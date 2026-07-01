@@ -1,18 +1,23 @@
 # 🚀 AI Developer Skill OS
 
 [![npm version](https://badge.fury.io/js/ai-developer-skill-os.svg)](https://badge.fury.io/js/ai-developer-skill-os)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Author](https://img.shields.io/badge/Author-Quang%20Kh%C3%A1nh-blue.svg)](https://github.com/phamquangkhanh2999)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-**A multi-agent skill package for AI coding assistants (Claude Code, Cursor, Windsurf, Antigravity/Gemini).**  
-Hệ điều hành kỹ năng (Skill OS) giúp biến AI của bạn từ một "cỗ máy sinh code" thành một Senior Software Engineer thực thụ với quy trình làm việc chuẩn mực.
-
-> Tác giả: **Quang Khánh**
+> **"Biến mọi AI Code Editor (Cursor, Windsurf, Cline) thành một Senior Engineer thực thụ với 23 kỹ năng được lập trình sẵn."**
 
 ---
 
-## 🌟 Tính năng nổi bật (Features)
+## 🌟 Tại sao bạn cần Skill OS?
 
-Bộ Skill OS cung cấp **23 kỹ năng chuyên biệt**, chia làm 3 nhóm chính:
+Các AI Editor hiện tại rất thông minh, nhưng nếu không có quy trình rõ ràng, chúng thường **lan man, tự ý sửa code lung tung, hoặc viết code không theo chuẩn kiến trúc**. 
+
+**AI Developer Skill OS (by Quang Khánh)** giải quyết triệt để vấn đề này bằng cách:
+- 🧠 **Ép AI tư duy theo Workflow (Chain-of-Thought):** Phân tích trước, code sau.
+- 🛡️ **Scope & Non-goals rõ ràng:** Khoá chặt giới hạn, tuyệt đối không cho AI sửa hỏng các file không liên quan.
+- 🎨 **Output chuyên nghiệp:** Mọi câu trả lời của AI đều được định dạng thành bảng biểu, báo cáo y hệt một hệ thống thật.
+
+### Hệ thống 23 Kỹ năng (Skillset)
 - 🛠️ **Engineering Core (8 skills):** Agent Orchestrator (Lên kế hoạch), Context Manager, Project Audit, Bug Fix, Refactor, API Integration, Migration, Git Engineer.
 - 🎨 **Frontend (11 skills):** Frontend Architecture, Design System, UI Builder, Component Generator, State Management, Form Builder, Table CRUD, Debug, Testing, Performance, A11Y Audit.
 - ⚙️ **Backend (4 skills):** Backend Architecture, Database Engineer, Auth & Security, Deployment (DevOps).
@@ -88,19 +93,36 @@ AI sẽ tự động nhận diện skill qua ngữ cảnh, nhưng để chắc c
 
 Dưới đây là các ví dụ cụ thể để bạn copy - paste và trải nghiệm ngay:
 
-### 1. Khi bắt đầu dự án / Nhờ AI lên kế hoạch (Planning)
-> **`./qk-agent-orchestrator`** Hãy lên kế hoạch làm tính năng Giỏ Hàng cho tôi. Nhớ gọi thêm **`./qk-context-manager`** để kiểm tra thư mục hiện tại có những file gì trước nhé.
+### 1. Nhờ AI lên kế hoạch (Planning) & Kiến trúc
+> **`./qk-agent-orchestrator`** Hãy lên kế hoạch làm tính năng Giỏ Hàng cho tôi. Nhớ gọi thêm **`./qk-context-manager`** để đọc cấu trúc dự án trước nhé.
 
-### 2. Khi muốn tạo Giao diện (UI)
-> **`./qk-ui-builder`** & **`./qk-design-system`** Hãy tạo cho tôi một màn hình Đăng Nhập (Login) sử dụng Tailwind CSS. 
+### 2. Xây dựng Giao diện (Frontend/UI)
+> **`./qk-ui-builder`** & **`./qk-design-system`** Hãy tạo cho tôi một màn hình Đăng Nhập (Login) xịn xò. Đảm bảo Responsive và dùng đúng chuẩn Component.
 
-### 3. Khi muốn làm việc với Database (Backend)
-> **`./qk-database-engineer`** Hãy viết cho tôi schema Prisma cho bảng Product và User có quan hệ 1-N. 
+### 3. Thiết kế Database (Backend)
+> **`./qk-database-engineer`** Hãy viết cho tôi schema Prisma cho bảng Product và User có quan hệ 1-N. Tối ưu index cho truy vấn nhanh.
 
-### 4. Khi gặp Bug cứng đầu
-> **`./qk-frontend-debug`** & **`./qk-bug-fix`** Code đang bị crash với lỗi `Hydration error`. Hãy tìm hiểu nguyên nhân gốc rễ và sửa nó giúp tôi.
+### 4. Tìm và Diệt Bug (Debugging)
+> **`./qk-frontend-debug`** & **`./qk-bug-fix`** Code đang bị crash với lỗi `Hydration error`. Hãy tìm nguyên nhân gốc rễ và sửa dứt điểm giúp tôi.
 
-👉 [Đọc Hướng Dẫn Sử Dụng chi tiết tại đây](docs/HUONG_DAN_SU_DUNG.md)
+---
+
+## 💎 Danh sách 23+ Kỹ Năng Độc Quyền
+
+| Phân hệ | Kỹ năng tiêu biểu | Chức năng chính |
+|---------|-------------------|-----------------|
+| 🏗️ **Engineering** | `qk-project-audit`, `qk-agent-orchestrator` | Kiểm toán dự án, lập kế hoạch, quản lý Git, Refactor code. |
+| 🎨 **Frontend** | `qk-ui-builder`, `qk-frontend-performance` | Dựng UI, tối ưu tốc độ, test component, quản lý State. |
+| ⚙️ **Backend** | `qk-database-engineer`, `qk-auth-security` | Thiết kế DB Schema, bảo mật JWT/OAuth, cấu hình CI/CD. |
+
+👉 [Xem danh sách toàn bộ Kỹ năng tại đây](docs/CHI_TIET_SKILLS.md)
+
+---
+
+<div align="center">
+  <b>Được thiết kế và phát triển bởi Quang Khánh (QK)</b><br>
+  <i>Empowering Vietnamese Developers with World-Class AI Workflows.</i>
+</div>
 
 ---
 
