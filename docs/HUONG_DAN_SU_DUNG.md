@@ -41,7 +41,9 @@ Hệ thống sẽ tự động tạo file cấu hình tương ứng (ví dụ `.
 
 **Câu 2: Phạm vi cài đặt?**
 - **(1) Local:** Cài vào thư mục ẩn `.qk-ai-skill-os/` (hoặc `.agents/` cho Gemini) ngay trong dự án. Rất phù hợp nếu dự án có nhiều người làm chung, bạn có thể commit thư mục này lên Git để ai cũng có skill.
-- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Nếu bạn code một mình, hãy chọn tuỳ chọn này! Nó giúp bạn tiết kiệm dung lượng, và chỉ cần cài 1 lần là BẤT KỲ DỰ ÁN NÀO bạn mở lên, AI cũng tự động có đủ 23 kỹ năng (Đặc biệt siêu mượt với Antigravity/Gemini). nó.
+- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Nếu bạn code một mình, hãy chọn tuỳ chọn này! Nó giúp bạn tiết kiệm dung lượng, và chỉ cần cài 1 lần là BẤT KỲ DỰ ÁN NÀO bạn mở lên, AI cũng tự động có đủ 23 kỹ năng (Đặc biệt siêu mượt với Antigravity/Gemini).
+
+> 💡 **Tính năng Tự động Dọn dẹp (Auto-Cleanup):** Mỗi khi cài đặt lại, hệ thống sẽ tự động quét và xóa sạch các kỹ năng phiên bản cũ để tối ưu dung lượng và tránh xung đột cho máy tính của bạn. Mọi thứ hoàn toàn tự động!
 
 ### Cho Gemini IDE / Antigravity
 **Không cần cấu hình gì thêm!** Gemini/Antigravity sẽ tự động nhận diện các file trong `.agents/skills/` và sẵn sàng làm việc ngay.

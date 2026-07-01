@@ -39,6 +39,8 @@ Hệ thống sẽ cung cấp cho bạn 2 tuỳ chọn cực kỳ linh hoạt:
 - **(1) Local:** Cài vào thư mục ẩn `.qk-ai-skill-os/` ngay trong dự án. (Phù hợp khi làm việc nhóm, commit lên Git để ai cũng xài được).
 - **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Từ đó trở đi, bạn mở **BẤT KỲ DỰ ÁN NÀO** cũng sẽ tự động gọi được 23 kỹ năng mà không cần tải lại file! (Rất tuyệt vời cho cá nhân sử dụng).
 
+> 💡 **Tính năng Tự động Dọn dẹp (Auto-Cleanup):** Mỗi khi cài đặt lại, hệ thống sẽ tự động quét và xóa sạch các kỹ năng phiên bản cũ để tối ưu dung lượng và tránh xung đột cho máy tính của bạn. Mọi thứ hoàn toàn tự động!
+
 ### Cách 2: Sử dụng Git Submodule
 Nếu bạn không dùng Node.js, bạn có thể nhúng trực tiếp qua Git (Chỉ hỗ trợ dạng Local):
 ```bash
