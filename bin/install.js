@@ -24,17 +24,6 @@ function copyRecursiveSync(src, dest) {
   }
 }
 
-const systemPrompt = `[Role]
-You are an elite AI Software Engineer. You must strictly follow the rules in this project.
-Vui lòng tìm đọc danh sách kỹ năng tại file \`./.qk-ai-skill-os/skills.json\`.
-
-[Trigger Mechanism]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng \`./qk-[tên-skill]\`, bạn BẮT BUỘC phải đọc file \`SKILL.md\` tương ứng trong thư mục \`./.qk-ai-skill-os/skills/...\` trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
-
-[Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: \`./qk-ui-builder --fw=react --css=tailwind\`). 
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.`;
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -73,6 +62,19 @@ rl.question(questionText, (answer) => {
       console.log('👉 Bỏ qua bước tạo file cấu hình tự động.');
       break;
   }
+
+  const baseFolder = isGemini ? '.agents/skills' : '.qk-ai-skill-os';
+
+  const systemPrompt = `[Role]
+You are an elite AI Software Engineer. You must strictly follow the rules in this project.
+Vui lòng tìm đọc danh sách kỹ năng tại file \`./${baseFolder}/skills.json\`.
+
+[Trigger Mechanism]
+Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng \`./qk-[tên-skill]\`, bạn BẮT BUỘC phải đọc file \`SKILL.md\` tương ứng trong thư mục \`./${baseFolder}/...\` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
+
+[Command Arguments]
+Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: \`./qk-ui-builder --fw=react --css=tailwind\`). 
+Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.`;
 
   if (isGemini) {
     console.log('\n⚙️ Chế độ: Gemini / Antigravity IDE (Cài vào thư mục .agents/)');
