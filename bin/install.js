@@ -121,6 +121,9 @@ Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải
         if (fs.existsSync(path.join(sourceDir, 'skills'))) {
             copyRecursiveSync(path.join(sourceDir, 'skills'), path.join(targetDir, 'skills'));
         }
+        if (fs.existsSync(path.join(sourceDir, 'skills.json'))) {
+            fs.copyFileSync(path.join(sourceDir, 'skills.json'), path.join(targetDir, 'skills', 'skills.json'));
+        }
       } else {
         filesAndFolders.forEach(item => {
             const src = path.join(sourceDir, item);
