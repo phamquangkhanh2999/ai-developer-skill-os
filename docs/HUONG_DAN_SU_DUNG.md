@@ -59,6 +59,16 @@ Speak to me in Vietnamese, but write all code in English.
 ```
 
 ### Cho Claude Code / Kilo Code (CLI Agents)
+#### Cách 1: Cài đặt Native (Khuyên dùng cho Kilo Code)
+Chạy `npx ai-developer-skill-os init` và chọn **(6) Kilo Code**.
+Hệ thống sẽ tự động:
+- Copy toàn bộ skills vào `.kilo/skills/` (Local) hoặc `~/.kilo/skills/` (Global)
+- Cấu hình `kilo.json` hoặc `~/.config/kilo/kilo.json` để Kilo nhận diện
+- Tạo file `CLAUDE.md` như hướng dẫn bổ sung
+
+Sau đó mở Kilo Code, dùng `<leader>t` hoặc `/themes` để kiểm tra skills đã được cài.
+
+#### Cách 2: Thủ công
 Tạo file `CLAUDE.md` (hoặc `KILO.md`) ở gốc dự án và dán đoạn sau vào:
 ```md
 # System Instructions
