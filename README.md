@@ -107,6 +107,28 @@ Dưới đây là các ví dụ cụ thể để bạn copy - paste và trải n
 
 ---
 
+## 💡 Mẹo & Workflow Thực Chiến (Best Practices)
+
+Để khai thác tối đa sức mạnh của 23 kỹ năng, bí quyết là **kết hợp (chaining) nhiều skill** lại với nhau trong cùng một luồng công việc. Dưới đây là các Workflow kinh điển:
+
+### 🌟 1. Workflow Bắt đầu một New Chat (Bắt buộc)
+Khi mở một New Chat, AI hoàn toàn chưa biết gì về dự án. Đừng bắt nó code ngay!
+* **Bước 1:** `> Dùng ./qk-context-manager để đọc cấu trúc toàn bộ dự án này.`
+* **Bước 2:** `> Dùng ./qk-agent-orchestrator để phân tích yêu cầu sau đây và lên kế hoạch: [Yêu cầu của bạn]`
+
+### 🌟 2. Workflow Làm tính năng mới (VD: Tích hợp API)
+Muốn tạo một màn hình hiển thị danh sách từ API trả về? Hãy gõ:
+* `> Hãy dùng ./qk-api-integration để tạo file gọi API fetch danh sách Users.`
+* `> Tiếp theo dùng ./qk-state-management để lưu data này vào Zustand/Redux.`
+* `> Cuối cùng dùng ./qk-ui-builder để vẽ màn hình Table hiển thị data đó.`
+
+### 🌟 3. Workflow Chống "Phá Code" (Safe Refactor)
+Trước khi đổi một cấu trúc lớn, hãy bắt AI dò mìn:
+* `> Hãy chạy ./qk-project-audit để dò xem việc đổi tên biến X có ảnh hưởng đến các component khác không.`
+* `> OK, giờ hãy dùng ./qk-refactor để sửa lại một cách an toàn.`
+
+---
+
 ## 💎 Danh sách 23+ Kỹ Năng Độc Quyền
 
 | Phân hệ | Kỹ năng tiêu biểu | Chức năng chính |
