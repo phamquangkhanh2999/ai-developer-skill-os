@@ -133,10 +133,15 @@ Trước khi đổi một cấu trúc lớn, hãy bắt AI dò mìn:
 
 ---
 
-## 💎 Danh sách 23+ Kỹ Năng Độc Quyền
+## 💎 **Danh sách đầy đủ các Kỹ năng đang có trong Skill OS:**
+*(Bạn có thể gọi trực tiếp trên Terminal hoặc Chat)*
 
-| Phân hệ | Kỹ năng tiêu biểu | Chức năng chính |
-|---------|-------------------|-----------------|
+> 💡 **Mẹo (Pro-Tip):** Bất cứ khi nào bạn quên mất danh sách kỹ năng hoặc cách dùng, chỉ cần gõ lệnh `./qk-help` (hoặc `@qk-help`), hệ thống sẽ xuất ra toàn bộ cẩm nang sử dụng và bí kíp kết hợp Kỹ năng (Skill Chaining) ngay lập tức!
+
+| Kỹ năng (Skill) | Nhiệm vụ chuyên môn |
+|-----------------|---------------------|
+| 🧠 **`qk-help`** | **[MỚI] Sách hướng dẫn tra cứu nhanh danh sách Skill và Bí kíp kết hợp** |
+| 🧑‍💻 **`qk-ui-builder`** | Xây dựng UI, vẽ Màn hình, chia Layout, tạo Modal cực đẹp |
 | 🏗️ **Engineering** | `qk-project-audit`, `qk-agent-orchestrator` | Kiểm toán dự án, lập kế hoạch, quản lý Git, Refactor code. |
 | 🎨 **Frontend** | `qk-ui-builder`, `qk-frontend-performance` | Dựng UI, tối ưu tốc độ, test component, quản lý State. |
 | ⚙️ **Backend** | `qk-database-engineer`, `qk-auth-security` | Thiết kế DB Schema, bảo mật JWT/OAuth, cấu hình CI/CD. |
