@@ -42,7 +42,10 @@ git submodule add https://github.com/phamquangkhanh2999/ai-developer-skill-os.gi
 
 ## 🛠️ Cấu hình cho IDE / AI Agent
 
-Sau khi thư mục `rules-skill/` đã xuất hiện trong dự án của bạn, hãy cấu hình để AI biết cách sử dụng nó.
+Sau khi thư mục kỹ năng đã xuất hiện trong dự án của bạn, hãy cấu hình để AI biết cách sử dụng nó.
+
+### Cho Antigravity / Gemini IDE
+**Không cần cấu hình gì thêm!** Nếu bạn đã cài đặt bằng cờ `--gemini` (thư mục `.agents/skills/`), hệ thống sẽ tự động quét và load toàn bộ 23 kỹ năng này. Bạn có thể sử dụng ngay lập tức!
 
 ### Cho Cursor / Windsurf (AI Code Editors)
 Tạo file `.cursorrules` (nếu dùng Cursor) hoặc `.windsurfrules` (nếu dùng Windsurf) ở gốc dự án và dán đoạn sau vào:
@@ -54,16 +57,26 @@ Always read the relevant `SKILL.md` from `./rules-skill/skills/` before providin
 Speak to me in Vietnamese, but write all code in English.
 ```
 
-### Cho Claude Code / Kilo Code (CLI Agents)
-Tạo file `CLAUDE.md` (hoặc `KILO.md`) ở gốc dự án và dán đoạn sau vào:
+### Cho Cline / Roo Code / Kilo Code (VS Code Extensions)
+Tạo file `.clinerules`, `.roorules` hoặc `KILO.md` ở gốc dự án và dán nội dung:
 ```md
-# System Instructions
 Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
-
-Vui lòng tìm đọc danh sách kỹ năng tại file `./rules-skill/skills.json`.
-Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md` tương ứng trong thư mục `./rules-skill/skills/` để biết quy trình làm việc chuẩn.
-Luôn giao tiếp bằng tiếng Việt nhưng viết code, đặt tên biến, comment trong code bằng tiếng Anh.
+Vui lòng tìm đọc danh sách kỹ năng tại file `./rules-skill/skills.json`. Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md` tương ứng trong thư mục `./rules-skill/skills/`.
+Luôn giao tiếp bằng tiếng Việt nhưng viết code bằng tiếng Anh.
 ```
+
+### Cho GitHub Copilot
+Tạo file `.github/copilot-instructions.md` và dán đoạn prompt tương tự như trên vào file này để Copilot học được các kỹ năng.
+
+---
+
+## 🎯 Cách kiểm tra cài đặt thành công
+
+Để biết AI của bạn đã thực sự "nhập môn" bộ Skill OS này chưa, hãy mở khung chat AI trong dự án và gõ chính xác câu sau:
+> *"Hãy kích hoạt skill project-audit và cho tôi biết bạn sẽ làm những gì."*
+
+✅ **Thành công:** Nếu AI trả lời bằng tiếng Việt, liệt kê đúng các bước khám bệnh (Phase 1, Phase 2, Phase 3...) theo đúng như trong file `SKILL.md` của `project-audit`.
+❌ **Thất bại:** Nếu AI trả lời chung chung hoặc bảo không biết skill này là gì, bạn cần kiểm tra lại đường dẫn file cấu hình ở bước trên.
 
 ---
 
