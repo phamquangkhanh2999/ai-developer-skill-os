@@ -1,9 +1,9 @@
 # Hướng Dẫn Sử Dụng — AI Developer Skill OS
 
 **Tác giả:** Quang Khánh  
-**Phiên bản:** v1.0.0  
+**Phiên bản:** v1.0.1  
 
-Chào mừng bạn đến với **AI Developer Skill OS**, bộ khung quản lý kỹ năng (Skill Framework) biến các trợ lý AI (Claude Code, Kilo Code, Antigravity, Cursor, Windsurf) từ một "cỗ máy sinh code" thành một Senior Software Engineer thực thụ.
+Chào mừng bạn đến với **AI Developer Skill OS**, bộ khung quản lý kỹ năng (Skill Framework) biến các trợ lý AI (Gemini, Antigravity, Claude Code, Cursor, Windsurf) từ một "cỗ máy sinh code" thành một Senior Software Engineer thực thụ.
 
 ---
 
@@ -20,29 +20,47 @@ Với hệ điều hành kỹ năng (Skill OS) này:
 
 ---
 
-## 2. Hướng dẫn cài đặt
+## 2. Hướng dẫn cài đặt qua NPM (Khuyên dùng)
 
-Bộ Skin này rất linh hoạt và có thể được tích hợp vào hầu hết các AI Agent IDE hiện đại:
+Bộ Skin này rất linh hoạt và được phân phối qua NPM để bạn có thể cài vào bất kỳ dự án nào cực kỳ nhanh chóng.
 
-### Cho Antigravity / Gemini IDE
-Bạn cần copy thư mục chứa các skill này vào thư mục `.agents` của dự án:
+Mở terminal tại gốc dự án của bạn và chạy lệnh cài đặt tương ứng với công cụ AI bạn đang dùng:
+
+### Dành cho Gemini IDE / Antigravity
+Các công cụ này đọc cấu hình từ thư mục `.agents/skills/`. Bạn chỉ cần thêm cờ `--gemini` khi chạy cài đặt:
+```bash
+npx ai-developer-skill-os init --gemini
 ```
-my-project/
-└── .agents/
-    └── skills/
-        ├── engineering/
-        ├── frontend/
-        └── backend/
+*Lệnh này sẽ tự tạo thư mục `.agents/skills/` và tải toàn bộ bộ kỹ năng vào đó.*
+
+### Dành cho Cursor / Windsurf / Claude Code / Kilo Code
+Các công cụ này linh hoạt hơn, bạn cài đặt mặc định:
+```bash
+npx ai-developer-skill-os init
 ```
-Hoặc cấu hình Global trong máy tính của bạn tại:
-`C:\Users\<Tên-Máy-Bạn>\.gemini\config\skills\`
+*Lệnh này sẽ tạo thư mục `rules-skill/` ở gốc dự án.*
 
-### Cho Claude Code & Kilo Code (CLI AI Agents)
-Claude Code và Kilo Code đọc các quy tắc (rules) từ thư mục gốc của dự án.
-**Cách cài đặt:**
-1. Copy toàn bộ thư mục `rules-skill/` vào gốc dự án của bạn.
-2. Tạo (hoặc sửa) file `CLAUDE.md` (đối với Claude) hoặc `KILO.md` (đối với Kilo) ở thư mục gốc, dán nội dung sau vào:
+---
 
+## 3. Cấu hình cho IDE / AI Agent
+
+Sau khi thư mục kỹ năng đã xuất hiện trong dự án của bạn, hãy cấu hình để AI biết cách sử dụng nó.
+
+### Cho Gemini IDE / Antigravity
+**Không cần cấu hình gì thêm!** Gemini/Antigravity sẽ tự động nhận diện các file trong `.agents/skills/` và sẵn sàng làm việc ngay.
+
+### Cho Cursor / Windsurf (AI Code Editors)
+Tạo file `.cursorrules` (nếu dùng Cursor) hoặc `.windsurfrules` (nếu dùng Windsurf) ở gốc dự án và dán đoạn sau vào:
+```md
+# AI Developer Skill OS by Quang Khánh
+
+When answering or generating code, you MUST act as an expert engineer using the skills defined in `./rules-skill/skills.json`.
+Always read the relevant `SKILL.md` from `./rules-skill/skills/` before providing a solution.
+Speak to me in Vietnamese, but write all code in English.
+```
+
+### Cho Claude Code / Kilo Code (CLI Agents)
+Tạo file `CLAUDE.md` (hoặc `KILO.md`) ở gốc dự án và dán đoạn sau vào:
 ```md
 # System Instructions
 Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
@@ -52,25 +70,11 @@ Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md
 Luôn giao tiếp bằng tiếng Việt nhưng viết code, đặt tên biến, comment trong code bằng tiếng Anh.
 ```
 
-### Cho Cursor / Windsurf (AI Code Editors)
-Cursor và Windsurf sử dụng file quy tắc riêng biệt.
-**Cách cài đặt:**
-1. Copy toàn bộ thư mục `rules-skill/` vào gốc dự án của bạn.
-2. Mở file `.cursorrules` (với Cursor) hoặc `.windsurfrules` (với Windsurf), dán nội dung sau vào:
-
-```md
-# AI Developer Skill OS by Quang Khánh
-
-When answering or generating code, you MUST act as an expert engineer using the skills defined in `./rules-skill/skills.json`.
-Always read the relevant `SKILL.md` from `./rules-skill/skills/` before providing a solution.
-Speak to me in Vietnamese, but write all code in English.
-```
-
 ---
 
-## 3. Cách tương tác với AI
+## 4. Cách tương tác với AI
 
-Vì AI giờ đây đã có "nghề" (Skill), bạn không cần phải prompt quá dài dòng. Hãy ra lệnh như giao việc cho một kỹ sư.
+Giờ đây bạn chỉ cần chat với AI như giao việc cho một kỹ sư thật sự. Không cần viết prompt dài dòng!
 
 **Ví dụ 1: Nhờ AI tự lên kế hoạch (Kích hoạt `agent-orchestrator`)**
 > "Quang Khánh ơi, dự án này đang cần thêm tính năng Đăng nhập. Cậu lên kế hoạch giúp mình nên làm gì trước nhé."
@@ -86,17 +90,3 @@ Vì AI giờ đây đã có "nghề" (Skill), bạn không cần phải prompt q
 
 **Ví dụ 5: Tích hợp API (Kích hoạt `api-integration`)**
 > "Tích hợp cái swagger login này vào frontend giúp. Nhớ dùng React Query như chuẩn của project."
-
----
-
-## 4. Tùy chỉnh Skin (Dành cho Advanced User)
-
-Nếu bạn muốn thêm kỹ năng mới cho AI, hãy sử dụng mẫu (Template) đã được tác giả chuẩn bị sẵn:
-1. Copy file từ thư mục `_template/SKILL.md`.
-2. Chỉnh sửa các thông số: Name, Description, Trigger, Scope, v.v.
-3. Đăng ký nó vào file `skills.json` ở gốc.
-4. Tận hưởng AI với kỹ năng mới của riêng bạn!
-
----
-
-Để xem danh sách chi tiết và công dụng của từng skill, vui lòng xem [Chi Tiết Skills](CHI_TIET_SKILLS.md).

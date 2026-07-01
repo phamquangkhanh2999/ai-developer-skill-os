@@ -4,7 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 const sourceDir = path.join(__dirname, '..');
-const targetDir = path.join(process.cwd(), 'rules-skill');
+let targetDir = path.join(process.cwd(), 'rules-skill');
+
+// Check arguments for IDE-specific paths
+const args = process.argv.slice(2);
+const isGemini = args.includes('--gemini') || args.includes('--antigravity');
+
+if (isGemini) {
+  targetDir = path.join(process.cwd(), '.agents', 'skills');
+}
 
 function copyRecursiveSync(src, dest) {
   const exists = fs.existsSync(src);
@@ -24,6 +32,11 @@ function copyRecursiveSync(src, dest) {
 }
 
 console.log('🚀 Đang cài đặt AI Developer Skill OS...');
+if (isGemini) {
+  console.log('⚙️ Chế độ: Gemini / Antigravity IDE (Cài vào thư mục .agents/skills/)');
+} else {
+  console.log('⚙️ Chế độ: Mặc định (Cài vào thư mục rules-skill/)');
+}
 
 const filesAndFolders = [
   'skills', 
@@ -42,14 +55,16 @@ try {
 
   filesAndFolders.forEach(item => {
     const src = path.join(sourceDir, item);
-    const dest = path.join(targetDir, item);
+    let dest = path.join(targetDir, item);
+    
+    // For Gemini, we dump the contents directly into .agents/skills/
     if (fs.existsSync(src)) {
       copyRecursiveSync(src, dest);
     }
   });
 
-  console.log('✅ Đã cài đặt thành công vào thư mục: ./rules-skill/');
-  console.log('\n💡 Tiếp theo, hãy tham khảo ./rules-skill/docs/HUONG_DAN_SU_DUNG.md để cấu hình cho AI của bạn nhé!');
+  console.log(`✅ Đã cài đặt thành công vào thư mục: ${targetDir.replace(process.cwd(), '.')}`);
+  console.log('\n💡 Tiếp theo, hãy tham khảo tài liệu trong mục docs/HUONG_DAN_SU_DUNG.md để biết cách tương tác với AI nhé!');
 } catch (error) {
   console.error('❌ Có lỗi xảy ra trong quá trình cài đặt:', error.message);
   process.exit(1);
