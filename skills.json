@@ -8,7 +8,7 @@
   "skills": [
     {
       "name": "qk-agent-orchestrator",
-      "path": "skills/engineering/qk-agent-orchestrator/SKILL.md",
+      "path": "skills/qk-agent-orchestrator/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P0",
@@ -34,7 +34,7 @@
     },
     {
       "name": "qk-context-manager",
-      "path": "skills/engineering/qk-context-manager/SKILL.md",
+      "path": "skills/qk-context-manager/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P0",
@@ -59,7 +59,7 @@
     },
     {
       "name": "qk-project-audit",
-      "path": "skills/engineering/qk-project-audit/SKILL.md",
+      "path": "skills/qk-project-audit/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P0",
@@ -89,7 +89,7 @@
     },
     {
       "name": "qk-bug-fix",
-      "path": "skills/engineering/qk-bug-fix/SKILL.md",
+      "path": "skills/qk-bug-fix/SKILL.md",
       "version": "2.0.0",
       "category": "engineering",
       "priority": "P0",
@@ -117,7 +117,7 @@
     },
     {
       "name": "qk-refactor",
-      "path": "skills/engineering/qk-refactor/SKILL.md",
+      "path": "skills/qk-refactor/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P2",
@@ -145,7 +145,7 @@
     },
     {
       "name": "qk-api-integration",
-      "path": "skills/engineering/qk-api-integration/SKILL.md",
+      "path": "skills/qk-api-integration/SKILL.md",
       "version": "2.0.0",
       "category": "engineering",
       "priority": "P1",
@@ -173,7 +173,7 @@
     },
     {
       "name": "qk-migration",
-      "path": "skills/engineering/qk-migration/SKILL.md",
+      "path": "skills/qk-migration/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P2",
@@ -202,7 +202,7 @@
     },
     {
       "name": "qk-git-engineer",
-      "path": "skills/engineering/qk-git-engineer/SKILL.md",
+      "path": "skills/qk-git-engineer/SKILL.md",
       "version": "1.0.0",
       "category": "engineering",
       "priority": "P2",
@@ -228,7 +228,7 @@
     },
     {
       "name": "qk-frontend-architecture",
-      "path": "skills/frontend/qk-frontend-architecture/SKILL.md",
+      "path": "skills/qk-frontend-architecture/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P1",
@@ -255,7 +255,7 @@
     },
     {
       "name": "qk-design-system",
-      "path": "skills/frontend/qk-design-system/SKILL.md",
+      "path": "skills/qk-design-system/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P1",
@@ -283,7 +283,7 @@
     },
     {
       "name": "qk-ui-builder",
-      "path": "skills/frontend/qk-ui-builder/SKILL.md",
+      "path": "skills/qk-ui-builder/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P1",
@@ -313,7 +313,7 @@
     },
     {
       "name": "qk-component-generator",
-      "path": "skills/frontend/qk-component-generator/SKILL.md",
+      "path": "skills/qk-component-generator/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P1",
@@ -340,7 +340,7 @@
     },
     {
       "name": "qk-state-management",
-      "path": "skills/frontend/qk-state-management/SKILL.md",
+      "path": "skills/qk-state-management/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -369,7 +369,7 @@
     },
     {
       "name": "qk-form-builder",
-      "path": "skills/frontend/qk-form-builder/SKILL.md",
+      "path": "skills/qk-form-builder/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -399,7 +399,7 @@
     },
     {
       "name": "qk-table-crud-generator",
-      "path": "skills/frontend/qk-table-crud-generator/SKILL.md",
+      "path": "skills/qk-table-crud-generator/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -429,7 +429,7 @@
     },
     {
       "name": "qk-frontend-debug",
-      "path": "skills/frontend/qk-frontend-debug/SKILL.md",
+      "path": "skills/qk-frontend-debug/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -456,7 +456,7 @@
     },
     {
       "name": "qk-frontend-testing",
-      "path": "skills/frontend/qk-frontend-testing/SKILL.md",
+      "path": "skills/qk-frontend-testing/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -485,7 +485,7 @@
     },
     {
       "name": "qk-frontend-performance",
-      "path": "skills/frontend/qk-frontend-performance/SKILL.md",
+      "path": "skills/qk-frontend-performance/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -513,7 +513,7 @@
     },
     {
       "name": "qk-accessibility-audit",
-      "path": "skills/frontend/qk-accessibility-audit/SKILL.md",
+      "path": "skills/qk-accessibility-audit/SKILL.md",
       "version": "1.0.0",
       "category": "frontend",
       "priority": "P2",
@@ -541,7 +541,7 @@
     },
     {
       "name": "qk-backend-architecture",
-      "path": "skills/backend/qk-backend-architecture/SKILL.md",
+      "path": "skills/qk-backend-architecture/SKILL.md",
       "version": "1.0.0",
       "category": "backend",
       "priority": "P3",
@@ -568,7 +568,7 @@
     },
     {
       "name": "qk-database-engineer",
-      "path": "skills/backend/qk-database-engineer/SKILL.md",
+      "path": "skills/qk-database-engineer/SKILL.md",
       "version": "1.0.0",
       "category": "backend",
       "priority": "P3",
@@ -598,7 +598,7 @@
     },
     {
       "name": "qk-auth-security",
-      "path": "skills/backend/qk-auth-security/SKILL.md",
+      "path": "skills/qk-auth-security/SKILL.md",
       "version": "1.0.0",
       "category": "backend",
       "priority": "P3",
@@ -627,7 +627,7 @@
     },
     {
       "name": "qk-deployment",
-      "path": "skills/backend/qk-deployment/SKILL.md",
+      "path": "skills/qk-deployment/SKILL.md",
       "version": "1.0.0",
       "category": "backend",
       "priority": "P3",
@@ -655,13 +655,13 @@
   ],
   "entries": [
     {
-      "path": "skills/engineering/qk-"
+      "path": "skills/qk-"
     },
     {
-      "path": "skills/frontend/qk-"
+      "path": "skills/qk-"
     },
     {
-      "path": "skills/backend/qk-"
+      "path": "skills/qk-"
     }
   ]
 }
