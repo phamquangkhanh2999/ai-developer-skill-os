@@ -1,0 +1,667 @@
+{
+  "version": "1.0.0",
+  "name": "AI Developer Skill OS",
+  "description": "Multi-agent skill package for AI coding agents — Engineering + Frontend + Backend",
+  "language": "en",
+  "author": "Quang Khánh",
+  "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os.git",
+  "skills": [
+    {
+      "name": "agent-orchestrator",
+      "path": "skills/engineering/agent-orchestrator/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "plan this task",
+        "how should I approach",
+        "what should I do first",
+        "help me organize",
+        "break down this task",
+        "where do I start"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Phân tích yêu cầu, lên kế hoạch thực thi chi tiết và điều phối các tác vụ cho đúng skill. Không tự viết code."
+    },
+    {
+      "name": "context-manager",
+      "path": "skills/engineering/context-manager/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "what files should I read",
+        "summarize the project",
+        "understand codebase",
+        "project overview",
+        "what is the architecture"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xác định các file cần thiết, tóm tắt kiến trúc và quản lý bộ nhớ ngữ cảnh để tránh tràn bộ nhớ."
+    },
+    {
+      "name": "project-audit",
+      "path": "skills/engineering/project-audit/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "audit",
+        "review the codebase",
+        "check for bugs",
+        "health check",
+        "analyze project",
+        "what's wrong with",
+        "find issues",
+        "code review"
+      ],
+      "dependencies": [
+        "context-manager"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm toán toàn bộ dự án để phát hiện bug ẩn, rủi ro bảo mật, vấn đề hiệu năng và nợ kỹ thuật trước khi sửa code."
+    },
+    {
+      "name": "bug-fix",
+      "path": "skills/engineering/bug-fix/SKILL.md",
+      "version": "2.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "fix this bug",
+        "it's broken",
+        "error",
+        "exception",
+        "crash",
+        "not working",
+        "stack trace",
+        "fails"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "migrating",
+      "description": "Chẩn đoán và sửa lỗi an toàn. Tái hiện lỗi, tìm nguyên nhân gốc rễ và áp dụng bản sửa lỗi tối thiểu, có kiểm chứng."
+    },
+    {
+      "name": "refactor",
+      "path": "skills/engineering/refactor/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "refactor",
+        "clean up",
+        "restructure",
+        "improve code quality",
+        "too messy",
+        "hard to maintain"
+      ],
+      "dependencies": [
+        "project-audit"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài."
+    },
+    {
+      "name": "api-integration",
+      "path": "skills/engineering/api-integration/SKILL.md",
+      "version": "2.0.0",
+      "category": "engineering",
+      "priority": "P1",
+      "trigger": [
+        "integrate API",
+        "call endpoint",
+        "curl",
+        "swagger",
+        "openapi",
+        "fetch data from",
+        "connect to backend",
+        "api layer"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "migrating",
+      "description": "Chuyển đổi tài liệu API (curl, swagger...) thành code tích hợp frontend chuẩn xác, có type an toàn và xử lý lỗi."
+    },
+    {
+      "name": "migration",
+      "path": "skills/engineering/migration/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "upgrade",
+        "migrate",
+        "update dependencies",
+        "breaking change",
+        "version bump",
+        "npm update",
+        "library replacement"
+      ],
+      "dependencies": [
+        "project-audit"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Nâng cấp dependency, chuyển đổi framework và thay thế thư viện một cách an toàn với chiến lược không downtime."
+    },
+    {
+      "name": "git-engineer",
+      "path": "skills/engineering/git-engineer/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "commit",
+        "write PR",
+        "pull request",
+        "changelog",
+        "release notes",
+        "git"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Viết commit message chuẩn Conventional Commits, mô tả Pull Request, Changelog và Release Notes chuyên nghiệp."
+    },
+    {
+      "name": "frontend-architecture",
+      "path": "skills/frontend/frontend-architecture/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "where should I put this file",
+        "folder structure",
+        "project structure",
+        "how to organize",
+        "which directory"
+      ],
+      "dependencies": [
+        "context-manager"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Phân tích cấu trúc thư mục frontend và quyết định vị trí đặt file chuẩn xác theo kiến trúc hiện tại."
+    },
+    {
+      "name": "design-system",
+      "path": "skills/frontend/design-system/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "use button component",
+        "design system",
+        "component library",
+        "which component to use",
+        "UI tokens",
+        "theme"
+      ],
+      "dependencies": [
+        "frontend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Ép buộc sử dụng design system, component library và token hiện có, ngăn chặn việc viết HTML/CSS rác."
+    },
+    {
+      "name": "ui-builder",
+      "path": "skills/frontend/ui-builder/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "create page",
+        "build UI",
+        "add screen",
+        "design layout",
+        "make a form",
+        "new view",
+        "implement UI"
+      ],
+      "dependencies": [
+        "design-system",
+        "frontend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xây dựng các màn hình và layout phức tạp từ yêu cầu, tái sử dụng component và đảm bảo responsive."
+    },
+    {
+      "name": "component-generator",
+      "path": "skills/frontend/component-generator/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "create component",
+        "new component",
+        "generate component",
+        "add reusable"
+      ],
+      "dependencies": [
+        "design-system",
+        "frontend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tạo các UI Component độc lập, tái sử dụng được, có type an toàn và tuân thủ chuẩn design system."
+    },
+    {
+      "name": "state-management",
+      "path": "skills/frontend/state-management/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "state",
+        "zustand",
+        "redux",
+        "react query",
+        "global state",
+        "store",
+        "context"
+      ],
+      "dependencies": [
+        "frontend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xác định và triển khai chiến lược quản lý state phù hợp (Zustand, Redux, React Query, Local State)."
+    },
+    {
+      "name": "form-builder",
+      "path": "skills/frontend/form-builder/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "build form",
+        "create form",
+        "form validation",
+        "login form",
+        "edit form",
+        "react hook form",
+        "zod schema"
+      ],
+      "dependencies": [
+        "design-system",
+        "component-generator"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xây dựng Form chuẩn xác với quản lý trạng thái, validate dữ liệu (Zod, Yup) và xử lý hiển thị lỗi."
+    },
+    {
+      "name": "table-crud-generator",
+      "path": "skills/frontend/table-crud-generator/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "data table",
+        "list screen",
+        "CRUD",
+        "admin table",
+        "pagination",
+        "filter table",
+        "sort column"
+      ],
+      "dependencies": [
+        "design-system",
+        "api-integration"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tạo các bảng dữ liệu admin với đầy đủ tính năng phân trang, sắp xếp, lọc và thao tác thêm/sửa/xóa (CRUD)."
+    },
+    {
+      "name": "frontend-debug",
+      "path": "skills/frontend/frontend-debug/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "react error",
+        "hydration error",
+        "component not rendering",
+        "state not updating",
+        "infinite rerender",
+        "UI bug",
+        "CSS issue"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Chẩn đoán và sửa các lỗi đặc thù frontend như Hydration error, infinite re-render, stale closure và vỡ CSS."
+    },
+    {
+      "name": "frontend-testing",
+      "path": "skills/frontend/frontend-testing/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "write test",
+        "unit test",
+        "component test",
+        "e2e",
+        "jest",
+        "vitest",
+        "testing library"
+      ],
+      "dependencies": [
+        "component-generator"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Viết Unit, Component và E2E test bằng Jest, Vitest, RTL, Cypress. Tập trung vào hành vi người dùng."
+    },
+    {
+      "name": "frontend-performance",
+      "path": "skills/frontend/frontend-performance/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "slow rendering",
+        "performance",
+        "bundle size",
+        "too many rerenders",
+        "lazy load",
+        "optimize"
+      ],
+      "dependencies": [
+        "project-audit"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tối ưu hóa hiệu năng frontend: giảm kích thước bundle, chặn re-render thừa, lazy load và cải thiện Web Vitals."
+    },
+    {
+      "name": "accessibility-audit",
+      "path": "skills/frontend/accessibility-audit/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "accessibility",
+        "a11y",
+        "aria",
+        "screen reader",
+        "keyboard navigation",
+        "contrast"
+      ],
+      "dependencies": [
+        "ui-builder"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm tra và sửa lỗi khả năng tiếp cận (a11y/WCAG). Đảm bảo hỗ trợ phím, screen reader và semantic HTML."
+    },
+    {
+      "name": "backend-architecture",
+      "path": "skills/backend/backend-architecture/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "backend structure",
+        "service layer",
+        "controller",
+        "repository pattern",
+        "clean architecture"
+      ],
+      "dependencies": [
+        "context-manager"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm soát cấu trúc backend, ép buộc tuân thủ mô hình Layer (Controller/Service/Repository) và vị trí file."
+    },
+    {
+      "name": "database-engineer",
+      "path": "skills/backend/database-engineer/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "schema",
+        "migration",
+        "database",
+        "query",
+        "index",
+        "prisma",
+        "drizzle",
+        "sql"
+      ],
+      "dependencies": [
+        "backend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Thiết kế database schema, viết script migration và tối ưu truy vấn cho SQL/NoSQL bằng ORM (Prisma, Drizzle...)."
+    },
+    {
+      "name": "auth-security",
+      "path": "skills/backend/auth-security/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "authentication",
+        "authorization",
+        "JWT",
+        "OAuth",
+        "RBAC",
+        "login system",
+        "security"
+      ],
+      "dependencies": [
+        "backend-architecture"
+      ],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Triển khai tính năng đăng nhập (JWT, OAuth), phân quyền (RBAC) và bảo vệ app khỏi các lỗ hổng OWASP."
+    },
+    {
+      "name": "deployment",
+      "path": "skills/backend/deployment/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "deploy",
+        "CI/CD",
+        "docker",
+        "kubernetes",
+        "pipeline",
+        "release",
+        "environment"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Cấu hình CI/CD pipelines, tạo Dockerfile và thiết lập môi trường để deploy lên Vercel, AWS hoặc VPS."
+    }
+  ],
+  "entries": [
+    {
+      "path": "skills/engineering/"
+    },
+    {
+      "path": "skills/frontend/"
+    },
+    {
+      "path": "skills/backend/"
+    }
+  ]
+}

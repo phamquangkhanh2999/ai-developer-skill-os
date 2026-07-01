@@ -1,142 +1,83 @@
-# AI Developer Skill OS
+# 🚀 AI Developer Skill OS
 
-**A multi-agent skill package for AI coding assistants.**
-Bộ skill package đa nền tảng cho AI coding assistant.
+[![npm version](https://badge.fury.io/js/ai-developer-skill-os.svg)](https://badge.fury.io/js/ai-developer-skill-os)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**A multi-agent skill package for AI coding assistants (Claude Code, Cursor, Windsurf, Antigravity/Gemini).**  
+Hệ điều hành kỹ năng (Skill OS) giúp biến AI của bạn từ một "cỗ máy sinh code" thành một Senior Software Engineer thực thụ với quy trình làm việc chuẩn mực.
 
 > Tác giả: **Quang Khánh**
-> Compatible with: **Claude Code · Kilo Code · Antigravity/Gemini IDE · Cursor · Windsurf**
-
-📚 **Tài liệu hữu ích:**
-- [Hướng dẫn sử dụng](file:///docs/HUONG_DAN_SU_DUNG.md)
-- [Chi tiết toàn bộ Skills (Tiếng Việt)](file:///docs/CHI_TIET_SKILLS.md)
 
 ---
 
-## What is this? / Đây là gì?
+## 🌟 Tính năng nổi bật (Features)
 
-**EN:** A structured collection of skills that transform AI coding agents into specialized engineering roles. Each skill defines a precise workflow, scope, rules, and output format — so AI consistently behaves like a senior engineer, not a random code generator.
+Bộ Skill OS cung cấp **23 kỹ năng chuyên biệt**, chia làm 3 nhóm chính:
+- 🛠️ **Engineering Core (8 skills):** Agent Orchestrator (Lên kế hoạch), Context Manager, Project Audit, Bug Fix, Refactor, API Integration, Migration, Git Engineer.
+- 🎨 **Frontend (11 skills):** Frontend Architecture, Design System, UI Builder, Component Generator, State Management, Form Builder, Table CRUD, Debug, Testing, Performance, A11Y Audit.
+- ⚙️ **Backend (4 skills):** Backend Architecture, Database Engineer, Auth & Security, Deployment (DevOps).
 
-**VI:** Bộ skill có cấu trúc biến AI coding agent thành các vai trò kỹ sư chuyên biệt. Mỗi skill định nghĩa workflow, phạm vi, quy tắc và định dạng output rõ ràng — để AI hoạt động nhất quán như senior engineer, không phải code generator tùy tiện.
+👉 [Xem chi tiết chức năng của toàn bộ 23 Skills tại đây](docs/CHI_TIET_SKILLS.md)
 
 ---
 
-## Skill Map / Sơ đồ Skill
+## 📦 Cài đặt (Installation)
 
+Bạn có thể cài đặt bộ Skill này vào bất kỳ dự án nào cực kỳ nhanh chóng qua NPM hoặc Git.
+
+### Cách 1: Sử dụng NPM (Khuyên dùng)
+Mở terminal tại thư mục gốc dự án của bạn và chạy:
+```bash
+npx ai-developer-skill-os init
 ```
-agent-orchestrator  →  Plan only. Routes work to correct skills.
-context-manager     →  Understands project structure. Manages what to read.
-project-audit       →  Diagnoses codebase before any changes.
-         ↓
-frontend-architecture  →  Decides file placement and folder conventions.
-design-system          →  Enforces component library usage.
-         ↓
-ui-builder · component-generator · form-builder · table-crud-generator
-         ↓
-api-integration    →  FE ↔ BE contract layer.
-state-management   →  Chooses correct state strategy.
-         ↓
-bug-fix · frontend-debug · refactor · migration
-         ↓
-frontend-testing · accessibility-audit · frontend-performance
-         ↓
-git-engineer       →  Commit, PR, changelog, release.
+*Lệnh này sẽ tự động tải và khởi tạo thư mục `rules-skill/` chứa toàn bộ kỹ năng vào dự án của bạn.*
+
+### Cách 2: Sử dụng Git Submodule
+Nếu bạn không dùng Node.js, bạn có thể nhúng trực tiếp qua Git:
+```bash
+git submodule add https://github.com/phamquangkhanh2999/ai-developer-skill-os.git rules-skill
 ```
 
 ---
 
-## Skills / Danh sách Skill
+## 🛠️ Cấu hình cho IDE / AI Agent
 
-### Engineering (8 skills)
-| Skill | Purpose |
-|-------|---------|
-| `agent-orchestrator` | Plans tasks, routes to correct skills — never writes code |
-| `context-manager` | Selects relevant files, summarizes architecture |
-| `project-audit` | Full codebase health check (Quick / Standard / Full mode) |
-| `bug-fix` | Diagnose and fix specific bugs with evidence |
-| `refactor` | Safe restructuring without breaking behavior |
-| `api-integration` | Build production-ready API integration layers |
-| `migration` | Dependency upgrades and framework migrations |
-| `git-engineer` | Commit messages, PR descriptions, changelogs |
+Sau khi thư mục `rules-skill/` đã xuất hiện trong dự án của bạn, hãy cấu hình để AI biết cách sử dụng nó.
 
-### Frontend (11 skills)
-| Skill | Purpose |
-|-------|---------|
-| `frontend-architecture` | Folder structure, file placement conventions |
-| `design-system` | Enforce component library — no raw HTML elements |
-| `ui-builder` | Build UI screens from requirements |
-| `component-generator` | Generate typed, reusable components |
-| `state-management` | Choose and implement correct state layer |
-| `form-builder` | Forms with schema validation and error handling |
-| `table-crud-generator` | Admin tables with pagination, filter, sort, CRUD |
-| `frontend-debug` | React errors, hydration, state, CSS issues |
-| `frontend-testing` | Unit, component, and e2e tests |
-| `frontend-performance` | Bundle, render, lazy load optimization |
-| `accessibility-audit` | ARIA, contrast, keyboard, mobile accessibility |
-
-### Backend (4 skills)
-| Skill | Purpose |
-|-------|---------|
-| `backend-architecture` | Service / controller / repository pattern |
-| `database-engineer` | Schema design, migrations, indexing |
-| `auth-security` | JWT, OAuth, RBAC implementation |
-| `deployment` | CI/CD, Docker, environment configuration |
-
----
-
-## Installation / Cài đặt
-
-### Antigravity / Gemini IDE
-
-Place this folder in your `.agents/skills/` directory:
-
-```
-your-project/
-└── .agents/
-    └── skills/        ← copy the `skills/` folder here
-        ├── engineering/
-        ├── frontend/
-        └── backend/
-```
-
-Or register globally in `C:\Users\<you>\.gemini\config\skills\`.
-
-### Claude Code / Kilo Code / Cursor
-
-Reference skills from your project rules file (`.cursorrules`, `CLAUDE.md`, etc.):
-
+### Cho Cursor / Windsurf (AI Code Editors)
+Tạo file `.cursorrules` (nếu dùng Cursor) hoặc `.windsurfrules` (nếu dùng Windsurf) ở gốc dự án và dán đoạn sau vào:
 ```md
-Use skills from: ./rules-skill/skills/
-When the user requests [task], load the appropriate SKILL.md and follow it precisely.
+# AI Developer Skill OS by Quang Khánh
+
+When answering or generating code, you MUST act as an expert engineer using the skills defined in `./rules-skill/skills.json`.
+Always read the relevant `SKILL.md` from `./rules-skill/skills/` before providing a solution.
+Speak to me in Vietnamese, but write all code in English.
+```
+
+### Cho Claude Code / Kilo Code (CLI Agents)
+Tạo file `CLAUDE.md` (hoặc `KILO.md`) ở gốc dự án và dán đoạn sau vào:
+```md
+# System Instructions
+Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
+
+Vui lòng tìm đọc danh sách kỹ năng tại file `./rules-skill/skills.json`.
+Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md` tương ứng trong thư mục `./rules-skill/skills/` để biết quy trình làm việc chuẩn.
+Luôn giao tiếp bằng tiếng Việt nhưng viết code, đặt tên biến, comment trong code bằng tiếng Anh.
 ```
 
 ---
 
-## Language / Ngôn ngữ
+## 🚀 Cách sử dụng (Usage)
 
-| Layer | Language |
-|-------|----------|
-| SKILL.md content | 🇬🇧 English |
-| Code, identifiers | 🇬🇧 English always |
-| AI responses | Matches user's language automatically |
-| README, docs | 🇬🇧 English + 🇻🇳 Vietnamese |
+Giờ đây bạn chỉ cần chat với AI như giao việc cho một kỹ sư thật sự. Không cần viết prompt dài dòng!
 
----
+- **Nhờ AI lên kế hoạch:** *"Dự án này đang cần thêm tính năng Đăng nhập. Cậu lên kế hoạch giúp mình nhé."* (Kích hoạt `agent-orchestrator`)
+- **Fix lỗi:** *"Bị lỗi Hydration error trên Next.js rồi. Fix giúp mình."* (Kích hoạt `bug-fix` / `frontend-debug`)
+- **Audit Code:** *"Audit nhanh cho tôi thư mục src/components/ xem có vấn đề gì không."* (Kích hoạt `project-audit`)
 
-## Contributing / Đóng góp
-
-1. Copy `_template/SKILL.md`
-2. Fill in all sections (Trigger, Scope, Non-goals, Workflow, Decision Tree, Output Format, Validation, Examples)
-3. Add to `skills.json` with `trigger[]` and `dependencies[]`
-4. Add to correct category folder under `skills/`
+👉 [Đọc Hướng Dẫn Sử Dụng chi tiết tại đây](docs/HUONG_DAN_SU_DUNG.md)
 
 ---
 
-## Version / Phiên bản
-
-**v1.0.0** — Initial release.
-Engineering foundation + Frontend core complete.
-
----
-
-*Tác giả: Quang Khánh*
-*Được xây dựng cho cộng đồng AI engineering.*
+## 📄 License
+Được phát hành dưới giấy phép [MIT](LICENSE). Tự do sử dụng, chỉnh sửa và chia sẻ.
