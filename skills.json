@@ -3,8 +3,8 @@
   "name": "AI Developer Skill OS",
   "description": "Multi-agent skill package for AI coding agents — Engineering + Frontend + Backend",
   "language": "en",
-  "author": "AI Developer Skill OS",
-  "homepage": "https://github.com/your-repo/ai-developer-skill-os",
+  "author": "Quang Khánh",
+  "homepage": "https://github.com/phamquangkhanh2999/rules-skill-ai.git",
   "skills": [
     {
       "name": "agent-orchestrator",
@@ -22,8 +22,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Phân tích yêu cầu, lên kế hoạch thực thi chi tiết và điều phối các tác vụ cho đúng skill. Không tự viết code."
     },
     {
       "name": "context-manager",
@@ -40,8 +47,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xác định các file cần thiết, tóm tắt kiến trúc và quản lý bộ nhớ ngữ cảnh để tránh tràn bộ nhớ."
     },
     {
       "name": "project-audit",
@@ -59,10 +73,19 @@
         "find issues",
         "code review"
       ],
-      "dependencies": ["context-manager"],
+      "dependencies": [
+        "context-manager"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm toán toàn bộ dự án để phát hiện bug ẩn, rủi ro bảo mật, vấn đề hiệu năng và nợ kỹ thuật trước khi sửa code."
     },
     {
       "name": "bug-fix",
@@ -82,8 +105,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "migrating"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "migrating",
+      "description": "Chẩn đoán và sửa lỗi an toàn. Tái hiện lỗi, tìm nguyên nhân gốc rễ và áp dụng bản sửa lỗi tối thiểu, có kiểm chứng."
     },
     {
       "name": "refactor",
@@ -99,10 +129,19 @@
         "too messy",
         "hard to maintain"
       ],
-      "dependencies": ["project-audit"],
+      "dependencies": [
+        "project-audit"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài."
     },
     {
       "name": "api-integration",
@@ -122,8 +161,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "migrating"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "migrating",
+      "description": "Chuyển đổi tài liệu API (curl, swagger...) thành code tích hợp frontend chuẩn xác, có type an toàn và xử lý lỗi."
     },
     {
       "name": "migration",
@@ -140,10 +186,19 @@
         "npm update",
         "library replacement"
       ],
-      "dependencies": ["project-audit"],
+      "dependencies": [
+        "project-audit"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Nâng cấp dependency, chuyển đổi framework và thay thế thư viện một cách an toàn với chiến lược không downtime."
     },
     {
       "name": "git-engineer",
@@ -161,8 +216,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Viết commit message chuẩn Conventional Commits, mô tả Pull Request, Changelog và Release Notes chuyên nghiệp."
     },
     {
       "name": "frontend-architecture",
@@ -177,10 +239,19 @@
         "how to organize",
         "which directory"
       ],
-      "dependencies": ["context-manager"],
+      "dependencies": [
+        "context-manager"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Phân tích cấu trúc thư mục frontend và quyết định vị trí đặt file chuẩn xác theo kiến trúc hiện tại."
     },
     {
       "name": "design-system",
@@ -196,10 +267,19 @@
         "UI tokens",
         "theme"
       ],
-      "dependencies": ["frontend-architecture"],
+      "dependencies": [
+        "frontend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Ép buộc sử dụng design system, component library và token hiện có, ngăn chặn việc viết HTML/CSS rác."
     },
     {
       "name": "ui-builder",
@@ -216,10 +296,20 @@
         "new view",
         "implement UI"
       ],
-      "dependencies": ["design-system", "frontend-architecture"],
+      "dependencies": [
+        "design-system",
+        "frontend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xây dựng các màn hình và layout phức tạp từ yêu cầu, tái sử dụng component và đảm bảo responsive."
     },
     {
       "name": "component-generator",
@@ -233,10 +323,20 @@
         "generate component",
         "add reusable"
       ],
-      "dependencies": ["design-system", "frontend-architecture"],
+      "dependencies": [
+        "design-system",
+        "frontend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tạo các UI Component độc lập, tái sử dụng được, có type an toàn và tuân thủ chuẩn design system."
     },
     {
       "name": "state-management",
@@ -253,10 +353,19 @@
         "store",
         "context"
       ],
-      "dependencies": ["frontend-architecture"],
+      "dependencies": [
+        "frontend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xác định và triển khai chiến lược quản lý state phù hợp (Zustand, Redux, React Query, Local State)."
     },
     {
       "name": "form-builder",
@@ -273,10 +382,20 @@
         "react hook form",
         "zod schema"
       ],
-      "dependencies": ["design-system", "component-generator"],
+      "dependencies": [
+        "design-system",
+        "component-generator"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Xây dựng Form chuẩn xác với quản lý trạng thái, validate dữ liệu (Zod, Yup) và xử lý hiển thị lỗi."
     },
     {
       "name": "table-crud-generator",
@@ -293,10 +412,20 @@
         "filter table",
         "sort column"
       ],
-      "dependencies": ["design-system", "api-integration"],
+      "dependencies": [
+        "design-system",
+        "api-integration"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tạo các bảng dữ liệu admin với đầy đủ tính năng phân trang, sắp xếp, lọc và thao tác thêm/sửa/xóa (CRUD)."
     },
     {
       "name": "frontend-debug",
@@ -315,8 +444,15 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Chẩn đoán và sửa các lỗi đặc thù frontend như Hydration error, infinite re-render, stale closure và vỡ CSS."
     },
     {
       "name": "frontend-testing",
@@ -333,10 +469,19 @@
         "vitest",
         "testing library"
       ],
-      "dependencies": ["component-generator"],
+      "dependencies": [
+        "component-generator"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Viết Unit, Component và E2E test bằng Jest, Vitest, RTL, Cypress. Tập trung vào hành vi người dùng."
     },
     {
       "name": "frontend-performance",
@@ -352,10 +497,19 @@
         "lazy load",
         "optimize"
       ],
-      "dependencies": ["project-audit"],
+      "dependencies": [
+        "project-audit"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tối ưu hóa hiệu năng frontend: giảm kích thước bundle, chặn re-render thừa, lazy load và cải thiện Web Vitals."
     },
     {
       "name": "accessibility-audit",
@@ -371,10 +525,19 @@
         "keyboard navigation",
         "contrast"
       ],
-      "dependencies": ["ui-builder"],
+      "dependencies": [
+        "ui-builder"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm tra và sửa lỗi khả năng tiếp cận (a11y/WCAG). Đảm bảo hỗ trợ phím, screen reader và semantic HTML."
     },
     {
       "name": "backend-architecture",
@@ -389,10 +552,19 @@
         "repository pattern",
         "clean architecture"
       ],
-      "dependencies": ["context-manager"],
+      "dependencies": [
+        "context-manager"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Kiểm soát cấu trúc backend, ép buộc tuân thủ mô hình Layer (Controller/Service/Repository) và vị trí file."
     },
     {
       "name": "database-engineer",
@@ -410,10 +582,19 @@
         "drizzle",
         "sql"
       ],
-      "dependencies": ["backend-architecture"],
+      "dependencies": [
+        "backend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Thiết kế database schema, viết script migration và tối ưu truy vấn cho SQL/NoSQL bằng ORM (Prisma, Drizzle...)."
     },
     {
       "name": "auth-security",
@@ -430,10 +611,19 @@
         "login system",
         "security"
       ],
-      "dependencies": ["backend-architecture"],
+      "dependencies": [
+        "backend-architecture"
+      ],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Triển khai tính năng đăng nhập (JWT, OAuth), phân quyền (RBAC) và bảo vệ app khỏi các lỗ hổng OWASP."
     },
     {
       "name": "deployment",
@@ -452,13 +642,26 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
-      "status": "planned"
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Cấu hình CI/CD pipelines, tạo Dockerfile và thiết lập môi trường để deploy lên Vercel, AWS hoặc VPS."
     }
   ],
   "entries": [
-    { "path": "skills/engineering/" },
-    { "path": "skills/frontend/" },
-    { "path": "skills/backend/" }
+    {
+      "path": "skills/engineering/"
+    },
+    {
+      "path": "skills/frontend/"
+    },
+    {
+      "path": "skills/backend/"
+    }
   ]
 }

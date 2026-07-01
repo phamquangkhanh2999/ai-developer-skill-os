@@ -1,9 +1,7 @@
 ---
 name: agent-orchestrator
 description: >-
-  Analyze a user request and create a structured execution plan by selecting
-  and sequencing the correct skills. Routes work to specialized skills.
-  Never writes code directly.
+  Phân tích yêu cầu, lên kế hoạch thực thi chi tiết và điều phối các tác vụ cho đúng skill. Không tự viết code.
 version: 1.0.0
 category: engineering
 tags: [orchestration, planning, workflow, task-decomposition]

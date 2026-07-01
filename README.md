@@ -3,7 +3,12 @@
 **A multi-agent skill package for AI coding assistants.**
 Bộ skill package đa nền tảng cho AI coding assistant.
 
+> Tác giả: **Quang Khánh**
 > Compatible with: **Claude Code · Kilo Code · Antigravity/Gemini IDE · Cursor · Windsurf**
+
+📚 **Tài liệu hữu ích:**
+- [Hướng dẫn sử dụng](file:///docs/HUONG_DAN_SU_DUNG.md)
+- [Chi tiết toàn bộ Skills (Tiếng Việt)](file:///docs/CHI_TIET_SKILLS.md)
 
 ---
 
@@ -133,5 +138,5 @@ Engineering foundation + Frontend core complete.
 
 ---
 
-*Built for the AI engineering community.*
+*Tác giả: Quang Khánh*
 *Được xây dựng cho cộng đồng AI engineering.*

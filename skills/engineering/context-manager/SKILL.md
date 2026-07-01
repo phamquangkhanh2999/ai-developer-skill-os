@@ -1,9 +1,7 @@
 ---
 name: context-manager
 description: >-
-  Determine which files and modules are relevant to the current task.
-  Summarize project architecture, maintain working memory across turns,
-  and prevent unnecessary context loading in large codebases.
+  Xác định các file cần thiết, tóm tắt kiến trúc và quản lý bộ nhớ ngữ cảnh để tránh tràn bộ nhớ.
 version: 1.0.0
 category: engineering
 tags: [context, architecture, memory, file-selection, summarization]
