@@ -7,6 +7,30 @@
   "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os.git",
   "skills": [
     {
+      "name": "qk-help",
+      "path": "skills/qk-help/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "help",
+        "list skills",
+        "show tips",
+        "danh sách skill"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "antigravity",
+        "claude-code",
+        "kilo-code",
+        "cursor",
+        "windsurf"
+      ],
+      "status": "planned",
+      "description": "Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo kết hợp để code hiệu quả."
+    },
+    {
       "name": "qk-agent-orchestrator",
       "path": "skills/qk-agent-orchestrator/SKILL.md",
       "version": "1.0.0",
