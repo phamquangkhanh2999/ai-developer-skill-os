@@ -1,0 +1,464 @@
+{
+  "version": "1.0.0",
+  "name": "AI Developer Skill OS",
+  "description": "Multi-agent skill package for AI coding agents — Engineering + Frontend + Backend",
+  "language": "en",
+  "author": "AI Developer Skill OS",
+  "homepage": "https://github.com/your-repo/ai-developer-skill-os",
+  "skills": [
+    {
+      "name": "agent-orchestrator",
+      "path": "skills/engineering/agent-orchestrator/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "plan this task",
+        "how should I approach",
+        "what should I do first",
+        "help me organize",
+        "break down this task",
+        "where do I start"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "context-manager",
+      "path": "skills/engineering/context-manager/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "what files should I read",
+        "summarize the project",
+        "understand codebase",
+        "project overview",
+        "what is the architecture"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "project-audit",
+      "path": "skills/engineering/project-audit/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "audit",
+        "review the codebase",
+        "check for bugs",
+        "health check",
+        "analyze project",
+        "what's wrong with",
+        "find issues",
+        "code review"
+      ],
+      "dependencies": ["context-manager"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "bug-fix",
+      "path": "skills/engineering/bug-fix/SKILL.md",
+      "version": "2.0.0",
+      "category": "engineering",
+      "priority": "P0",
+      "trigger": [
+        "fix this bug",
+        "it's broken",
+        "error",
+        "exception",
+        "crash",
+        "not working",
+        "stack trace",
+        "fails"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "migrating"
+    },
+    {
+      "name": "refactor",
+      "path": "skills/engineering/refactor/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "refactor",
+        "clean up",
+        "restructure",
+        "improve code quality",
+        "too messy",
+        "hard to maintain"
+      ],
+      "dependencies": ["project-audit"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "api-integration",
+      "path": "skills/engineering/api-integration/SKILL.md",
+      "version": "2.0.0",
+      "category": "engineering",
+      "priority": "P1",
+      "trigger": [
+        "integrate API",
+        "call endpoint",
+        "curl",
+        "swagger",
+        "openapi",
+        "fetch data from",
+        "connect to backend",
+        "api layer"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "migrating"
+    },
+    {
+      "name": "migration",
+      "path": "skills/engineering/migration/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "upgrade",
+        "migrate",
+        "update dependencies",
+        "breaking change",
+        "version bump",
+        "npm update",
+        "library replacement"
+      ],
+      "dependencies": ["project-audit"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "git-engineer",
+      "path": "skills/engineering/git-engineer/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "priority": "P2",
+      "trigger": [
+        "commit",
+        "write PR",
+        "pull request",
+        "changelog",
+        "release notes",
+        "git"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "frontend-architecture",
+      "path": "skills/frontend/frontend-architecture/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "where should I put this file",
+        "folder structure",
+        "project structure",
+        "how to organize",
+        "which directory"
+      ],
+      "dependencies": ["context-manager"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "design-system",
+      "path": "skills/frontend/design-system/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "use button component",
+        "design system",
+        "component library",
+        "which component to use",
+        "UI tokens",
+        "theme"
+      ],
+      "dependencies": ["frontend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "ui-builder",
+      "path": "skills/frontend/ui-builder/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "create page",
+        "build UI",
+        "add screen",
+        "design layout",
+        "make a form",
+        "new view",
+        "implement UI"
+      ],
+      "dependencies": ["design-system", "frontend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "component-generator",
+      "path": "skills/frontend/component-generator/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P1",
+      "trigger": [
+        "create component",
+        "new component",
+        "generate component",
+        "add reusable"
+      ],
+      "dependencies": ["design-system", "frontend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "state-management",
+      "path": "skills/frontend/state-management/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "state",
+        "zustand",
+        "redux",
+        "react query",
+        "global state",
+        "store",
+        "context"
+      ],
+      "dependencies": ["frontend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "form-builder",
+      "path": "skills/frontend/form-builder/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "build form",
+        "create form",
+        "form validation",
+        "login form",
+        "edit form",
+        "react hook form",
+        "zod schema"
+      ],
+      "dependencies": ["design-system", "component-generator"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "table-crud-generator",
+      "path": "skills/frontend/table-crud-generator/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "data table",
+        "list screen",
+        "CRUD",
+        "admin table",
+        "pagination",
+        "filter table",
+        "sort column"
+      ],
+      "dependencies": ["design-system", "api-integration"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "frontend-debug",
+      "path": "skills/frontend/frontend-debug/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "react error",
+        "hydration error",
+        "component not rendering",
+        "state not updating",
+        "infinite rerender",
+        "UI bug",
+        "CSS issue"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "frontend-testing",
+      "path": "skills/frontend/frontend-testing/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "write test",
+        "unit test",
+        "component test",
+        "e2e",
+        "jest",
+        "vitest",
+        "testing library"
+      ],
+      "dependencies": ["component-generator"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "frontend-performance",
+      "path": "skills/frontend/frontend-performance/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "slow rendering",
+        "performance",
+        "bundle size",
+        "too many rerenders",
+        "lazy load",
+        "optimize"
+      ],
+      "dependencies": ["project-audit"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "accessibility-audit",
+      "path": "skills/frontend/accessibility-audit/SKILL.md",
+      "version": "1.0.0",
+      "category": "frontend",
+      "priority": "P2",
+      "trigger": [
+        "accessibility",
+        "a11y",
+        "aria",
+        "screen reader",
+        "keyboard navigation",
+        "contrast"
+      ],
+      "dependencies": ["ui-builder"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "backend-architecture",
+      "path": "skills/backend/backend-architecture/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "backend structure",
+        "service layer",
+        "controller",
+        "repository pattern",
+        "clean architecture"
+      ],
+      "dependencies": ["context-manager"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "database-engineer",
+      "path": "skills/backend/database-engineer/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "schema",
+        "migration",
+        "database",
+        "query",
+        "index",
+        "prisma",
+        "drizzle",
+        "sql"
+      ],
+      "dependencies": ["backend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "auth-security",
+      "path": "skills/backend/auth-security/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "authentication",
+        "authorization",
+        "JWT",
+        "OAuth",
+        "RBAC",
+        "login system",
+        "security"
+      ],
+      "dependencies": ["backend-architecture"],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    },
+    {
+      "name": "deployment",
+      "path": "skills/backend/deployment/SKILL.md",
+      "version": "1.0.0",
+      "category": "backend",
+      "priority": "P3",
+      "trigger": [
+        "deploy",
+        "CI/CD",
+        "docker",
+        "kubernetes",
+        "pipeline",
+        "release",
+        "environment"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": ["antigravity", "claude-code", "kilo-code", "cursor", "windsurf"],
+      "status": "planned"
+    }
+  ],
+  "entries": [
+    { "path": "skills/engineering/" },
+    { "path": "skills/frontend/" },
+    { "path": "skills/backend/" }
+  ]
+}
