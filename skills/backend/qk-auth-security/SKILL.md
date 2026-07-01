@@ -1,5 +1,5 @@
 ---
-name: auth-security
+name: qk-
 description: >-
   Triển khai tính năng đăng nhập (JWT, OAuth), phân quyền (RBAC) và bảo vệ app khỏi các lỗ hổng OWASP.
 version: 1.0.0

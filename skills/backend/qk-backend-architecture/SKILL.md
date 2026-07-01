@@ -1,5 +1,5 @@
 ---
-name: backend-architecture
+name: qk-
 description: >-
   Kiểm soát cấu trúc backend, ép buộc tuân thủ mô hình Layer (Controller/Service/Repository) và vị trí file.
 version: 1.0.0
