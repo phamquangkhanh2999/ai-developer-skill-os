@@ -1,5 +1,5 @@
 ---
-name: deployment
+name: qk-deployment
 description: >-
   Cấu hình CI/CD pipelines, tạo Dockerfile và thiết lập môi trường để deploy lên Vercel, AWS hoặc VPS.
 version: 1.0.0

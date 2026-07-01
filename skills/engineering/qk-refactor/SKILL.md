@@ -1,5 +1,5 @@
 ---
-name: refactor
+name: qk-refactor
 description: >-
   Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài.
 version: 1.0.0

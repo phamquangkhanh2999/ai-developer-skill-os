@@ -1,5 +1,5 @@
 ---
-name: context-manager
+name: qk-context-manager
 description: >-
   Xác định các file cần thiết, tóm tắt kiến trúc và quản lý bộ nhớ ngữ cảnh để tránh tràn bộ nhớ.
 version: 1.0.0

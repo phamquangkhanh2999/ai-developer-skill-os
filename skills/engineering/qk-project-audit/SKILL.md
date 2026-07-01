@@ -1,5 +1,5 @@
 ---
-name: project-audit
+name: qk-project-audit
 description: >-
   Kiểm toán toàn bộ dự án để phát hiện bug ẩn, rủi ro bảo mật, vấn đề hiệu năng và nợ kỹ thuật trước khi sửa code.
 version: 1.0.0

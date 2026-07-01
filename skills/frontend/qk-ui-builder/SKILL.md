@@ -1,5 +1,5 @@
 ---
-name: ui-builder
+name: qk-ui-builder
 description: >-
   Xây dựng các màn hình và layout phức tạp từ yêu cầu, tái sử dụng component và đảm bảo responsive.
 version: 1.0.0

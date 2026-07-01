@@ -1,5 +1,5 @@
 ---
-name: migration
+name: qk-migration
 description: >-
   Nâng cấp dependency, chuyển đổi framework và thay thế thư viện một cách an toàn với chiến lược không downtime.
 version: 1.0.0

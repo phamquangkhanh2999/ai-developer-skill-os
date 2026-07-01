@@ -1,5 +1,5 @@
 ---
-name: frontend-testing
+name: qk-frontend-testing
 description: >-
   Viết Unit, Component và E2E test bằng Jest, Vitest, RTL, Cypress. Tập trung vào hành vi người dùng.
 version: 1.0.0
