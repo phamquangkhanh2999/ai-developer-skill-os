@@ -11,8 +11,9 @@ platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 # Design System Enforcer
 
 > **Language rule:**
-> Use **English** for: component names, CSS classes, design tokens, technical terms.
-> Use **the user's language** for: explanations, summaries, and questions.
+> Use English for: code, identifiers, file names, architecture terms, technical decisions.
+> Use the user's language for: explanations, questions, summaries, and feedback.
+> The user may write in any language — detect and match it automatically.
 
 ---
 

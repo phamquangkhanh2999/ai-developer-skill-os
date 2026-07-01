@@ -5,6 +5,11 @@ All notable changes to the **AI Developer Skill OS** project will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-07-01
+### Fixed
+- Standardized Language rule across all 23 SKILL.md files for consistency.
+- Updated registry version to match package.json.
+
 ## [1.0.0] - 2026-07-01
 
 ### Added

@@ -11,8 +11,9 @@ platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 # State Management
 
 > **Language rule:**
-> Use **English** for: code, store names, action types, library names.
-> Use **the user's language** for: explanations, summaries, and questions.
+> Use English for: code, identifiers, file names, architecture terms, technical decisions.
+> Use the user's language for: explanations, questions, summaries, and feedback.
+> The user may write in any language — detect and match it automatically.
 
 ---
 

@@ -11,8 +11,9 @@ platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 # Project Audit
 
 > **Language rule:**
-> Use **English** for: code references, file paths, severity labels, technical terms.
-> Use **the user's language** for: explanations, questions, and report summaries.
+> Use English for: code, identifiers, file names, architecture terms, technical decisions.
+> Use the user's language for: explanations, questions, summaries, and feedback.
+> The user may write in any language — detect and match it automatically.
 
 > ⚠️ **CRITICAL: Do NOT modify any code during audit.**
 > The audit produces a report. Changes happen only after the user reviews and approves.

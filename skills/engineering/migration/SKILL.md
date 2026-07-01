@@ -11,8 +11,9 @@ platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 # Migration & Dependency Upgrade
 
 > **Language rule:**
-> Use **English** for: package names, version numbers, commands, config keys, technical terms.
-> Use **the user's language** for: explanations, risk summaries, and step-by-step instructions.
+> Use English for: code, identifiers, file names, architecture terms, technical decisions.
+> Use the user's language for: explanations, questions, summaries, and feedback.
+> The user may write in any language — detect and match it automatically.
 
 > ⚠️ **Always create a rollback plan before starting any migration.**
 > Never apply breaking upgrades to production without a verified fallback.

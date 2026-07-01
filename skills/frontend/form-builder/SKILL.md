@@ -11,8 +11,9 @@ platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 # Form Builder
 
 > **Language rule:**
-> Use **English** for: field names, validation rules, code, technical concepts.
-> Use **the user's language** for: explanations, error message text (unless specified otherwise), and summaries.
+> Use English for: code, identifiers, file names, architecture terms, technical decisions.
+> Use the user's language for: explanations, questions, summaries, and feedback.
+> The user may write in any language — detect and match it automatically.
 
 ---
 

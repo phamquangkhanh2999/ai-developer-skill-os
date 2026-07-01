@@ -1,7 +1,7 @@
 # Chi Tiết 23 Skills — AI Developer Skill OS
 
 **Tác giả:** Quang Khánh  
-**Phiên bản:** v1.0.0
+**Phiên bản:** v1.0.1
 
 Tài liệu này giải thích chi tiết chức năng của từng Skill trong bộ Skill OS.
 AI sẽ đọc mô tả (description) bằng tiếng Anh để nhận diện, nhưng bạn có thể đọc tài liệu tiếng Việt này để hiểu AI có thể làm được gì.
