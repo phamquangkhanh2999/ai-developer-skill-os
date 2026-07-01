@@ -24,6 +24,23 @@ function copyRecursiveSync(src, dest) {
   }
 }
 
+function cleanOldSkills(targetSkillsDir, isGeminiGlobal) {
+  if (fs.existsSync(targetSkillsDir)) {
+    console.log('🧹 Đang dọn dẹp phiên bản cũ để tối ưu hệ thống...');
+    if (isGeminiGlobal) {
+      // Chỉ xoá các thư mục qk-* để không ảnh hưởng các skill khác của người dùng
+      fs.readdirSync(targetSkillsDir).forEach(item => {
+        if (item.startsWith('qk-')) {
+          fs.rmSync(path.join(targetSkillsDir, item), { recursive: true, force: true });
+        }
+      });
+    } else {
+      // Xoá sạch toàn bộ thư mục kỹ năng của bộ công cụ này
+      fs.rmSync(targetSkillsDir, { recursive: true, force: true });
+    }
+  }
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -111,6 +128,9 @@ Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải
       if (!fs.existsSync(targetDir)) {
         fs.mkdirSync(targetDir, { recursive: true });
       }
+
+      const targetSkillsDir = path.join(targetDir, 'skills');
+      cleanOldSkills(targetSkillsDir, isGemini && isGlobal);
 
       const filesAndFolders = [
         'skills', '_template', 'docs', 'skills.json', 'README.md', 'CHANGELOG.md', 'LICENSE'
