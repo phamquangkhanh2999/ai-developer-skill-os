@@ -1,0 +1,34 @@
+{
+  "name": "ai-developer-skill-os",
+  "version": "1.0.0",
+  "description": "Multi-agent skill package cho AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 23 skills chuyên nghiệp.",
+  "main": "bin/install.js",
+  "bin": {
+    "ai-developer-skill-os": "bin/install.js",
+    "ai-skill": "bin/install.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
+  },
+  "keywords": [
+    "ai",
+    "claude",
+    "cursor",
+    "windsurf",
+    "skills",
+    "developer",
+    "agent",
+    "prompts",
+    "framework"
+  ],
+  "author": "Quang Khánh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os/issues"
+  },
+  "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os#readme"
+}
