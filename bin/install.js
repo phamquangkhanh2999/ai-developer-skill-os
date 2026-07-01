@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const sourceDir = path.join(__dirname, '..');
-let targetDir = path.join(process.cwd(), 'rules-skill');
+let targetDir = path.join(process.cwd(), '.rules-skill');
 
 // Check arguments for IDE-specific paths
 const args = process.argv.slice(2);
@@ -35,7 +35,7 @@ console.log('🚀 Đang cài đặt AI Developer Skill OS...');
 if (isGemini) {
   console.log('⚙️ Chế độ: Gemini / Antigravity IDE (Cài vào thư mục .agents/skills/)');
 } else {
-  console.log('⚙️ Chế độ: Mặc định (Cài vào thư mục rules-skill/)');
+  console.log('⚙️ Chế độ: Mặc định (Cài vào thư mục .rules-skill/)');
 }
 
 const filesAndFolders = [
@@ -64,7 +64,7 @@ try {
   });
 
   console.log(`✅ Đã cài đặt thành công vào thư mục: ${targetDir.replace(process.cwd(), '.')}`);
-  console.log('\n💡 Tiếp theo, hãy tham khảo tài liệu trong mục docs/HUONG_DAN_SU_DUNG.md để biết cách tương tác với AI nhé!');
+  console.log('\n💡 Tiếp theo, hãy tham khảo tài liệu trong mục .rules-skill/docs/HUONG_DAN_SU_DUNG.md để biết cách tương tác với AI nhé!');
 } catch (error) {
   console.error('❌ Có lỗi xảy ra trong quá trình cài đặt:', error.message);
   process.exit(1);
