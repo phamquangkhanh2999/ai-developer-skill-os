@@ -1,6 +1,6 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Multi-agent skill package cho AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 23 skills chuyên nghiệp.",
   "main": "bin/install.js",
   "bin": {
