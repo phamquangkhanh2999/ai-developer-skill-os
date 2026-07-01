@@ -1,5 +1,5 @@
 ---
-name: form-builder
+name: qk-form-builder
 description: >-
   Xây dựng Form chuẩn xác với quản lý trạng thái, validate dữ liệu (Zod, Yup) và xử lý hiển thị lỗi.
 version: 1.0.0

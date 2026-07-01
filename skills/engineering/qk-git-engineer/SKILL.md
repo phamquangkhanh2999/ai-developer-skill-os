@@ -1,5 +1,5 @@
 ---
-name: git-engineer
+name: qk-git-engineer
 description: >-
   Viết commit message chuẩn Conventional Commits, mô tả Pull Request, Changelog và Release Notes chuyên nghiệp.
 version: 1.0.0

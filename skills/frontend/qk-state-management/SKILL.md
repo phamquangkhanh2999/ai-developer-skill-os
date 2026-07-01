@@ -1,5 +1,5 @@
 ---
-name: state-management
+name: qk-state-management
 description: >-
   Xác định và triển khai chiến lược quản lý state phù hợp (Zustand, Redux, React Query, Local State).
 version: 1.0.0

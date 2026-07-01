@@ -1,5 +1,5 @@
 ---
-name: api-integration
+name: qk-api-integration
 description: >-
   Chuyển đổi tài liệu API (curl, swagger...) thành code tích hợp frontend chuẩn xác, có type an toàn và xử lý lỗi.
 version: 2.0.0

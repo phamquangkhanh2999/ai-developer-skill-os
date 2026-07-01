@@ -1,5 +1,5 @@
 ---
-name: design-system
+name: qk-design-system
 description: >-
   Ép buộc sử dụng design system, component library và token hiện có, ngăn chặn việc viết HTML/CSS rác.
 version: 1.0.0

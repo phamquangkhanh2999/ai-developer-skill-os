@@ -1,5 +1,5 @@
 ---
-name: accessibility-audit
+name: qk-accessibility-audit
 description: >-
   Kiểm tra và sửa lỗi khả năng tiếp cận (a11y/WCAG). Đảm bảo hỗ trợ phím, screen reader và semantic HTML.
 version: 1.0.0

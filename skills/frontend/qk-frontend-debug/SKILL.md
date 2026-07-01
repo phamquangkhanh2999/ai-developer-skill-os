@@ -1,5 +1,5 @@
 ---
-name: frontend-debug
+name: qk-frontend-debug
 description: >-
   Chẩn đoán và sửa các lỗi đặc thù frontend như Hydration error, infinite re-render, stale closure và vỡ CSS.
 version: 1.0.0

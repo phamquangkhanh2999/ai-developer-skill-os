@@ -1,5 +1,5 @@
 ---
-name: bug-fix
+name: qk-bug-fix
 description: >-
   Chẩn đoán và sửa lỗi an toàn. Tái hiện lỗi, tìm nguyên nhân gốc rễ và áp dụng bản sửa lỗi tối thiểu, có kiểm chứng.
 version: 2.0.0

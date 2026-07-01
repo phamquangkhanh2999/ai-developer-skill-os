@@ -1,5 +1,5 @@
 ---
-name: frontend-architecture
+name: qk-frontend-architecture
 description: >-
   Phân tích cấu trúc thư mục frontend và quyết định vị trí đặt file chuẩn xác theo kiến trúc hiện tại.
 version: 1.0.0

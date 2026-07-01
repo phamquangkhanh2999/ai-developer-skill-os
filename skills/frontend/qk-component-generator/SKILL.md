@@ -1,5 +1,5 @@
 ---
-name: component-generator
+name: qk-component-generator
 description: >-
   Tạo các UI Component độc lập, tái sử dụng được, có type an toàn và tuân thủ chuẩn design system.
 version: 1.0.0

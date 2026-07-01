@@ -1,5 +1,5 @@
 ---
-name: table-crud-generator
+name: qk-table-crud-generator
 description: >-
   Tạo các bảng dữ liệu admin với đầy đủ tính năng phân trang, sắp xếp, lọc và thao tác thêm/sửa/xóa (CRUD).
 version: 1.0.0

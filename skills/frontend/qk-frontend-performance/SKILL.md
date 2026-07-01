@@ -1,5 +1,5 @@
 ---
-name: frontend-performance
+name: qk-frontend-performance
 description: >-
   Tối ưu hóa hiệu năng frontend: giảm kích thước bundle, chặn re-render thừa, lazy load và cải thiện Web Vitals.
 version: 1.0.0

@@ -1,5 +1,5 @@
 ---
-name: database-engineer
+name: qk-database-engineer
 description: >-
   Thiết kế database schema, viết script migration và tối ưu truy vấn cho SQL/NoSQL bằng ORM (Prisma, Drizzle...).
 version: 1.0.0

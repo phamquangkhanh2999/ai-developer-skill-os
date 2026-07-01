@@ -1,5 +1,5 @@
 ---
-name: agent-orchestrator
+name: qk-agent-orchestrator
 description: >-
   Phân tích yêu cầu, lên kế hoạch thực thi chi tiết và điều phối các tác vụ cho đúng skill. Không tự viết code.
 version: 1.0.0
