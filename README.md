@@ -30,12 +30,12 @@ Mở terminal tại thư mục gốc dự án của bạn và chạy:
 ```bash
 npx ai-developer-skill-os init
 ```
-*Lệnh này sẽ tự động tải và khởi tạo thư mục `.rules-skill/` chứa toàn bộ kỹ năng vào dự án của bạn.*
+*Lệnh này sẽ tự động tải và khởi tạo thư mục ẩn `.qk-ai-skill-os/` chứa toàn bộ kỹ năng vào dự án của bạn.*
 
 ### Cách 2: Sử dụng Git Submodule
 Nếu bạn không dùng Node.js, bạn có thể nhúng trực tiếp qua Git:
 ```bash
-git submodule add https://github.com/phamquangkhanh2999/ai-developer-skill-os.git rules-skill
+git submodule add https://github.com/phamquangkhanh2999/ai-developer-skill-os.git .qk-ai-skill-os
 ```
 
 ---
@@ -61,7 +61,7 @@ Speak to me in Vietnamese, but write all code in English.
 Tạo file `.clinerules`, `.roorules` hoặc `KILO.md` ở gốc dự án và dán nội dung:
 ```md
 Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
-Vui lòng tìm đọc danh sách kỹ năng tại file `./.rules-skill/skills.json`. Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md` tương ứng trong thư mục `./.rules-skill/skills/`.
+Vui lòng tìm đọc danh sách kỹ năng tại file `./.qk-ai-skill-os/skills.json`. Trước khi thực hiện bất kỳ yêu cầu nào, hãy gọi file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/skills/`.
 Luôn giao tiếp bằng tiếng Việt nhưng viết code bằng tiếng Anh.
 ```
 
