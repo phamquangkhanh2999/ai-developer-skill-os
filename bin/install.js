@@ -47,7 +47,7 @@ const questionText = `Vui lòng chọn IDE/AI Assistant bạn đang sử dụng 
 (2) Windsurf
 (3) Cline / Roo Code
 (4) Antigravity / Gemini
-(5) Codecx
+(5) Codex
 (6) Kilo Code
 (0) Bỏ qua (Không tạo file config)
 
@@ -66,7 +66,7 @@ rl.question(questionText, (answer) => {
       targetDir = path.join(process.cwd(), '.agents', 'skills');
       ruleFile = path.join('.agents', 'AGENTS.md');
       break;
-    case '5': ruleFile = '.codecxrules'; break;
+    case '5': ruleFile = '.codexrules'; break;
     case '6': ruleFile = '.kilorules'; break;
     case '0': 
     default:
