@@ -27,24 +27,21 @@ Bộ Skin này rất linh hoạt và được phân phối qua NPM để bạn c
 Mở terminal tại gốc dự án của bạn và chạy lệnh cài đặt tương ứng với công cụ AI bạn đang dùng:
 
 ### Dành cho Gemini IDE / Antigravity
-Các công cụ này đọc cấu hình từ thư mục `.agents/skills/`. Bạn chỉ cần thêm cờ `--gemini` khi chạy cài đặt:
-```bash
-npx ai-developer-skill-os init --gemini
-```
-*Lệnh này sẽ tự tạo thư mục `.agents/skills/` và tải toàn bộ bộ kỹ năng vào đó.*
+### 1. Cài đặt (Installation)
+> Khuyên dùng cách cài đặt qua NPM để luôn nhận được cấu trúc mới nhất và tận dụng tính năng Auto-Config.
 
-### Dành cho Cursor / Windsurf / Claude Code / Kilo Code
-Các công cụ này linh hoạt hơn, bạn cài đặt mặc định:
+Mở terminal tại thư mục gốc dự án của bạn và chạy lệnh sau:
 ```bash
 npx ai-developer-skill-os init
 ```
-*Lệnh này sẽ tạo thư mục `.qk-ai-skill-os/` ở gốc dự án.*
+Quá trình cài đặt sẽ hỏi bạn 2 câu quan trọng:
 
----
+**Câu 1: Bạn đang dùng IDE nào?**
+Hệ thống sẽ tự động tạo file cấu hình tương ứng (ví dụ `.cursorrules`, `.windsurfrules`, `.clinerules`) và bơm sẵn System Prompt vào để AI tự nhận diện các skill.
 
-## 3. Cấu hình cho IDE / AI Agent
-
-Sau khi thư mục kỹ năng đã xuất hiện trong dự án của bạn, hãy cấu hình để AI biết cách sử dụng nó.
+**Câu 2: Phạm vi cài đặt?**
+- **(1) Local:** Cài vào thư mục ẩn `.qk-ai-skill-os/` (hoặc `.agents/` cho Gemini) ngay trong dự án. Rất phù hợp nếu dự án có nhiều người làm chung, bạn có thể commit thư mục này lên Git để ai cũng có skill.
+- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Nếu bạn code một mình, hãy chọn tuỳ chọn này! Nó giúp bạn tiết kiệm dung lượng, và chỉ cần cài 1 lần là BẤT KỲ DỰ ÁN NÀO bạn mở lên, AI cũng tự động có đủ 23 kỹ năng (Đặc biệt siêu mượt với Antigravity/Gemini). nó.
 
 ### Cho Gemini IDE / Antigravity
 **Không cần cấu hình gì thêm!** Gemini/Antigravity sẽ tự động nhận diện các file trong `.agents/skills/` và sẵn sàng làm việc ngay.

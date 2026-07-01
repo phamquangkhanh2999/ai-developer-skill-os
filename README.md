@@ -35,10 +35,12 @@ Mở terminal tại thư mục gốc dự án của bạn và chạy:
 ```bash
 npx ai-developer-skill-os init
 ```
-*Lệnh này sẽ tự động tải và khởi tạo thư mục ẩn `.qk-ai-skill-os/` chứa toàn bộ kỹ năng vào dự án của bạn.*
+Hệ thống sẽ cung cấp cho bạn 2 tuỳ chọn cực kỳ linh hoạt:
+- **(1) Local:** Cài vào thư mục ẩn `.qk-ai-skill-os/` ngay trong dự án. (Phù hợp khi làm việc nhóm, commit lên Git để ai cũng xài được).
+- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Từ đó trở đi, bạn mở **BẤT KỲ DỰ ÁN NÀO** cũng sẽ tự động gọi được 23 kỹ năng mà không cần tải lại file! (Rất tuyệt vời cho cá nhân sử dụng).
 
 ### Cách 2: Sử dụng Git Submodule
-Nếu bạn không dùng Node.js, bạn có thể nhúng trực tiếp qua Git:
+Nếu bạn không dùng Node.js, bạn có thể nhúng trực tiếp qua Git (Chỉ hỗ trợ dạng Local):
 ```bash
 git submodule add https://github.com/phamquangkhanh2999/ai-developer-skill-os.git .qk-ai-skill-os
 ```
