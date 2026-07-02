@@ -1,8 +1,8 @@
 ---
 name: qk-feature-delivery
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Develop new features end-to-end (Frontend & Backend).
+description: Phát triển tính năng mới hoàn chỉnh từ Frontend đến Backend.
 category: engineering
 behavior: development
 intent: implement-feature
@@ -32,12 +32,13 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
    - Build the backend/API mock first (if applicable).
    - Build the UI component and bind the data.
 4. **Verify (Validation):**
-   - Check if the UI is responsive.
-   - Ensure the API handles edge cases (empty states, loading, error).
+   - **4 UI States:** Implement all 4 UI states: `Loading` (Skeleton/Spinner), `Success` (Data), `Error` (Fallback UI/Retry), and `Empty` (No data).
+   - Check if the UI is responsive (works well on Mobile & Desktop).
 
 ## 🛡️ 3. Constraints & Rules
 
 - **Contract First:** Always define the Type/Interface contract before writing the implementation logic.
+- **State Management:** Lift state to Global (Redux/Zustand/Context) only if 2 or more components outside the same parent/child tree need to share it. Do not abuse Global State.
 - **Component Reusability:** Do not create a new Button or Input if a Shared Component already exists in `src/components/shared/`.
 - **DRY (Don't Repeat Yourself):** Extract inline styles or duplicate logic into hooks/utilities.
 

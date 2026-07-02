@@ -1,15 +1,15 @@
 ---
 name: qk-docs
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Write and maintain human-readable project documentation.
+description: Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu.
 category: documentation
 behavior: static-analysis
 intent: maintain
 priority: low
-tags: [docs, markdown, jsdoc, readme]
+tags: [docs, markdown, jsdoc, readme, architecture, mermaid]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User asks to write docs, update the README, or generate JSDoc comments.
+trigger: User asks to write docs, generate architecture diagrams, update README, or write JSDoc.
 inputs: [Source code, Task context]
 outputs: [Markdown Documentation, JSDoc]
 allowed_tools: [read_file, write_to_file]
@@ -40,11 +40,13 @@ pipeline: [analyze, implement, validate, complete]
 ## 🌳 3. Decision Tree
 
 ```text
-Is this an API Documentation?
-  ├── YES → Use standard REST/GraphQL documentation layout (Endpoint, Method, Body, Response).
-  └── NO → Is it a Component Documentation?
-             ├── YES → Document the Props interface and usage examples.
-             └── NO → Write standard JSDoc.
+Is this a System Architecture or Flow?
+  ├── YES → Create Mermaid diagrams (Architecture, Sequence) and save to `/docs/`.
+  └── NO → Is this an API Documentation?
+             ├── YES → Use standard REST/GraphQL documentation layout (Endpoint, Method, Body, Response).
+             └── NO → Is it a Component Documentation?
+                        ├── YES → Document the Props interface and usage examples.
+                        └── NO → Write standard JSDoc or update README.
 ```
 
 ## 🤝 4. Handoff Pipeline

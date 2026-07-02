@@ -1,8 +1,8 @@
 ---
 name: qk-project-bootstrap
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Initialize a new project with best practices, linters, and folder structures.
+description: Khởi tạo dự án mới với các best practices, linters, và cấu trúc thư mục chuẩn.
 category: setup
 behavior: development
 intent: implement-feature

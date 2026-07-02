@@ -1,8 +1,8 @@
 ---
 name: qk-help
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Display the list of available skills and pro-tips.
+description: Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng.
 category: utilities
 behavior: static-analysis
 intent: review-code

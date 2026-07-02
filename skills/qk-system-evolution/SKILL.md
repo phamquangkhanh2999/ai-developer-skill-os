@@ -1,8 +1,8 @@
 ---
 name: qk-system-evolution
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Safely upgrade dependencies, migrate frameworks, and manage rollbacks.
+description: Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback.
 category: operations
 behavior: maintenance
 intent: maintain
@@ -29,9 +29,9 @@ pipeline: [analyze, plan, implement, validate, complete]
 2. **Plan (Rollback Strategy):**
    - Document the exact Git commands or NPM commands needed to revert the system if the upgrade fails completely.
 3. **Implement (Dry-Run & Upgrade):**
-   - Apply the dependency updates in `package.json`.
-   - Run Codemods (if provided by the library).
-   - Manually fix code affected by Breaking Changes.
+   - **Mandatory Dry Run:** Create a temporary branch (e.g., `git checkout -b upgrade-dry-run`).
+   - Update dependencies and run Codemods on this branch.
+   - Fix Breaking Changes and pass the Validation Gate. Merge only if safe.
 4. **Verify (System Test):**
    - Reinstall dependencies cleanly (`npm ci` or `yarn install`).
    - Run the build process to ensure the system compiles.

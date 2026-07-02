@@ -1,8 +1,8 @@
 ---
 name: qk-api-lifecycle
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Design, implement, and integrate API endpoints.
+description: Thiết kế, triển khai, và tích hợp các API endpoints.
 category: engineering
 behavior: development
 intent: implement-feature
@@ -31,6 +31,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
    - If Backend: Choose the appropriate layer (Controller -> Service -> Repository).
 3. **Execute (Implementation):**
    - Write the backend handler/controller with strict validation (e.g., Zod, Class Validator).
+   - **Security:** Integrate Auth Middleware (JWT/RBAC) before the Controller. DO NOT expose public endpoints unless explicitly requested.
    - Write the frontend API client (e.g., Axios instance wrapper).
 4. **Verify (Validation):**
    - Handle Error Status Codes (400, 401, 403, 404, 500) gracefully.
@@ -40,6 +41,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 
 - **No Hardcoded URLs:** Never hardcode `http://localhost:3000` inside frontend components. Always use environment variables (`process.env.API_URL`).
 - **Separation of Concerns:** Do NOT write `fetch` or `axios.get` directly inside a React UI component. Extract it to a custom hook or an API service file.
+- **Pagination & Rate Limit:** Any `GET` API returning a list MUST include Pagination by default to prevent server OOM.
 
 ## 🌳 3. Decision Tree
 

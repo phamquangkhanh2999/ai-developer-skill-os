@@ -1,8 +1,8 @@
 ---
 name: qk-access-policy
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Manage RBAC, ABAC, and security boundaries.
+description: Quản lý RBAC, ABAC và các ranh giới bảo mật.
 category: security
 behavior: static-analysis
 intent: review-code

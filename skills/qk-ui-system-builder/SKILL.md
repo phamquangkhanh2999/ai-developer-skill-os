@@ -1,8 +1,8 @@
 ---
 name: qk-ui-system-builder
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Build and maintain Design Systems, Token extraction, and shared UI libraries.
+description: Xây dựng và duy trì Design Systems, Token extraction, và các thư viện UI dùng chung.
 category: frontend
 behavior: development
 intent: implement-feature

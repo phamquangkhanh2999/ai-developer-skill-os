@@ -1,8 +1,8 @@
 ---
 name: qk-policy-engine
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Policy evaluation engine to ensure actions are authorized and safe.
+description: Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền.
 category: security
 behavior: static-analysis
 intent: review-code

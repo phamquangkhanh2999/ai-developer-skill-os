@@ -21,7 +21,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "high",
-      "tags": ["security", "rbac", "auth", "permissions"],
+      "tags": [
+        "security",
+        "rbac",
+        "auth",
+        "permissions"
+      ],
       "trigger": [
         "add roles",
         "restrict access",
@@ -31,9 +36,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Manage RBAC, ABAC, and security boundaries."
+      "description": "Quản lý RBAC, ABAC và các ranh giới bảo mật."
     },
     {
       "name": "qk-ai-builder",
@@ -44,7 +54,13 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "medium",
-      "tags": ["ai", "llm", "prompt-engineering", "rag", "agents"],
+      "tags": [
+        "ai",
+        "llm",
+        "prompt-engineering",
+        "rag",
+        "agents"
+      ],
       "trigger": [
         "build a chatbot",
         "add AI features",
@@ -53,9 +69,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Design AI Logic, Prompts, RAG pipelines, and Agents."
+      "description": "Thiết kế AI Logic, Prompts, RAG pipelines, và các Agents."
     },
     {
       "name": "qk-api-lifecycle",
@@ -66,7 +87,12 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "high",
-      "tags": ["api", "backend", "frontend-integration", "endpoints"],
+      "tags": [
+        "api",
+        "backend",
+        "frontend-integration",
+        "endpoints"
+      ],
       "trigger": [
         "create a new API",
         "fix an API",
@@ -76,9 +102,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Design, implement, and integrate API endpoints."
+      "description": "Thiết kế, triển khai, và tích hợp các API endpoints."
     },
     {
       "name": "qk-bug-resolution",
@@ -89,7 +120,12 @@
       "behavior": "development",
       "intent": "fix-bug",
       "priority": "high",
-      "tags": ["bug", "debug", "regression", "error"],
+      "tags": [
+        "bug",
+        "debug",
+        "regression",
+        "error"
+      ],
       "trigger": [
         "fix this bug",
         "it's broken",
@@ -102,9 +138,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Fix bugs and prevent regressions."
+      "description": "Xử lý và sửa các lỗi (bugs), đồng thời ngăn ngừa lỗi hồi quy."
     },
     {
       "name": "qk-context-loader",
@@ -115,7 +156,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "medium",
-      "tags": ["context", "filesystem", "dependencies", "graph"],
+      "tags": [
+        "context",
+        "filesystem",
+        "dependencies",
+        "graph"
+      ],
       "trigger": [
         "understand the codebase",
         "what files should I read",
@@ -125,9 +171,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Load relevant files and map the dependency graph for a task."
+      "description": "Tải các file liên quan và vẽ biểu đồ phụ thuộc (dependency graph) cho một tác vụ."
     },
     {
       "name": "qk-data-lifecycle",
@@ -138,7 +189,13 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "medium",
-      "tags": ["database", "sql", "migration", "schema", "orm"],
+      "tags": [
+        "database",
+        "sql",
+        "migration",
+        "schema",
+        "orm"
+      ],
       "trigger": [
         "create a new database table",
         "modify schema",
@@ -149,9 +206,47 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Manage Database Schema, Migrations, and Repositories."
+      "description": "Quản lý Database Schema, Migrations, và Repositories."
+    },
+    {
+      "name": "qk-db-optimizer",
+      "path": "skills/qk-db-optimizer/SKILL.md",
+      "version": "1.0.0",
+      "category": "database",
+      "subcategory": "backend",
+      "behavior": "development",
+      "intent": "implement-feature",
+      "priority": "high",
+      "tags": [
+        "database",
+        "optimize",
+        "sql",
+        "index",
+        "performance"
+      ],
+      "trigger": [
+        "optimize database",
+        "slow queries",
+        "add index",
+        "N+1 issues"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
+      "status": "ready",
+      "description": "Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries)."
     },
     {
       "name": "qk-design-to-code",
@@ -162,7 +257,13 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "high",
-      "tags": ["ui", "figma", "frontend", "styling", "css"],
+      "tags": [
+        "ui",
+        "figma",
+        "frontend",
+        "styling",
+        "css"
+      ],
       "trigger": [
         "upload image mockup",
         "design requirement",
@@ -171,9 +272,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Convert Figma/Images to semantic, pixel-perfect code components."
+      "description": "Chuyển đổi thiết kế từ Figma/Images thành các UI component hoàn chỉnh, chuẩn pixel."
     },
     {
       "name": "qk-docs",
@@ -184,7 +290,12 @@
       "behavior": "static-analysis",
       "intent": "maintain",
       "priority": "low",
-      "tags": ["docs", "markdown", "jsdoc", "readme"],
+      "tags": [
+        "docs",
+        "markdown",
+        "jsdoc",
+        "readme"
+      ],
       "trigger": [
         "write docs",
         "update the README",
@@ -193,31 +304,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
-      "status": "ready",
-      "description": "Write and maintain human-readable project documentation."
-    },
-    {
-      "name": "qk-documentation-system",
-      "path": "skills/qk-documentation-system/SKILL.md",
-      "version": "3.0.0",
-      "category": "documentation",
-      "subcategory": "maintenance",
-      "behavior": "static-analysis",
-      "intent": "maintain",
-      "priority": "low",
-      "tags": ["architecture", "diagrams", "mermaid", "runbooks"],
-      "trigger": [
-        "generate architecture diagrams",
-        "DevOps manuals",
-        "system docs",
-        "mermaid diagram"
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
       ],
-      "dependencies": [],
-      "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
       "status": "ready",
-      "description": "Maintain system-level architecture docs and DevOps runbooks."
+      "description": "Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu."
     },
     {
       "name": "qk-engineering-standard",
@@ -228,7 +322,13 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "critical",
-      "tags": ["clean-code", "architecture", "refactoring", "solid", "naming"],
+      "tags": [
+        "clean-code",
+        "architecture",
+        "refactoring",
+        "solid",
+        "naming"
+      ],
       "trigger": [
         "review code",
         "refactor code",
@@ -239,9 +339,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Enforce SOLID, DRY, Clean Code, and Naming conventions."
+      "description": "Ép buộc áp dụng SOLID, DRY, Clean Code, và các quy tắc đặt tên."
     },
     {
       "name": "qk-feature-delivery",
@@ -252,7 +357,13 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "high",
-      "tags": ["feature", "development", "e2e", "ui", "api"],
+      "tags": [
+        "feature",
+        "development",
+        "e2e",
+        "ui",
+        "api"
+      ],
       "trigger": [
         "create a new page",
         "build a new component",
@@ -261,9 +372,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Develop new features end-to-end (Frontend & Backend)."
+      "description": "Phát triển tính năng mới hoàn chỉnh từ Frontend đến Backend."
     },
     {
       "name": "qk-help",
@@ -274,7 +390,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "low",
-      "tags": ["help", "manual", "list", "tutorial"],
+      "tags": [
+        "help",
+        "manual",
+        "list",
+        "tutorial"
+      ],
       "trigger": [
         "help",
         "list skills",
@@ -284,9 +405,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Display the list of available skills and pro-tips."
+      "description": "Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng."
     },
     {
       "name": "qk-orchestrator",
@@ -297,7 +423,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "critical",
-      "tags": ["router", "orchestrator", "delegation", "ai-manager"],
+      "tags": [
+        "router",
+        "orchestrator",
+        "delegation",
+        "ai-manager"
+      ],
       "trigger": [
         "plan this task",
         "how should I approach",
@@ -308,9 +439,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Route user requests, parse intents, and delegate to the correct sub-skills."
+      "description": "Điều hướng yêu cầu của người dùng, phân tích ý định và ủy quyền cho các sub-skills phù hợp."
     },
     {
       "name": "qk-policy-engine",
@@ -321,7 +457,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "high",
-      "tags": ["security", "policy", "guardrails", "authorization"],
+      "tags": [
+        "security",
+        "policy",
+        "guardrails",
+        "authorization"
+      ],
       "trigger": [
         "high-risk destructive action",
         "DROP table",
@@ -330,9 +471,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Policy evaluation engine to ensure actions are authorized and safe."
+      "description": "Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền."
     },
     {
       "name": "qk-production-release",
@@ -343,7 +489,12 @@
       "behavior": "validation",
       "intent": "validate",
       "priority": "high",
-      "tags": ["deploy", "release", "build", "production"],
+      "tags": [
+        "deploy",
+        "release",
+        "build",
+        "production"
+      ],
       "trigger": [
         "deploy the app",
         "build for production",
@@ -352,9 +503,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Prepare the codebase for a production release (Build, CI/CD, Security)."
+      "description": "Chuẩn bị codebase để phát hành lên production (Build, CI/CD, Security)."
     },
     {
       "name": "qk-project-bootstrap",
@@ -365,7 +521,12 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "high",
-      "tags": ["bootstrap", "scaffolding", "setup", "init"],
+      "tags": [
+        "bootstrap",
+        "scaffolding",
+        "setup",
+        "init"
+      ],
       "trigger": [
         "start a new project",
         "create a new repo",
@@ -374,9 +535,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Initialize a new project with best practices, linters, and folder structures."
+      "description": "Khởi tạo dự án mới với các best practices, linters, và cấu trúc thư mục chuẩn."
     },
     {
       "name": "qk-project-health",
@@ -387,7 +553,12 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "medium",
-      "tags": ["audit", "architecture", "tech-debt", "code-smell"],
+      "tags": [
+        "audit",
+        "architecture",
+        "tech-debt",
+        "code-smell"
+      ],
       "trigger": [
         "project review",
         "architecture audit",
@@ -397,9 +568,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Comprehensive audit of Code Smells, Tech Debt, and Architecture."
+      "description": "Kiểm toán toàn diện về Code Smells, Tech Debt, và Architecture."
     },
     {
       "name": "qk-project-memory",
@@ -410,7 +586,11 @@
       "behavior": "static-analysis",
       "intent": "maintain",
       "priority": "low",
-      "tags": ["memory", "context", "storage"],
+      "tags": [
+        "memory",
+        "context",
+        "storage"
+      ],
       "trigger": [
         "remember a specific configuration",
         "architectural decision",
@@ -419,9 +599,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Store and retrieve long-term project context across sessions."
+      "description": "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc."
     },
     {
       "name": "qk-system-evolution",
@@ -432,7 +617,12 @@
       "behavior": "maintenance",
       "intent": "maintain",
       "priority": "high",
-      "tags": ["upgrade", "migration", "devops", "dependencies"],
+      "tags": [
+        "upgrade",
+        "migration",
+        "devops",
+        "dependencies"
+      ],
       "trigger": [
         "update a library",
         "upgrade a framework",
@@ -441,9 +631,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Safely upgrade dependencies, migrate frameworks, and manage rollbacks."
+      "description": "Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback."
     },
     {
       "name": "qk-ui-audit",
@@ -454,7 +649,13 @@
       "behavior": "static-analysis",
       "intent": "review-code",
       "priority": "medium",
-      "tags": ["ui", "audit", "frontend", "a11y", "responsive"],
+      "tags": [
+        "ui",
+        "audit",
+        "frontend",
+        "a11y",
+        "responsive"
+      ],
       "trigger": [
         "check the UI",
         "review styling",
@@ -464,9 +665,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Audit UI for Consistency, Accessibility, Responsive, and Performance."
+      "description": "Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất."
     },
     {
       "name": "qk-ui-system-builder",
@@ -477,7 +683,12 @@
       "behavior": "development",
       "intent": "implement-feature",
       "priority": "medium",
-      "tags": ["design-system", "tokens", "shared-components", "storybook"],
+      "tags": [
+        "design-system",
+        "tokens",
+        "shared-components",
+        "storybook"
+      ],
       "trigger": [
         "create a shared component",
         "extract color palette",
@@ -486,9 +697,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Build and maintain Design Systems, Token extraction, and shared UI libraries."
+      "description": "Xây dựng và duy trì Design Systems, Token extraction, và các thư viện UI dùng chung."
     },
     {
       "name": "qk-validation-gate",
@@ -499,7 +715,13 @@
       "behavior": "validation",
       "intent": "validate",
       "priority": "critical",
-      "tags": ["ci", "testing", "linting", "security", "gatekeeper"],
+      "tags": [
+        "ci",
+        "testing",
+        "linting",
+        "security",
+        "gatekeeper"
+      ],
       "trigger": [
         "check the code",
         "run validation",
@@ -510,9 +732,14 @@
       ],
       "dependencies": [],
       "conflicts": [],
-      "platforms": ["claude-code", "cursor", "windsurf", "gemini-cli"],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
       "status": "ready",
-      "description": "Mandatory Quality Gate (Test, Lint, Security)."
+      "description": "Cổng kiểm tra chất lượng bắt buộc (Test, Lint, Security)."
     }
   ],
   "categories": {
@@ -520,7 +747,6 @@
       "qk-access-policy",
       "qk-context-loader",
       "qk-docs",
-      "qk-documentation-system",
       "qk-engineering-standard",
       "qk-help",
       "qk-orchestrator",
@@ -533,6 +759,7 @@
       "qk-ai-builder",
       "qk-api-lifecycle",
       "qk-data-lifecycle",
+      "qk-db-optimizer",
       "qk-design-to-code",
       "qk-feature-delivery",
       "qk-project-bootstrap",

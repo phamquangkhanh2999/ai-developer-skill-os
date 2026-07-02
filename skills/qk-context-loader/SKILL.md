@@ -1,8 +1,8 @@
 ---
 name: qk-context-loader
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Load relevant files and map the dependency graph for a task.
+description: Tải các file liên quan và vẽ biểu đồ phụ thuộc (dependency graph) cho một tác vụ.
 category: utilities
 behavior: static-analysis
 intent: review-code

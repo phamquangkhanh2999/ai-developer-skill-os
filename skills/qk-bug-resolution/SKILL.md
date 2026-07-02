@@ -1,8 +1,8 @@
 ---
 name: qk-bug-resolution
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Fix bugs and prevent regressions.
+description: Xử lý và sửa các lỗi (bugs), đồng thời ngăn ngừa lỗi hồi quy.
 category: engineering
 behavior: development
 intent: fix-bug
@@ -22,8 +22,9 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 
 ## 🔄 1. Chain of Thought (SOP)
 
-1. **Analyze (Root Cause Analysis):**
+1. **Analyze (Root Cause Analysis & Reproduce):**
    - Read the provided error log or bug description.
+   - Identify how to reproduce the bug. Ask the user for more info if it is unclear.
    - Trace the error to the exact file and line of code.
    - Identify if the bug is a syntax error, logic error, state issue, or boundary case.
 2. **Plan (Fix Strategy):**
@@ -41,6 +42,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 - **No Guesses:** Do not assume the shape of an API response. Print it or read the type definitions first.
 - **Minimal Fix:** Always prefer a 1-line fix over a 100-line refactor, unless the architecture is fundamentally broken.
 - **Clean Up:** Remove any `console.log()` or debugger statements introduced during the debugging process.
+- **Regression Test:** Add at least 1 Unit or Integration Test to prevent this bug from recurring.
 
 ## 🌳 3. Decision Tree
 

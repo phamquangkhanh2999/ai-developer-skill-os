@@ -1,8 +1,8 @@
 ---
 name: qk-ui-audit
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Audit UI for Consistency, Accessibility, Responsive, and Performance.
+description: Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất.
 category: validation
 behavior: static-analysis
 intent: review-code

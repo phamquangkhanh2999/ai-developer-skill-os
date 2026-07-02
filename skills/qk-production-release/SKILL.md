@@ -1,8 +1,8 @@
 ---
 name: qk-production-release
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Prepare the codebase for a production release (Build, CI/CD, Security).
+description: Chuẩn bị codebase để phát hành lên production (Build, CI/CD, Security).
 category: operations
 behavior: validation
 intent: validate

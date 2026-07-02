@@ -1,8 +1,8 @@
 ---
 name: qk-data-lifecycle
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Manage Database Schema, Migrations, and Repositories.
+description: Quản lý Database Schema, Migrations, và Repositories.
 category: database
 behavior: development
 intent: implement-feature

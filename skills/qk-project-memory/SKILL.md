@@ -1,8 +1,8 @@
 ---
 name: qk-project-memory
-version: 3.1.4
+version: version: 3.1.5
 updated: 2026-07-02
-description: Store and retrieve long-term project context across sessions.
+description: Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc.
 category: utilities
 behavior: static-analysis
 intent: maintain
