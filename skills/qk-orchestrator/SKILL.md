@@ -1,6 +1,6 @@
 ---
 name: qk-orchestrator
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Route user requests, parse intents, and delegate to the correct sub-skills.
 category: orchestration

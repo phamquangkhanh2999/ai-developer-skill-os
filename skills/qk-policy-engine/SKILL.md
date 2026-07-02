@@ -1,6 +1,6 @@
 ---
 name: qk-policy-engine
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Policy evaluation engine to ensure actions are authorized and safe.
 category: security

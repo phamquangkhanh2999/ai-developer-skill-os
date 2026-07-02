@@ -1,6 +1,6 @@
 ---
 name: qk-design-to-code
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Convert Figma/Images to semantic, pixel-perfect code components.
 category: frontend

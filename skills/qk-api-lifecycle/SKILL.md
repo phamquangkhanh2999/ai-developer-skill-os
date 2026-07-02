@@ -1,6 +1,6 @@
 ---
 name: qk-api-lifecycle
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Design, implement, and integrate API endpoints.
 category: engineering

@@ -1,6 +1,6 @@
 ---
 name: qk-system-evolution
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Safely upgrade dependencies, migrate frameworks, and manage rollbacks.
 category: operations

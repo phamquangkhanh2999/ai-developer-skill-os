@@ -1,6 +1,6 @@
 ---
 name: qk-ui-system-builder
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Build and maintain Design Systems, Token extraction, and shared UI libraries.
 category: frontend

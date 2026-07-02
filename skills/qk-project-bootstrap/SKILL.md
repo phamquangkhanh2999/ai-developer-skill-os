@@ -1,6 +1,6 @@
 ---
 name: qk-project-bootstrap
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Initialize a new project with best practices, linters, and folder structures.
 category: setup

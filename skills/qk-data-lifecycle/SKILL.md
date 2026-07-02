@@ -1,6 +1,6 @@
 ---
 name: qk-data-lifecycle
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Manage Database Schema, Migrations, and Repositories.
 category: database

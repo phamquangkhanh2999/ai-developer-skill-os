@@ -1,6 +1,6 @@
 ---
 name: qk-ui-audit
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Audit UI for Consistency, Accessibility, Responsive, and Performance.
 category: validation

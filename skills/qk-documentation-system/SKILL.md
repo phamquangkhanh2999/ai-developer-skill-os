@@ -1,6 +1,6 @@
 ---
 name: qk-documentation-system
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Maintain system-level architecture docs and DevOps runbooks.
 category: documentation

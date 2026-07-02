@@ -1,6 +1,6 @@
 ---
 name: qk-docs
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Write and maintain human-readable project documentation.
 category: documentation

@@ -1,6 +1,6 @@
 ---
 name: qk-project-health
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Comprehensive audit of Code Smells, Tech Debt, and Architecture.
 category: architecture

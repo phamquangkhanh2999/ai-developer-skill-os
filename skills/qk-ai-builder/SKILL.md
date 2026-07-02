@@ -1,6 +1,6 @@
 ---
 name: qk-ai-builder
-version: 3.1.0
+version: 3.1.2
 updated: 2026-07-02
 description: Design AI Logic, Prompts, RAG pipelines, and Agents.
 category: ai
