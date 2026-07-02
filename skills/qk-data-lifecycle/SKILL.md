@@ -1,6 +1,6 @@
 ---
 name: qk-data-lifecycle
-purpose: Quản lý Schema, Migration, Repository, Query Tuning.
+description: Quản lý Schema, Migration, Repository, Query Tuning.
 mode_supported: [enterprise]
 input: [Data requirement]
 output: [Schema, Migration files]

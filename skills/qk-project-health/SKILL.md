@@ -1,6 +1,6 @@
 ---
 name: qk-project-health
-purpose: Kiểm toán Code Smell, Tech Debt, Architecture (Audit Only).
+description: Kiểm toán Code Smell, Tech Debt, Architecture (Audit Only).
 mode_supported: [enterprise]
 input: [Codebase]
 output: [Health Report]

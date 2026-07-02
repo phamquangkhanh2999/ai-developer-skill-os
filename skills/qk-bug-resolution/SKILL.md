@@ -1,6 +1,6 @@
 ---
 name: qk-bug-resolution
-purpose: Tái hiện lỗi, tìm root cause, sửa lỗi và chống hồi quy (Regression check).
+description: Tái hiện lỗi, tìm root cause, sửa lỗi và chống hồi quy (Regression check).
 mode_supported: [standard]
 input: [Bug report]
 output: [Fixed code, Regression test]

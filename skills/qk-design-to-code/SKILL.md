@@ -1,6 +1,6 @@
 ---
 name: qk-design-to-code
-purpose: Chuyển đổi Figma/Screenshot thành Code UI tuân thủ hệ thống.
+description: Chuyển đổi Figma/Screenshot thành Code UI tuân thủ hệ thống.
 mode_supported: [standard]
 input: [Image/Figma]
 output: [UI Code]

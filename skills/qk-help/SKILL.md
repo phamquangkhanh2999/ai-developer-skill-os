@@ -1,6 +1,6 @@
 ---
 name: qk-help
-purpose: Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo (pro-tips) kết hợp kỹ năng.
+description: Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo (pro-tips) kết hợp kỹ năng.
 mode_supported: [quick, standard]
 input: [User query]
 output: [Skill list, guides]

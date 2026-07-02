@@ -1,6 +1,6 @@
 ---
 name: qk-engineering-standard
-purpose: Rút trích các bộ luật thép (Folder, Naming, State, Boundary) cần tuân thủ cho task.
+description: Rút trích các bộ luật thép (Folder, Naming, State, Boundary) cần tuân thủ cho task.
 mode_supported: [enterprise]
 input: [Context]
 output: [Validated Context + Rules]

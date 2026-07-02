@@ -1,6 +1,6 @@
 ---
 name: qk-api-lifecycle
-purpose: Thiết kế Spec, Code Service, Types, Test, Docs cho API.
+description: Thiết kế Spec, Code Service, Types, Test, Docs cho API.
 mode_supported: [standard]
 input: [API requirement]
 output: [API Service, Routes, Docs]

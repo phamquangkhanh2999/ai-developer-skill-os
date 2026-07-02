@@ -1,6 +1,6 @@
 ---
 name: qk-production-release
-purpose: Build, CI/CD, Deploy, Observability, Security Release.
+description: Build, CI/CD, Deploy, Observability, Security Release.
 mode_supported: [enterprise]
 input: [Release candidate]
 output: [Production deployment]

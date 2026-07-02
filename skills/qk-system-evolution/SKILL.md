@@ -1,6 +1,6 @@
 ---
 name: qk-system-evolution
-purpose: Nâng cấp version, Impact Analysis, dry-run, apply và rollback.
+description: Nâng cấp version, Impact Analysis, dry-run, apply và rollback.
 mode_supported: [enterprise]
 input: [Upgrade target]
 output: [Upgraded system]

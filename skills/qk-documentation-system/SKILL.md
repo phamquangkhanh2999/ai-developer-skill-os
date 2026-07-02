@@ -1,6 +1,6 @@
 ---
 name: qk-documentation-system
-purpose: Hệ thống tri thức AI: Rút trích Pattern/Decision và cập nhật AI Memory.
+description: Hệ thống tri thức AI: Rút trích Pattern/Decision và cập nhật AI Memory.
 mode_supported: [enterprise]
 input: [Docs & Code]
 output: [Updated project memory (ADR, patterns)]

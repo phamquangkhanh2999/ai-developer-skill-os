@@ -1,6 +1,6 @@
 ---
 name: qk-validation-gate
-purpose: Cổng kiểm định chất lượng bắt buộc (Test, Lint, Security) trước khi hoàn tất.
+description: Cổng kiểm định chất lượng bắt buộc (Test, Lint, Security) trước khi hoàn tất.
 mode_supported: [standard]
 input: [Completed code]
 output: [Validation pass/fail]

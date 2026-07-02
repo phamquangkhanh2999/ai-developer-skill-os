@@ -1,6 +1,6 @@
 ---
 name: qk-access-policy
-purpose: Quản lý chính sách bảo mật, phân quyền RBAC và ranh giới truy cập.
+description: Quản lý chính sách bảo mật, phân quyền RBAC và ranh giới truy cập.
 mode_supported: [enterprise]
 input: [Access rules]
 output: [Access policies]

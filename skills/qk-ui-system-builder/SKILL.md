@@ -1,6 +1,6 @@
 ---
 name: qk-ui-system-builder
-purpose: Quản lý Design System, Component Library, Consistency.
+description: Quản lý Design System, Component Library, Consistency.
 mode_supported: [standard, enterprise]
 input: [UI constraints]
 output: [Reusable UI components/Tokens]

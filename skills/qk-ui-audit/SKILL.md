@@ -1,6 +1,6 @@
 ---
 name: qk-ui-audit
-purpose: Kiểm toán giao diện (Consistency, Accessibility, Responsive).
+description: Kiểm toán giao diện (Consistency, Accessibility, Responsive).
 mode_supported: [standard]
 input: [UI Code]
 output: [Audit Report]

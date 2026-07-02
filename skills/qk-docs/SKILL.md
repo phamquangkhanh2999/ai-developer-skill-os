@@ -1,6 +1,6 @@
 ---
 name: qk-docs
-purpose: Viết và duy trì tài liệu dự án dễ hiểu cho con người (Human-readable Docs).
+description: Viết và duy trì tài liệu dự án dễ hiểu cho con người (Human-readable Docs).
 mode_supported: [standard]
 input: [Code changes]
 output: [Updated README, API Docs, Changelog]

@@ -1,6 +1,6 @@
 ---
 name: qk-policy-engine
-purpose: Động cơ xét duyệt chính sách, đảm bảo tác vụ hợp lệ trước khi thực thi.
+description: Động cơ xét duyệt chính sách, đảm bảo tác vụ hợp lệ trước khi thực thi.
 mode_supported: [enterprise]
 input: [Task request]
 output: [Policy validation result]

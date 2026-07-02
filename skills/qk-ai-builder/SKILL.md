@@ -1,6 +1,6 @@
 ---
 name: qk-ai-builder
-purpose: Thiết kế hệ thống AI App (RAG, Agent, Prompt, Logic AI).
+description: Thiết kế hệ thống AI App (RAG, Agent, Prompt, Logic AI).
 mode_supported: [enterprise]
 input: [AI Requirement]
 output: [AI Architecture, Agents]

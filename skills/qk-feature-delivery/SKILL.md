@@ -1,6 +1,6 @@
 ---
 name: qk-feature-delivery
-purpose: Phân tích, Code và Test tính năng mới hoàn chỉnh (E2E).
+description: Phân tích, Code và Test tính năng mới hoàn chỉnh (E2E).
 mode_supported: [quick, standard, enterprise]
 input: [Feature requirement]
 output: [Completed feature code, tests]

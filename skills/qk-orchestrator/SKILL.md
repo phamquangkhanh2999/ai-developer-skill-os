@@ -1,6 +1,6 @@
 ---
 name: qk-orchestrator
-purpose: Điều hướng request, phân tích ý đồ và chọn workflow phù hợp nhất.
+description: Điều hướng request, phân tích ý đồ và chọn workflow phù hợp nhất.
 mode_supported: [standard]
 input: [User request]
 output: [Workflow được chọn và bàn giao cho skill tương ứng]

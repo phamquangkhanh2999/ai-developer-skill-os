@@ -1,6 +1,6 @@
 ---
 name: qk-project-memory
-purpose: Trí nhớ dài hạn: quyết định kiến trúc, rule, convention, ui-patterns.
+description: Trí nhớ dài hạn: quyết định kiến trúc, rule, convention, ui-patterns.
 mode_supported: [enterprise]
 input: [Query about architecture/rules]
 output: [Relevant project DNA context]

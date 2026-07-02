@@ -1,6 +1,6 @@
 ---
 name: qk-project-bootstrap
-purpose: Khởi tạo hệ thống, setup dự án chuẩn từ con số 0.
+description: Khởi tạo hệ thống, setup dự án chuẩn từ con số 0.
 mode_supported: [enterprise]
 input: [Project specs]
 output: [Scaffolded project]

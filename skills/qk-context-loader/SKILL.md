@@ -1,6 +1,6 @@
 ---
 name: qk-context-loader
-purpose: Load ngữ cảnh thực tại (file, folder, logic) liên quan trực tiếp đến task.
+description: Load ngữ cảnh thực tại (file, folder, logic) liên quan trực tiếp đến task.
 mode_supported: [standard]
 input: [Workflow task]
 output: [Context summaries, loaded files]
