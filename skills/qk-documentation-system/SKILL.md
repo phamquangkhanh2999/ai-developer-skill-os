@@ -1,33 +1,38 @@
 ---
 name: qk-documentation-system
-description: Hệ thống tri thức AI: Rút trích Pattern/Decision và cập nhật AI Memory.
-mode_supported: [enterprise]
-input: [Docs & Code]
-output: [Updated project memory (ADR, patterns)]
-workflow: [1. Đọc Docs mới -> 2. Trích xuất Rule -> 3. Update Memory]
-allowed_tools: [write_to_file]
-handoff_to: [none]
+version: 3.0.0
+updated: 2026-07-02
+description: Maintain system-level architecture docs and DevOps runbooks.
+category: documentation
+priority: low
+tags: [architecture, diagrams, mermaid, runbooks]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User asks to generate architecture diagrams or DevOps manuals.
+inputs: [Architecture changes]
+outputs: [System Docs, Mermaid Diagrams]
+allowed_tools: [write_to_file, read_file]
+pipeline: [analyze, design, implement, complete]
 ---
 
-# 🛠️ qk-documentation-system - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-documentation-system - Standard Operating Procedure
 
-> **Mô tả:** Hệ thống tri thức AI: Rút trích Pattern/Decision và cập nhật AI Memory.
+> **Goal:** Quản lý tài liệu cấp hệ thống (System Architecture, Sequence Diagrams, Runbooks).
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (System Flow):**
+   - Understand the flow of data across microservices or complex components.
+2. **Design (Diagramming):**
+   - Draft the sequence or architecture diagram using Mermaid syntax.
+3. **Implement (Drafting):**
+   - Save the documentation into the `/docs/` folder.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **Syntax Check:** Ensure Mermaid diagrams are syntactically valid before saving.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🤝 3. Handoff Pipeline
+1. `complete`: Output the System Documentation Report.
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `none`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+## 📝 4. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Tài liệu kiến trúc nào đã được tạo.
+- **Chi tiết (Changes):** Đường dẫn file.

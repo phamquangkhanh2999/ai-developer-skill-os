@@ -1,33 +1,46 @@
 ---
 name: qk-design-to-code
-description: Chuyển đổi Figma/Screenshot thành Code UI tuân thủ hệ thống.
-mode_supported: [standard]
-input: [Image/Figma]
-output: [UI Code]
-workflow: [1. Analyze Image -> 2. Map Components -> 3. Code -> 4. Responsive]
-allowed_tools: [write_to_file]
-handoff_to: [qk-ui-audit]
+version: 3.0.0
+updated: 2026-07-02
+description: Convert Figma/Images to semantic, pixel-perfect code components.
+category: frontend
+priority: high
+tags: [ui, figma, frontend, styling, css]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User uploads an image mockup or provides a design requirement for a UI component.
+inputs: [Image/Mockup, Framework choice]
+outputs: [Code component, CSS/Tailwind classes]
+allowed_tools: [write_to_file, read_file]
+pipeline: [analyze, implement, engineering-standard, validate, complete]
 ---
 
-# 🛠️ qk-design-to-code - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-design-to-code - Standard Operating Procedure
 
-> **Mô tả:** Chuyển đổi Figma/Screenshot thành Code UI tuân thủ hệ thống.
+> **Goal:** Dịch thiết kế (Mockups/Images) thành mã nguồn (React, Vue, HTML/CSS) với độ chính xác Pixel-Perfect.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Deconstruct Design):**
+   - Look at the provided mockup.
+   - Break it down from Outside-In (Container -> Rows -> Columns -> Elements).
+2. **Plan (Token Mapping):**
+   - Map colors, fonts, and spacings to existing Design System Tokens (e.g., Tailwind classes `text-primary-500`, `gap-4`).
+3. **Implement (Code Construction):**
+   - Write the semantic HTML (`<article>`, `<section>`, `<nav>`).
+   - Apply styling.
+4. **Validate (Responsive Check):**
+   - Ensure the component uses relative units where necessary and scales on mobile.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **No Magic Values:** Do not use random hex codes or pixel values if a Design System is available.
+- **Accessibility:** Always include `alt` for images and `aria-label` for icon-only buttons.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🤝 3. Handoff Pipeline
+1. `engineering-standard`: Ensure the UI component has no business logic.
+2. `validate`: Trigger `qk-ui-audit` checks.
+3. `complete`: Generate the UI Component Report.
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `qk-ui-audit`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+## 📝 4. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Tên Component vừa tạo.
+- **Chi tiết (Changes):** File chứa component.
+- **Rủi ro (Risks):** Vấn đề responsive nếu có.

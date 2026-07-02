@@ -1,33 +1,35 @@
 ---
 name: qk-project-memory
-description: Trí nhớ dài hạn: quyết định kiến trúc, rule, convention, ui-patterns.
-mode_supported: [enterprise]
-input: [Query about architecture/rules]
-output: [Relevant project DNA context]
-workflow: [1. Truy vấn Memory -> 2. Trả về DNA dự án]
-allowed_tools: [read_file]
-handoff_to: [none]
+version: 3.0.0
+updated: 2026-07-02
+description: Store and retrieve long-term project context across sessions.
+category: utilities
+priority: low
+tags: [memory, context, storage]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User asks to remember a specific configuration, rule, or architectural decision.
+inputs: [Context to remember]
+outputs: [Memory file updated]
+allowed_tools: [write_to_file, read_file]
+pipeline: [analyze, implement, complete]
 ---
 
-# 🛠️ qk-project-memory - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-project-memory - Standard Operating Procedure
 
-> **Mô tả:** Trí nhớ dài hạn: quyết định kiến trúc, rule, convention, ui-patterns.
+> **Goal:** "Bộ nhớ dài hạn". Giúp Agent nhớ lại các cấu hình, đường dẫn API hoặc luật lệ riêng của dự án mà không cần User nhắc lại.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Fact Extraction):**
+   - Extract the core facts from the conversation (e.g., "The project uses pnpm, not npm").
+2. **Implement (Storage):**
+   - Append the fact to `.ai-memory.md` or a similar configuration file.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **Keep it small:** Do not write entire source files into memory. Only save abstract facts and rules.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🤝 3. Handoff Pipeline
+1. `complete`: Output confirmation.
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `none`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+## 📝 4. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Đã ghi nhớ thông tin gì.

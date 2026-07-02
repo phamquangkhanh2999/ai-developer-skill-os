@@ -1,33 +1,43 @@
 ---
 name: qk-project-bootstrap
-description: Khởi tạo hệ thống, setup dự án chuẩn từ con số 0.
-mode_supported: [enterprise]
-input: [Project specs]
-output: [Scaffolded project]
-workflow: [1. Setup Folder -> 2. Config Lint/Format -> 3. Setup UI/API/Test]
+version: 3.0.0
+updated: 2026-07-02
+description: Initialize a new project with best practices, linters, and folder structures.
+category: setup
+priority: high
+tags: [bootstrap, scaffolding, setup, init]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User asks to start a new project, create a new repo, or setup standard configurations.
+inputs: [Stack selection, Project Name]
+outputs: [Scaffolded Codebase, Configs]
 allowed_tools: [run_command, write_to_file]
-handoff_to: [none]
+pipeline: [analyze, implement, engineering-standard, validate, complete]
 ---
 
-# 🛠️ qk-project-bootstrap - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-project-bootstrap - Standard Operating Procedure
 
-> **Mô tả:** Khởi tạo hệ thống, setup dự án chuẩn từ con số 0.
+> **Goal:** "Thợ xây móng". Khởi tạo một dự án mới hoàn toàn với các cấu hình chuẩn mực nhất từ Day 1.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Requirements):**
+   - Ask the user for their preferred stack (e.g., Next.js, Vite, NestJS).
+2. **Implement (Scaffolding):**
+   - Run the initialization command (e.g., `npx create-next-app@latest`).
+   - Overwrite `.eslintrc`, `prettierrc`, `tsconfig.json` with strict rules.
+   - Scaffold the architecture (e.g., create `src/features/`, `src/components/shared/`).
+3. **Verify (Validation):**
+   - Run `npm run dev` in a short background task to ensure it doesn't crash.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **Strict Mode:** Always enable `strict: true` in TypeScript configurations.
+- **Package Manager Check:** If the user uses `pnpm`, do NOT run `npm install`. Stick to one package manager.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🤝 3. Handoff Pipeline
+1. `engineering-standard`: Verify the generated folder structure.
+2. `complete`: Output the Bootstrap Report.
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `none`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+## 📝 4. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Dự án đã được khởi tạo với Stack nào.
+- **Chi tiết (Changes):** Cấu trúc thư mục mới và các file cấu hình.
+- **Xác thực (Verification):** Cách chạy dự án.

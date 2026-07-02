@@ -1,135 +1,60 @@
 ---
 name: qk-data-lifecycle
-description: Quản lý Schema, Migration, Repository, Query Tuning.
-mode_supported: [enterprise]
-input: [Data requirement]
-output: [Schema, Migration files]
-workflow: [1. Schema -> 2. Migration -> 3. Repository -> 4. Index]
-allowed_tools: [write_to_file, run_command]
-handoff_to: [qk-validation-gate]
+version: 3.0.0
+updated: 2026-07-02
+description: Manage Database Schema, Migrations, and Repositories.
+category: database
+priority: medium
+tags: [database, sql, migration, schema, orm]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User asks to create a new database table, modify schema, or write complex queries.
+inputs: [Data model requirements]
+outputs: [Migration scripts, Models, Repositories]
+allowed_tools: [run_command, read_file, write_to_file]
+pipeline: [analyze, design, implement, engineering-standard, validate, complete]
 ---
 
-# 🛠️ qk-data-lifecycle - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-data-lifecycle - Standard Operating Procedure
 
-> **Mô tả:** Quản lý Schema, Migration, Repository, Query Tuning.
+> **Goal:** Quản lý an toàn vòng đời dữ liệu, đảm bảo Schema chuẩn xác, Migration có thể Rollback và Query tối ưu.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Requirements):**
+   - Understand the entities and their relationships (1:1, 1:N, N:N).
+   - Identify the ORM/Query Builder used in the project (e.g., Prisma, TypeORM, Drizzle).
+2. **Design (Schema & Normalization):**
+   - Design the schema. Ensure foreign keys and indices are applied to frequently queried columns.
+   - Always include audit columns (`created_at`, `updated_at`).
+3. **Implement (Migration & Models):**
+   - Write the Migration script. MUST include both `up` (apply) and `down` (rollback) logic.
+   - Write/Update the Model/Entity files.
+   - Create Repository layer functions if necessary.
+4. **Verify (Safety Check):**
+   - Review the migration script for destructive operations (e.g., `DROP TABLE`, `DROP COLUMN`).
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **No Data Loss:** NEVER execute a migration that drops data on Production without explicit User approval and a backup plan.
+- **Decoupling:** Do not write SQL queries directly in Controllers. Always use the Repository or DAO pattern.
+- **Index Rule:** Any column used in a `WHERE`, `JOIN`, or `ORDER BY` clause should be evaluated for an index.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
-
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `qk-validation-gate`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
-
-## 📚 5. Kiến Thức Chuyên Sâu (Deep Knowledge)
-
-*(Nền tảng kiến thức và quy tắc chi tiết kế thừa từ kỹ sư)*
-
----
-
-
-
-# Database Engineer
-
-> **Language rule:**
-> Use English for: code, identifiers, file names, architecture terms, technical decisions.
-> Use the user's language for: explanations, questions, summaries, and feedback.
-> The user may write in any language — detect and match it automatically.
-
----
-
-## Trigger
-
-Activate this skill when:
-- User says "create a new table", "add a column", "design the schema"
-- Writing complex data retrieval logic (joins, aggregations)
-- A query is running slowly and needs optimization (indexing)
-- Running or generating database migrations
-
----
-
-## Scope
-
-- ✅ **Schema Design:** Model tables, relations (1:1, 1:N, N:M), and constraints (Unique, FK).
-- ✅ **ORM Integration:** Generate code for Prisma, Drizzle, TypeORM, Sequelize, or Mongoose.
-- ✅ **Migrations:** Generate SQL or ORM migration files safely.
-- ✅ **Query Optimization:** Prevent N+1 queries, add indexes, use efficient aggregations.
-
----
-
-## Non-goals
-
-- ❌ Do NOT execute destructive migrations (DROP TABLE) on production environments without extreme warnings and approval.
-- ❌ Do NOT mix raw SQL into ORM logic unless necessary for performance.
-
----
-
-## Workflow
-
-### Phase 1 — Schema Design
-
-Understand the business entities and relations.
-- Identify primary keys (UUID vs Auto-increment ID).
-- Identify foreign keys and cascade rules (`ON DELETE CASCADE`).
-- Ensure proper normalization (usually 3NF) or denormalization (if NoSQL).
-
-### Phase 2 — ORM / Migration Generation
-
-Map the design to the project's tool:
-- **Prisma:** Update `schema.prisma`.
-- **Drizzle:** Update `schema.ts`.
-- **Raw SQL:** Write `V1__create_table.sql`.
-
-### Phase 3 — Query Implementation
-
-Write the data access methods (Repository pattern or direct ORM calls).
-- Avoid fetching `SELECT *` if only 2 columns are needed.
-- Batch queries or use joins to prevent N+1 issues.
-
----
-
-## Decision Tree
-
-```
-Is the project using an ORM?
-  ├── Prisma  → Modify `schema.prisma`, use `prisma.entity.findMany()`
-  ├── Drizzle → Modify schema TS files, use Drizzle query builder
-  └── No      → Write raw SQL or use query builder (Knex)
-
-Does the schema change drop data or alter existing columns?
-  ├── Yes → Flag as High Risk. Provide rollback strategy. Ask for approval.
-  └── No  → Standard migration (e.g., adding a nullable column).
+## 🌳 3. Decision Tree
+```text
+Is this modifying an existing table in Production?
+  ├── YES → Does it drop a column or change a data type destructively?
+  │       ├── YES → STOP. Create a new column, migrate data, then drop the old one (Expand & Contract Pattern).
+  │       └── NO → Proceed with safe migration (e.g., ADD COLUMN).
+  └── NO (New Table) → Ensure Primary Key, Timestamps, and Foreign Keys are defined.
 ```
 
----
+## 🤝 4. Handoff Pipeline
+1. `engineering-standard`: Verify naming conventions (e.g., snake_case for DB columns if required).
+2. `validate`: Run dry-run migrations or unit tests.
+3. `complete`: Generate the Database report.
 
-## Output Format
-
-```
-🗄️ Database Engineering Report
-─────────────────────────────────────────────────
-Action:     [Schema Update / Query Optimization]
-Tooling:    [Prisma / Raw SQL / etc.]
-
-Changes:
-  ✅ Added model: `User` (1:N with `Post`)
-  ✅ Added index on `User.email`
-  ✅ Generated query: `getUserWithPosts`
-
-⚠️ Risk Assessment:
-  [Low / High — e.g., "Safe addition, no data loss"]
-
-🔗 Next Steps:
-  Run `npx prisma migrate dev` to apply these changes locally.
-```
+## 📝 5. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Bảng nào được tạo/sửa.
+- **Chi tiết (Changes):** File migration và Model đã sinh ra.
+- **Kiến trúc (Reasoning):** Lý do thiết kế quan hệ bảng và các Index.
+- **Rủi ro (Risks):** Đánh giá mức độ an toàn của Migration (Có làm mất data không?).
+- **Hành động tiếp (Next Action):** Hướng dẫn user chạy lệnh migrate.

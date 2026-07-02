@@ -1,112 +1,59 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os)
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v3.0
 
-> Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Cursor, Windsurf, Cline, v.v.).
+> Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini).
 
-Thay vì cung cấp các "công cụ rời rạc" (Toolbox), dự án này xây dựng một hệ thống **22 Siêu Kỹ Năng (Master Skills)**, biến Agent của bạn thành một **Senior Engineer / Chief Architect** thực thụ với khả năng tự học, tự kiểm toán và tự viết tài liệu.
-
----
-
-## 🏗️ Kiến Trúc Khối (The 7-Layer Architecture)
-
-Hệ thống được thiết kế hoàn hảo với 7 phân lớp, hoạt động khép kín theo chuỗi End-to-End:
-
-### 0. Foundation Layer (Nền Tảng Cốt Lõi)
-- `qk-orchestrator`: Bộ điều hướng yêu cầu người dùng, chọn Workflow.
-- `qk-context-loader`: Bộ nạp ngữ cảnh, tìm file liên quan, chống tràn token.
-- `qk-policy-engine`: Động cơ kiểm tra tính hợp lệ của Request trước khi chạy.
-- `qk-access-policy`: Ranh giới bảo mật, phân quyền và RBAC.
-- `qk-project-memory`: Bộ nhớ cấu trúc dự án (Architecture, UI Patterns, Conventions).
-- `qk-engineering-standard`: Bộ luật thiết kế (Frontend, Backend, Security, Testing rules).
-- `qk-project-bootstrap`: Trình khởi tạo dự án từ con số 0.
-
-### 1. UI System Layer (Hệ Thống Giao Diện)
-- `qk-ui-system-builder`: Quản lý Design System, Component Library.
-- `qk-design-to-code`: Chuyển đổi Figma/Screenshot sang mã nguồn.
-- `qk-ui-audit`: Kiểm toán tính nhất quán, Responsive, Accessibility.
-
-### 2. Development Layer (Phát Triển E2E)
-- `qk-feature-delivery`: Phân tích, code, test hoàn thiện một tính năng từ A-Z.
-- `qk-api-lifecycle`: Vòng đời API (Spec, Service, Type, Test, Docs).
-- `qk-data-lifecycle`: Vòng đời dữ liệu (Schema, Migration, Query Tuning).
-
-### 3. Quality Assurance Layer (Đảm Bảo Chất Lượng)
-- `qk-project-health`: Audit tình trạng dự án, Tech Debt, Code Smell.
-- `qk-bug-resolution`: Tái hiện lỗi, tìm Root Cause, Fix và chống Regression.
-- `qk-validation-gate`: Cổng chặn an toàn (Lint, Test, Security) trước khi hoàn tất.
-
-### 4. Evolution Layer (Tiến Hóa Hệ Thống)
-- `qk-system-evolution`: Nâng cấp phiên bản, Impact Analysis, Dry-run.
-
-### 5. Operation Layer (Vận Hành)
-- `qk-production-release`: CI/CD, Build, Deploy, Observability.
-
-### 6. AI Builder Layer
-- `qk-ai-builder`: Thiết kế các hệ thống AI App, Agent, RAG.
-
-### 7. Knowledge Layer (Tri Thức & Tài Liệu)
-- `qk-docs`: Viết tài liệu cho con người (README, Changelog, Developer Guide).
-- `qk-documentation-system`: Máy học nội bộ (Chuyển đổi Pattern thành luật nạp vào Memory).
-- `qk-help`: Trợ lý tra cứu hướng dẫn kỹ năng.
+Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v3.0** được thiết kế lại hoàn toàn theo chuẩn **Enterprise-ready Agentic Framework**. Nó biến Agent của bạn thành một **Senior Engineer / Chief Architect** thực thụ với khả năng tự suy luận bằng Tiếng Anh, nhưng lại báo cáo thân thiện bằng Tiếng Việt.
 
 ---
 
-## 🔄 Luồng Vận Hành Khép Kín (Workflow)
+## 🏗️ Kiến Trúc 5 Tầng (The 5-Tier Architecture)
 
-Khi bạn ra lệnh: `"Thêm tính năng đăng nhập"`:
+Hệ thống được thiết kế decoupled (phân tách) hoàn hảo để chống tràn Context Window và tối ưu khả năng suy luận của LLM:
+
+### 1. Global Policy (`.agents/AGENTS.md`)
+Chứa các bộ luật thép toàn cục (Agent-wide rules):
+- **Language Policy:** Suy luận kỹ thuật bằng Tiếng Anh, giao tiếp với người dùng bằng Tiếng Việt.
+- **Execution Principles:** `Read before Write`, `Verify before Complete`.
+- **Engineering Policy:** Trị bệnh tận gốc (Fix root cause), giữ nguyên chuẩn cũ.
+
+### 2. Core Templates (`templates/`)
+Chứa các format báo cáo chuẩn (như `bug-report.md`, `feature-report.md`, `review-report.md`). AI không cần "học lại" cách viết báo cáo, giúp đầu ra luôn nhất quán 100%.
+
+### 3. Skill Definition (`skills/`)
+Bộ 20+ kỹ năng (Skills) cốt lõi được cấu trúc siêu chuẩn xác với **Metadata 12 trường** (Version, Category, Pipeline, Allowed Tools...). Toàn bộ SOP (Standard Operating Procedure), Decision Tree và Constraints được viết 100% bằng Tiếng Anh để tối ưu hóa khả năng hiểu kỹ thuật của AI.
+
+### 4. Knowledge Library (`knowledge/`)
+Tri thức chuyên sâu được tách rời hoàn toàn khỏi Prompt. Ví dụ: Kiến thức về React (`knowledge/frontend/react.md`) chỉ được gọi (On-demand RAG) khi AI thực sự làm việc với React.
+
+### 5. Output Format (Vietnamese Report)
+Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Policy: Báo cáo bằng Tiếng Việt, chia mục rõ ràng (Summary, Changes, Root Cause, Risks, Next Actions).
+
+---
+
+## 🧩 Danh sách 20+ Master Skills
+
+Các skill được chia thành các nhóm (Category) rõ ràng:
+- **Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-policy-engine`, `qk-access-policy`
+- **Engineering / Dev:** `qk-feature-delivery`, `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-design-to-code`, `qk-ui-system-builder`
+- **Validation & Standards:** `qk-validation-gate`, `qk-engineering-standard`, `qk-ui-audit`, `qk-project-health`, `qk-bug-resolution`
+- **Ops & AI:** `qk-system-evolution`, `qk-production-release`, `qk-ai-builder`, `qk-project-bootstrap`
+- **Docs & Utils:** `qk-docs`, `qk-documentation-system`, `qk-project-memory`, `qk-help`
+
+---
+
+## 🔄 Luồng Handoff Pipeline Khép Kín
+
+Bất cứ một tính năng hay lỗi nào cũng được đi qua một đường ống khép kín (Abstract Pipeline):
 ```text
-User Request 
-   ↓
-qk-orchestrator (Phân tích, chọn qk-feature-delivery)
-   ↓
-qk-context-loader (Load code liên quan Auth)
-   ↓
-qk-policy-engine & qk-access-policy (Check quyền)
-   ↓
-qk-engineering-standard (Rút luật Backend/Security)
-   ↓
-[THỰC THI BỞI qk-feature-delivery]
-   ↓
-qk-validation-gate (Test, Lint)
-   ↓
-qk-docs (Cập nhật API doc, Changelog)
-   ↓
-qk-documentation-system (Lưu các Pattern mới vào Memory)
-```
-
----
-
-## 💡 Ví Dụ Thực Tế (Common Examples)
-
-Dưới đây là một số ví dụ sử dụng các kỹ năng phổ biến và mạnh mẽ nhất trong quá trình code hàng ngày của bạn:
-
-### 1. `qk-orchestrator` (Trợ lý điều phối trung tâm)
-Nếu bạn không biết nên dùng skill nào, hãy gọi Orchestrator. Nó sẽ tự động phân tích và kích hoạt đúng các skill bên dưới.
-```bash
-./qk-orchestrator "Tôi muốn tạo một trang Dashboard hiển thị doanh thu bằng React"
-```
-
-### 2. `qk-feature-delivery` (Phát triển tính năng E2E)
-Dùng khi bạn muốn xây dựng trọn vẹn một tính năng từ DB, API đến UI và Test.
-```bash
-./qk-feature-delivery "Tạo luồng thanh toán giỏ hàng (Cart Checkout), lưu vào bảng orders và gọi API thanh toán Stripe"
-```
-
-### 3. `qk-bug-resolution` (Chẩn đoán và diệt Bug triệt để)
-Tuyệt đối không dùng prompt thường để sửa lỗi. Dùng kỹ năng này để ép AI tìm Root Cause và viết Regression Test.
-```bash
-./qk-bug-resolution "API /users/profile đang trả về 500 khi user chưa có avatar, stack trace như sau..."
-```
-
-### 4. `qk-ui-system-builder` (Chuẩn hóa giao diện)
-Dùng khi thiết kế các component dùng chung (Button, Card, Form) để đảm bảo không bị rác CSS.
-```bash
-./qk-ui-system-builder "Tạo một Data Table Component có hỗ trợ phân trang và filter, sử dụng Design Token hiện tại"
-```
-
-### 5. `qk-api-lifecycle` (Thiết kế và Code API)
-Dành cho Backend Engineer, đi từ spec đến code, type và test.
-```bash
-./qk-api-lifecycle "Thiết kế API cập nhật mật khẩu, yêu cầu validate JWT token và mã hóa bcrypt"
+analyze 
+  ↓
+implement 
+  ↓
+engineering-standard (Ép chuẩn Code, Naming, SOLID)
+  ↓
+validate (Chạy Linter, Tests, Security Check)
+  ↓
+complete (Tạo báo cáo bằng tiếng Việt)
 ```
 
 ---
@@ -124,7 +71,7 @@ npx ai-developer-skill-os init
 
 ## 🚀 Tra Cứu (Help)
 
-Để tra cứu danh sách toàn bộ 22 Kỹ năng và các mẹo sử dụng, hãy gọi:
+Để tra cứu danh sách toàn bộ 20+ Kỹ năng và các mẹo sử dụng, hãy gọi:
 ```bash
-./qk-help "Hiển thị tất cả các skill liên quan đến Frontend"
+./qk-help "Hiển thị tất cả các skill"
 ```

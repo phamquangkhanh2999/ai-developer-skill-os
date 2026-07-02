@@ -1,33 +1,59 @@
 ---
 name: qk-validation-gate
-description: Cổng kiểm định chất lượng bắt buộc (Test, Lint, Security) trước khi hoàn tất.
-mode_supported: [standard]
-input: [Completed code]
-output: [Validation pass/fail]
-workflow: [1. Run Tests -> 2. Linting -> 3. Security Scan -> 4. Handoff if PASS]
-allowed_tools: [run_command]
-handoff_to: [qk-docs]
+version: 3.0.0
+updated: 2026-07-02
+description: Mandatory Quality Gate (Test, Lint, Security).
+category: validation
+priority: critical
+tags: [ci, testing, linting, security, gatekeeper]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: Triggered automatically as the final step in a pipeline, or manually when the user asks to "check the code".
+inputs: [Modified files]
+outputs: [Validation Report (Pass/Fail)]
+allowed_tools: [run_command, grep_search]
+pipeline: [analyze, validate, complete]
 ---
 
-# 🛠️ qk-validation-gate - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-validation-gate - Standard Operating Procedure
 
-> **Mô tả:** Cổng kiểm định chất lượng bắt buộc (Test, Lint, Security) trước khi hoàn tất.
+> **Goal:** Hoạt động như một "Người Gác Cổng" (Gatekeeper). Đảm bảo không có lỗi cú pháp, vi phạm bảo mật, hoặc code rác nào lọt qua trước khi báo cáo hoàn thành.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Static Sweep):**
+   - Use `grep_search` to scan modified files for garbage code: `console.log(`, `debugger;`, `// TODO`, `@ts-ignore`.
+   - Scan for hardcoded secrets: `API_KEY=`, `Bearer ey...`.
+2. **Validate (Automated Checks):**
+   - Run the Linter: `npm run lint` or `eslint .`.
+   - Run the Type Checker: `tsc --noEmit`.
+   - Run the Tests: `npm run test` (if applicable).
+3. **Complete (Report & Auto-fix):**
+   - If minor lint errors exist, attempt an auto-fix (`npm run lint --fix`).
+   - If tests fail, report the exact failure to the user. Do NOT pretend it passed.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **Zero Tolerance:** A failed test or a TypeScript error means the Gate is FAILED. Do not ignore errors.
+- **No Force:** Never use `--force` or `--no-verify` flags.
+- **Real Execution:** You MUST run the actual CLI commands using `run_command` and wait for the output.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🌳 3. Decision Tree
+```text
+Did `npm run lint` return errors?
+  ├── YES → Are they auto-fixable?
+  │       ├── YES → Run `npm run lint --fix`.
+  │       └── NO → Manually fix the file and re-run.
+  └── NO → Proceed to Type Checking.
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `qk-docs`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+Did `tsc --noEmit` return errors?
+  ├── YES → Fix the TypeScript types. Do NOT use `any` as a shortcut.
+  └── NO → GATE PASSED.
+```
+
+## 🤝 4. Handoff Pipeline
+1. `complete`: Once all checks pass, output the Validation Report.
+
+## 📝 5. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** 🛡️ Đã chạy các cổng kiểm định (Lint, Test, Type).
+- **Chi tiết (Changes):** Liệt kê các lệnh đã chạy và kết quả.
+- **Xác thực (Verification):** Ghi rõ PASS (Xanh) hoặc FAIL (Đỏ).
+- **Rủi ro (Risks):** Có phát hiện code rác / comment tạm thời không.

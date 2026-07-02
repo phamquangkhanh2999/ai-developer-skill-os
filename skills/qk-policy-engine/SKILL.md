@@ -1,33 +1,52 @@
 ---
 name: qk-policy-engine
-description: Động cơ xét duyệt chính sách, đảm bảo tác vụ hợp lệ trước khi thực thi.
-mode_supported: [enterprise]
-input: [Task request]
-output: [Policy validation result]
-workflow: [1. Đọc chính sách -> 2. Đối chiếu request -> 3. Phê duyệt/Từ chối]
+version: 3.0.0
+updated: 2026-07-02
+description: Policy evaluation engine to ensure actions are authorized and safe.
+category: security
+priority: high
+tags: [security, policy, guardrails, authorization]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
+trigger: User asks to perform a high-risk destructive action (e.g., DROP table, mass delete).
+inputs: [Requested Action, Context]
+outputs: [Approval/Denial, Policy violations]
 allowed_tools: [read_file]
-handoff_to: [qk-access-policy]
+pipeline: [analyze, evaluate, complete]
 ---
 
-# 🛠️ qk-policy-engine - Quy Trình Vận Hành Chuẩn (SOP)
+# 🛠️ qk-policy-engine - Standard Operating Procedure
 
-> **Mô tả:** Động cơ xét duyệt chính sách, đảm bảo tác vụ hợp lệ trước khi thực thi.
+> **Goal:** Đóng vai trò là "Bộ quy tắc thép" (Policy Enforcer). Ngăn chặn các lệnh sai lầm có thể phá hoại hệ thống.
 
-## 🎯 1. Mục Tiêu (Goal)
-- Hoàn thành thành công tác vụ được giao liên quan đến nhiệm vụ của skill.
-- Đảm bảo chất lượng mã nguồn và tính nhất quán của hệ thống.
+## 🔄 1. Chain of Thought (SOP)
+1. **Analyze (Risk Assessment):**
+   - Classify the user's request (Low, Medium, High risk).
+   - High Risk: Dropping databases, deleting multiple files, force-pushing to `main`.
+2. **Evaluate (Policy Check):**
+   - Load security policies (from `.agents/AGENTS.md` or `.cursorrules`).
+   - Check if the action violates any safety constraints.
+3. **Complete (Decision):**
+   - Approve (Allow execution) or Deny (Block execution) with explicit reasons.
 
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Thu thập ngữ cảnh và hiểu rõ yêu cầu đầu vào.
-2. **Lên kế hoạch (Plan):** Xác định các bước cần thay đổi/tạo mới dựa trên bộ luật (rules).
-3. **Thực thi (Execute):** Tiến hành sửa đổi mã nguồn hoặc tạo tài liệu.
-4. **Xác thực (Verify):** Đảm bảo đầu ra đáp ứng đúng yêu cầu và không vi phạm quy định.
+## 🛡️ 2. Constraints & Rules
+- **Deny by Default:** If an action is highly destructive and no backup plan exists, DENY it.
+- **Override:** Only allow skipping the policy if the user explicitly passes an `--override` flag in their prompt.
 
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- CẤM bỏ qua việc kiểm tra `qk-engineering-standard` trước khi viết code.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
+## 🌳 3. Decision Tree
+```text
+Does the action involve deleting data or resources in Production?
+  ├── YES → Has the user provided a backup confirmation?
+  │       ├── YES → Approve.
+  │       └── NO → DENY and request backup confirmation.
+  └── NO → Approve.
+```
 
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `qk-access-policy`
-- Nội dung bàn giao: Chuyển toàn bộ ngữ cảnh và kết quả đã thực thi cho bước tiếp theo.
+## 🤝 4. Handoff Pipeline
+1. `complete`: Generate the Policy Decision Report.
+
+## 📝 5. Output Format
+Vui lòng trả kết quả bằng Tiếng Việt.
+- **Tóm tắt (Summary):** Mức độ rủi ro (Risk Level).
+- **Phán quyết (Decision):** ✅ APPROVED hoặc ❌ DENIED.
+- **Nguyên nhân (Reasoning):** Vi phạm chính sách nào (nếu bị Deny).
+- **Hành động tiếp (Next Action):** ...
