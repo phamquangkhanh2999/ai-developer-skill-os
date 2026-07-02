@@ -1,6 +1,6 @@
 ---
 name: qk-bug-resolution
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Xử lý và sửa các lỗi (bugs), đồng thời ngăn ngừa lỗi hồi quy.
 category: engineering

@@ -1,6 +1,6 @@
 ---
 name: qk-project-bootstrap
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Khởi tạo dự án mới với các best practices, linters, và cấu trúc thư mục chuẩn.
 category: setup

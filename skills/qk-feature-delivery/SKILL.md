@@ -1,6 +1,6 @@
 ---
 name: qk-feature-delivery
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Phát triển tính năng mới hoàn chỉnh từ Frontend đến Backend.
 category: engineering

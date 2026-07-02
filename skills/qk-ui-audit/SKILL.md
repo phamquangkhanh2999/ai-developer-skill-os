@@ -1,6 +1,6 @@
 ---
 name: qk-ui-audit
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất.
 category: validation

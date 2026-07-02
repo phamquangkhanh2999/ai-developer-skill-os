@@ -1,6 +1,6 @@
 ---
 name: qk-api-lifecycle
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Thiết kế, triển khai, và tích hợp các API endpoints.
 category: engineering

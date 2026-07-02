@@ -1,6 +1,6 @@
 ---
 name: qk-engineering-standard
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Ép buộc áp dụng SOLID, DRY, Clean Code, và các quy tắc đặt tên.
 category: standard

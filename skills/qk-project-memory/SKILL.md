@@ -1,6 +1,6 @@
 ---
 name: qk-project-memory
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc.
 category: utilities

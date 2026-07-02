@@ -1,6 +1,6 @@
 ---
 name: qk-validation-gate
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Cổng kiểm tra chất lượng bắt buộc (Test, Lint, Security).
 category: validation

@@ -1,6 +1,6 @@
 ---
 name: qk-docs
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu.
 category: documentation

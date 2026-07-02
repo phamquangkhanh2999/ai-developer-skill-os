@@ -1,6 +1,6 @@
 ---
 name: qk-system-evolution
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback.
 category: operations

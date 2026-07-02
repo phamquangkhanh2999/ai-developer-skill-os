@@ -1,6 +1,6 @@
 ---
 name: qk-policy-engine
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền.
 category: security

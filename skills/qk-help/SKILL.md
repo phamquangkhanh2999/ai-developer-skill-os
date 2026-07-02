@@ -1,6 +1,6 @@
 ---
 name: qk-help
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng.
 category: utilities

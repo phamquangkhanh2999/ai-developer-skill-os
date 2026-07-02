@@ -1,6 +1,6 @@
 ---
 name: qk-orchestrator
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Điều hướng yêu cầu của người dùng, phân tích ý định và ủy quyền cho các sub-skills phù hợp.
 category: orchestration

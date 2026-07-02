@@ -1,6 +1,6 @@
 ---
 name: qk-access-policy
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Quản lý RBAC, ABAC và các ranh giới bảo mật.
 category: security

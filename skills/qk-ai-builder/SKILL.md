@@ -1,6 +1,6 @@
 ---
 name: qk-ai-builder
-version: version: 3.1.5
+version: 3.1.5
 updated: 2026-07-02
 description: Thiết kế AI Logic, Prompts, RAG pipelines, và các Agents.
 category: ai
