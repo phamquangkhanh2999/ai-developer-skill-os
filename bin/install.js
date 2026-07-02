@@ -237,8 +237,20 @@ Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải
         }
 
         if (fs.existsSync(ruleFilePath)) {
-          fs.appendFileSync(ruleFilePath, "\n\n" + writeContent);
-          console.log(`✅ Đã GHI THÊM cấu hình tự động vào file: ${ruleFilePath}`);
+          const existingContent = fs.readFileSync(ruleFilePath, 'utf8');
+          const marker = isGemini ? '<RULE[ai_skill_os]>' : '[Role]\nYou are an elite AI Software Engineer.';
+          const markerIndex = existingContent.indexOf(marker);
+          if (markerIndex !== -1) {
+            const before = existingContent.substring(0, markerIndex);
+            const after = existingContent.substring(markerIndex).split('\n').slice(isGemini ? 2 : 1).join('\n');
+            const lastMarkerEnd = after.indexOf(isGemini ? '</RULE[ai_skill_os]>' : '[Trigger Mechanism]');
+            const actualAfter = lastMarkerEnd !== -1 ? after.substring(lastMarkerEnd + (isGemini ? 19 : 18)).trimStart() : after;
+            fs.writeFileSync(ruleFilePath, before + writeContent.trimStart() + (actualAfter ? '\n' + actualAfter : '') + '\n');
+            console.log(`✅ Đã CẬP NHẬT cấu hình tự động trong file: ${ruleFilePath}`);
+          } else {
+            fs.appendFileSync(ruleFilePath, "\n\n" + writeContent);
+            console.log(`✅ Đã GHI THÊM cấu hình tự động vào file: ${ruleFilePath}`);
+          }
         } else {
           fs.writeFileSync(ruleFilePath, writeContent);
           console.log(`✅ Đã TẠO MỚI file cấu hình: ${ruleFilePath}`);

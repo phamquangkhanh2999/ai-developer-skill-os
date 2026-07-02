@@ -1,9 +1,11 @@
 ---
 name: qk-policy-engine
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Policy evaluation engine to ensure actions are authorized and safe.
 category: security
+behavior: static-analysis
+intent: review-code
 priority: high
 tags: [security, policy, guardrails, authorization]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, evaluate, complete]
 > **Goal:** Đóng vai trò là "Bộ quy tắc thép" (Policy Enforcer). Ngăn chặn các lệnh sai lầm có thể phá hoại hệ thống.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Risk Assessment):**
    - Classify the user's request (Low, Medium, High risk).
    - High Risk: Dropping databases, deleting multiple files, force-pushing to `main`.
@@ -29,10 +32,12 @@ pipeline: [analyze, evaluate, complete]
    - Approve (Allow execution) or Deny (Block execution) with explicit reasons.
 
 ## 🛡️ 2. Constraints & Rules
+
 - **Deny by Default:** If an action is highly destructive and no backup plan exists, DENY it.
 - **Override:** Only allow skipping the policy if the user explicitly passes an `--override` flag in their prompt.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Does the action involve deleting data or resources in Production?
   ├── YES → Has the user provided a backup confirmation?
@@ -42,10 +47,13 @@ Does the action involve deleting data or resources in Production?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `complete`: Generate the Policy Decision Report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Mức độ rủi ro (Risk Level).
 - **Phán quyết (Decision):** ✅ APPROVED hoặc ❌ DENIED.
 - **Nguyên nhân (Reasoning):** Vi phạm chính sách nào (nếu bị Deny).

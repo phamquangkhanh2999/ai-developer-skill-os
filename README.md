@@ -1,8 +1,8 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v3.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v4.0
 
-> Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini).
+> Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini, Kilo).
 
-Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v3.0** được thiết kế lại hoàn toàn theo chuẩn **Enterprise-ready Agentic Framework**. Nó biến Agent của bạn thành một **Senior Engineer / Chief Architect** thực thụ với khả năng tự suy luận bằng Tiếng Anh, nhưng lại báo cáo thân thiện bằng Tiếng Việt.
+Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v4.0** được thiết kế lại hoàn toàn theo chuẩn **Enterprise-ready Agentic Framework**. Nó biến Agent của bạn thành một **Senior Engineer / Chief Architect** thực thụ với khả năng tự suy luận bằng Tiếng Anh, nhưng lại báo cáo thân thiện bằng Tiếng Việt.
 
 ---
 
@@ -10,11 +10,11 @@ Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những promp
 
 Hệ thống được thiết kế decoupled (phân tách) hoàn hảo để chống tràn Context Window và tối ưu khả năng suy luận của LLM:
 
-### 1. Global Policy (`.agents/AGENTS.md`)
-Chứa các bộ luật thép toàn cục (Agent-wide rules):
-- **Language Policy:** Suy luận kỹ thuật bằng Tiếng Anh, giao tiếp với người dùng bằng Tiếng Việt.
-- **Execution Principles:** `Read before Write`, `Verify before Complete`.
-- **Engineering Policy:** Trị bệnh tận gốc (Fix root cause), giữ nguyên chuẩn cũ.
+### 1. OS Kernel (`.agents/AGENTS.md`)
+The core of the system is a lightweight, heavily optimized OS Kernel that dictates agent behavior across all tasks.
+- **Intent-Based Policies:** Skills are classified into 4 groups (Static Analysis, Development, Validation, Maintenance) rather than micromanaged with individual exceptions.
+- **Progressive Evidence Collection:** Agents collect context incrementally (1 file → 3 files) and stop at a 80% Confidence Threshold, eliminating "hallucination loops".
+- **Risk-based Verification:** Tests and builds are only run based on the risk level of the change, strictly guided by the Cost and Escalation policies.
 
 ### 2. Core Templates (`templates/`)
 Chứa các format báo cáo chuẩn (như `bug-report.md`, `feature-report.md`, `review-report.md`). AI không cần "học lại" cách viết báo cáo, giúp đầu ra luôn nhất quán 100%.
@@ -67,6 +67,26 @@ npm i -g ai-developer-skill-os
 Hoặc sử dụng qua `npx`:
 ```bash
 npx ai-developer-skill-os init
+```
+
+## 🧪 Testing
+
+This project includes a full test suite to ensure registry integrity and SKILL.md spec compliance:
+
+```bash
+npm test
+```
+
+CI runs automatically on every PR via GitHub Actions, enforcing:
+- Registry matches filesystem
+- All SKILL.md frontmatters comply with `docs/SPEC.md`
+- Install script idempotency
+
+## 🗑️ Cách Gỡ Cài Đặt (Uninstallation)
+
+Nếu bạn đã cài đặt thông qua npm global, bạn có thể gỡ bỏ bằng lệnh:
+```bash
+npm uninstall -g ai-developer-skill-os
 ```
 
 ## 🚀 Tra Cứu (Help)

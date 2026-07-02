@@ -1,9 +1,11 @@
 ---
 name: qk-feature-delivery
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Develop new features end-to-end (Frontend & Backend).
 category: engineering
+behavior: development
+intent: implement-feature
 priority: high
 tags: [feature, development, e2e, ui, api]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 > **Goal:** Phát triển một tính năng mới hoàn chỉnh, từ giao diện (Frontend) đến API (Backend) và Cơ sở dữ liệu (nếu có).
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Requirements Gathering):**
    - Read the user's requirements.
    - Break down the feature into sub-tasks (e.g., Schema -> API -> UI Component -> Integration).
@@ -32,12 +35,14 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
    - Check if the UI is responsive.
    - Ensure the API handles edge cases (empty states, loading, error).
 
-## 🛡️ 2. Constraints & Rules
+## 🛡️ 3. Constraints & Rules
+
 - **Contract First:** Always define the Type/Interface contract before writing the implementation logic.
 - **Component Reusability:** Do not create a new Button or Input if a Shared Component already exists in `src/components/shared/`.
 - **DRY (Don't Repeat Yourself):** Extract inline styles or duplicate logic into hooks/utilities.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Does the feature require Backend API changes?
   ├── YES → Start with Database Schema/Types -> API Route -> UI Integration.
@@ -47,14 +52,19 @@ Does the feature require Backend API changes?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 After implementing the feature, map to the pipeline:
+
 1. `engineering-standard`: Ensure naming conventions and file size limits are respected.
 2. `validate`: Run tests and format the code.
 3. `complete`: Output the final report.
 
 ## 📝 5. Output Format
+
 Vui lòng báo cáo lại bằng Tiếng Việt với cấu trúc tương tự `templates/bug-report.md` nhưng thay đổi tiêu đề thành:
+
 ### 🚀 Báo Cáo Triển Khai Tính Năng (Feature Report)
+
 - **Tóm tắt (Summary):** Tính năng gì đã được làm.
 - **Chi tiết (Changes):** Liệt kê các file tạo mới / chỉnh sửa.
 - **Kiến trúc (Reasoning):** Giải thích quyết định thiết kế State/API.

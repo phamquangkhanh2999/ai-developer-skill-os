@@ -1,9 +1,11 @@
 ---
 name: qk-data-lifecycle
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Manage Database Schema, Migrations, and Repositories.
 category: database
+behavior: development
+intent: implement-feature
 priority: medium
 tags: [database, sql, migration, schema, orm]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, design, implement, engineering-standard, validate, complete]
 > **Goal:** Quản lý an toàn vòng đời dữ liệu, đảm bảo Schema chuẩn xác, Migration có thể Rollback và Query tối ưu.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Requirements):**
    - Understand the entities and their relationships (1:1, 1:N, N:N).
    - Identify the ORM/Query Builder used in the project (e.g., Prisma, TypeORM, Drizzle).
@@ -33,11 +36,13 @@ pipeline: [analyze, design, implement, engineering-standard, validate, complete]
    - Review the migration script for destructive operations (e.g., `DROP TABLE`, `DROP COLUMN`).
 
 ## 🛡️ 2. Constraints & Rules
+
 - **No Data Loss:** NEVER execute a migration that drops data on Production without explicit User approval and a backup plan.
 - **Decoupling:** Do not write SQL queries directly in Controllers. Always use the Repository or DAO pattern.
 - **Index Rule:** Any column used in a `WHERE`, `JOIN`, or `ORDER BY` clause should be evaluated for an index.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is this modifying an existing table in Production?
   ├── YES → Does it drop a column or change a data type destructively?
@@ -47,12 +52,15 @@ Is this modifying an existing table in Production?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `engineering-standard`: Verify naming conventions (e.g., snake_case for DB columns if required).
 2. `validate`: Run dry-run migrations or unit tests.
 3. `complete`: Generate the Database report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Bảng nào được tạo/sửa.
 - **Chi tiết (Changes):** File migration và Model đã sinh ra.
 - **Kiến trúc (Reasoning):** Lý do thiết kế quan hệ bảng và các Index.

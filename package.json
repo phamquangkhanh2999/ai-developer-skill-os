@@ -1,14 +1,18 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "3.0.0",
+  "version": "3.1.1",
   "description": "Multi-agent skill package cho AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 23 skills chuyên nghiệp.",
   "main": "bin/install.js",
   "bin": {
     "ai-developer-skill-os": "bin/install.js",
     "ai-skill": "bin/install.js"
   },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:registry": "vitest run --config vitest.config.js",
+    "lint": "echo \"No linter configured\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -30,5 +34,11 @@
   "bugs": {
     "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os/issues"
   },
-  "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os#readme"
+  "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os#readme",
+  "devDependencies": {
+    "vitest": "^2.1.0",
+    "fast-glob": "^3.3.0",
+    "gray-matter": "^4.0.0",
+    "js-yaml": "^4.1.0"
+  }
 }

@@ -1,9 +1,11 @@
 ---
 name: qk-engineering-standard
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Enforce SOLID, DRY, Clean Code, and Naming conventions.
 category: standard
+behavior: static-analysis
+intent: review-code
 priority: critical
 tags: [clean-code, architecture, refactoring, solid]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, review, implement, validate, complete]
 > **Goal:** Đóng vai trò là "Kiến trúc sư trưởng", rà soát và ép buộc mã nguồn phải tuân thủ chuẩn mực Clean Code, dễ đọc và dễ bảo trì.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Context Review):**
    - Scan the target file(s) and determine their role (UI, Logic, API, Config).
 2. **Review (Smell Detection):**
@@ -32,12 +35,14 @@ pipeline: [analyze, review, implement, validate, complete]
 4. **Verify (Validation):**
    - Ensure the refactoring did NOT change the business logic or behavior of the app (Regression check).
 
-## 🛡️ 2. Constraints & Rules
+## 🛡️ 3. Constraints & Rules
+
 - **Code is for Humans:** Write code that junior developers can easily understand. Avoid overly clever or obscure syntax.
 - **Scope Limit:** Do NOT refactor the entire project if the user only asked to review one file. Limit the scope to the current task context.
 - **Preserve Behavior:** Refactoring must strictly preserve backward compatibility.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is the file larger than 300 lines?
   ├── YES → Propose splitting the file into sub-components or moving logic to hooks.
@@ -49,11 +54,14 @@ Does the React Component contain `fetch()` or heavy data mapping?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `validate`: Run static analysis (Linters, TypeScript compiler) to ensure the refactored code has no syntax errors.
 2. `complete`: Generate the review report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt. Cấu trúc báo cáo bao gồm:
+
 - **Tóm tắt (Summary):** File nào vừa được Refactor / Review.
 - **Chi tiết (Changes):** Các thay đổi cụ thể về Tên biến, Cấu trúc.
 - **Nguyên nhân (Reasoning):** Giải thích tại sao code cũ là "Bad Practice" và code mới tốt hơn thế nào.

@@ -1,9 +1,11 @@
 ---
 name: qk-validation-gate
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Mandatory Quality Gate (Test, Lint, Security).
 category: validation
+behavior: validation
+intent: validate
 priority: critical
 tags: [ci, testing, linting, security, gatekeeper]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, validate, complete]
 > **Goal:** Hoạt động như một "Người Gác Cổng" (Gatekeeper). Đảm bảo không có lỗi cú pháp, vi phạm bảo mật, hoặc code rác nào lọt qua trước khi báo cáo hoàn thành.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Static Sweep):**
    - Use `grep_search` to scan modified files for garbage code: `console.log(`, `debugger;`, `// TODO`, `@ts-ignore`.
    - Scan for hardcoded secrets: `API_KEY=`, `Bearer ey...`.
@@ -30,12 +33,14 @@ pipeline: [analyze, validate, complete]
    - If minor lint errors exist, attempt an auto-fix (`npm run lint --fix`).
    - If tests fail, report the exact failure to the user. Do NOT pretend it passed.
 
-## 🛡️ 2. Constraints & Rules
+## 🛡️ 3. Constraints & Rules
+
 - **Zero Tolerance:** A failed test or a TypeScript error means the Gate is FAILED. Do not ignore errors.
 - **No Force:** Never use `--force` or `--no-verify` flags.
 - **Real Execution:** You MUST run the actual CLI commands using `run_command` and wait for the output.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Did `npm run lint` return errors?
   ├── YES → Are they auto-fixable?
@@ -49,10 +54,13 @@ Did `tsc --noEmit` return errors?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `complete`: Once all checks pass, output the Validation Report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** 🛡️ Đã chạy các cổng kiểm định (Lint, Test, Type).
 - **Chi tiết (Changes):** Liệt kê các lệnh đã chạy và kết quả.
 - **Xác thực (Verification):** Ghi rõ PASS (Xanh) hoặc FAIL (Đỏ).

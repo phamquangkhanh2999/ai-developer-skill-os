@@ -1,9 +1,11 @@
 ---
 name: qk-ui-system-builder
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Build and maintain Design Systems, Token extraction, and shared UI libraries.
 category: frontend
+behavior: development
+intent: implement-feature
 priority: medium
 tags: [design-system, tokens, shared-components, storybook]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 > **Goal:** Đảm bảo tính Nhất quán Giao diện (Consistency). Quản lý Design Tokens và xây dựng thư viện Shared Components.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Token Extraction):**
    - Extract raw colors and typography into CSS Variables or Tailwind config.
 2. **Implement (Component Factory):**
@@ -27,14 +30,18 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
    - Ensure every variation (primary, secondary, disabled) is accounted for.
 
 ## 🛡️ 2. Constraints & Rules
+
 - **Stateless:** System UI components should NEVER have their own backend logic or hardcoded strings.
 - **Extendable:** Always allow users to pass `className` and `...props` to the base element.
 
 ## 🤝 3. Handoff Pipeline
+
 1. `engineering-standard`: Verify naming conventions.
 2. `complete`: Output the Design System Report.
 
 ## 📝 4. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Thư viện Component vừa cập nhật.
 - **Chi tiết (Changes):** Liệt kê các variant (màu sắc, kích cỡ).

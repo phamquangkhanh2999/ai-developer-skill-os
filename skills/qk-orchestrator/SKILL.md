@@ -1,9 +1,11 @@
 ---
 name: qk-orchestrator
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Route user requests, parse intents, and delegate to the correct sub-skills.
 category: orchestration
+behavior: static-analysis
+intent: review-code
 priority: critical
 tags: [router, orchestrator, delegation, ai-manager]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, plan, delegate]
 > **Goal:** "Tổng tư lệnh" (Master Orchestrator). Phân tích ý đồ của người dùng và điều phối các kỹ năng (Skills) khác để giải quyết vấn đề thay vì làm mọi thứ một cách thủ công.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Intent Parsing):**
    - Read the user's request. Determine the goal: Is it a Bug Fix, a New Feature, a Refactor, or just a Question?
 2. **Plan (Context Gathering & Skill Selection):**
@@ -28,10 +31,12 @@ pipeline: [analyze, plan, delegate]
    - Handoff the gathered context to the selected Skill.
 
 ## 🛡️ 2. Constraints & Rules
+
 - **Delegation First:** Do not write source code directly while acting as the Orchestrator. Delegate to the correct specialized Skill.
 - **Ambiguity Check:** If the user's intent is unclear, give them 2-3 Skill suggestions to choose from.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is the task a massive project (e.g., "Build an Admin Dashboard")?
   ├── YES → Break it down:
@@ -43,10 +48,13 @@ Is the task a massive project (e.g., "Build an Admin Dashboard")?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `delegate`: Call the target Skill.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Đã phân tích xong yêu cầu của User.
 - **Quyết định điều phối (Reasoning):** Giao việc cho Skill nào.
 - **Hành động tiếp (Next Action):** Tự động chuyển vai trò sang Skill được chọn.

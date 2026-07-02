@@ -1,9 +1,11 @@
 ---
 name: qk-api-lifecycle
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Design, implement, and integrate API endpoints.
 category: engineering
+behavior: development
+intent: implement-feature
 priority: high
 tags: [api, backend, frontend-integration, endpoints]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
 > **Goal:** Quản lý toàn bộ vòng đời của một API, từ việc thiết kế Spec (Swagger/Types) cho đến khi Backend code xong và Frontend gọi thành công.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Contract Definition):**
    - Read the user requirements.
    - Define the exact API contract (Request Body, Query Params, Response DTO) in TypeScript interfaces or OpenAPI spec.
@@ -34,10 +37,12 @@ pipeline: [analyze, implement, engineering-standard, validate, complete]
    - Ensure loading states are managed on the frontend.
 
 ## 🛡️ 2. Constraints & Rules
+
 - **No Hardcoded URLs:** Never hardcode `http://localhost:3000` inside frontend components. Always use environment variables (`process.env.API_URL`).
 - **Separation of Concerns:** Do NOT write `fetch` or `axios.get` directly inside a React UI component. Extract it to a custom hook or an API service file.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is this a Backend or Frontend task?
   ├── BACKEND → Does the API need Database access?
@@ -49,12 +54,15 @@ Is this a Backend or Frontend task?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `engineering-standard`: Verify API naming conventions (e.g., `GET /users` instead of `POST /getUsers`).
 2. `validate`: Run API tests and Type-checks.
 3. `complete`: Generate the final report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt. Sử dụng template chuẩn của hệ thống:
+
 - **Tóm tắt (Summary):** Các endpoint đã tạo hoặc tích hợp.
 - **Chi tiết (Changes):** File nào chứa logic API.
 - **Kiến trúc (Reasoning):** Lý do chọn thư viện hoặc cách bắt lỗi (Error handling).

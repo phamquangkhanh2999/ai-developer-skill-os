@@ -1,9 +1,11 @@
 ---
 name: qk-project-health
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Comprehensive audit of Code Smells, Tech Debt, and Architecture.
 category: architecture
+behavior: static-analysis
+intent: review-code
 priority: medium
 tags: [audit, architecture, tech-debt, code-smell]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, review, validate, complete]
 > **Goal:** "Khám sức khỏe" toàn diện cho Codebase. Tìm ra các Nợ Kỹ Thuật (Tech Debt), Mã Lỗi Thời (Code Smells), và các rủi ro cấu trúc dài hạn.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Dependency Scan):**
    - Read `package.json` to identify outdated libraries, bloated dependencies, or unused packages.
 2. **Review (Architecture Scan):**
@@ -30,11 +33,13 @@ pipeline: [analyze, review, validate, complete]
 4. **Complete (Roadmap):**
    - Generate a prioritized Refactor Roadmap (High, Medium, Low).
 
-## 🛡️ 2. Constraints & Rules
+## 🛡️ 3. Constraints & Rules
+
 - **Audit Only - No Touch:** Do not modify any code. You are diagnosing, not performing surgery.
 - **Evidence Based:** Provide concrete metrics (e.g., "Folder `components` has 45 files, making it hard to navigate").
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is the `src/components` folder bloated (>30 files)?
   ├── YES → Recommend migrating to a Feature-driven structure (e.g., `src/features/auth`).
@@ -46,10 +51,13 @@ Are there components exceeding 500 lines?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `complete`: Output the Health Audit Report.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Đánh giá tổng quan Sức Khỏe Dự Án (Điểm: X/100).
 - **Chi tiết (Changes):** Phân tích Dependencies, Architecture, Code Smells.
 - **Xác thực (Verification):** Các bằng chứng thu thập được từ code (dòng nào, file nào phình to).

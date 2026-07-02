@@ -1,9 +1,11 @@
 ---
 name: qk-context-loader
-version: 3.0.0
+version: 3.1.0
 updated: 2026-07-02
 description: Load relevant files and map the dependency graph for a task.
 category: utilities
+behavior: static-analysis
+intent: review-code
 priority: medium
 tags: [context, filesystem, dependencies, graph]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
@@ -19,6 +21,7 @@ pipeline: [analyze, implement, complete]
 > **Goal:** "Người thu thập tình báo". Đảm bảo AI hiểu rõ môi trường xung quanh một file code trước khi tiến hành sửa nó, tránh lỗi thiếu context.
 
 ## 🔄 1. Chain of Thought (SOP)
+
 1. **Analyze (Target Identification):**
    - Identify the main file that needs modification.
 2. **Implement (Graph Traversal):**
@@ -29,9 +32,11 @@ pipeline: [analyze, implement, complete]
    - Build a mental map of how the data flows.
 
 ## 🛡️ 2. Constraints & Rules
+
 - **Token Optimization:** Do not load `node_modules` or massive minified build files. Extract only the exact logic needed.
 
 ## 🌳 3. Decision Tree
+
 ```text
 Is the target file a UI Component?
   ├── YES → Load its CSS/Theme tokens and any nested Child components.
@@ -39,9 +44,12 @@ Is the target file a UI Component?
 ```
 
 ## 🤝 4. Handoff Pipeline
+
 1. `complete`: Provide the context map to the Orchestrator or Target Skill.
 
 ## 📝 5. Output Format
+
 Vui lòng trả kết quả bằng Tiếng Việt.
+
 - **Tóm tắt (Summary):** Đã nạp thành công ngữ cảnh.
 - **Chi tiết (Changes):** Các file có liên quan trực tiếp.

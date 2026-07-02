@@ -1,0 +1,56 @@
+name: CI / Spec Compliance & Registry Validation
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'skills.json'
+      - 'docs/SPEC.md'
+      - 'bin/install.js'
+  push:
+    branches: [ main ]
+    paths:
+      - 'skills/**'
+      - 'skills.json'
+      - 'docs/SPEC.md'
+      - 'bin/install.js'
+
+jobs:
+  lint-and-validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate Skills Registry vs Filesystem
+        run: npm run test:registry
+
+      - name: Validate SKILL.md Spec Compliance
+        run: npm run test
+
+  snapshot:
+    runs-on: windows-latest
+    needs: lint-and-validate
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate Registry Snapshot
+        run: node bin/install.js --ide=7 --scope=2
