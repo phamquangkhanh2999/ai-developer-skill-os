@@ -1,6 +1,6 @@
 ---
 name: qk-engineering-standard
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Enforce SOLID, DRY, Clean Code, and Naming conventions.
 category: standard

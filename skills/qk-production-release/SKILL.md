@@ -1,6 +1,6 @@
 ---
 name: qk-production-release
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Prepare the codebase for a production release (Build, CI/CD, Security).
 category: operations

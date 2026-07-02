@@ -1,6 +1,6 @@
 ---
 name: qk-bug-resolution
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Fix bugs and prevent regressions.
 category: engineering

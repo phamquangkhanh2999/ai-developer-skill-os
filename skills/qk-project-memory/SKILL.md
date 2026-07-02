@@ -1,6 +1,6 @@
 ---
 name: qk-project-memory
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Store and retrieve long-term project context across sessions.
 category: utilities

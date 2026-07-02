@@ -1,6 +1,6 @@
 ---
 name: qk-validation-gate
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Mandatory Quality Gate (Test, Lint, Security).
 category: validation

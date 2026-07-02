@@ -1,6 +1,6 @@
 ---
 name: qk-access-policy
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Manage RBAC, ABAC, and security boundaries.
 category: security

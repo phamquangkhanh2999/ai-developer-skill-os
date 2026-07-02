@@ -1,6 +1,6 @@
 ---
 name: qk-feature-delivery
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Develop new features end-to-end (Frontend & Backend).
 category: engineering

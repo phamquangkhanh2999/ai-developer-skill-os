@@ -1,6 +1,6 @@
 ---
 name: qk-help
-version: 3.1.2
+version: 3.1.4
 updated: 2026-07-02
 description: Display the list of available skills and pro-tips.
 category: utilities
