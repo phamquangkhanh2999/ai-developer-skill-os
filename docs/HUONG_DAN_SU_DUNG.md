@@ -1,9 +1,9 @@
 # Hướng Dẫn Sử Dụng — AI Developer Skill OS
 
 **Tác giả:** Quang Khánh  
-**Phiên bản:** v1.0.1  
+**Phiên bản:** v2.0.0 (Master OS Architecture)
 
-Chào mừng bạn đến với **AI Developer Skill OS**, bộ khung quản lý kỹ năng (Skill Framework) biến các trợ lý AI (Gemini, Antigravity, Claude Code, Cursor, Windsurf) từ một "cỗ máy sinh code" thành một Senior Software Engineer thực thụ.
+Chào mừng bạn đến với **AI Developer Skill OS**, hệ điều hành kỹ năng (Skill Framework) biến các trợ lý AI (Gemini, Antigravity, Claude Code, Cursor, Windsurf) từ một "cỗ máy sinh code" thành một **Senior Software Engineer / Chief Architect** thực thụ với khả năng tự học, tự kiểm toán và tự viết tài liệu.
 
 ---
 
@@ -11,12 +11,12 @@ Chào mừng bạn đến với **AI Developer Skill OS**, bộ khung quản lý
 
 Thông thường, khi bạn yêu cầu AI "Làm cho tôi tính năng X", AI sẽ nhảy ngay vào viết code. Điều này ở các dự án lớn thường dẫn đến: phá vỡ kiến trúc, tạo ra code rác, và không tuân thủ các component dùng chung.
 
-Với hệ điều hành kỹ năng (Skill OS) này:
-1. Bạn đưa ra yêu cầu.
-2. Skill **agent-orchestrator** sẽ tiếp nhận, phân tích và lên kế hoạch (Plan only).
-3. Nó gọi **context-manager** để đọc đúng những file cần thiết (chống tràn ngữ cảnh).
-4. Nó gọi các skill chuyên biệt (`ui-builder`, `api-integration`, `database-engineer`...) để thực thi từng bước.
-5. AI luôn bị ép phải dùng tiếng Anh để viết code/định nghĩa biến, nhưng sẽ dùng tiếng Việt để giao tiếp và báo cáo với bạn.
+Với hệ điều hành 22 Master Skills này:
+1. Bạn đưa ra yêu cầu thông qua **`qk-orchestrator`**.
+2. Hệ thống sẽ tự động gọi **`qk-context-loader`** để gom đúng file (tránh tràn ngữ cảnh) và **`qk-policy-engine`** để kiểm tra quyền.
+3. Kế tiếp, **`qk-engineering-standard`** sẽ gắn các "luật thép" (rules) của dự án vào ngữ cảnh.
+4. AI kích hoạt kỹ năng thực thi E2E như **`qk-feature-delivery`** để code và test trọn vẹn.
+5. Cuối cùng, **`qk-validation-gate`** chặn lại kiểm tra lỗi, trước khi giao cho **`qk-docs`** và **`qk-documentation-system`** tự động cập nhật tài liệu và bộ nhớ hệ thống.
 
 ---
 
@@ -26,127 +26,95 @@ Bộ Skin này rất linh hoạt và được phân phối qua NPM để bạn c
 
 Mở terminal tại gốc dự án của bạn và chạy lệnh cài đặt tương ứng với công cụ AI bạn đang dùng:
 
-### Dành cho Gemini IDE / Antigravity
-### 1. Cài đặt (Installation)
-> Khuyên dùng cách cài đặt qua NPM để luôn nhận được cấu trúc mới nhất và tận dụng tính năng Auto-Config.
-
-Mở terminal tại thư mục gốc dự án của bạn và chạy lệnh sau:
 ```bash
-npx ai-developer-skill-os init
+npx rules-skill-ai init
 ```
+
 Quá trình cài đặt sẽ hỏi bạn 2 câu quan trọng:
 
 **Câu 1: Bạn đang dùng IDE nào?**
 Hệ thống sẽ tự động tạo file cấu hình tương ứng (ví dụ `.cursorrules`, `.windsurfrules`, `.clinerules`) và bơm sẵn System Prompt vào để AI tự nhận diện các skill.
 
 **Câu 2: Phạm vi cài đặt?**
-- **(1) Local:** Cài vào thư mục ẩn `.qk-ai-skill-os/` (hoặc `.agents/` cho Gemini) ngay trong dự án. Rất phù hợp nếu dự án có nhiều người làm chung, bạn có thể commit thư mục này lên Git để ai cũng có skill.
-- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Nếu bạn code một mình, hãy chọn tuỳ chọn này! Nó giúp bạn tiết kiệm dung lượng, và chỉ cần cài 1 lần là BẤT KỲ DỰ ÁN NÀO bạn mở lên, AI cũng tự động có đủ 23 kỹ năng (Đặc biệt siêu mượt với Antigravity/Gemini).
+- **(1) Local:** Cài vào thư mục `skills/` (hoặc `.agents/` cho Gemini) ngay trong dự án. Thích hợp cho làm việc nhóm.
+- **(2) Global:** Cài thẳng vào ổ đĩa máy tính (Home Directory). Chỉ cài 1 lần, áp dụng cho mọi dự án.
 
 > 💡 **Tính năng Tự động Dọn dẹp (Auto-Cleanup):** Mỗi khi cài đặt lại, hệ thống sẽ tự động quét và xóa sạch các kỹ năng phiên bản cũ để tối ưu dung lượng và tránh xung đột cho máy tính của bạn. Mọi thứ hoàn toàn tự động!
 
-### Cho Gemini IDE / Antigravity
-**Không cần cấu hình gì thêm!** Gemini/Antigravity sẽ tự động nhận diện các file trong `.agents/skills/` và sẵn sàng làm việc ngay.
+### Cấu hình thủ công (Dành cho IDE / CLI cụ thể)
 
-### Cho Cursor / Windsurf (AI Code Editors)
-Tạo file `.cursorrules` (nếu dùng Cursor) hoặc `.windsurfrules` (nếu dùng Windsurf) ở gốc dự án và dán đoạn sau vào:
+#### Cho Gemini IDE / Antigravity
+**Không cần cấu hình gì thêm!** Hệ thống tự nhận diện các file trong `.agents/` hoặc thư mục cấu hình toàn cục.
+
+#### Cho Cursor / Windsurf (AI Code Editors)
+Tạo file `.cursorrules` hoặc `.windsurfrules` ở gốc dự án:
 ```md
 # AI Developer Skill OS by Quang Khánh
 
-When answering or generating code, you MUST act as an expert engineer using the skills defined in `./.qk-ai-skill-os/skills.json`.
-Bất cứ khi nào người dùng gõ lệnh `./qk [tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/skills/` trước khi thực hiện.
+When answering or generating code, you MUST act as an expert engineer using the skills defined in `./skills.json`.
+Bất cứ khi nào người dùng gõ lệnh `./qk-[tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./skills/` trước khi thực hiện.
 Speak to me in Vietnamese, but write all code in English.
 ```
 
-### Cho Claude Code / Kilo Code (CLI Agents)
-#### Cách 1: Cài đặt Native (Khuyên dùng cho Kilo Code)
-Chạy `npx ai-developer-skill-os init` và chọn **(6) Kilo Code**.
-Hệ thống sẽ tự động:
-- Copy toàn bộ skills vào `.kilo/skills/` (Local) hoặc `~/.kilo/skills/` (Global)
-- Cấu hình `kilo.json` hoặc `~/.config/kilo/kilo.json` để Kilo nhận diện
-- Tạo file `CLAUDE.md` như hướng dẫn bổ sung
-
-Sau đó mở Kilo Code, dùng `<leader>t` hoặc `/themes` để kiểm tra skills đã được cài.
-
-#### Cách 2: Thủ công
+#### Cho Claude Code / Kilo Code (CLI Agents)
 Tạo file `CLAUDE.md` (hoặc `KILO.md`) ở gốc dự án và dán đoạn sau vào:
 ```md
 # System Instructions
 Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
 
-Vui lòng tìm đọc danh sách kỹ năng tại file `./.qk-ai-skill-os/skills.json`.
-ĐẶC BIỆT LƯU Ý: Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk [tên-skill]`, bạn BẮT BUỘC phải gọi và đọc nội dung file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/skills/` trước khi phân tích hoặc viết code.
-Luôn giao tiếp bằng tiếng Việt nhưng viết code, đặt tên biến, comment trong code bằng tiếng Anh.
+Vui lòng tìm đọc danh sách kỹ năng tại file `./skills.json`.
+ĐẶC BIỆT LƯU Ý: Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk-[tên-skill]`, bạn BẮT BUỘC phải gọi và đọc nội dung file `SKILL.md` tương ứng trong thư mục `./skills/` trước khi phân tích hoặc viết code.
 ```
-
-### Cho Cline / Roo Code (VS Code Extensions)
-Tạo file `.clinerules` hoặc `.roorules` ở gốc dự án và dán nội dung:
-```md
-Bạn đang chạy bằng **AI Developer Skill OS** (Tác giả: Quang Khánh).
-Vui lòng tìm đọc danh sách kỹ năng tại file `./.qk-ai-skill-os/skills.json`.
-Bất cứ khi nào người dùng gõ lệnh `./qk [tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/skills/`.
-Luôn giao tiếp bằng tiếng Việt nhưng viết code bằng tiếng Anh.
-```
-
-### Cho GitHub Copilot
-Tạo file `.github/copilot-instructions.md` và dán đoạn prompt tương tự như trên vào file này để Copilot học được các kỹ năng.
 
 ---
 
-## 4. Cách kiểm tra cài đặt thành công
+## 3. Cách kiểm tra cài đặt thành công
 
-Để biết AI của bạn đã thực sự "nhập môn" bộ Skill OS này chưa, hãy mở khung chat AI trong dự án và gõ cú pháp lệnh chuyên nghiệp sau:
-> **`./qk-project-audit`** Hãy cho tôi biết bạn sẽ làm những gì.
+Để biết AI của bạn đã thực sự "nhập môn" bộ AI-OS này chưa, hãy mở khung chat AI trong dự án và gõ cú pháp lệnh:
+> **`./qk-help`** Hãy liệt kê cho tôi các khối kỹ năng của hệ thống.
 
-✅ **Thành công:** Nếu AI trả lời bằng tiếng Việt, liệt kê đúng các bước khám bệnh (Phase 1, Phase 2, Phase 3...) theo đúng như trong file `SKILL.md` của `qk-project-audit`.  
-❌ **Thất bại:** Nếu AI trả lời chung chung hoặc bảo không biết skill này là gì, bạn cần kiểm tra lại đường dẫn file cấu hình ở bước trên.
+✅ **Thành công:** Nếu AI trả lời bằng tiếng Việt, liệt kê đúng mô hình 7 Lớp (Foundation, UI, Development, Quality, Evolution, Operation, AI, Knowledge).
+❌ **Thất bại:** Nếu AI trả lời chung chung, bạn cần kiểm tra lại đường dẫn file cấu hình ở bước trên.
 
 ---
 
-## 5. Cách gọi lệnh Skill chuyên nghiệp (Usage)
+## 4. Cách gọi lệnh Skill chuyên nghiệp (Usage)
 
-AI sẽ tự động nhận diện skill qua ngữ cảnh, nhưng cách chuyên nghiệp và tiết kiệm thời gian gõ prompt nhất là bạn sử dụng cú pháp lệnh độc quyền: **`./qk-[tên-skill]`**
+AI sẽ tự động nhận diện skill qua ngữ cảnh, nhưng cách chuyên nghiệp và tiết kiệm thời gian nhất là bạn sử dụng cú pháp: **`./qk-[tên-skill]`**
 
 Dưới đây là các câu lệnh (prompt) mẫu cực kỳ hiệu quả mà bạn nên dùng:
 
-### 🎯 Ví dụ 1: Nhờ AI lên kế hoạch (Planning)
-> **`./qk-agent-orchestrator`** Hãy lên kế hoạch làm tính năng Đăng nhập này cho tôi. Nhớ gọi thêm **`./qk-context-manager`** để kiểm tra thư mục hiện tại có những file gì trước nhé.
+### 🎯 Ví dụ 1: Giao phó tổng thể (Orchestrator)
+> **`./qk-orchestrator`** Tôi muốn thêm tính năng Đăng nhập bằng Google. Hãy lên kế hoạch và gọi các skill cần thiết để thực hiện từ A-Z.
 
-### 🎯 Ví dụ 2: Fix lỗi cứng đầu (Bug Fix)
-> **`./qk-frontend-debug`** & **`./qk-bug-fix`** Code đang bị crash với lỗi `Hydration error`. Hãy tìm hiểu nguyên nhân gốc rễ và sửa nó giúp tôi.
+### 🎯 Ví dụ 2: Phát triển Tính năng E2E (Feature Delivery)
+> **`./qk-feature-delivery`** Hãy tạo màn hình Dashboard thống kê doanh thu. Lưu ý cập nhật Database, tạo API và dùng UI Component có sẵn.
 
-### 🎯 Ví dụ 3: Review Codebase (Audit)
-> **`./qk-project-audit`** Hãy kiểm tra nhanh cho tôi thư mục `src/components/` xem có bị vấn đề về hiệu năng hay code smell không.
+### 🎯 Ví dụ 3: Fix lỗi cứng đầu (Bug Resolution)
+> **`./qk-bug-resolution`** Code đang bị crash với lỗi `Hydration error`. Hãy tìm Root Cause, sửa an toàn và đảm bảo viết Regression Test để chống hồi quy.
 
-### 🎯 Ví dụ 4: Xây dựng Giao diện Frontend (UI)
-> **`./qk-ui-builder`** & **`./qk-design-system`** Hãy tạo cho tôi một màn hình Danh sách User. Chú ý dùng chuẩn components của thư mục `src/components/ui/` nhé.
+### 🎯 Ví dụ 4: Xây dựng Giao diện (UI System Builder)
+> **`./qk-ui-system-builder`** Hãy tạo cho tôi một Data Table Component có hỗ trợ phân trang và filter, sử dụng Design Token của dự án. Không viết inline CSS rác.
 
-### 🎯 Ví dụ 5: Làm việc với API (Backend & Integration)
-> **`./qk-api-integration`** Tích hợp cái swagger login này vào frontend giúp. Nhớ dùng React Query như chuẩn của project.
-
-### 🎯 Ví dụ 6: Database & Backend
-> **`./qk-database-engineer`** Hãy viết cho tôi schema Prisma cho bảng Product và User có quan hệ 1-N. Làm theo đúng chuẩn kiến trúc trong skill.
+### 🎯 Ví dụ 5: Audit & Tối ưu (Project Health)
+> **`./qk-project-health`** Hãy kiểm tra nhanh cho tôi thư mục `src/components/` xem có bị Code Smell hoặc vi phạm Architecture không.
 
 ---
 
-## 6. 💡 Mẹo & Workflow Thực Chiến (Best Practices)
+## 💡 5. Mẹo & Workflow Thực Chiến (Best Practices)
 
-Để khai thác tối đa sức mạnh của 23 kỹ năng, bí quyết là **kết hợp (chaining) nhiều skill** lại với nhau trong cùng một luồng công việc.
+Để khai thác tối đa sức mạnh của 22 kỹ năng, bí quyết là **tin tưởng vào chuỗi Handoff tự động** của hệ thống thay vì phải gọi từng lệnh nhỏ lẻ.
 
-### 🌟 Workflow Bắt đầu một New Chat (Bắt buộc)
-Khi mở một New Chat, AI hoàn toàn chưa biết gì về dự án. Đừng bắt nó code ngay!
-* **Bước 1:** `> Dùng ./qk-context-manager để đọc cấu trúc toàn bộ dự án này.`
-* **Bước 2:** `> Dùng ./qk-agent-orchestrator để phân tích yêu cầu sau đây và lên kế hoạch: [Yêu cầu của bạn]`
+### 🌟 Bắt đầu một tính năng hoàn toàn mới
+Thay vì bảo AI tạo từng file, hãy yêu cầu một lần:
+* `> Hãy dùng ./qk-feature-delivery để tạo chức năng Giỏ hàng (Cart).`
+Hệ thống sẽ tự động đi từ DB -> API -> UI và đẩy sang `qk-validation-gate` để kiểm tra lỗi.
 
-### 🌟 Workflow Làm tính năng mới (VD: Tích hợp API)
-Muốn tạo một màn hình hiển thị danh sách từ API trả về? Hãy gõ 1 lượt các lệnh:
-* `> Hãy dùng ./qk-api-integration để tạo file gọi API fetch danh sách Users.`
-* `> Tiếp theo dùng ./qk-state-management để lưu data này vào Zustand/Redux.`
-* `> Cuối cùng dùng ./qk-ui-builder để vẽ màn hình Table hiển thị data đó.`
+### 🌟 Khi dự án bắt đầu lộn xộn
+* `> Hãy chạy ./qk-project-health để kiểm tra toàn bộ nợ kỹ thuật (Tech Debt). Sau đó hãy dùng ./qk-docs để cập nhật lại cấu trúc thư mục mới nhất vào README.`
 
-### 🌟 Workflow Chống "Phá Code" (Safe Refactor)
+### 🌟 Chống "Phá Code" (Safe Refactor)
 Trước khi đổi một cấu trúc lớn, hãy bắt AI dò mìn:
-* `> Hãy chạy ./qk-project-audit để dò xem việc đổi tên biến X có ảnh hưởng đến các component khác không.`
-* `> OK, giờ hãy dùng ./qk-refactor để sửa lại một cách an toàn.`
+* `> Hãy dùng ./qk-system-evolution để phân tích tầm ảnh hưởng (Impact Analysis) nếu tôi cập nhật Next.js lên phiên bản 15.`
 
-👉 Chúc bạn tận hưởng cảm giác code như một Tech Lead thực thụ!
+👉 Chúc bạn tận hưởng cảm giác code như một Chief Architect thực thụ!

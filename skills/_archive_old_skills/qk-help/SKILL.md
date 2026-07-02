@@ -1,40 +1,12 @@
 ---
 name: qk-help
-purpose: Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo (pro-tips) kết hợp kỹ năng.
-mode_supported: [quick, standard]
-input: [User query]
-output: [Skill list, guides]
-workflow: [1. Nhận câu hỏi -> 2. Tra cứu -> 3. Phản hồi]
-allowed_tools: [read_file, list_dir]
-handoff_to: [none]
+description: >-
+  Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo (pro-tips) kết hợp kỹ năng để tăng tốc độ code.
+version: 1.0.0
+category: engineering
+tags: [help, list, tips, guide, manual]
+platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
 ---
-
-# 🛠️ qk-help - Quy Trình Vận Hành Chuẩn (SOP)
-
-> **Mô tả:** Tra cứu danh sách toàn bộ kỹ năng (skills) hiện có và đọc các mẹo (pro-tips) kết hợp kỹ năng.
-
-## 🎯 1. Mục Tiêu (Goal)
-- Cung cấp danh sách các kỹ năng hệ thống (AI-OS) cho người dùng.
-- Hướng dẫn cách kết hợp các kỹ năng để tạo ra chuỗi giá trị (workflow).
-
-## 🔄 2. Chuỗi Hành Động (Chain of Thought / SOP)
-*(Bắt buộc AI phải suy nghĩ và làm theo đúng thứ tự)*
-1. **Phân tích (Analyze):** Phân tích câu hỏi của người dùng xem họ đang tìm kiếm gì.
-2. **Tra cứu (Plan):** Kiểm tra danh sách các kỹ năng hoặc mẹo sử dụng trong phần Deep Knowledge.
-3. **Thực thi (Execute):** Định dạng và trả lời câu hỏi một cách dễ hiểu nhất.
-4. **Xác thực (Verify):** Đảm bảo không giới thiệu các skill không tồn tại.
-
-## 🛡️ 3. Ràng Buộc & Quy Tắc (Constraints)
-- Chỉ được liệt kê các skill đang có thực trong dự án.
-- Mọi quyết định kỹ thuật phải dựa trên nội dung tại phần Deep Knowledge (nếu có).
-
-## 🤝 4. Giao Thức Bàn Giao (Handoff Protocol)
-- Đích đến: `none`
-- Nội dung bàn giao: Trả về kết quả hiển thị cho người dùng.
-
-## 📚 5. Kiến Thức Chuyên Sâu (Deep Knowledge)
-
-*(Nền tảng kiến thức và quy tắc chi tiết kế thừa từ kỹ sư)*
 
 # 📚 Cẩm nang AI Developer Skill OS
 

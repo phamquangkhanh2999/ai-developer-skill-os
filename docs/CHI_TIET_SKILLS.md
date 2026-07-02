@@ -1,117 +1,125 @@
-# Chi Tiết 23 Skills — AI Developer Skill OS
+# Từ Điển Chi Tiết 22 Siêu Kỹ Năng (Master Skills)
 
-**Tác giả:** Quang Khánh  
-**Phiên bản:** v1.0.1
-
-Tài liệu này giải thích chi tiết chức năng của từng Skill trong bộ Skill OS.
-AI sẽ đọc mô tả (description) bằng tiếng Anh để nhận diện, nhưng bạn có thể đọc tài liệu tiếng Việt này để hiểu AI có thể làm được gì.
+Dưới đây là danh sách chi tiết và giải thích cụ thể cho toàn bộ 22 Kỹ năng thuộc Kiến trúc AI Developer Skill OS. Các kỹ năng được phân chia khép kín theo 7 lớp kiến trúc tiêu chuẩn cấp doanh nghiệp (Enterprise Architecture).
 
 ---
 
-## 🛠️ Nhóm 1: Engineering Core (Kỹ thuật Cốt lõi)
+## 🏗️ Lớp 0: Foundation Layer (Nền Tảng Cốt Lõi)
+*Lớp này đóng vai trò như "Não bộ trung ương", chuyên nhận lệnh, cấp quyền, cung cấp luật lệ và chuẩn bị môi trường trước khi bất kỳ dòng code nào được viết ra.*
 
-Đây là các kỹ năng chung quản lý toàn bộ dự án, kiến trúc và mã nguồn.
+### 1. `qk-orchestrator` (Trợ Lý Điều Phối)
+- **Mô tả:** Nhận lệnh chung chung từ người dùng, tự động phân tích ý đồ và định hướng luồng công việc (chọn gọi các kỹ năng nào tiếp theo).
+- **Khi nào dùng:** Khi bạn có một yêu cầu lớn và không biết bắt đầu từ đâu.
 
-### 1. `agent-orchestrator` (Người Điều Phối)
-- **Mô tả:** AI không tự viết code mà đóng vai trò như một Project Manager. Phân tích yêu cầu phức tạp của bạn, chia nhỏ thành các tác vụ (Task) và quyết định gọi các Skill nào theo thứ tự nào.
-- **Khi nào dùng:** Khi bạn giao một việc lớn ("Làm cho tôi tính năng thanh toán") mà không biết bắt đầu từ đâu.
+### 2. `qk-context-loader` (Nạp Ngữ Cảnh)
+- **Mô tả:** Có khả năng đọc lướt dự án để gom chính xác các file liên quan đến task hiện tại (chống tràn bộ nhớ token của AI).
+- **Khi nào dùng:** Khi code dự án quá lớn, cần khoanh vùng các file cần sửa.
 
-### 2. `context-manager` (Quản Lý Ngữ Cảnh)
-- **Mô tả:** Xác định file nào cần đọc, đọc cấu trúc thư mục, ghi nhớ kiến trúc hệ thống để AI không bị "quên" hoặc đọc tràn ngập các file không cần thiết.
-- **Khi nào dùng:** Khi bắt đầu một dự án mới tinh, hoặc khi AI cần nắm bắt bức tranh tổng thể.
+### 3. `qk-policy-engine` (Động Cơ Chính Sách)
+- **Mô tả:** Xét duyệt xem yêu cầu của người dùng hoặc hành động của AI có vi phạm các nguyên tắc cốt lõi của dự án không.
+- **Khi nào dùng:** Được AI tự động gọi trước khi thực thi để đảm bảo tính hợp lệ.
 
-### 3. `project-audit` (Kiểm Toán Dự Án)
-- **Mô tả:** Quét toàn bộ mã nguồn hoặc các file bạn vừa thay đổi để tìm kiếm bug tiềm ẩn, code smell, lỗ hổng bảo mật hoặc nợ kỹ thuật. AI sẽ xuất ra một báo cáo khám bệnh chi tiết.
-- **Khi nào dùng:** Trước khi refactor lớn, trước khi release, hoặc muốn kiểm tra code mình viết có sạch không.
+### 4. `qk-access-policy` (Kiểm Soát Phân Quyền)
+- **Mô tả:** Xử lý và cung cấp các quy tắc về bảo mật (Security), phân quyền (RBAC), Authentication (JWT/OAuth).
+- **Khi nào dùng:** Khi tính năng liên quan đến việc bảo mật, ai được quyền truy cập vào đâu.
 
-### 4. `bug-fix` (Chuyên Gia Sửa Lỗi)
-- **Mô tả:** Dò tìm nguyên nhân gốc rễ (root cause) của một lỗi dựa trên stack trace hoặc mô tả của bạn. Không chữa cháy tạm thời, cung cấp bản fix tối thiểu và an toàn nhất.
-- **Khi nào dùng:** Khi app bị crash, test fail, màn hình trắng.
+### 5. `qk-project-memory` (Trí Nhớ Dự Án)
+- **Mô tả:** Lưu trữ DNA của dự án, các quyết định kiến trúc, UI pattern và các convention đã được thống nhất từ trước.
+- **Khi nào dùng:** Khi muốn AI làm theo đúng style đã có sẵn trong dự án.
 
-### 5. `refactor` (Tái Cấu Trúc Code)
-- **Mô tả:** Làm sạch code, tách hàm, tách component, xóa code thừa, dọn dẹp biến mà **không làm thay đổi logic hoạt động**.
-- **Khi nào dùng:** Khi code quá rối rắm (spaghetti code), cần dọn dẹp cho dễ bảo trì.
+### 6. `qk-engineering-standard` (Bộ Luật Thiết Kế)
+- **Mô tả:** Bơm các "luật thép" (về Frontend, Backend, Database) vào ngữ cảnh để bắt AI tuân thủ cấu trúc thư mục và naming.
+- **Khi nào dùng:** Tự động gọi để ép AI viết code không bị rác.
 
-### 6. `api-integration` (Kỹ Sư Tích Hợp API)
-- **Mô tả:** Nhận bất kỳ input nào (curl, swagger, postman, backend controller) và sinh ra một lớp gọi API hoàn chỉnh cho Frontend (Type chuẩn, xử lý lỗi, call Axios/Fetch/React Query).
-- **Khi nào dùng:** Khi Backend vừa làm xong API và bạn cần nối nó vào Frontend.
-
-### 7. `migration` (Nâng Cấp Hệ Thống)
-- **Mô tả:** Nâng cấp an toàn các thư viện cũ (như React 17 lên 19), chuyển đổi thư viện (Moment sang Date-fns) theo mô hình tăng dần, có kế hoạch Rollback.
-- **Khi nào dùng:** Khi cần update package có lỗ hổng bảo mật hoặc chuyển framework.
-
-### 8. `git-engineer` (Quản Lý Git & Release)
-- **Mô tả:** Viết commit message cực chuẩn theo Conventional Commits, viết mô tả Pull Request, sinh Changelog và Release Notes cho sếp/khách hàng đọc.
-- **Khi nào dùng:** Khi code xong và cần đẩy code lên hoặc chuẩn bị release version mới.
+### 7. `qk-project-bootstrap` (Khởi Tạo Dự Án)
+- **Mô tả:** Setup toàn bộ khung sườn của một dự án mới tinh từ con số 0 (Cấu hình lint, format, folder structure).
+- **Khi nào dùng:** Lúc bắt đầu dự án mới.
 
 ---
 
-## 🎨 Nhóm 2: Frontend (Giao Diện)
+## 🎨 Lớp 1: UI System Layer (Hệ Thống Giao Diện)
+*Nhóm chuyên biệt về vẽ giao diện và quản lý hệ thống thành phần (Components).*
 
-Nhóm chuyên biệt cho việc xây dựng giao diện người dùng (UI/UX).
+### 8. `qk-ui-system-builder` (Kỹ Sư Hệ Thống UI)
+- **Mô tả:** Quản lý Design Token, tạo ra các Component có thể tái sử dụng (Button, Table, Form) đảm bảo tính nhất quán toàn dự án.
+- **Khi nào dùng:** Xây dựng thư viện giao diện, tránh viết CSS lộn xộn.
 
-### 9. `frontend-architecture` (Kiến Trúc Frontend)
-- **Mô tả:** Đọc hiểu và ép AI phải tuân thủ việc đặt file ở đâu cho đúng chuẩn của project (Features-based, Layer-based, DDD...).
-- **Khi nào dùng:** Khi không biết nên tạo file component mới ở thư mục nào.
+### 9. `qk-design-to-code` (Chuyển Đổi Thiết Kế)
+- **Mô tả:** Đọc hiểu hình ảnh/Figma để tự động chuyển thành mã nguồn giao diện (React, Tailwind, v.v.).
+- **Khi nào dùng:** Bóc tách UI từ bản thiết kế.
 
-### 10. `design-system` (Hệ Thống Thiết Kế)
-- **Mô tả:** Ép AI phải dùng thư viện UI có sẵn (MUI, Shadcn, Tailwind...) thay vì tự viết HTML chay hay CSS inline lộn xộn.
-- **Khi nào dùng:** Đi kèm khi xây dựng UI để giữ tính nhất quán.
-
-### 11. `ui-builder` (Xây Dựng Giao Diện)
-- **Mô tả:** Lắp ráp các component nhỏ thành một màn hình/trang hoàn chỉnh, xử lý layout (Grid/Flexbox) và responsive (di động/máy tính).
-- **Khi nào dùng:** Khi bạn đưa wireframe/mockup và bảo "Làm cho tôi màn hình Dashboard".
-
-### 12. `component-generator` (Tạo Component Đơn Lẻ)
-- **Mô tả:** Sinh ra các mảnh ghép UI nhỏ, tái sử dụng được (như Button, Card, Dropdown) với Props Type an toàn.
-- **Khi nào dùng:** Khi cần tạo một UI Component dùng chung.
-
-### 13. `state-management` (Quản Lý Trạng Thái)
-- **Mô tả:** Phân tích dữ liệu và quyết định nên dùng React Query, Redux, Zustand hay chỉ là useState local. Setup các store hoàn chỉnh.
-- **Khi nào dùng:** Khi phải truyền Props quá sâu, hoặc cần lưu cache dữ liệu.
-
-### 14. `form-builder` (Chuyên Gia Làm Form)
-- **Mô tả:** Sinh ra các Form phức tạp với validate đầu vào (Zod, Yup) kết hợp React Hook Form. Hiển thị báo lỗi chuẩn mực.
-- **Khi nào dùng:** Làm màn hình Đăng ký, Đăng nhập, Tạo mới dữ liệu.
-
-### 15. `table-crud-generator` (Làm Bảng Dữ Liệu)
-- **Mô tả:** Sinh ra bảng Data Grid hoàn chỉnh có phân trang (pagination), lọc, sắp xếp và các nút hành động (Thêm/Sửa/Xóa).
-- **Khi nào dùng:** Làm trang Admin quản trị.
-
-### 16. `frontend-debug` (Sửa Lỗi Frontend)
-- **Mô tả:** Chuyên trị các lỗi khó chịu của UI như: Hydration Error (Next.js), Infinite Re-render (lặp vô tận), lỗi vỡ CSS layout.
-- **Khi nào dùng:** Lỗi vỡ giao diện hoặc lỗi render của React.
-
-### 17. `frontend-testing` (Kiểm Thử UI)
-- **Mô tả:** Viết Unit Test, Component Test (React Testing Library) hay E2E Test (Cypress/Playwright) giả lập hành vi người dùng thật.
-- **Khi nào dùng:** Khi sếp yêu cầu tăng Test Coverage hoặc bọc test cho tính năng quan trọng.
-
-### 18. `accessibility-audit` (Kiểm Tra Tiếp Cận)
-- **Mô tả:** Đảm bảo trang web chuẩn WCAG, dùng đúng thẻ Semantic HTML, có thể dùng phím Tab để điều hướng và hỗ trợ phần mềm đọc màn hình cho người khiếm thị.
-- **Khi nào dùng:** Làm các project chuẩn quốc tế, nhà nước, hoặc tối ưu SEO nâng cao.
-
-### 19. `frontend-performance` (Tối Ưu Hiệu Năng)
-- **Mô tả:** Chữa bệnh web chạy chậm. Tối ưu ảnh, chẻ nhỏ file JS (Code splitting, Lazy load), thêm `useMemo/useCallback` để tránh giật lag.
-- **Khi nào dùng:** Điểm Google Lighthouse thấp, web bị khựng khi cuộn.
+### 10. `qk-ui-audit` (Kiểm Toán Giao Diện)
+- **Mô tả:** Kiểm tra độ nhất quán UI/UX, hỗ trợ Responsive trên điện thoại và tối ưu khả năng tiếp cận (Accessibility - a11y).
+- **Khi nào dùng:** Kiểm tra lỗi UI sau khi hoàn thiện giao diện.
 
 ---
 
-## ⚙️ Nhóm 3: Backend (Máy Chủ)
+## 💻 Lớp 2: Development Layer (Phát Triển E2E)
+*Khối thực thi mạnh mẽ nhất, đi từ A-Z một tính năng cụ thể.*
 
-Nhóm chuyên biệt cho việc xây dựng và quản lý API, máy chủ.
+### 11. `qk-feature-delivery` (Chuyển Giao Tính Năng)
+- **Mô tả:** Kỹ năng toàn năng, tự động phân tích thiết kế Database -> Viết API -> Xây UI -> Viết Unit Test cho một tính năng trọn vẹn.
+- **Khi nào dùng:** Xây dựng tính năng hoàn chỉnh (Ví dụ: Chức năng Thanh Toán).
 
-### 20. `backend-architecture` (Kiến Trúc Backend)
-- **Mô tả:** Phân chia rạch ròi đâu là Controller (xử lý HTTP), đâu là Service (Xử lý nghiệp vụ), đâu là Repository (Gọi Database) để code không bị thành một đống bùi nhùi.
-- **Khi nào dùng:** Cấu trúc file cho backend mới hoặc thêm module mới.
+### 12. `qk-api-lifecycle` (Vòng Đời API)
+- **Mô tả:** Chuyên biệt cho Backend: Viết spec, tạo Service, định nghĩa Type, viết Test và sinh tài liệu cho API.
+- **Khi nào dùng:** Xây dựng các Endpoint API.
 
-### 21. `database-engineer` (Kỹ Sư Cơ Sở Dữ Liệu)
-- **Mô tả:** Thiết kế schema, vẽ quan hệ bảng, sinh script Migration, tối ưu hóa câu lệnh truy vấn (SQL, Prisma, Drizzle, MongoDB).
-- **Khi nào dùng:** Cần thêm bảng mới vào DB hoặc API truy vấn DB quá chậm.
+### 13. `qk-data-lifecycle` (Vòng Đời Dữ Liệu)
+- **Mô tả:** Quản lý Schema, tạo file Migration, tối ưu câu lệnh truy vấn (SQL, Prisma, v.v.).
+- **Khi nào dùng:** Thay đổi cấu trúc cơ sở dữ liệu.
 
-### 22. `auth-security` (Bảo Mật & Phân Quyền)
-- **Mô tả:** Triển khai đăng nhập JWT, OAuth, thiết lập phân quyền (Admin vs User), phòng chống hacker tấn công bằng các cấu hình bảo mật chuẩn OWASP.
-- **Khi nào dùng:** Làm tính năng đăng nhập, bảo vệ API nhạy cảm.
+---
 
-### 23. `deployment` (Triển Khai DevOps)
-- **Mô tả:** Viết Dockerfile, cấu hình CI/CD bằng GitHub Actions, thiết lập luồng tự động build và deploy lên Vercel, AWS hoặc VPS.
-- **Khi nào dùng:** Lúc cần đưa code lên môi trường production cho khách hàng xem.
+## 🛡️ Lớp 3: Quality Assurance Layer (Đảm Bảo Chất Lượng)
+*Kiểm tra độ sạch của code và diệt bug.*
+
+### 14. `qk-project-health` (Kiểm Toán Dự Án)
+- **Mô tả:** Quét toàn bộ dự án để tìm Code Smell, Nợ kỹ thuật (Tech Debt), và các vi phạm kiến trúc.
+- **Khi nào dùng:** Định kỳ kiểm tra chất lượng mã nguồn hoặc tối ưu hiệu năng.
+
+### 15. `qk-bug-resolution` (Giải Quyết Bug Triệt Để)
+- **Mô tả:** Tái hiện lỗi, đào sâu tìm Root Cause, cung cấp giải pháp an toàn và viết Regression Test để chống lỗi lặp lại.
+- **Khi nào dùng:** Sửa các lỗi đứt gãy hoặc logic nghiêm trọng.
+
+### 16. `qk-validation-gate` (Cổng Kiểm Định)
+- **Mô tả:** Kỹ năng chặn cửa. Bắt buộc chạy Test, Linting và Scan Security. Chỉ khi "PASS" mới cho phép kết thúc task.
+- **Khi nào dùng:** Nằm cuối quy trình code của bất kỳ tính năng nào.
+
+---
+
+## 🚀 Lớp 4 & 5: Evolution & Operation (Vận Hành & Tiến Hóa)
+*Triển khai dự án lên Production và nâng cấp phiên bản lớn.*
+
+### 17. `qk-system-evolution` (Tiến Hóa Hệ Thống)
+- **Mô tả:** Nâng cấp dependency (VD: Next 14 lên 15), phân tích rủi ro ảnh hưởng và thực thi nâng cấp an toàn không downtime.
+- **Khi nào dùng:** Update version framework/thư viện.
+
+### 18. `qk-production-release` (Triển Khai Môi Trường)
+- **Mô tả:** Viết Dockerfile, cấu hình CI/CD Pipelines (Github Actions), Deploy lên Cloud (AWS, Vercel).
+- **Khi nào dùng:** Release sản phẩm cho người dùng cuối.
+
+---
+
+## 🤖 Lớp 6: AI Builder Layer (Tích hợp AI)
+
+### 19. `qk-ai-builder` (Xây Dựng AI App)
+- **Mô tả:** Chuyên thiết kế và code các ứng dụng AI như RAG (Retrieval-Augmented Generation), Agent logic và Prompt Engineering.
+- **Khi nào dùng:** Tích hợp LLM vào trong phần mềm của bạn.
+
+---
+
+## 📚 Lớp 7: Knowledge Layer (Tri Thức & Tài Liệu)
+*Hệ thống tự học và viết tài liệu vĩ đại của OS.*
+
+### 20. `qk-docs` (Kỹ Sư Tài Liệu)
+- **Mô tả:** Tự động sinh hoặc cập nhật tài liệu cho con người đọc: `README.md`, `CHANGELOG.md`, `API Docs`.
+- **Khi nào dùng:** Nằm ở cuối quy trình sau khi hoàn thành tính năng.
+
+### 21. `qk-documentation-system` (Hệ Thống Trí Nhớ)
+- **Mô tả:** Quản trị Tri thức máy. Tự động rút trích các Quyết định Kỹ thuật (ADR) hoặc Pattern mới xuất hiện trong code, và nạp ngược lại vào `qk-project-memory`.
+- **Khi nào dùng:** Hệ thống "tự học" để Agent trở nên thông minh hơn qua từng ngày.
+
+### 22. `qk-help` (Tra Cứu Nhanh)
+- **Mô tả:** Cuốn từ điển sống. Cung cấp thông tin và hướng dẫn chi tiết (Pro-tips) về cách sử dụng toàn bộ hệ thống.
+- **Khi nào dùng:** Bất kỳ khi nào người dùng cần hỗ trợ sử dụng hệ điều hành.
