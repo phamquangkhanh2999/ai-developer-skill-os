@@ -27,7 +27,7 @@ Bộ Skin này rất linh hoạt và được phân phối qua NPM để bạn c
 Mở terminal tại gốc dự án của bạn và chạy lệnh cài đặt tương ứng với công cụ AI bạn đang dùng:
 
 ```bash
-npx rules-skill-ai init
+npx ai-developer-skill-os init
 ```
 
 Quá trình cài đặt sẽ hỏi bạn 2 câu quan trọng:

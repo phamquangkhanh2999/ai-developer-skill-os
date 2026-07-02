@@ -1,4 +1,4 @@
-# 🚀 AI Developer Skill OS (rules-skill-ai)
+# 🚀 AI Developer Skill OS (ai-developer-skill-os)
 
 > Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Cursor, Windsurf, Cline, v.v.).
 
@@ -115,11 +115,11 @@ Dành cho Backend Engineer, đi từ spec đến code, type và test.
 
 Sử dụng npm:
 ```bash
-npm i -g rules-skill-ai
+npm i -g ai-developer-skill-os
 ```
 Hoặc sử dụng qua `npx`:
 ```bash
-npx rules-skill-ai init
+npx ai-developer-skill-os init
 ```
 
 ## 🚀 Tra Cứu (Help)
