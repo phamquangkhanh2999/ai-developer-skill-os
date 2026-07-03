@@ -1,42 +1,56 @@
 ---
 name: qk-project-memory
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc.
 category: utilities
-behavior: static-analysis
-intent: maintain
-priority: low
 tags: [memory, context, storage]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User asks to remember a specific configuration, rule, or architectural decision.
-inputs: [Context to remember]
-outputs: [Memory file updated]
-allowed_tools: [write_to_file, read_file]
-pipeline: [analyze, implement, complete]
 ---
 
-# 🛠️ qk-project-memory - Standard Operating Procedure
+# 🛠️ qk-project-memory
 
-> **Goal:** "Bộ nhớ dài hạn". Giúp Agent nhớ lại các cấu hình, đường dẫn API hoặc luật lệ riêng của dự án mà không cần User nhắc lại.
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Fact Extraction):**
-   - Extract the core facts from the conversation (e.g., "The project uses pnpm, not npm").
-2. **Implement (Storage):**
-   - Append the fact to `.ai-memory.md` or a similar configuration file.
+## 🎯 Mission (Scope)
+- ✅ Lưu trữ các Rule, ADR, và cấu hình bất biến vào memory.
+- ❌ Do NOT dump toàn bộ file mã nguồn hoặc hội thoại vào memory gây phình to token.
 
-## 🛡️ 2. Constraints & Rules
+---
 
-- **Keep it small:** Do not write entire source files into memory. Only save abstract facts and rules.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
+```
 
-## 🤝 3. Handoff Pipeline
+---
 
-1. `complete`: Output confirmation.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: strictness
+```
 
-## 📝 4. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt.
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases:
+  - id: hallucinated-tools
+```
 
-- **Tóm tắt (Summary):** Đã ghi nhớ thông tin gì.
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: minimal-diff
+```

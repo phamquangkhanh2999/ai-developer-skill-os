@@ -1,44 +1,52 @@
 ---
 name: qk-help
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng.
-category: utilities
-behavior: static-analysis
-intent: review-code
-priority: low
-tags: [help, manual, list, tutorial]
+category: utility
+tags: [help, menu, list]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User types 'help', asks for a list of skills, or doesn't know how to use the agent.
-inputs: [Help query]
-outputs: [List of skills, Tips]
-allowed_tools: [read_file, list_dir]
-pipeline: [analyze, complete]
 ---
 
-# 🛠️ qk-help - Standard Operating Procedure
+# 🛠️ qk-help
 
-> **Goal:** Bản đồ hướng dẫn sử dụng Agent Skills. Giúp User tra cứu nhanh lệnh.
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Scan):**
-   - Read the skills directory to list all available tools.
-2. **Complete (Format):**
-   - Format the skills into a neat Markdown table.
+## 🎯 Mission (Scope)
+- ✅ Trình bày bảng hướng dẫn sử dụng nhanh gọn, dễ đọc.
+- ❌ Do NOT đưa ra những tường chữ dài dòng.
 
-## 🛡️ 2. Constraints & Rules
+---
 
-- **Keep it short:** Do not print the entire content of `SKILL.md`. Only print the Name and Description from the metadata.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - execution # Bỏ qua Inference và Planning vì đây là skill cung cấp thông tin.
+  - ship-check
+```
 
-## 🤝 3. Handoff Pipeline
+---
 
-1. `complete`: Output the Help table.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: strictness
+```
 
-## 📝 4. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt dạng Bảng (Table).
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases: []
+```
 
-- **Cột 1:** Tên Skill
-- **Cột 2:** Mô tả ngắn (Tiếng Việt)
-- **Cột 3:** Lệnh kích hoạt (Ví dụ: `@qk-bug-resolution`)
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: delegation-only
+```

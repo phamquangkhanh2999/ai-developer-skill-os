@@ -1,53 +1,58 @@
 ---
 name: qk-design-to-code
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Chuyển đổi thiết kế từ Figma/Images thành các UI component hoàn chỉnh, chuẩn pixel.
 category: frontend
-behavior: development
-intent: implement-feature
-priority: high
 tags: [ui, figma, frontend, styling, css]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User uploads an image mockup or provides a design requirement for a UI component.
-inputs: [Image/Mockup, Framework choice]
-outputs: [Code component, CSS/Tailwind classes]
-allowed_tools: [write_to_file, read_file]
-pipeline: [analyze, implement, engineering-standard, validate, complete]
 ---
 
-# 🛠️ qk-design-to-code - Standard Operating Procedure
+# 🛠️ qk-design-to-code
 
-> **Goal:** Dịch thiết kế (Mockups/Images) thành mã nguồn (React, Vue, HTML/CSS) với độ chính xác Pixel-Perfect.
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Deconstruct Design):**
-   - Look at the provided mockup.
-   - Break it down from Outside-In (Container -> Rows -> Columns -> Elements).
-2. **Plan (Token Mapping):**
-   - Map colors, fonts, and spacings to existing Design System Tokens (e.g., Tailwind classes `text-primary-500`, `gap-4`).
-3. **Implement (Code Construction):**
-   - Write the semantic HTML (`<article>`, `<section>`, `<nav>`).
-   - Apply styling.
-4. **Validate (Responsive Check):**
-   - Ensure the component uses relative units where necessary and scales on mobile.
+## 🎯 Mission (Scope)
+- ✅ Dịch thiết kế thành mã nguồn pixel-perfect.
+- ❌ Do NOT lạm dụng thẻ `<div>` thay cho Semantic HTML.
 
-## 🛡️ 2. Constraints & Rules
+---
 
-- **No Magic Values:** Do not use random hex codes or pixel values if a Design System is available.
-- **Accessibility:** Always include `alt` for images and `aria-label` for icon-only buttons.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
+```
 
-## 🤝 3. Handoff Pipeline
+---
 
-1. `engineering-standard`: Ensure the UI component has no business logic.
-2. `validate`: Trigger `qk-ui-audit` checks.
-3. `complete`: Generate the UI Component Report.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: aesthetic-vibe
+  - id: strictness
+```
 
-## 📝 4. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt.
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases:
+  - id: fake-ui-slop # (Vẽ UI giả mạo không dùng ảnh placeholder thật)
+  - id: missing-ui-states # (Bỏ quên :active, :hover)
+```
 
-- **Tóm tắt (Summary):** Tên Component vừa tạo.
-- **Chi tiết (Changes):** File chứa component.
-- **Rủi ro (Risks):** Vấn đề responsive nếu có.
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: end-to-end-validation
+```

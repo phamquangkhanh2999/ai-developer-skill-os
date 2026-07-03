@@ -1,48 +1,57 @@
 ---
 name: qk-ai-builder
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Thiết kế AI Logic, Prompts, RAG pipelines, và các Agents.
 category: ai
-behavior: development
-intent: implement-feature
-priority: medium
 tags: [ai, llm, prompt-engineering, rag, agents]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User asks to build a chatbot, add AI features, or write prompts.
-inputs: [AI Requirements]
-outputs: [AI Logic, Prompts, RAG setup]
-allowed_tools: [run_command, write_to_file]
-pipeline: [analyze, design, implement, validate, complete]
 ---
 
-# 🛠️ qk-ai-builder - Standard Operating Procedure
+# 🛠️ qk-ai-builder
 
-> **Goal:** "AI Engineer". Xây dựng các tính năng thông minh bằng LLM (Chatbot, RAG pipeline, Agent workflows).
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Task Breakdown):**
-   - Determine the AI use case (Classification, Generation, Chat, Search).
-2. **Design (Prompt Engineering):**
-   - Write clear System Prompts. Treat prompts like code (use variables, constraints).
-3. **Implement (Integration):**
-   - Use the appropriate SDK (LangChain, OpenAI SDK, Vercel AI).
-4. **Validate (Safety Check):**
-   - Ensure API keys are not hardcoded.
+## 🎯 Mission (Scope)
+- ✅ Xây dựng luồng AI/LLM, viết Prompts chuyên nghiệp.
+- ❌ Do NOT dùng LLM để thay thế các logic cứng có thể giải quyết bằng Code (như tính toán).
 
-## 🛡️ 2. Constraints & Rules
+---
 
-- **JSON Parsing:** Always enforce JSON outputs if the AI response is consumed by the app, and handle parse errors.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
+```
 
-## 🤝 3. Handoff Pipeline
+---
 
-1. `validate`: Send to validation gate.
-2. `complete`: Output the AI Integration Report.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: complexity-budget
+```
 
-## 📝 4. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt.
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases:
+  - id: swallow-errors # (Bỏ qua lỗi API gọi LLM thất bại)
+  - id: hallucinated-tools # (Tự bịa model không tồn tại)
+```
 
-- **Tóm tắt (Summary):** Luồng AI đã thiết lập.
-- **Chi tiết (Changes):** Prompt và logic gọi API.
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: end-to-end-validation
+```

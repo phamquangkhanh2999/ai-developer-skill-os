@@ -1,32 +1,28 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v4.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v5.0
 
-> Một hệ điều hành (AI-OS) và Nền tảng Kiến trúc Kỹ thuật (Engineering Platform) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini, Kilo).
+> Một hệ điều hành Agent (Agent OS Specification) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini, Kilo).
 
-Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v4.0** được thiết kế lại hoàn toàn theo chuẩn **Enterprise-ready Agentic Framework**. Nó biến Agent của bạn thành một **Senior Engineer / Chief Architect** thực thụ với khả năng tự suy luận bằng Tiếng Anh, nhưng lại báo cáo thân thiện bằng Tiếng Việt.
+Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v5.0** được thiết kế lại hoàn toàn theo chuẩn **Modular Agent OS**. Các kỹ năng giờ đây siêu nhẹ, kế thừa tập trung từ Kernel và các bộ quy tắc độc lập.
 
 ---
 
-## 🏗️ Kiến Trúc 5 Tầng (The 5-Tier Architecture)
+## 🏗️ Kiến Trúc 5 Tầng (Agent OS Kernel)
 
-Hệ thống được thiết kế decoupled (phân tách) hoàn hảo để chống tràn Context Window và tối ưu khả năng suy luận của LLM:
+Hệ thống được thiết kế decoupled hoàn hảo:
 
-### 1. OS Kernel (`.agents/AGENTS.md`)
-The core of the system is a lightweight, heavily optimized OS Kernel that dictates agent behavior across all tasks.
-- **Intent-Based Policies:** Skills are classified into 4 groups (Static Analysis, Development, Validation, Maintenance) rather than micromanaged with individual exceptions.
-- **Progressive Evidence Collection:** Agents collect context incrementally (1 file → 3 files) and stop at a 80% Confidence Threshold, eliminating "hallucination loops".
-- **Risk-based Verification:** Tests and builds are only run based on the risk level of the change, strictly guided by the Cost and Escalation policies.
+### 1. OS Kernel (`framework/KERNEL.md`)
+Trái tim của hệ thống định nghĩa Core Policies (Minimal Change, Evidence, Escalation, Reasoning), Constraint Layer (các hành vi bị cấm), và Cognitive Pipeline.
 
-### 2. Core Templates (`templates/`)
-Chứa các format báo cáo chuẩn (như `bug-report.md`, `feature-report.md`, `review-report.md`). AI không cần "học lại" cách viết báo cáo, giúp đầu ra luôn nhất quán 100%.
+### 2. Thư Viện Độc Lập (Library Modules)
+- `framework/bias-library/`: Sửa các lỗi tư duy mặc định của AI (Ví dụ: cấm vẽ UI giả, cấm nuốt lỗi).
+- `framework/dial-library/`: Định nghĩa các cấu hình điều khiển hành vi (Độ nghiêm ngặt, ngân sách độ phức tạp).
+- `framework/rule-library/`: Các tiêu chí xuất xưởng bắt buộc.
 
-### 3. Skill Definition (`skills/`)
-Bộ 20+ kỹ năng (Skills) cốt lõi được cấu trúc siêu chuẩn xác với **Metadata 12 trường** (Version, Category, Pipeline, Allowed Tools...). Toàn bộ SOP (Standard Operating Procedure), Decision Tree và Constraints được viết 100% bằng Tiếng Anh để tối ưu hóa khả năng hiểu kỹ thuật của AI.
+### 3. Metadata-Only Skills (`skills/`)
+Bộ 23 kỹ năng (Skills) cốt lõi được cấu trúc siêu nhẹ. Toàn bộ logic nội bộ bị loại bỏ, thay bằng việc khai báo (Declarative) để gọi các Pipeline, Bias, và Dials từ thư viện.
 
-### 4. Knowledge Library (`knowledge/`)
-Tri thức chuyên sâu được tách rời hoàn toàn khỏi Prompt. Ví dụ: Kiến thức về React (`knowledge/frontend/react.md`) chỉ được gọi (On-demand RAG) khi AI thực sự làm việc với React.
-
-### 5. Output Format (Vietnamese Report)
-Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Policy: Báo cáo bằng Tiếng Việt, chia mục rõ ràng (Summary, Changes, Root Cause, Risks, Next Actions).
+### 4. Output Contract (Decision Summary)
+Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Contract: Báo cáo dưới dạng `Decision Summary` súc tích (Context, Decisions, Assumptions, Trade-offs) bằng Tiếng Việt, loại bỏ hoàn toàn các chuỗi suy nghĩ dài dòng (Invisible Reasoning).
 
 ---
 

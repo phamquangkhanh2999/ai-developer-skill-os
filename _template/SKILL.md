@@ -1,154 +1,58 @@
 ---
-name: <skill-name>
-description: >-
-  <1-3 lines in English. This is used for trigger matching across all AI agents.
-  Be specific and action-oriented. Avoid vague words.>
-version: 1.0.0
-category: engineering | frontend | backend
-tags: [tag1, tag2, tag3]
-platforms: [antigravity, claude-code, kilo-code, cursor, windsurf]
+name: qk-template
+version: 5.0.0
+updated: 2026-07-03
+description: Bản mẫu siêu gọn để tạo skill theo chuẩn Agent OS v5.0.
+category: template
+tags: [template, boilerplate]
+platforms: [claude-code, cursor, windsurf, gemini-cli]
 ---
 
-# <Skill Name>
+# 🛠️ [Tên Kỹ Năng]
 
-> **Language rule:**
-> Use **English** for: code, identifiers, file names, architecture terms, technical decisions.
-> Use **the user's language** for: explanations, questions, summaries, and feedback.
-> The user may write in any language — detect and match it automatically.
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Các xử lý tư duy nội bộ sẽ dựa vào các thông số dưới đây và trả về Decision Summary.
 
 ---
 
-## Trigger
-
-When to activate this skill. List specific conditions, user intents, and keywords.
-
-Examples:
-- User says "create a new page"
-- User provides a UI mockup or wireframe
-- User asks to "build", "design", or "implement" a screen
+## 🎯 Mission (Scope)
+- ✅ Làm gì.
+- ❌ Không được làm gì.
 
 ---
 
-## Scope
-
-What this skill is responsible for. Be explicit.
-
-- ✅ [What it covers]
-- ✅ [What it covers]
-
----
-
-## Non-goals
-
-What this skill must NOT do. This prevents scope creep.
-
-- ❌ Do NOT [action A]
-- ❌ Do NOT [action B]
-- ❌ Do NOT make changes beyond the stated task
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
+```
 
 ---
 
-## Severity Levels
-
-All findings, issues, and risks use this shared scale:
-
-| Level | Label | Meaning |
-|-------|-------|---------|
-| P0 | Critical | Must fix before any other work |
-| P1 | High | Fix in current session |
-| P2 | Medium | Schedule soon |
-| P3 | Low | Technical debt — fix when possible |
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: strictness # (Import từ dial-library/strictness.md)
+  - id: complexity-budget # (Import từ dial-library/complexity-budget.md)
+```
 
 ---
 
-## Workflow
-
-### Phase 1 — <Discovery / Analysis>
-
-What to analyze, read, or understand first.
-
-- Read: [files / folders / configs]
-- Detect: [patterns / issues / context]
-- Output: [brief summary of findings]
+## 🛡️ Biases (Sửa lỗi mặc định của AI)
+```yaml
+Biases:
+  - id: cosmetic-refactor # (Import từ bias-library/cosmetic-refactor.md)
+  - id: enterprise-crud # (Import từ bias-library/enterprise-crud.md)
+```
 
 ---
 
-### Phase 2 — <Planning>
-
-Before writing any code, produce a plan.
-
-- List what will change and why
-- Identify risks or conflicts
-- Confirm with user if scope is unclear
-
----
-
-### Phase 3 — <Execution>
-
-Apply changes following the plan.
-
+## 🛫 Ship Criteria (Điều kiện xuất xưởng)
+```yaml
 Rules:
-- Smallest safe change
-- Preserve existing behavior unless explicitly changing it
-- Follow project conventions (naming, structure, style)
-- Do not introduce unnecessary dependencies
-
----
-
-### Phase 4 — <Validation>
-
-Verify the output before finishing.
-
-- [ ] Does it match the requirement?
-- [ ] Are edge cases handled?
-- [ ] No regressions introduced?
-- [ ] Output format is complete?
-
----
-
-## Decision Tree
-
-Use this to handle branching logic during execution:
-
+  - id: minimal-diff # (Import từ rule-library/minimal-diff.md)
 ```
-Condition A?
-  ├── Yes → Action X
-  └── No  → Condition B?
-              ├── Yes → Action Y
-              └── No  → Ask user for clarification
-```
-
----
-
-## Output Format
-
-Define exactly what the AI must produce at the end of this skill.
-
-Example:
-```
-✅ Summary:     <what was done>
-📁 Files:       <list of created/modified files>
-⚠️  Warnings:   <anything the user should know>
-🔗 Next steps:  <suggested follow-up skills or actions>
-```
-
----
-
-## Validation Checklist
-
-Before marking this skill complete:
-
-- [ ] All phases completed
-- [ ] Output format produced
-- [ ] No TODOs or placeholder code left
-- [ ] No hardcoded secrets, URLs, or credentials
-- [ ] Follows project naming conventions
-- [ ] User has been informed of any side effects
-
----
-
-## Examples
-
-See `examples/` folder for:
-- `example-en.md` — English input/output example
-- `example-vi.md` — Vietnamese input/output example

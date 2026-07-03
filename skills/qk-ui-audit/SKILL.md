@@ -1,66 +1,57 @@
 ---
 name: qk-ui-audit
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất.
 category: validation
-behavior: static-analysis
-intent: review-code
-priority: medium
 tags: [ui, audit, frontend, a11y, responsive]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User asks to check the UI, review styling, or run an audit on a component.
-inputs: [Target UI component, File path]
-outputs: [UI Audit Score, Fix recommendations]
-allowed_tools: [grep_search, read_file]
-pipeline: [analyze, review, validate, complete]
 ---
 
-# 🛠️ qk-ui-audit - Standard Operating Procedure
+# 🛠️ qk-ui-audit
 
-> **Goal:** Kiểm toán chất lượng Giao diện Người dùng (UI QA). Tìm ra các lỗi hiển thị, sự thiếu đồng nhất và vi phạm Accessibility (a11y).
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Scan UI):**
-   - Read the UI component's source code.
-   - Look for inline styles (`style={{...}}`) and hardcoded magic numbers (e.g., `px`, `%` instead of standard tokens).
-2. **Review (Consistency & Responsive):**
-   - Check if standard Design System tokens (e.g., Tailwind classes like `p-4`, `text-lg`) are used.
-   - Check for mobile-first implementation (e.g., base classes for mobile, `md:` for desktop).
-3. **Validate (Accessibility - A11y):**
-   - Verify `<img>` tags have `alt` attributes.
-   - Verify `<button>` tags without text have `aria-label`.
-   - Verify interactive `<div>` elements have `role="button"` and `tabIndex`.
-4. **Complete (Report):**
-   - Calculate a rough score (0-100) based on violations.
+## 🎯 Mission (Scope)
+- ✅ Audit UI/UX, rà soát Design Tokens, A11y, và Responsive.
+- ❌ Do NOT tự tiện sửa code trừ khi user ra lệnh.
 
-## 🛡️ 3. Constraints & Rules
+---
 
-- **Audit Only:** Do not modify the code automatically unless the user explicitly requests you to apply the fixes.
-- **Evidence Based:** Point out the exact line number where the violation occurs.
-
-## 🌳 3. Decision Tree
-
-```text
-Does the component contain hardcoded `#hex` colors or `px` values?
-  ├── YES → Deduct Consistency score. Recommend using Design Tokens.
-  └── NO → Pass.
-
-Does the component have clickable `<div>` elements?
-  ├── YES → Deduct A11y score. Recommend using `<button>` or adding roles.
-  └── NO → Pass.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
 ```
 
-## 🤝 4. Handoff Pipeline
+---
 
-1. `complete`: Generate the UI Audit Report.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: aesthetic-vibe
+  - id: strictness
+```
 
-## 📝 5. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt.
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases:
+  - id: cosmetic-refactor # (Audit format code thay vì audit UX/Tokens)
+```
 
-- **Tóm tắt (Summary):** Chấm điểm Giao diện (Score: X/100).
-- **Chi tiết (Changes):** Liệt kê các lỗi Consistency, A11y, Responsive (ghi rõ dòng).
-- **Nguyên nhân (Reasoning):** Tại sao lại đánh lỗi điểm đó.
-- **Hành động tiếp (Next Action):** Hỏi User có muốn tự động sửa các lỗi này không.
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: delegation-only # (Chỉ đọc và Report)
+```

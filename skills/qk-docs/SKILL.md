@@ -1,62 +1,56 @@
 ---
 name: qk-docs
-version: 3.1.5
-updated: 2026-07-02
+version: 5.0.0
+updated: 2026-07-03
 description: Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu.
 category: documentation
-behavior: static-analysis
-intent: maintain
-priority: low
-tags: [docs, markdown, jsdoc, readme, architecture, mermaid]
+tags: [documentation, readme, comments]
 platforms: [claude-code, cursor, windsurf, gemini-cli]
-trigger: User asks to write docs, generate architecture diagrams, update README, or write JSDoc.
-inputs: [Source code, Task context]
-outputs: [Markdown Documentation, JSDoc]
-allowed_tools: [read_file, write_to_file]
-pipeline: [analyze, implement, validate, complete]
 ---
 
-# 🛠️ qk-docs - Standard Operating Procedure
+# 🛠️ qk-docs
 
-> **Goal:** Đóng vai trò là "Technical Writer". Viết tài liệu (README, API Docs, Code Comments) rõ ràng, dễ hiểu cho con người.
+> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
+> Output bắt buộc là Decision Summary.
 
-## 🔄 1. Chain of Thought (SOP)
+---
 
-1. **Analyze (Context Extraction):**
-   - Read the target source code to understand its Inputs, Outputs, and side effects.
-2. **Implement (Drafting):**
-   - Write Markdown or JSDoc comments.
-   - Structure: Description -> Parameters -> Returns -> Warnings/Notes.
-3. **Validate (Review Examples):**
-   - ALWAYS provide 1-2 real-world code examples demonstrating how to use the function/API.
-4. **Complete (Format):**
-   - Ensure proper Markdown syntax (bolding, code blocks with languages).
+## 🎯 Mission (Scope)
+- ✅ Dịch logic phức tạp thành giải thích tiếng Việt trong sáng cho con người.
+- ❌ Do NOT dịch nguyên xi các thuật ngữ chuyên ngành (Props, Hook, Cache).
 
-## 🛡️ 2. Constraints & Rules
+---
 
-- **Human Friendly:** Avoid overly academic language. Explain it as if explaining to a junior developer.
-- **Language Hybrid:** If writing Vietnamese documentation, keep technical keywords (props, state, endpoint, fetch) in English.
-
-## 🌳 3. Decision Tree
-
-```text
-Is this a System Architecture or Flow?
-  ├── YES → Create Mermaid diagrams (Architecture, Sequence) and save to `/docs/`.
-  └── NO → Is this an API Documentation?
-             ├── YES → Use standard REST/GraphQL documentation layout (Endpoint, Method, Body, Response).
-             └── NO → Is it a Component Documentation?
-                        ├── YES → Document the Props interface and usage examples.
-                        └── NO → Write standard JSDoc or update README.
+## ⚙️ Capabilities (Cognitive Pipeline)
+```yaml
+Pipeline:
+  - inference
+  - planning
+  - execution
+  - bias-review
+  - ship-check
 ```
 
-## 🤝 4. Handoff Pipeline
+---
 
-1. `complete`: Generate the Docs and save them to the project files.
+## 🎛️ Dials (Hành vi)
+```yaml
+Dials:
+  - id: strictness
+```
 
-## 📝 5. Output Format
+---
 
-Vui lòng trả kết quả bằng Tiếng Việt.
+## 🛡️ Biases (Sửa lỗi mặc định)
+```yaml
+Biases:
+  - id: hallucinated-tools # (Tự bịa ra các step hướng dẫn không tồn tại)
+```
 
-- **Tóm tắt (Summary):** Tài liệu nào đã được tạo/cập nhật.
-- **Chi tiết (Changes):** Cấu trúc tài liệu.
-- **Xác thực (Verification):** Yêu cầu User đọc lướt qua tài liệu.
+---
+
+## 🛫 Ship Criteria
+```yaml
+Rules:
+  - id: minimal-diff
+```
