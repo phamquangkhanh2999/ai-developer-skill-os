@@ -1,6 +1,6 @@
 {
   "$schema": "https://ai-developer-skill-os.dev/schema/skills-registry.json",
-  "version": "3.1.0",
+  "version": "6.0.3",
   "name": "AI Developer Skill OS",
   "description": "Enterprise-ready Agentic Framework for AI Coding Agents — Engineering + Frontend + Backend",
   "language": "en",

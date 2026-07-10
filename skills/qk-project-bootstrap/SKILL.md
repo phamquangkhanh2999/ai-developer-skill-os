@@ -1,7 +1,8 @@
 ---
 name: qk-project-bootstrap
 category: fullstack
-version: 6.0.0
+version: 6.0.3
+description: "Khởi tạo dự án mới với các best practices, linters, và cấu trúc thư mục chuẩn."
 ---
 
 # qk-project-bootstrap

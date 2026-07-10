@@ -1,7 +1,8 @@
 ---
 name: qk-orchestrator
 category: core
-version: 6.0.0
+version: 6.0.3
+description: "Điều hướng yêu cầu của người dùng, phân tích ý định và ủy quyền cho các sub-skills phù hợp."
 ---
 
 # qk-orchestrator

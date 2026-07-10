@@ -1,7 +1,8 @@
 ---
 name: qk-api-lifecycle
 category: fullstack
-version: 6.0.0
+version: 6.0.3
+description: "Thiết kế, triển khai, và tích hợp các API endpoints."
 ---
 
 # qk-api-lifecycle

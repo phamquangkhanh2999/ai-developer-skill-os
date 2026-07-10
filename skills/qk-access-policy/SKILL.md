@@ -1,7 +1,8 @@
 ---
 name: qk-access-policy
 category: security
-version: 6.0.0
+version: 6.0.3
+description: "Quản lý RBAC, ABAC và các ranh giới bảo mật."
 ---
 
 # qk-access-policy

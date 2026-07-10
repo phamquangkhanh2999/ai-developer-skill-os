@@ -1,7 +1,8 @@
 ---
 name: qk-feature-delivery
 category: fullstack
-version: 6.0.0
+version: 6.0.3
+description: "Phát triển tính năng mới hoàn chỉnh từ Frontend đến Backend."
 ---
 
 # qk-feature-delivery

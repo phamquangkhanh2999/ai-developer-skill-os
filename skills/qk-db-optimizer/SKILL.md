@@ -1,7 +1,8 @@
 ---
 name: qk-db-optimizer
 category: infrastructure
-version: 6.0.0
+version: 6.0.3
+description: "Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries)."
 ---
 
 # qk-db-optimizer

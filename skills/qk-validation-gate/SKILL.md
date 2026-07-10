@@ -1,7 +1,8 @@
 ---
 name: qk-validation-gate
 category: qa
-version: 6.0.0
+version: 6.0.3
+description: "Cổng kiểm tra chất lượng bắt buộc (Test, Lint, Security)."
 ---
 
 # qk-validation-gate

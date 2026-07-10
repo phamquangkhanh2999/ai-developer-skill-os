@@ -1,7 +1,8 @@
 ---
 name: qk-ui-audit
 category: qa
-version: 6.0.0
+version: 6.0.3
+description: "Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất."
 ---
 
 # qk-ui-audit

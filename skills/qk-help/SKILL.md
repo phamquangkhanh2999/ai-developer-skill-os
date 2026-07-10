@@ -1,7 +1,8 @@
 ---
 name: qk-help
 category: core
-version: 6.0.0
+version: 6.0.3
+description: "Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng."
 ---
 
 # qk-help

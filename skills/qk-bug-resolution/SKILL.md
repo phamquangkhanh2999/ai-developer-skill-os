@@ -1,7 +1,8 @@
 ---
 name: qk-bug-resolution
 category: maintenance
-version: 6.0.0
+version: 6.0.3
+description: "Xử lý và sửa các lỗi (bugs), đồng thời ngăn ngừa lỗi hồi quy."
 ---
 
 # qk-bug-resolution

@@ -1,7 +1,8 @@
 ---
 name: qk-project-memory
 category: core
-version: 6.0.0
+version: 6.0.3
+description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc."
 ---
 
 # qk-project-memory

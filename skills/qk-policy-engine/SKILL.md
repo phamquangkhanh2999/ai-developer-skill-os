@@ -1,7 +1,8 @@
 ---
 name: qk-policy-engine
 category: security
-version: 6.0.0
+version: 6.0.3
+description: "Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền."
 ---
 
 # qk-policy-engine

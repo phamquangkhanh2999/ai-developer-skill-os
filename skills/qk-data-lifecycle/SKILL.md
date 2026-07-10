@@ -1,7 +1,8 @@
 ---
 name: qk-data-lifecycle
 category: infrastructure
-version: 6.0.0
+version: 6.0.3
+description: "Quản lý Database Schema, Migrations, và Repositories."
 ---
 
 # qk-data-lifecycle

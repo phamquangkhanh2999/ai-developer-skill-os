@@ -1,7 +1,8 @@
 ---
 name: qk-context-loader
 category: utilities
-version: 6.0.0
+version: 6.0.3
+description: "Tải các file liên quan và vẽ biểu đồ phụ thuộc (dependency graph) cho một tác vụ."
 ---
 
 # qk-context-loader

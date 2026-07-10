@@ -1,7 +1,8 @@
 ---
 name: qk-ai-builder
 category: ai
-version: 6.0.0
+version: 6.0.3
+description: "Thiết kế AI Logic, Prompts, RAG pipelines, và các Agents."
 ---
 
 # qk-ai-builder

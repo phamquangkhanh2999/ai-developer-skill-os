@@ -1,7 +1,8 @@
 ---
 name: qk-design-to-code
 category: frontend
-version: 6.0.0
+version: 6.0.3
+description: "Chuyển đổi thiết kế từ Figma/Images thành các UI component hoàn chỉnh, chuẩn pixel."
 ---
 
 # qk-design-to-code

@@ -1,7 +1,8 @@
 ---
 name: qk-docs
 category: utilities
-version: 6.0.0
+version: 6.0.3
+description: "Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu."
 ---
 
 # qk-docs

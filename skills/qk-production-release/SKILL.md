@@ -1,7 +1,8 @@
 ---
 name: qk-production-release
 category: devops
-version: 6.0.0
+version: 6.0.3
+description: "Chuẩn bị codebase để phát hành lên production (Build, CI/CD, Security)."
 ---
 
 # qk-production-release

@@ -1,7 +1,8 @@
 ---
 name: qk-engineering-standard
 category: conventions
-version: 6.0.0
+version: 6.0.3
+description: "Ép buộc áp dụng SOLID, DRY, Clean Code, và các quy tắc đặt tên."
 ---
 
 # qk-engineering-standard

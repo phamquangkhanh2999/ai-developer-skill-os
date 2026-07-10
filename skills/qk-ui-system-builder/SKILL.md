@@ -1,7 +1,8 @@
 ---
 name: qk-ui-system-builder
 category: frontend
-version: 6.0.0
+version: 6.0.3
+description: "Xây dựng và duy trì Design Systems, Token extraction, và các thư viện UI dùng chung."
 ---
 
 # qk-ui-system-builder

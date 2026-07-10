@@ -1,7 +1,8 @@
 ---
 name: qk-system-evolution
 category: infrastructure
-version: 6.0.0
+version: 6.0.3
+description: "Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback."
 ---
 
 # qk-system-evolution

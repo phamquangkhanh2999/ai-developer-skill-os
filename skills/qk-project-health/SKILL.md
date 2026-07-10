@@ -1,7 +1,8 @@
 ---
 name: qk-project-health
 category: maintenance
-version: 6.0.0
+version: 6.0.3
+description: "Kiểm toán toàn diện về Code Smells, Tech Debt, và Architecture."
 ---
 
 # qk-project-health
