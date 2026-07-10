@@ -1,57 +1,36 @@
 ---
 name: qk-project-bootstrap
-version: 5.0.0
-updated: 2026-07-03
-description: Khởi tạo dự án mới với các best practices, linters, và cấu trúc thư mục chuẩn.
-category: setup
-tags: [bootstrap, scaffolding, setup, init]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: fullstack
+version: 6.0.0
 ---
 
-# 🛠️ qk-project-bootstrap
+# qk-project-bootstrap
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Initializing new projects with best practices (Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Setup dự án mới từ đầu.
-- ❌ Do NOT khởi tạo với cấu hình lỏng lẻo (Linter tắt).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Setup linters, formatters, and standard directory structures
+  - Follow the organization's existing templates if available
+must_not:
+  - Hardcode outdated dependency versions
+  - Skip adding basic README instructions
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
-  - id: complexity-budget
+prefer:
+  - Standard tooling over custom scripts
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: enterprise-crud
+ask:
+  - To clarify preferred framework/language if not specified
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: no-unnecessary-dependencies
+## Output
+- Bootstrapped repository structure
 ```

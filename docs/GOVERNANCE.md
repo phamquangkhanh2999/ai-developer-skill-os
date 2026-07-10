@@ -30,7 +30,7 @@ A change is considered **Breaking** if it:
 
 ## 5. Versioning Strategy (Semantic Versioning)
 We strictly adhere to SemVer based on the framework's architecture, not just content.
-- **MAJOR (e.g., v4.0.0 to v5.0.0):** Breaking changes to the Kernel (`AGENTS.md`), Metadata Contract (`SPEC.md`), or fundamental routing.
+- **MAJOR (e.g., v4.0.0 to v6.0.0):** Breaking changes to the Kernel (`AGENTS.md`), Metadata Contract (`SPEC.md`), or fundamental routing.
 - **MINOR (e.g., v4.0.0 to v4.1.0):** Adding new Capabilities, new default Skills, new Knowledge docs, or new Templates. 
 - **PATCH (e.g., v4.0.0 to v4.0.1):** Fixing typos in docs, updating README, or minor bug fixes within an individual skill's SOP.
 

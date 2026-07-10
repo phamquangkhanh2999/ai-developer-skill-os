@@ -1,58 +1,35 @@
 ---
 name: qk-orchestrator
-version: 5.0.0
-updated: 2026-07-03
-description: Điều hướng yêu cầu của người dùng, phân tích ý định và ủy quyền cho các sub-skills phù hợp.
 category: core
-tags: [orchestrator, routing, dispatch, core]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-orchestrator
+# qk-orchestrator
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Request analysis and task delegation (Coordinate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Phân tích yêu cầu và điều phối cho đúng Skill con.
-- ❌ Do NOT tự tay viết code hoặc thực hiện thay đổi hệ thống.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - delegation # <-- Core capability
-  - bias-review
-  - ship-check
+must:
+  - Route user request to the correct sub-skill
+must_not:
+  - Write code directly
+  - Hallucinate non-existent skills
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: autonomy # (Tự động quyết định hay chờ lệnh)
-  - id: strictness
+prefer:
+  - Delegate to specialist skills
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: hallucinated-tools # (Tự bịa ra các tool/skill không tồn tại)
-  - id: absent-delegation # (Tự nhảy vào code thay vì giao việc)
+stop:
+  - No matching skill is found
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only
+## Output
+- Delegation plan
 ```

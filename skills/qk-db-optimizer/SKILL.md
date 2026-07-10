@@ -1,56 +1,35 @@
 ---
 name: qk-db-optimizer
-version: 5.0.0
-updated: 2026-07-03
-description: Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries).
-category: database
-tags: [database, performance, optimization, queries]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: infrastructure
+version: 6.0.0
 ---
 
-# 🛠️ qk-db-optimizer
+# qk-db-optimizer
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Database optimization (Indexes, N+1 Queries, Slow Queries) (Diagnose & Evaluate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Tìm nguyên nhân gây nghẽn cổ chai DB và đề xuất Query Optimization.
-- ❌ Do NOT vội vàng đề xuất Redis/Cache trước khi fix tận gốc câu SQL lỗi.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Analyze query execution plans if available
+  - Suggest non-breaking performance fixes
+must_not:
+  - Change database engine or major architecture without consent
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: optimization-strategy
+prefer:
+  - Adding indexes before rewriting complex queries
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: over-indexing
+ask:
+  - For exact slow query logs if not provided
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- Optimization plan and SQL patches
 ```

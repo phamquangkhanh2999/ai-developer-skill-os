@@ -1,52 +1,34 @@
 ---
 name: qk-help
-version: 5.0.0
-updated: 2026-07-03
-description: Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng.
-category: utility
-tags: [help, menu, list]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: core
+version: 6.0.0
 ---
 
-# 🛠️ qk-help
+# qk-help
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Displaying available skills and usage tips (Collect & Delegate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Trình bày bảng hướng dẫn sử dụng nhanh gọn, dễ đọc.
-- ❌ Do NOT đưa ra những tường chữ dài dòng.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - execution # Bỏ qua Inference và Planning vì đây là skill cung cấp thông tin.
-  - ship-check
+must:
+  - Present information clearly and concisely
+must_not:
+  - Hallucinate skills that do not exist in the repository
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Short, actionable examples over long descriptions
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases: []
+ask:
+  - If the user's intent is unclear when asking for help
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only
+## Output
+- List of available skills and usage instructions
 ```

@@ -1,57 +1,38 @@
 ---
 name: qk-api-lifecycle
-version: 5.0.0
-updated: 2026-07-03
-description: Thiết kế, triển khai, và tích hợp các API endpoints.
-category: backend
-tags: [api, rest, graphql, integration]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: fullstack
+version: 6.0.0
 ---
 
-# 🛠️ qk-api-lifecycle
+# qk-api-lifecycle
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- API design, endpoints, contracts, and lifecycle management (Plan & Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Thiết kế RESTful hoặc GraphQL API chuẩn mực.
-- ❌ Do NOT trả về mã `200 OK` cho các response bị lỗi `error: true`.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Define clear request/response contracts (OpenAPI/Swagger)
+  - Ensure backward compatibility on existing endpoints
+must_not:
+  - Introduce breaking changes without versioning
+  - Bypass authentication or authorization checks
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: rest-strictness
+prefer:
+  - RESTful resource naming conventions
+  - Meaningful HTTP status codes
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: swallow-errors
-  - id: enterprise-crud # (Dùng gRPC/Kafka cho API quá nhỏ)
+stop:
+  - Required API contracts or models are missing
+  - Major breaking change detected on production APIs
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- API endpoints, controllers, and documentation
 ```

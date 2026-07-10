@@ -1,56 +1,36 @@
 ---
 name: qk-docs
-version: 5.0.0
-updated: 2026-07-03
-description: Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu.
-category: documentation
-tags: [documentation, readme, comments]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: utilities
+version: 6.0.0
 ---
 
-# 🛠️ qk-docs
+# qk-docs
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Writing and maintaining project documentation for human readability (Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Dịch logic phức tạp thành giải thích tiếng Việt trong sáng cho con người.
-- ❌ Do NOT dịch nguyên xi các thuật ngữ chuyên ngành (Props, Hook, Cache).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Keep documentation in sync with the actual codebase
+  - Use clear, accessible language
+must_not:
+  - Generate overly verbose or redundant docs
+  - Invent features that don't exist in the code
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Examples and code snippets over pure text
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: hallucinated-tools # (Tự bịa ra các step hướng dẫn không tồn tại)
+stop:
+  - The codebase logic is too ambiguous to document accurately
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- Markdown documentation files
 ```

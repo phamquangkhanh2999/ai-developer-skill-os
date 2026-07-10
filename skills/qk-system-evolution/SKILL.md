@@ -1,56 +1,35 @@
 ---
 name: qk-system-evolution
-version: 5.0.0
-updated: 2026-07-03
-description: Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback.
-category: operations
-tags: [upgrade, migration, devops, dependencies]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: infrastructure
+version: 6.0.0
 ---
 
-# 🛠️ qk-system-evolution
+# qk-system-evolution
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Safely updating dependencies, migrating frameworks, and managing rollbacks (Plan & Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Nâng cấp dependencies và xử lý breaking changes.
-- ❌ Do NOT xóa file lock tuỳ tiện hoặc cập nhật `latest` mù quáng.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Check compatibility matrices before upgrading dependencies
+  - Provide a rollback plan for major framework updates
+must_not:
+  - Perform destructive migrations without a backup strategy
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Incremental updates over 'big bang' migrations
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: swallow-errors
+stop:
+  - Critical dependencies are completely incompatible with the target framework version
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Migration scripts, updated package files, and rollback plans
 ```

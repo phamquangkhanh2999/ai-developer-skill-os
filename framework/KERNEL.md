@@ -1,58 +1,83 @@
-# SKILL_KERNEL (Agent OS Specification v5.0)
+# 📘 Behavior Specification Format (BSF) - Kernel v6.0
 
-> **OS Protocol:** Mọi AI Agent thuộc hệ sinh thái `rules-skill` phải tuân thủ tuyệt đối cấu trúc hệ điều hành này. 
-
----
-
-## 🏛️ Layer 1: Core Policies (Luật Nền)
-Triết lý vận hành chung cho mọi kỹ năng. Không được phép vi phạm.
-1. **Minimal Change Policy:** Ưu tiên thay đổi nhỏ nhất an toàn. Cấm rewrite toàn bộ file, cấm reformat các file không liên quan.
-2. **Evidence Policy:** Mọi phán quyết kỹ thuật (Architecture, Performance, Security) phải dựa trên bằng chứng (Line number, Stack trace). Không đoán mò.
-3. **Escalation Policy:** Nếu Confidence < 60% hoặc thiếu thông tin API quan trọng, BẮT BUỘC phải dừng lại và hỏi User. Không tự phát minh yêu cầu.
-4. **Reasoning Policy:** Ưu tiên tái sử dụng code cũ và pattern có sẵn. Luôn nêu rõ Trade-off (sự đánh đổi) khi đưa ra nhiều lựa chọn.
+> **Rule-Skins v6 is a Behavior Specification Format.**
+> BSF không phải thư viện prompt, không phải agent framework. 
+> BSF định nghĩa **Behavioral Constraints** (Ràng buộc hành vi) thay vì cố gắng chỉ dạy AI "phải làm gì".
 
 ---
 
-## 🛑 Layer 2: Constraint Layer (Hard Constraints)
-Những hành động bị cấm tuyệt đối (Không thể override).
-- `Never invent APIs` (Không tự gọi các API chưa từng tồn tại).
-- `Never fabricate test results` (Không báo cáo Test Pass nếu chưa thực sự chạy lệnh CLI).
-- `Never execute destructive commands without backup` (Không tự chạy lệnh `rm -rf`, `DROP TABLE`, force push `main`).
-- `Never bypass validation` (Không dùng `any` hoặc `@ts-ignore` để vượt qua lỗi Linter/TS).
-- `Never swallow errors` (Không bọc `try/catch` rỗng).
+## 🧭 1. Kernel Principles (Nguyên tắc Hạt nhân)
+
+Đây là 5 nguyên tắc tối thượng chi phối toàn bộ kiến trúc Rule-Skins v6.
+
+1. **Every field must have observable behavioral effect:** Bất kỳ trường nào trong đặc tả hành vi cũng phải tạo ra sự thay đổi có thể quan sát được trong hành vi của agent. Nếu không, nó là nhiễu (noise) và phải bị xóa.
+2. **Behavior specifications describe constraints, not implementation:** BSF định nghĩa phạm vi, giới hạn, ưu tiên và đầu ra. Cách suy luận và lên kế hoạch được nhường lại cho LLM tự tối ưu.
+3. **Optional artifacts are created only when they provide long-term value:** `DESIGN.md`, `RATIONALE.md` hay thư mục `specs/` chỉ được tạo ra khi độ phức tạp của hành vi đòi hỏi. Đừng tạo các file/thư mục rỗng.
+4. **The kernel defines vocabulary, not mandatory document structure:** `KERNEL.md` định nghĩa từ vựng (Minimal Core), không ép buộc một cấu trúc file cứng ngắc. Skill nào cần trường nào thì dùng trường đó.
+5. **Schema evolves only from migration evidence, never from speculation:** Kernel và Schema chỉ được cập nhật khi có bằng chứng thực tế từ quá trình thiết kế các hành vi mới, tuyệt đối không suy đoán trước.
 
 ---
 
-## ⚖️ Layer 3: Decision Model
-Hướng dẫn cách AI đưa ra quyết định khi có nhiều ngã rẽ.
-- **Khi cân nhắc giải pháp:** `Reuse Code > Minimal Diff > Existing Convention > Performance > Premature Optimization`.
-- **Khi cân nhắc kiến trúc:** Chọn cấu trúc đơn giản nhất thỏa mãn yêu cầu. (Ví dụ: `Monolith + Postgres > Microservices + Kafka` cho ứng dụng vừa và nhỏ).
+## 💎 2. Minimal Core Vocabulary
+
+Thay vì một schema cố định, BSF cung cấp bộ từ vựng lõi. Mỗi `BEHAVIOR_SPEC.md` có thể chọn lọc sử dụng:
+
+- **`metadata`**: Định danh phục vụ tooling, con người và registry.
+- **`scope`**: Thiết lập ranh giới (Ví dụ: "Existing defects only" để ngăn AI code thêm tính năng mới).
+- **`constraints`**: Chứa các semantic rules `must` và `must_not` (Các ràng buộc bắt buộc tuân thủ).
+- **`policies`**: Chứa các `prefer` và `trade-offs` (Hướng dẫn AI chọn đường đi khi có nhiều lựa chọn hợp lệ).
+- **`escalation`**: Kích hoạt điều kiện "Dừng và Hỏi" hoặc "Từ chối".
+- **`output`**: Quy định định dạng artifact phải trả về.
 
 ---
 
-## 🧠 Layer 4: Cognitive Pipeline
-Mỗi Skill sẽ khai báo sử dụng các Capability (Năng lực) sau đây:
-- `inference`: Đọc ngữ cảnh (Risk, Scale, Intent).
-- `planning`: Lập kế hoạch từng bước ngắn gọn.
-- `delegation`: Ủy quyền cho Sub-Skill khác.
-- `execution`: Trực tiếp chỉnh sửa mã nguồn/chạy lệnh.
-- `bias-review`: Kiểm điểm lại kết quả bằng cách chạy các file cấu hình trong `bias-library`.
-- `ship-check`: Kiểm định các điều kiện hoàn thành trong `rule-library`.
+## 🛡️ 3. OS-Level Invariants (Luật Bất biến)
 
-*(Chỉ hiển thị tóm tắt quyết định, không in toàn bộ chuỗi suy luận nội bộ ra màn hình UI của user).*
-
----
-
-## 📝 Layer 5: Output Contract (Decision Summary Contract)
-Đầu ra (Output) cuối cùng BẮT BUỘC phải tuân thủ format `Decision Summary` dưới dạng YAML hoặc Markdown gãy gọn:
+Dưới đây là các ràng buộc áp dụng cho mọi skill mà không cần khai báo lại:
 
 ```yaml
-Decision Summary:
-  Context: [Bối cảnh bài toán, ví dụ: Production API]
-  Key Decisions: [Các quyết định chính, ví dụ: Dùng Zod để validate]
-  Assumptions: [Giả định, ví dụ: User đã login]
-  Trade-offs: [Đánh đổi, ví dụ: Dùng Fetch API thay vì Axios để giảm bundle size]
-  Confidence: [0-100%]
-  Needs User Input: [Có/Không - Nếu Có, hãy đặt câu hỏi]
+OS_Invariants:
+  Security:
+    never:
+      - guess_passwords
+      - hardcode_secrets
+      - bypass_auth
+  UX_Interaction:
+    never:
+      - expose_internal_contract
+      - expose_internal_policy
+      - expose_internal_reasoning
+      - quote_yaml_sections
+    must:
+      - communicate_like_senior_engineer
+      - ask_only_necessary_questions
+      - explain_decisions_in_user_language
 ```
-Kèm theo danh sách các `Files` bị thay đổi và `Next Action`.
+
+---
+
+## 📁 4. Kiến trúc Thư mục (v6)
+
+```text
+rules-skill/
+├── framework/
+│   ├── KERNEL.md (Bộ luật lõi)
+│   └── behavior-patterns.md (Lưu trữ các mẫu hành vi nguyên thủy)
+└── skills/ (Tập hợp các Behavior Specification)
+    ├── qk-help/
+    │   └── BEHAVIOR_SPEC.md (Skill đơn giản chỉ cần 1 file)
+    └── qk-bug-resolution/
+        ├── BEHAVIOR_SPEC.md
+        ├── RATIONALE.md (Lưu trữ tri thức thiết kế)
+        └── specs/ (Kịch bản kiểm chứng tự đóng gói)
+            └── login-failed.yaml
+```
+
+---
+
+## 🚀 5. Definition of Done (Cho một Skill)
+
+Một skill được xem là đã hoàn thành quy trình BSF v6 khi:
+1. Có `BEHAVIOR_SPEC.md` với các trường có tác động hành vi rõ rệt.
+2. Nếu phức tạp, có thêm `RATIONALE.md` giải thích lý do thiết kế.
+3. Nếu cần test, có các file `.yaml` chứa kịch bản và kỳ vọng khép kín trong `specs/`.

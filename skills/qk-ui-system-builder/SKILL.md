@@ -1,56 +1,35 @@
 ---
 name: qk-ui-system-builder
-version: 5.0.0
-updated: 2026-07-03
-description: Xây dựng và duy trì Design Systems, Token extraction, và các thư viện UI dùng chung.
 category: frontend
-tags: [design-system, tokens, shared-components, storybook]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-ui-system-builder
+# qk-ui-system-builder
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Building and maintaining Design Systems and shared UI tokens (Plan & Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Xây dựng Shared Components (Dumb components).
-- ❌ Do NOT nhét logic API hoặc Fetch data vào core component.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Extract reusable design tokens (colors, spacing, typography)
+  - Ensure components are accessible (A11y)
+must_not:
+  - Create duplicate tokens for the same visual value
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Composable components over rigid layouts
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: missing-ui-states
+stop:
+  - Design tokens conflict with existing design guidelines
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- UI component library or Design System tokens
 ```

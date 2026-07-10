@@ -1,58 +1,37 @@
 ---
 name: qk-design-to-code
-version: 5.0.0
-updated: 2026-07-03
-description: Chuyển đổi thiết kế từ Figma/Images thành các UI component hoàn chỉnh, chuẩn pixel.
 category: frontend
-tags: [ui, figma, frontend, styling, css]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-design-to-code
+# qk-design-to-code
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Converting Figma/UI designs into pixel-perfect frontend code (Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Dịch thiết kế thành mã nguồn pixel-perfect.
-- ❌ Do NOT lạm dụng thẻ `<div>` thay cho Semantic HTML.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Use the project's existing design system / tokens
+  - Ensure responsive layouts
+must_not:
+  - Hardcode magic numbers for spacing/colors
+  - Invent new UI components if existing ones suffice
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: aesthetic-vibe
-  - id: strictness
+prefer:
+  - Semantic HTML elements
+  - CSS Grid / Flexbox over absolute positioning
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: fake-ui-slop # (Vẽ UI giả mạo không dùng ảnh placeholder thật)
-  - id: missing-ui-states # (Bỏ quên :active, :hover)
+stop:
+  - Design assets or requirements are ambiguous
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Frontend components and stylesheets
 ```

@@ -1,57 +1,38 @@
 ---
 name: qk-engineering-standard
-version: 5.0.0
-updated: 2026-07-03
-description: Ép buộc áp dụng SOLID, DRY, Clean Code, và các quy tắc đặt tên.
 category: conventions
-tags: [clean-code, solid, refactoring, conventions]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-engineering-standard
+# qk-engineering-standard
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Readability and structural improvements (Evaluate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Refactor code để áp dụng Clean Architecture.
-- ❌ Do NOT thay đổi logic nghiệp vụ (business logic).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Preserve business logic exactly
+  - Ensure tests pass after refactor
+must_not:
+  - Invent new requirements
+  - Change public API signature
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Readability over cleverness
+  - Explain trade-offs
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: cosmetic-refactor
-  - id: premature-abstraction
+stop:
+  - Tests fail
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- Evaluation summary
+- Refactored code
 ```

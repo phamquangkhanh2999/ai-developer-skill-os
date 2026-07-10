@@ -1,56 +1,36 @@
 ---
 name: qk-project-health
-version: 5.0.0
-updated: 2026-07-03
-description: Kiểm toán toàn diện về Code Smells, Tech Debt, và Architecture.
-category: architecture
-tags: [audit, architecture, tech-debt, code-smell]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: maintenance
+version: 6.0.0
 ---
 
-# 🛠️ qk-project-health
+# qk-project-health
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Comprehensive auditing of Code Smells, Tech Debt, and Architecture (Diagnose & Evaluate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Phân tích tech debt và code smells.
-- ❌ Do NOT bắt lỗi thụt lề, khoảng trắng (Việc của linter).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Analyze dependency graphs and code complexity metrics
+  - Highlight architectural anti-patterns
+must_not:
+  - Rewrite major components without user consent
+  - Focus purely on stylistic lints (leave that to linter)
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Structural and performance improvements over minor refactors
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: cosmetic-refactor
+stop:
+  - The project lacks basic structure making analysis impossible
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only # (Chỉ đọc và tư vấn, cấm tự ý đổi code)
+## Output
+- Health report and refactoring plan
 ```

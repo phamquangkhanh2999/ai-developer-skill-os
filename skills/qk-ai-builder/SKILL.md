@@ -1,57 +1,37 @@
 ---
 name: qk-ai-builder
-version: 5.0.0
-updated: 2026-07-03
-description: Thiết kế AI Logic, Prompts, RAG pipelines, và các Agents.
 category: ai
-tags: [ai, llm, prompt-engineering, rag, agents]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-ai-builder
+# qk-ai-builder
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- AI logic, prompts, RAG pipelines, and Agents (Plan & Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Xây dựng luồng AI/LLM, viết Prompts chuyên nghiệp.
-- ❌ Do NOT dùng LLM để thay thế các logic cứng có thể giải quyết bằng Code (như tính toán).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Validate prompt changes against actual model outputs
+  - Handle API rate limits and failures gracefully
+must_not:
+  - Use LLMs for deterministic logic (e.g. math, exact matching)
+  - Fabricate non-existent models or APIs
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: complexity-budget
+prefer:
+  - System prompts over user prompts for constraints
+  - Few-shot examples over complex instructions
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: swallow-errors # (Bỏ qua lỗi API gọi LLM thất bại)
-  - id: hallucinated-tools # (Tự bịa model không tồn tại)
+stop:
+  - Model context window limits are exceeded
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Prompts, pipelines, or Agent configuration
 ```

@@ -1,57 +1,35 @@
 ---
 name: qk-access-policy
-version: 5.0.0
-updated: 2026-07-03
-description: Quản lý RBAC, ABAC và các ranh giới bảo mật.
 category: security
-tags: [security, rbac, abac, auth]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-access-policy
+# qk-access-policy
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Security boundaries and policies (Govern)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Thiết kế và triển khai phân quyền hệ thống.
-- ❌ Do NOT bỏ qua các lỗ hổng bảo mật hiển nhiên (như lộ mật khẩu, thiếu mã hóa).
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Enforce access controls at API level
+  - Check security rules
+must_not:
+  - Rely on UI-only security
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: granularity # (Coarse vs Fine-grained)
-  - id: strictness
+prefer:
+  - Deny-by-default
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: ui-only-security # (Chỉ ẩn nút ở frontend mà quên chặn API backend)
+stop:
+  - Policy is missing or ambiguous
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Policy enforcement decision
 ```

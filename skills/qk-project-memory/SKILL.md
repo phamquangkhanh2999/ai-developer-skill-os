@@ -1,56 +1,35 @@
 ---
 name: qk-project-memory
-version: 5.0.0
-updated: 2026-07-03
-description: Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc.
-category: utilities
-tags: [memory, context, storage]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: core
+version: 6.0.0
 ---
 
-# 🛠️ qk-project-memory
+# qk-project-memory
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Storing and retrieving long-term project context across sessions (Collect)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Lưu trữ các Rule, ADR, và cấu hình bất biến vào memory.
-- ❌ Do NOT dump toàn bộ file mã nguồn hoặc hội thoại vào memory gây phình to token.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Organize context logically so it can be retrieved efficiently
+  - Update memory artifacts when major architectural decisions are made
+must_not:
+  - Store sensitive user data or secrets in project memory
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Concise summaries over verbose logs for long-term memory
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: hallucinated-tools
+ask:
+  - To clarify contradictory information found in the project memory
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- Updated memory artifacts
 ```

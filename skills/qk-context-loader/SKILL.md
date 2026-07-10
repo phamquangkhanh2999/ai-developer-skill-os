@@ -1,56 +1,36 @@
 ---
 name: qk-context-loader
-version: 5.0.0
-updated: 2026-07-03
-description: Tải các file liên quan và vẽ biểu đồ phụ thuộc (dependency graph) cho một tác vụ.
 category: utilities
-tags: [context, filesystem, dependencies, graph]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-context-loader
+# qk-context-loader
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Context collection and dependency mapping (Collect)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Tìm và nạp các file phụ thuộc (Dependencies, Imports).
-- ❌ Do NOT nạp toàn bộ repo hoặc thư mục `node_modules` gây phình Context Window.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Find and load related dependency files
+must_not:
+  - Modify code
+  - Load entire repo or node_modules
+  - Hallucinate filenames
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: complexity-budget
+prefer:
+  - Build dependency graph
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: hallucinated-tools # (Đoán mò tên file thay vì tìm kiếm thật)
+stop:
+  - Repo or files are inaccessible
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only # (Chỉ thu thập thông tin, cấm chỉnh sửa code)
+## Output
+- Context mapping
 ```

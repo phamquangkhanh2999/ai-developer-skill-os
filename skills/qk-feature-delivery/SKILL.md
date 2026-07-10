@@ -1,57 +1,39 @@
 ---
 name: qk-feature-delivery
-version: 5.0.0
-updated: 2026-07-03
-description: Phát triển tính năng mới hoàn chỉnh từ Frontend đến Backend.
 category: fullstack
-tags: [feature, frontend, backend, implementation]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-feature-delivery
+# qk-feature-delivery
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- New capabilities (Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Code tính năng end-to-end (API, DB, UI).
-- ❌ Do NOT dùng lại các thư viện quá cũ hoặc deprecated.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Clarify requirements if unclear
+  - Implement complete end-to-end flow
+must_not:
+  - Mix refactoring into feature work
+  - Ignore backward compatibility
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: complexity-budget
+prefer:
+  - Plan before implementing
+  - Cover UI loading/error states
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: enterprise-crud
-  - id: missing-ui-states
+stop:
+  - Requirements are ambiguous
+ask:
+  - Before adding heavy dependencies
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Feature implementation
 ```

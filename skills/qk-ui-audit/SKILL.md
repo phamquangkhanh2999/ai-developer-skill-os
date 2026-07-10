@@ -1,57 +1,35 @@
 ---
 name: qk-ui-audit
-version: 5.0.0
-updated: 2026-07-03
-description: Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất.
-category: validation
-tags: [ui, audit, frontend, a11y, responsive]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: qa
+version: 6.0.0
 ---
 
-# 🛠️ qk-ui-audit
+# qk-ui-audit
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- UI consistency, accessibility (A11y), responsiveness, and performance auditing (Evaluate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Audit UI/UX, rà soát Design Tokens, A11y, và Responsive.
-- ❌ Do NOT tự tiện sửa code trừ khi user ra lệnh.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Check UI against established design tokens and guidelines
+  - Verify ARIA roles and contrast ratios
+must_not:
+  - Ignore mobile viewport constraints
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: aesthetic-vibe
-  - id: strictness
+prefer:
+  - Identifying systemic UI issues over isolated pixel tweaks
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: cosmetic-refactor # (Audit format code thay vì audit UX/Tokens)
+stop:
+  - UI components completely lack semantic structure
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only # (Chỉ đọc và Report)
+## Output
+- UI audit report with actionable fixes
 ```

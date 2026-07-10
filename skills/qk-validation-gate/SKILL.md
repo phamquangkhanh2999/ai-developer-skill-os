@@ -1,54 +1,36 @@
 ---
 name: qk-validation-gate
-version: 5.0.0
-updated: 2026-07-03
-description: Cổng kiểm tra chất lượng bắt buộc (Test, Lint, Security).
-category: validation
-tags: [ci, testing, linting, security, gatekeeper]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: qa
+version: 6.0.0
 ---
 
-# 🛠️ qk-validation-gate
+# qk-validation-gate
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Mandatory quality checks (Test, Lint, Security) before merge/commit (Evaluate)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Chạy các lệnh kiểm định (Test, Lint) thực tế.
-- ❌ Do NOT giả vờ là test đã pass mà không gọi tool CLI.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - execution
-  - ship-check
+must:
+  - Verify acceptance criteria and test coverage
+  - Fail early if critical errors or lint violations are found
+must_not:
+  - Approve incomplete work or failing tests
+  - Bypass security scans
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Automated testing over manual verification
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: hallucinated-tools
+stop:
+  - Artifact is absent or tests are failing
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: end-to-end-validation
+## Output
+- Pass/Fail decision and validation report
 ```

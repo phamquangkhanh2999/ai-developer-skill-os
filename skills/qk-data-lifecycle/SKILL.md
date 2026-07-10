@@ -1,56 +1,35 @@
 ---
 name: qk-data-lifecycle
-version: 5.0.0
-updated: 2026-07-03
-description: Quản lý Database Schema, Migrations, và Repositories.
-category: database
-tags: [database, schema, migrations, orm]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+category: infrastructure
+version: 6.0.0
 ---
 
-# 🛠️ qk-data-lifecycle
+# qk-data-lifecycle
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- Database Schema, Migrations, and Repositories management (Plan & Execute)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Thiết kế cấu trúc CSDL và viết file Migration an toàn.
-- ❌ Do NOT xóa cột hoặc đổi tên cột đang dùng (DROP/RENAME) mà không dùng cơ chế "Expand & Contract".
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - execution
-  - bias-review
-  - ship-check
+must:
+  - Ensure data schema matches application domain models
+  - Generate reversible migration scripts
+must_not:
+  - Perform destructive schema changes without explicit user approval
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Declarative schema definitions over imperative scripts
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: over-indexing # (Chống thói quen đánh index bừa bãi)
+stop:
+  - Migration script risks massive data loss
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: minimal-diff
+## Output
+- Database schemas and migration scripts
 ```

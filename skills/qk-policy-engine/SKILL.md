@@ -1,55 +1,35 @@
 ---
 name: qk-policy-engine
-version: 5.0.0
-updated: 2026-07-03
-description: Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền.
 category: security
-tags: [security, policy, safety, guardrails]
-platforms: [claude-code, cursor, windsurf, gemini-cli]
+version: 6.0.0
 ---
 
-# 🛠️ qk-policy-engine
+# qk-policy-engine
 
-> **Inheritance:** Kỹ năng này tuân thủ Kiến trúc v5.0 của `framework/KERNEL.md`.
-> Output bắt buộc là Decision Summary.
+## Scope
+- System policy evaluation for safe and authorized actions (Govern)
 
----
-
-## 🎯 Mission (Scope)
-- ✅ Đóng vai trò Guardrails, ngăn chặn các hành vi phá hoại trước khi chúng diễn ra.
-- ❌ Do NOT đồng ý thực thi lệnh nguy hiểm (drop table, rm -rf) trừ khi có sự xác nhận mạnh mẽ.
-
----
-
-## ⚙️ Capabilities (Cognitive Pipeline)
+## Constraints
 ```yaml
-Pipeline:
-  - inference
-  - planning
-  - bias-review
-  - ship-check
+must:
+  - Evaluate requested actions against defined system constraints
+  - Enforce OS-level invariants
+must_not:
+  - Allow destructive commands (e.g. rm -rf /) to bypass checks
 ```
 
----
-
-## 🎛️ Dials (Hành vi)
+## Policies
 ```yaml
-Dials:
-  - id: strictness
+prefer:
+  - Strict adherence to policy over convenience
 ```
 
----
-
-## 🛡️ Biases (Sửa lỗi mặc định)
+## Escalation
 ```yaml
-Biases:
-  - id: swallow-errors
+stop:
+  - Action explicitly violates core safety policies
 ```
 
----
-
-## 🛫 Ship Criteria
-```yaml
-Rules:
-  - id: delegation-only
+## Output
+- Policy evaluation result (Allow/Deny)
 ```

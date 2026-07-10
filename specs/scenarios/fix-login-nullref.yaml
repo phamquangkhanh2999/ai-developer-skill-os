@@ -1,0 +1,3 @@
+scenario_id: fix-login-nullref
+description: "Một API production bị lỗi NullReferenceException sau khi merge."
+expected_behavior: qk-bug-resolution

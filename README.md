@@ -1,8 +1,8 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v5.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v6.0
 
-> Một hệ điều hành Agent (Agent OS Specification) tối thượng dành cho AI Coding Agents (Claude Code, Cursor, Windsurf, Gemini, Kilo).
+> **Rule-Skins v6 is a Behavior Specification Format (BSF), not a prompt library, not an agent framework, and not a programming language. It defines reusable behavioral contracts that can be interpreted by different AI runtimes while remaining implementation-agnostic.**
 
-Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **AI Developer Skill OS v5.0** được thiết kế lại hoàn toàn theo chuẩn **Modular Agent OS**. Các kỹ năng giờ đây siêu nhẹ, kế thừa tập trung từ Kernel và các bộ quy tắc độc lập.
+Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **Rule-Skins v6** được tái thiết kế hoàn toàn theo chuẩn **Behavior Specification Format**. Các hành vi (Behaviors) giờ đây là các bản Hợp đồng (Contracts) rõ ràng, bao gồm Policies, Capabilities, và Reasoning Boundaries.
 
 ---
 
@@ -10,19 +10,19 @@ Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những promp
 
 Hệ thống được thiết kế decoupled hoàn hảo:
 
-### 1. OS Kernel (`framework/KERNEL.md`)
-Trái tim của hệ thống định nghĩa Core Policies (Minimal Change, Evidence, Escalation, Reasoning), Constraint Layer (các hành vi bị cấm), và Cognitive Pipeline.
+### 1. BSF Kernel (`framework/KERNEL.md`)
+Trái tim của hệ thống định nghĩa BSF Meta-Model, OS Policy (Invariants), Knowledge Layer, Validation Rules, và Design Principles.
 
 ### 2. Thư Viện Độc Lập (Library Modules)
-- `framework/bias-library/`: Sửa các lỗi tư duy mặc định của AI (Ví dụ: cấm vẽ UI giả, cấm nuốt lỗi).
-- `framework/dial-library/`: Định nghĩa các cấu hình điều khiển hành vi (Độ nghiêm ngặt, ngân sách độ phức tạp).
+- `framework/bias-library/`: Sửa các lỗi tư duy mặc định của AI.
+- `framework/dial-library/`: Định nghĩa các cấu hình điều khiển hành vi.
 - `framework/rule-library/`: Các tiêu chí xuất xưởng bắt buộc.
 
-### 3. Metadata-Only Skills (`skills/`)
-Bộ 23 kỹ năng (Skills) cốt lõi được cấu trúc siêu nhẹ. Toàn bộ logic nội bộ bị loại bỏ, thay bằng việc khai báo (Declarative) để gọi các Pipeline, Bias, và Dials từ thư viện.
+### 3. Behavior Specifications (`skills/`)
+Bộ 23 Behavior cốt lõi được cấu trúc theo chuẩn BSF (`_template/BEHAVIOR_SPEC.md`). Toàn bộ logic nội bộ được quy hoạch thành các Contracts (Quyền hạn), Policies (Quyết định, Bằng chứng) và Protocol (State Machine tùy chọn).
 
 ### 4. Output Contract (Decision Summary)
-Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Contract: Báo cáo dưới dạng `Decision Summary` súc tích (Context, Decisions, Assumptions, Trade-offs) bằng Tiếng Việt, loại bỏ hoàn toàn các chuỗi suy nghĩ dài dòng (Invisible Reasoning).
+Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Contract: Báo cáo bằng Tiếng Việt, bảo đảm Invariants, và vượt qua các Quality Gates.
 
 ---
 
