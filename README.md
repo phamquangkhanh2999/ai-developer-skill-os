@@ -1,56 +1,34 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v6.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v7.0.0
 
-> **Rule-Skins v6 is a Behavior Specification Format (BSF), not a prompt library, not an agent framework, and not a programming language. It defines reusable behavioral contracts that can be interpreted by different AI runtimes while remaining implementation-agnostic.**
+> **V7.0.0 "Anti-Slop & Zero-Trust Architecture"**
 
-Thay vì cung cấp các "công cụ rời rạc" (Toolbox) hoặc những prompt cồng kềnh, **Rule-Skins v6** được tái thiết kế hoàn toàn theo chuẩn **Behavior Specification Format**. Các hành vi (Behaviors) giờ đây là các bản Hợp đồng (Contracts) rõ ràng, bao gồm Policies, Capabilities, và Reasoning Boundaries.
-
----
-
-## 🏗️ Kiến Trúc 5 Tầng (Agent OS Kernel)
-
-Hệ thống được thiết kế decoupled hoàn hảo:
-
-### 1. BSF Kernel (`framework/KERNEL.md`)
-Trái tim của hệ thống định nghĩa BSF Meta-Model, OS Policy (Invariants), Knowledge Layer, Validation Rules, và Design Principles.
-
-### 2. Thư Viện Độc Lập (Library Modules)
-- `framework/bias-library/`: Sửa các lỗi tư duy mặc định của AI.
-- `framework/dial-library/`: Định nghĩa các cấu hình điều khiển hành vi.
-- `framework/rule-library/`: Các tiêu chí xuất xưởng bắt buộc.
-
-### 3. Behavior Specifications (`skills/`)
-Bộ 23 Behavior cốt lõi được cấu trúc theo chuẩn BSF (`_template/BEHAVIOR_SPEC.md`). Toàn bộ logic nội bộ được quy hoạch thành các Contracts (Quyền hạn), Policies (Quyết định, Bằng chứng) và Protocol (State Machine tùy chọn).
-
-### 4. Output Contract (Decision Summary)
-Toàn bộ kết quả trả về cho bạn đều tuân thủ Output Contract: Báo cáo bằng Tiếng Việt, bảo đảm Invariants, và vượt qua các Quality Gates.
+Hệ sinh thái AI Developer Skill OS đã được tái cấu trúc hoàn toàn. Thay vì cung cấp các "công cụ rời rạc" (Toolbox), phiên bản V7 được thiết kế như một **Hệ điều hành khép kín, hoạt động theo kỷ luật của một Kiến trúc sư Hệ thống (50 năm kinh nghiệm)**.
 
 ---
 
-## 🧩 Danh sách 20+ Master Skills
+## 🏗️ Triết Lý Hoạt Động Cốt Lõi (V7 Kernel)
 
-Các skill được chia thành các nhóm (Category) rõ ràng:
+### 1. Zero-Trust Context (Không bao giờ đoán mò)
+Mọi kỹ năng phân tích logic và backend (như `qk-feature-delivery`, `qk-orchestrator`) đều bị khoá chặt, không được phép hoạt động nếu chưa có **Dependency Graph** (Bản đồ cấu trúc) từ `qk-context-loader`. AI không được phép thay đổi code dựa trên trí tưởng tượng.
+
+### 2. Contract-First (Khế ước đi đầu)
+- **Frontend / UI**: Mọi sửa đổi giao diện đều phải dựa trên `DESIGN.md`. Nếu vi phạm (tạo ra giao diện lười biếng "slop", dùng màu mặc định sai lệch), AI sẽ tự động bị đánh trượt bài kiểm toán.
+- **Backend / API**: Mọi API phải được viết `OpenAPI/Swagger` schema trước khi viết logic thực tế (`qk-api-lifecycle`).
+- **Database**: Cấm truy vấn mù. Bắt buộc phải có Schema định nghĩa rõ ràng trước (`qk-data-lifecycle`).
+
+### 3. Repair Loop (Chu trình Sửa Lỗi Khép Kín)
+Bảo vệ mã nguồn khỏi thói quen "sửa vội" của AI. Lỗi bắt buộc phải qua chu trình điều tra nghiêm ngặt: `Observe -> Hypothesis -> Evidence -> Fix -> Verify` (`qk-bug-resolution`).
+
+---
+
+## 🧩 Danh sách 22 Master Skills
+
+Các kỹ năng được quản lý cực kỳ chặt chẽ với bài kiểm tra tự động (Vitest) để đảm bảo tính nhất quán của luật lệ:
 - **Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-policy-engine`, `qk-access-policy`
 - **Engineering / Dev:** `qk-feature-delivery`, `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-design-to-code`, `qk-ui-system-builder`
 - **Validation & Standards:** `qk-validation-gate`, `qk-engineering-standard`, `qk-ui-audit`, `qk-project-health`, `qk-bug-resolution`
 - **Ops & AI:** `qk-system-evolution`, `qk-production-release`, `qk-ai-builder`, `qk-project-bootstrap`
-- **Docs & Utils:** `qk-docs`, `qk-documentation-system`, `qk-project-memory`, `qk-help`
-
----
-
-## 🔄 Luồng Handoff Pipeline Khép Kín
-
-Bất cứ một tính năng hay lỗi nào cũng được đi qua một đường ống khép kín (Abstract Pipeline):
-```text
-analyze 
-  ↓
-implement 
-  ↓
-engineering-standard (Ép chuẩn Code, Naming, SOLID)
-  ↓
-validate (Chạy Linter, Tests, Security Check)
-  ↓
-complete (Tạo báo cáo bằng tiếng Việt)
-```
+- **Docs & Utils:** `qk-docs`, `qk-project-memory`, `qk-help`
 
 ---
 
@@ -60,34 +38,22 @@ Sử dụng npm:
 ```bash
 npm i -g ai-developer-skill-os
 ```
-Hoặc sử dụng qua `npx`:
+Hoặc khởi tạo thông qua `npx`:
 ```bash
 npx ai-developer-skill-os init
 ```
 
 ## 🧪 Testing
 
-This project includes a full test suite to ensure registry integrity and SKILL.md spec compliance:
+Hệ thống được bảo vệ bằng bộ Test Suite (Vitest) để tự động kiểm toán tính hợp lệ của toàn bộ 22 file Kỹ năng trước khi xuất bản:
 
 ```bash
 npm test
 ```
 
-CI runs automatically on every PR via GitHub Actions, enforcing:
-- Registry matches filesystem
-- All SKILL.md frontmatters comply with `docs/SPEC.md`
-- Install script idempotency
-
-## 🗑️ Cách Gỡ Cài Đặt (Uninstallation)
-
-Nếu bạn đã cài đặt thông qua npm global, bạn có thể gỡ bỏ bằng lệnh:
-```bash
-npm uninstall -g ai-developer-skill-os
-```
-
 ## 🚀 Tra Cứu (Help)
 
-Để tra cứu danh sách toàn bộ 20+ Kỹ năng và các mẹo sử dụng, hãy gọi:
+Để tra cứu danh sách các Kỹ năng và luật lệ khắt khe của hệ thống V7, hãy gọi:
 ```bash
-./qk-help "Hiển thị tất cả các skill"
+./qk-help
 ```
