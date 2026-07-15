@@ -1,36 +1,44 @@
 ---
 name: qk-data-lifecycle
-category: infrastructure
-version: 6.0.3
-description: "Quản lý Database Schema, Migrations, và Repositories."
+category: backend
+version: 7.0.0
+description: "Quản lý Database Schema, Migrations, và Repositories khắt khe với Zero-Trust."
 ---
 
 # qk-data-lifecycle
 
 ## Scope
-- Database Schema, Migrations, and Repositories management (Plan & Execute)
+- Database Schema management, Migrations, and Repositories (Plan & Execute)
+- Enforcing structural database contracts before implementation.
+
+## Verbs
+- `[SCHEMA]`: Define database tables/models explicitly.
+- `[MIGRATE]`: Safely manage state changes.
 
 ## Constraints
 ```yaml
 must:
-  - Ensure data schema matches application domain models
-  - Generate reversible migration scripts
+  - "MUST define explicitly strict database schemas (e.g., Prisma/TypeORM) before writing repository code"
+  - "Enforce strict types for all database operations"
 must_not:
-  - Perform destructive schema changes without explicit user approval
+  - "Create dynamic queries without schema definitions"
+  - "Delete or drop columns without a deprecation phase"
+  - "Write complex business logic inside repository files"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Declarative schema definitions over imperative scripts
+  - "Separation of concerns (Repositories handle data, Services handle logic)"
+  - "Transactions for multi-table updates"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Migration script risks massive data loss
+  - "Missing database schema or ORM models"
+  - "Attempting destructive migrations on production"
 ```
 
 ## Output
-- Database schemas and migration scripts
-```
+- ORM Schema, Repositories, and Migration files.

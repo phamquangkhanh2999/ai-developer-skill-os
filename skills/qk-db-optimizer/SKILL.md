@@ -1,36 +1,41 @@
 ---
 name: qk-db-optimizer
-category: infrastructure
-version: 6.0.3
-description: "Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries)."
+category: backend
+version: 7.0.0
+description: "Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries) dựa trên bằng chứng."
 ---
 
 # qk-db-optimizer
 
 ## Scope
-- Database optimization (Indexes, N+1 Queries, Slow Queries) (Diagnose & Evaluate)
+- Database Optimization and Performance Auditing (Diagnose & Execute)
+
+## Verbs
+- `[OPTIMIZE]`: Analyze query plans and apply targeted indexes.
 
 ## Constraints
 ```yaml
 must:
-  - Analyze query execution plans if available
-  - Suggest non-breaking performance fixes
+  - "Analyze EXPLAIN or Query Plans BEFORE adding indexes"
+  - "Solve N+1 queries using Data Loaders or explicit Joins"
+  - "Validate query performance improvements"
 must_not:
-  - Change database engine or major architecture without consent
+  - "Guess missing indexes without slow query logs"
+  - "Add overlapping or redundant indexes"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Adding indexes before rewriting complex queries
+  - "Compound indexes for multi-column queries"
+  - "Eager loading over lazy loading for known data relations"
 ```
 
 ## Escalation
 ```yaml
-ask:
-  - For exact slow query logs if not provided
+stop:
+  - "No evidence of slow queries or performance bottlenecks"
 ```
 
 ## Output
-- Optimization plan and SQL patches
-```
+- Optimized queries and index migration files.

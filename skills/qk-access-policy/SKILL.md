@@ -1,36 +1,39 @@
 ---
 name: qk-access-policy
 category: security
-version: 6.0.3
-description: "Quản lý RBAC, ABAC và các ranh giới bảo mật."
+version: 7.0.0
+description: "Quản lý RBAC, ABAC và thiết lập ranh giới bảo mật nghiêm ngặt."
 ---
 
 # qk-access-policy
 
 ## Scope
-- Security boundaries and policies (Govern)
+- Role-Based and Attribute-Based Access Control configuration (Plan & Execute)
+
+## Verbs
+- `[CONFIGURE]`: Setup explicit role hierarchies and access lists.
 
 ## Constraints
 ```yaml
 must:
-  - Enforce access controls at API level
-  - Check security rules
+  - "Explicitly define roles and permissions in a Matrix"
+  - "Validate user identity before granting role-based access"
 must_not:
-  - Rely on UI-only security
+  - "Grant wildcard (*) permissions unless absolutely mandated by system architecture"
+  - "Mix authentication logic with authorization logic"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Deny-by-default
+  - "Attribute-Based Access Control (ABAC) for complex business logic"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Policy is missing or ambiguous
+  - "Access Matrix is contradictory or undefined"
 ```
 
 ## Output
-- Policy enforcement decision
-```
+- RBAC/ABAC configurations and middleware.

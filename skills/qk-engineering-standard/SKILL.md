@@ -1,39 +1,42 @@
 ---
 name: qk-engineering-standard
-category: conventions
-version: 6.0.3
-description: "Ép buộc áp dụng SOLID, DRY, Clean Code, và các quy tắc đặt tên."
+category: qa
+version: 7.0.0
+description: "Ép buộc áp dụng SOLID, DRY, Clean Code, và chống Spaghetti code."
 ---
 
 # qk-engineering-standard
 
 ## Scope
-- Readability and structural improvements (Evaluate)
+- Code Quality, Architecture, and Standards Enforcement (Audit)
+
+## Verbs
+- `[ENFORCE]`: Reject code that violates engineering standards.
 
 ## Constraints
 ```yaml
 must:
-  - Preserve business logic exactly
-  - Ensure tests pass after refactor
+  - "Enforce SOLID principles and DRY"
+  - "Keep cyclomatic complexity low (Functions must do ONE thing)"
+  - "Enforce strict naming conventions"
 must_not:
-  - Invent new requirements
-  - Change public API signature
+  - "Allow spaghetti code or mega-functions"
+  - "Merge logic that mixes UI, State, and Network in one file"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Readability over cleverness
-  - Explain trade-offs
+  - "Composition over inheritance"
+  - "Early returns and guard clauses"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Tests fail
+  - "Cyclomatic complexity exceeds acceptable thresholds"
+  - "Code violates V7 Anti-Slop architectural rules"
 ```
 
 ## Output
-- Evaluation summary
-- Refactored code
-```
+- Refactored code or Audit rejection report.

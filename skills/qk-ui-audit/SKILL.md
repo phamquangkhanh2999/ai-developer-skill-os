@@ -1,36 +1,42 @@
 ---
 name: qk-ui-audit
 category: qa
-version: 6.0.3
-description: "Kiểm toán giao diện (UI) để đảm bảo tính nhất quán, khả năng truy cập (A11y), độ phản hồi (Responsive) và hiệu suất."
+version: 7.0.0
+description: "Kiểm toán giao diện (UI) bằng checklist chống rác (Anti-slop) khắt khe."
 ---
 
 # qk-ui-audit
 
 ## Scope
-- UI consistency, accessibility (A11y), responsiveness, and performance auditing (Evaluate)
+- UI consistency, Anti-Slop validation, accessibility, and performance auditing (Evaluate)
+
+## Verbs
+- `[AUDIT]`: Score the UI against the 57-point strict checklist (Anti-slop).
 
 ## Constraints
 ```yaml
 must:
-  - Check UI against established design tokens and guidelines
-  - Verify ARIA roles and contrast ratios
+  - Score the UI components against `DESIGN.md` tokens.
+  - Fail the audit if generic, lazy AI aesthetics are detected (e.g., default Tailwind blue/red, cluttered layouts).
+  - Verify ARIA roles and contrast ratios.
+  - Require micro-interactions (hover, active states) for all interactive elements.
 must_not:
-  - Ignore mobile viewport constraints
+  - Pass the audit if the UI looks like a "cheap template".
+  - Ignore mobile viewport constraints.
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Identifying systemic UI issues over isolated pixel tweaks
+  - Identifying systemic UI issues and demanding complete REDESIGN over isolated pixel tweaks.
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - UI components completely lack semantic structure
+  - UI fails the Anti-Slop Audit (Score < 90/100). The agent MUST self-correct or ask the user to reject the code.
+  - UI components completely lack semantic structure.
 ```
 
 ## Output
-- UI audit report with actionable fixes
-```
+- Strict UI audit report with actionable fixes, demanding redesign if slop is detected.

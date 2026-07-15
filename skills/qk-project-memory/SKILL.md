@@ -1,36 +1,40 @@
 ---
 name: qk-project-memory
 category: core
-version: 6.0.3
-description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc."
+version: 7.0.0
+description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn qua các phiên làm việc với độ chính xác cao."
 ---
 
 # qk-project-memory
 
 ## Scope
-- Storing and retrieving long-term project context across sessions (Collect)
+- Long-term context storage and retrieval (Plan & Collect)
+
+## Verbs
+- `[MEMORIZE]`: Store verified facts about the project.
+- `[RECALL]`: Retrieve facts strictly based on recorded memory.
 
 ## Constraints
 ```yaml
 must:
-  - Organize context logically so it can be retrieved efficiently
-  - Update memory artifacts when major architectural decisions are made
+  - "Verify facts against the actual codebase before storing them"
+  - "Timestamp and categorize memory entries"
 must_not:
-  - Store sensitive user data or secrets in project memory
+  - "Store assumptions or unverified AI hypotheses"
+  - "Overwrite fundamental architectural rules without explicit user consent"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Concise summaries over verbose logs for long-term memory
+  - "Structured data formats (JSON/Markdown) for memory storage"
 ```
 
 ## Escalation
 ```yaml
-ask:
-  - To clarify contradictory information found in the project memory
+stop:
+  - "Memory conflicts with the core AGENTS.md rules"
 ```
 
 ## Output
-- Updated memory artifacts
-```
+- Context retrieval results or stored memory artifacts.

@@ -1,36 +1,40 @@
 ---
 name: qk-system-evolution
-category: infrastructure
-version: 6.0.3
-description: "Cập nhật an toàn các thư viện dependencies, di chuyển frameworks và quản lý quá trình rollback."
+category: maintenance
+version: 7.0.0
+description: "Cập nhật an toàn các thư viện, di chuyển frameworks với kế hoạch rollback nghiêm ngặt."
 ---
 
 # qk-system-evolution
 
 ## Scope
-- Safely updating dependencies, migrating frameworks, and managing rollbacks (Plan & Execute)
+- Dependency upgrades, Framework migrations, and rollback management (Execute)
+
+## Verbs
+- `[UPGRADE]`: Migrate systems with zero-trust testing.
 
 ## Constraints
 ```yaml
 must:
-  - Check compatibility matrices before upgrading dependencies
-  - Provide a rollback plan for major framework updates
+  - "MUST have a Rollback Plan before executing any major upgrade"
+  - "Verify all dependencies against the Context Graph to catch breaking changes"
 must_not:
-  - Perform destructive migrations without a backup strategy
+  - "Upgrade major versions without reading the Changelog/Migration Guide"
+  - "Blindly run 'npm update' or equivalent"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Incremental updates over 'big bang' migrations
+  - "Incremental upgrades over 'big bang' migrations"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Critical dependencies are completely incompatible with the target framework version
+  - "Dependency upgrades break existing test suites"
+  - "No Rollback Plan provided"
 ```
 
 ## Output
-- Migration scripts, updated package files, and rollback plans
-```
+- Upgraded dependencies and migration logs.

@@ -22,12 +22,14 @@ function parseBSF(skillPath) {
   const fmMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
   if (!fmMatch) return null;
   const frontmatter = YAML.load(fmMatch[1]);
-  if (frontmatter.version !== '6.0.0') return { type: 'v5', frontmatter };
-
-  const bsf = { type: 'v6', frontmatter };
+  let type = 'legacy';
+  if (frontmatter.version && frontmatter.version.startsWith('7.')) type = 'v7';
+  else if (frontmatter.version && frontmatter.version.startsWith('6.')) type = 'v6';
+  
+  const bsf = { type, frontmatter };
   
   // Parse YAML blocks
-  const yamlBlocks = [...content.matchAll(/```yaml\n([\s\S]*?)\n```/g)];
+  const yamlBlocks = [...content.matchAll(/```yaml\r?\n([\s\S]*?)\r?\n```/g)];
   
   try {
     let parsedBlocks = {};
@@ -61,24 +63,24 @@ function parseBSF(skillPath) {
 describe('Behavior Validation Framework', () => {
 
   describe('Level 1: Specification Valid', () => {
-    it('Every v6 skill must have valid Schema (Metadata, Scope, Constraints)', () => {
+    it('Every v6/v7 skill must have valid Schema (Metadata, Scope, Constraints)', () => {
       const dirs = getActiveSkillDirs();
-      const v6Skills = [];
+      const modernSkills = [];
 
       dirs.forEach(dir => {
         const skillPath = path.join(dir, 'SKILL.md');
         if (!fs.existsSync(skillPath)) return;
         const bsf = parseBSF(skillPath);
         
-        if (bsf && bsf.type === 'v6') {
-          v6Skills.push(dir);
+        if (bsf && bsf.type === 'v7') {
+          modernSkills.push(dir);
           expect(bsf.error, `Parser error in ${path.basename(dir)}: ${bsf.error}`).toBeUndefined();
           expect(bsf.frontmatter.category, `Missing category metadata in ${path.basename(dir)}`).toBeDefined();
           expect(bsf.constraints, `Missing Constraints in ${path.basename(dir)}`).toBeDefined();
         }
       });
 
-      expect(v6Skills.length).toBeGreaterThan(0);
+      expect(modernSkills.length).toBeGreaterThan(0);
     });
   });
 
@@ -91,12 +93,13 @@ describe('Behavior Validation Framework', () => {
         if (!fs.existsSync(skillPath)) return;
         const bsf = parseBSF(skillPath);
         
-        if (bsf && bsf.type === 'v6' && !bsf.error) {
+        if (bsf && bsf.type === 'v7' && !bsf.error) {
           const must = bsf.constraints.must || [];
           const must_not = bsf.constraints.must_not || [];
           
           must.forEach(rule => {
-            const conflict = must_not.some(c => c.toLowerCase() === rule.toLowerCase());
+            if (typeof rule !== 'string') return;
+            const conflict = must_not.some(c => typeof c === 'string' && c.toLowerCase() === rule.toLowerCase());
             expect(conflict, `Conflict detected in ${path.basename(dir)}: '${rule}' is in both must and must_not`).toBe(false);
           });
         }

@@ -1,36 +1,41 @@
 ---
 name: qk-production-release
 category: devops
-version: 6.0.3
-description: "Chuẩn bị codebase để phát hành lên production (Build, CI/CD, Security)."
+version: 7.0.0
+description: "Chuẩn bị codebase phát hành Production với các cổng kiểm duyệt an ninh tuyệt đối."
 ---
 
 # qk-production-release
 
 ## Scope
-- Preparing codebase for production release including Build, CI/CD, and Security checks (Plan & Govern)
+- Production builds, CI/CD pipelines, and Security gating (Execute)
+
+## Verbs
+- `[RELEASE]`: Prepare and sign off on a production-ready artifact.
 
 ## Constraints
 ```yaml
 must:
-  - Verify that all tests pass and linters are clean
-  - Check for exposed secrets or misconfigurations
+  - "Run full suite of linters, tests, and security scans (Validation Gate) before release"
+  - "Minify and strip out all debug/console logs"
 must_not:
-  - Deploy code that fails security audits
+  - "Release if ANY high-priority bug is unresolved"
+  - "Deploy with dev-environment secrets or configurations"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Immutable artifacts and deterministic builds
+  - "Automated CI/CD validation over manual checks"
+  - "Immutable build artifacts"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Security vulnerabilities or critical test failures are detected
+  - "Tests fail during the release build"
+  - "Environment variables for production are missing"
 ```
 
 ## Output
-- Release checklist and deployment readiness status
-```
+- Production-ready build artifacts and deployment scripts.

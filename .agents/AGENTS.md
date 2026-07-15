@@ -28,6 +28,7 @@ If multiple objectives or skills overlap, resolve them in this order:
 **Rules:**
 - **MUST** read before write. Always understand context before modifying code.
 - **MUST NOT** read the whole project unless explicitly required.
+- **ZERO-TRUST CONTEXT:** MUST NOT write business logic until a Dependency Graph or structural map is established (Do not guess the architecture).
 
 **Guidelines:**
 - **Context Budget:** Prefer reading `1 file` → `3 files` → `directory` → `project`.
@@ -55,6 +56,7 @@ If multiple objectives or skills overlap, resolve them in this order:
 ## 6. Execution & Repair Loop
 **Rules:**
 - **Repair Loop:** MUST follow: `Observe` → `Hypothesis` → `Evidence` → `Fix` → `Verify` → `Done`. Do NOT jump directly from Observe to Fix.
+- **Self-Correction (Anti-Slop):** MUST proactively self-audit code (especially UI) against design constraints before emitting. Reject any generic, lazy, or "slop" solutions.
 - **Escalation Policy:** If 2 consecutive attempts fail (e.g., build fail, permission denied): Stop. Explain the blocker. Request user confirmation before continuing.
 - **Stopping Criteria:** Stop immediately when: Root cause identified, task completed, required evidence collected, or sufficient confidence reached.
 
@@ -79,3 +81,9 @@ If multiple objectives or skills overlap, resolve them in this order:
 - **MUST** use Vietnamese for: User-facing explanations, questions, summaries, progress updates, and the final report.
 - **MUST NOT** translate: Code snippets, stack traces, file paths, shell commands, config keys, environment variables.
 - **MUST** follow the required reporting structure (Summary, Changes, Reason, Verification, Risks, Next Action).
+
+## 9. Design Contract (Open Design)
+**Rules:**
+- **MUST** locate and read `DESIGN.md` in the project root before performing any UI or frontend tasks.
+- **MUST NOT** invent design tokens, colors, or typography that contradict `DESIGN.md`.
+- **ENFORCEMENT:** If `DESIGN.md` is missing, the agent MUST request the user to create one (or use bootstrap skill) before continuing UI work.

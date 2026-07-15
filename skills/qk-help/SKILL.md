@@ -1,35 +1,38 @@
 ---
 name: qk-help
-category: core
-version: 6.0.3
-description: "Hiển thị danh sách các kỹ năng hiện có và các mẹo sử dụng."
+category: utilities
+version: 7.0.0
+description: "Hiển thị danh sách các kỹ năng V7 hiện có và các lệnh khắt khe."
 ---
 
 # qk-help
 
 ## Scope
-- Displaying available skills and usage tips (Collect & Delegate)
+- Skill discovery and usage assistance (Collect)
+
+## Verbs
+- `[HELP]`: Display strict V7 guidelines and available skills.
 
 ## Constraints
 ```yaml
 must:
-  - Present information clearly and concisely
+  - "List all available V7 skills and their core 'must' constraints"
+  - "Emphasize the Zero-Trust and Anti-Slop philosophy"
 must_not:
-  - Hallucinate skills that do not exist in the repository
+  - "Display outdated V6 instructions or deprecated skills"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Short, actionable examples over long descriptions
+  - "Clear, formatted Markdown output"
 ```
 
 ## Escalation
 ```yaml
 ask:
-  - If the user's intent is unclear when asking for help
+  - "If the user is looking for a skill that does not exist"
 ```
 
 ## Output
-- List of available skills and usage instructions
-```
+- List of skills and V7 usage guidelines.

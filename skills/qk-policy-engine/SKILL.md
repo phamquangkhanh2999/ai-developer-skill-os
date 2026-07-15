@@ -1,36 +1,39 @@
 ---
 name: qk-policy-engine
 category: security
-version: 6.0.3
+version: 7.0.0
 description: "Hệ thống đánh giá chính sách để đảm bảo các hành động an toàn và được ủy quyền."
 ---
 
 # qk-policy-engine
 
 ## Scope
-- System policy evaluation for safe and authorized actions (Govern)
+- Security policies, authorization rules, and compliance (Evaluate)
+
+## Verbs
+- `[AUTHORIZE]`: Evaluate requests against the strict policy matrix.
 
 ## Constraints
 ```yaml
 must:
-  - Evaluate requested actions against defined system constraints
-  - Enforce OS-level invariants
+  - "Enforce Principle of Least Privilege (PoLP) on all operations"
+  - "Log all authorization failures for audit purposes"
 must_not:
-  - Allow destructive commands (e.g. rm -rf /) to bypass checks
+  - "Bypass security checks for 'admin' or 'dev' accounts in production"
+  - "Hardcode plain-text secrets in policy rules"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Strict adherence to policy over convenience
+  - "Explicit Deny by default"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - Action explicitly violates core safety policies
+  - "Policy evaluation fails (Unauthorized Action)"
 ```
 
 ## Output
-- Policy evaluation result (Allow/Deny)
-```
+- Policy evaluation result (Allow/Deny) and audit trail.

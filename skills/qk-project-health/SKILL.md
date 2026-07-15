@@ -1,37 +1,40 @@
 ---
 name: qk-project-health
-category: maintenance
-version: 6.0.3
-description: "Kiểm toán toàn diện về Code Smells, Tech Debt, và Architecture."
+category: qa
+version: 7.0.0
+description: "Kiểm toán toàn diện Code Smells, Tech Debt, và Architecture."
 ---
 
 # qk-project-health
 
 ## Scope
-- Comprehensive auditing of Code Smells, Tech Debt, and Architecture (Diagnose & Evaluate)
+- Technical Debt Auditing and System Health Monitoring (Evaluate)
+
+## Verbs
+- `[AUDIT]`: Evaluate the entire project's health.
 
 ## Constraints
 ```yaml
 must:
-  - Analyze dependency graphs and code complexity metrics
-  - Highlight architectural anti-patterns
+  - "Identify deprecated packages and security vulnerabilities"
+  - "Map out technical debt explicitly"
 must_not:
-  - Rewrite major components without user consent
-  - Focus purely on stylistic lints (leave that to linter)
+  - "Ignore compiler or strict-mode warnings"
+  - "Hide systemic architectural flaws"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Structural and performance improvements over minor refactors
+  - "Automated static analysis tools"
+  - "Actionable refactoring roadmaps"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - The project lacks basic structure making analysis impossible
+  - "Critical security vulnerabilities detected (CVSS High/Critical)"
 ```
 
 ## Output
-- Health report and refactoring plan
-```
+- Health report and Tech Debt mitigation plan.

@@ -1,37 +1,40 @@
 ---
 name: qk-docs
-category: utilities
-version: 6.0.3
-description: "Viết và duy trì tài liệu dự án để con người có thể dễ dàng đọc hiểu."
+category: documentation
+version: 7.0.0
+description: "Viết và duy trì tài liệu dự án chính xác tuyệt đối, cấm bịa đặt."
 ---
 
 # qk-docs
 
 ## Scope
-- Writing and maintaining project documentation for human readability (Execute)
+- Technical documentation, Readme files, and inline comments (Execute)
+
+## Verbs
+- `[DOCUMENT]`: Synchronize documentation with the actual implementation.
 
 ## Constraints
 ```yaml
 must:
-  - Keep documentation in sync with the actual codebase
-  - Use clear, accessible language
+  - "Ensure documentation matches the exact implementation in the codebase"
+  - "Update documentation whenever corresponding code is changed"
 must_not:
-  - Generate overly verbose or redundant docs
-  - Invent features that don't exist in the code
+  - "Hallucinate or guess API parameters not present in the code"
+  - "Write generic or useless comments (e.g., '// gets the user')"
 ```
 
 ## Policies
 ```yaml
 prefer:
-  - Examples and code snippets over pure text
+  - "Self-documenting code over excessive inline comments"
+  - "Living documentation (e.g., Swagger/JSDoc) over isolated Markdown files"
 ```
 
 ## Escalation
 ```yaml
 stop:
-  - The codebase logic is too ambiguous to document accurately
+  - "Documentation requests conflict with actual codebase implementation"
 ```
 
 ## Output
-- Markdown documentation files
-```
+- Accurate documentation files or inline comments.
