@@ -5,6 +5,11 @@ All notable changes to the **AI Developer Skill OS** project will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [7.0.2] - 2026-07-15
+
+### Added
+- **Frontend Integration**: Added `qk-fe-api-integration` skill to strictly enforce zero-overhead base API consumption, DTO mapping, and resilient UI states.
+
 ## [7.0.0] - 2026-07-15
 
 ### Changed (The "Anti-Slop & Zero-Trust" Architecture Upgrade)

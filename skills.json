@@ -740,6 +740,40 @@
       ],
       "status": "ready",
       "description": "Cổng kiểm tra chất lượng bắt buộc (Test, Lint, Security)."
+    },
+    {
+      "name": "qk-fe-api-integration",
+      "path": "skills/qk-fe-api-integration/SKILL.md",
+      "version": "1.0.0",
+      "category": "engineering",
+      "subcategory": "frontend",
+      "behavior": "development",
+      "intent": "implement-feature",
+      "priority": "high",
+      "tags": [
+        "api",
+        "frontend",
+        "integration",
+        "ui-binding",
+        "state-management"
+      ],
+      "trigger": [
+        "ghép api",
+        "tích hợp api",
+        "consume api",
+        "gọi api",
+        "bind data"
+      ],
+      "dependencies": [],
+      "conflicts": [],
+      "platforms": [
+        "claude-code",
+        "cursor",
+        "windsurf",
+        "gemini-cli"
+      ],
+      "status": "ready",
+      "description": "Chuyên biệt hóa việc tiêu thụ (consume) API Backend, quản lý State, và ghép nối vào Giao diện (UI) tuân thủ chặt chẽ Base dự án."
     }
   ],
   "categories": {
@@ -763,7 +797,8 @@
       "qk-design-to-code",
       "qk-feature-delivery",
       "qk-project-bootstrap",
-      "qk-ui-system-builder"
+      "qk-ui-system-builder",
+      "qk-fe-api-integration"
     ],
     "validation": [
       "qk-production-release",
@@ -788,8 +823,8 @@
     "lastAudited": "2026-07-02",
     "auditedBy": "kilo-auto/free",
     "specCompliance": "4.0",
-    "totalSkills": 22,
-    "readySkills": 22,
+    "totalSkills": 23,
+    "readySkills": 23,
     "archivedSkills": 22
   }
 }
