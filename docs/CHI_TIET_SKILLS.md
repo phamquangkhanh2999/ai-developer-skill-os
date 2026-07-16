@@ -40,7 +40,7 @@ Dưới đây là danh sách chi tiết và giải thích cụ thể cho toàn b
 - **Mô tả:** Quản lý Design Token, tạo ra các Component có thể tái sử dụng (Button, Table, Form) đảm bảo tính nhất quán toàn dự án.
 - **Khi nào dùng:** Xây dựng thư viện giao diện, tránh viết CSS lộn xộn.
 
-### 8. `qk-design-to-code` (Chuyển Đổi Thiết Kế)
+### 8. `qk-ui-builder` (Chuyển Đổi Thiết Kế)
 - **Mô tả:** Đọc hiểu hình ảnh/Figma để tự động chuyển thành mã nguồn giao diện (React, Tailwind, v.v.).
 - **Khi nào dùng:** Bóc tách UI từ bản thiết kế.
 
@@ -123,3 +123,4 @@ Dưới đây là danh sách chi tiết và giải thích cụ thể cho toàn b
 ### 22. `qk-help` (Tra Cứu Nhanh)
 - **Mô tả:** Cuốn từ điển sống. Cung cấp thông tin và hướng dẫn chi tiết (Pro-tips) về cách sử dụng toàn bộ hệ thống.
 - **Khi nào dùng:** Bất kỳ khi nào người dùng cần hỗ trợ sử dụng hệ điều hành.
+

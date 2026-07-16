@@ -256,8 +256,8 @@
             "description": "Tối ưu hóa Database (đánh Index, xử lý N+1 Queries, Slow Queries)."
         },
         {
-            "name": "qk-design-to-code",
-            "path": "skills/qk-design-to-code/SKILL.md",
+            "name": "qk-ui-builder",
+            "path": "skills/qk-ui-builder/SKILL.md",
             "version": "7.5.0",
             "category": "frontend",
             "subcategory": "visual",
@@ -783,7 +783,7 @@
             "qk-api-lifecycle",
             "qk-data-lifecycle",
             "qk-db-optimizer",
-            "qk-design-to-code",
+            "qk-ui-builder",
             "qk-feature-delivery",
             "qk-project-bootstrap",
             "qk-ui-system-builder",

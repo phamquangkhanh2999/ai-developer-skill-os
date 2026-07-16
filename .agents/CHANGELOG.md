@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed (The "Anti-Slop & Zero-Trust" Architecture Upgrade)
 - **Zero-Trust Logic**: Core logic skills (`qk-context-loader`, `qk-orchestrator`, `qk-feature-delivery`) now mandate a Topological Context Graph prior to any code generation.
-- **Strict Design Contract**: Frontend skills (`qk-ui-system-builder`, `qk-design-to-code`, `qk-ui-audit`) now explicitly reject generic styling (slop) and enforce strict token matching against a mandated `DESIGN.md`.
+- **Strict Design Contract**: Frontend skills (`qk-ui-system-builder`, `qk-ui-builder`, `qk-ui-audit`) now explicitly reject generic styling (slop) and enforce strict token matching against a mandated `DESIGN.md`.
 - **Repair Loop Enforcement**: `qk-bug-resolution` updated to strictly prohibit jumping to fixes without explicitly establishing an `Observe -> Hypothesis -> Evidence` chain.
 - **Contract-First APIs**: `qk-api-lifecycle` now requires explicit OpenAPI/Swagger definitions prior to endpoint implementation.
 - **Upgraded Testing Framework**: Fixed regex and validation logic in `behavior-conformance.test.js` to rigorously support YAML array strings and precise V7 markdown constraints. All 22 skills bumped to `v7.0.0`.
@@ -67,3 +67,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added detailed user documentation in `docs/HUONG_DAN_SU_DUNG.md` and `docs/CHI_TIET_SKILLS.md`.
 - Translated all skill frontmatter descriptions to Vietnamese for better UX in agent terminals.
 - Included generic English and Vietnamese usage examples in `_template/examples/`.
+

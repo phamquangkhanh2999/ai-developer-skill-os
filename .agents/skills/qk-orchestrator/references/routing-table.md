@@ -10,7 +10,7 @@
 |----------------------------------------|---------------|-------------------|
 | bug, lỗi, error, broken, crash, fix, sửa, không hoạt động | `qk-bug-resolution` | direct |
 | tính năng, feature, thêm, mới, add, implement, xây dựng | `qk-feature-delivery` | `qk-context-loader` first |
-| UI, giao diện, design, component, layout, màn hình, hiển thị | `qk-design-to-code` | DESIGN.md check |
+| UI, giao diện, design, component, layout, màn hình, hiển thị | `qk-ui-builder` | DESIGN.md check |
 | slow, chậm, query, index, N+1, performance DB, tối ưu DB | `qk-db-optimizer` | `qk-context-loader` first |
 | deploy, release, production, CI/CD, build, xuất bản | `qk-production-release` | `qk-validation-gate` first |
 | schema, migration, database, table, model, ORM | `qk-data-lifecycle` | `qk-context-loader` first |
@@ -38,7 +38,7 @@
 ```
 1. Check DESIGN.md exists (qk-project-bootstrap if missing)
 2. [Optional] qk-ui-audit — audit existing UI
-3. qk-design-to-code OR qk-feature-delivery (UI part)
+3. qk-ui-builder OR qk-feature-delivery (UI part)
 4. qk-validation-gate — lint + type check
 ```
 
@@ -75,3 +75,4 @@ When 2+ skills match:
 | "refactor" + API | `qk-engineering-standard` if code quality focus, `qk-api-lifecycle` if contract change |
 | "add feature" + DB | Route `qk-feature-delivery` with `qk-data-lifecycle` in pipeline |
 | "optimize" without context | Ask: "DB performance or code quality?" |
+

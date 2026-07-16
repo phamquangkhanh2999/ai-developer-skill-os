@@ -30,8 +30,8 @@ const REQUIRED_FOR_EXECUTION = [
   'Retry Policy'
 ];
 
-const ACTION_SKILLS = ['qk-bug-resolution', 'qk-feature-delivery', 'qk-fe-api-integration', 'qk-api-lifecycle', 'qk-data-lifecycle', 'qk-db-optimizer', 'qk-design-to-code', 'qk-ui-system-builder', 'qk-access-policy', 'qk-ai-builder', 'qk-system-evolution', 'qk-production-release', 'qk-project-bootstrap'];
-const EXECUTION_SKILLS = ['qk-bug-resolution', 'qk-feature-delivery', 'qk-fe-api-integration', 'qk-api-lifecycle', 'qk-data-lifecycle', 'qk-db-optimizer', 'qk-design-to-code', 'qk-ui-system-builder', 'qk-access-policy', 'qk-ai-builder', 'qk-system-evolution', 'qk-production-release', 'qk-project-bootstrap', 'qk-engineering-standard', 'qk-validation-gate', 'qk-ui-audit', 'qk-project-health'];
+const ACTION_SKILLS = ['qk-bug-resolution', 'qk-feature-delivery', 'qk-fe-api-integration', 'qk-api-lifecycle', 'qk-data-lifecycle', 'qk-db-optimizer', 'qk-ui-builder', 'qk-ui-system-builder', 'qk-access-policy', 'qk-ai-builder', 'qk-system-evolution', 'qk-production-release', 'qk-project-bootstrap'];
+const EXECUTION_SKILLS = ['qk-bug-resolution', 'qk-feature-delivery', 'qk-fe-api-integration', 'qk-api-lifecycle', 'qk-data-lifecycle', 'qk-db-optimizer', 'qk-ui-builder', 'qk-ui-system-builder', 'qk-access-policy', 'qk-ai-builder', 'qk-system-evolution', 'qk-production-release', 'qk-project-bootstrap', 'qk-engineering-standard', 'qk-validation-gate', 'qk-ui-audit', 'qk-project-health'];
 
 const SKIP_LINT = ['qk-help'];
 
@@ -120,3 +120,4 @@ if (hasErrors) {
   console.log('\n✅ All skills comply with V7.5 Runtime Standard!');
   process.exit(0);
 }
+

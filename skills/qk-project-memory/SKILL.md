@@ -170,3 +170,49 @@ Recommended Assumptions:
 
 ---
 
+## UI Diversification Memory
+
+### Purpose
+Prevent UI template repetition across project builds. Inspired by Hallmark's `.hallmark/log.json`.
+
+### Storage Path
+```
+.agents/memory/
+├── architecture.json
+├── patterns.json
+├── decisions.json
+├── warnings.json
+└── ui-diversification.json    # NEW: UI build history
+```
+
+### Schema
+```json
+{
+  "id": "ui_[timestamp]",
+  "category": "ui-diversification",
+  "fact": "Built [component] with [theme] theme and [macrostructure] macrostructure",
+  "evidence": "path/to/component.tsx",
+  "confidence": "HIGH",
+  "created_at": "ISO8601",
+  "expires_at": null,
+  "tags": ["theme", "macrostructure", "component"]
+}
+```
+
+### Rule
+**No two consecutive UI builds in the same project may share the same theme + macrostructure combination.**
+
+When `qk-ui-builder` runs:
+1. Read `.agents/memory/ui-diversification.json` (if exists)
+2. Get last entry's theme + macrostructure
+3. Pick different combination for current build
+4. After build, append new entry to `ui-diversification.json`
+
+### Enforcement
+If user requests same theme/macrostructure as last build:
+- Note the conflict in output
+- Recommend alternative
+- Proceed only if user explicitly overrides
+
+---
+

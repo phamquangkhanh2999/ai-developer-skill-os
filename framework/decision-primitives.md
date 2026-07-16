@@ -33,7 +33,7 @@ Mọi hành vi phức tạp của bất kỳ Agent nào trong hệ thống đề
 - **Bản chất:** Trực tiếp sửa đổi trạng thái hệ thống (viết code, xóa file, sửa file).
 - **Trigger:** Đã có kế hoạch rõ ràng hoặc đã xác định xong lỗi.
 - **Evidence Required:** Codebase hiện tại, Kế hoạch.
-- **Ví dụ Skills:** `qk-feature-delivery` (bước sau), `qk-design-to-code`.
+- **Ví dụ Skills:** `qk-feature-delivery` (bước sau), `qk-ui-builder`.
 
 ## 6. 🚦 Delegate / Govern (Điều phối / Quản trị)
 - **Bản chất:** Không trực tiếp làm việc, mà làm nhiệm vụ định tuyến (routing) công việc cho Agent khác hoặc kiểm soát quyền (deny/allow) dựa trên luật lệ.
@@ -45,3 +45,4 @@ Mọi hành vi phức tạp của bất kỳ Agent nào trong hệ thống đề
 
 > **Nguyên tắc Thiết kế Hệ thống:** 
 > Khi tạo một Skill mới, đừng cố gắng mô tả "tính cách" của nó. Hãy tự hỏi: *Nó cần dùng những Primitives nào để hoàn thành nhiệm vụ?*
+

@@ -143,7 +143,7 @@ schema_version: 2
 **Pipeline Rules:**
 ```
 UI tasks:
-  [DESIGN.md check] → [qk-ui-audit (optional)] → [qk-design-to-code | qk-feature-delivery]
+  [DESIGN.md check] → [qk-ui-audit (optional)] → [qk-ui-builder | qk-feature-delivery]
 
 Logic tasks:
   [qk-context-loader] → [qk-feature-delivery | qk-bug-resolution | qk-api-lifecycle]
@@ -167,7 +167,7 @@ Full table: see `references/routing-table.md`
 |----------------|---------------|----------|
 | bug, lỗi, error, broken, crash, fix, sửa | `qk-bug-resolution` | direct |
 | tính năng, feature, thêm, mới, add, implement | `qk-feature-delivery` | context-loader first |
-| UI, giao diện, design, component, layout, màn hình | `qk-design-to-code` | DESIGN.md check |
+| UI, giao diện, design, component, layout, màn hình | `qk-ui-builder` | DESIGN.md check |
 | slow, query, index, N+1, performance DB | `qk-db-optimizer` | context-loader first |
 | deploy, release, production, CI/CD, build | `qk-production-release` | validation-gate first |
 | schema, migration, database, table, model | `qk-data-lifecycle` | context-loader first |
@@ -274,4 +274,5 @@ schema_version: 2
 | FAILED | No skill matches and cannot escalate | Unknown domain request |
 
 ---
+
 

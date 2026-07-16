@@ -56,7 +56,7 @@ schema_version: 2
 - ✅ Validate responsive, interactive, and animation states
 
 ## Non-Goals
-- ❌ Fix the UI — only audit and report (fixes go to qk-design-to-code)
+- ❌ Fix the UI — only audit and report (fixes go to qk-ui-builder)
 - ❌ Pixel-level screenshot comparison
 - ❌ Read entire CSS files — use targeted reads
 
@@ -248,7 +248,7 @@ schema_version: 2
 ### Produces
 ```json
 {
-  "to": "qk-design-to-code (if fixes needed)",
+  "to": "qk-ui-builder (if fixes needed)",
   "output_fields": ["audit_score", "violations_list", "top_3_fixes", "exit_code"]
 }
 ```
@@ -311,4 +311,5 @@ schema_version: 2
 - Full 57-point checklist: `references/anti-slop-checklist.md`
 
 ---
+
 
