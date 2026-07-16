@@ -1,7 +1,7 @@
 ---
 name: qk-feature-delivery
 category: fullstack
-version: 7.5.0
+version: 7.5.1
 description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -303,3 +303,4 @@ Fix applied
 ```
 
 ---
+

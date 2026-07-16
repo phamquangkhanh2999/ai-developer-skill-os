@@ -1,7 +1,7 @@
 ---
 name: qk-data-lifecycle
 category: backend
-version: 7.5.0
+version: 7.5.1
 description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -17,7 +17,7 @@ token_budget:
   max_shell_commands: 1
   stop_early: false
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -189,4 +189,5 @@ Recommended Assumptions:
 ```
 
 ---
+
 

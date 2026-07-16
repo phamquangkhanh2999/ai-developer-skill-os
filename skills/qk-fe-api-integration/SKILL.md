@@ -1,7 +1,7 @@
 ---
 name: qk-fe-api-integration
 category: frontend
-version: 7.5.0
+version: 7.5.1
 description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -324,3 +324,4 @@ Triggered when user needs to integrate a backend API endpoint into a frontend ap
 - Error Handling: All HTTP errors must be handled per mandatory table
 - Separation: Service layer only — no API calls in presentational components
 ---
+

@@ -1,7 +1,7 @@
 ---
 name: qk-bug-resolution
 category: maintenance
-version: 7.5.0
+version: 7.5.1
 description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -305,3 +305,4 @@ This skill is triggered when a user reports a specific defect with a stack trace
 - Backward Compat: Preserve all existing public API behavior
 - Evidence First: Every finding must use Evidence Format with file:line
 ---
+

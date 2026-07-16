@@ -1,7 +1,7 @@
 ---
 name: qk-db-optimizer
 category: backend
-version: 7.5.0
+version: 7.5.1
 description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -17,7 +17,7 @@ token_budget:
   max_shell_commands: 2
   stop_early: true
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -193,4 +193,5 @@ Recommended Assumptions:
 ```
 
 ---
+
 

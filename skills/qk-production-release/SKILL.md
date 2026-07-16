@@ -1,7 +1,7 @@
 ---
 name: qk-production-release
 category: devops
-version: 7.5.0
+version: 7.5.1
 description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -45,7 +45,7 @@ On missing precondition:
   Message: "qk-validation-gate must pass before release. Run it first."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -60,7 +60,7 @@ schema_version: 2
 - ❌ Deploy to infrastructure — that's DevOps/CI system
 - ❌ Skip any gate unless user explicitly overrides
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -78,7 +78,7 @@ schema_version: 2
 | P7 | No dev dependencies in production build | YES — hard block |
 | P8 | CHANGELOG.md updated with release notes | WARN only |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -96,7 +96,7 @@ schema_version: 2
 [ ] P8: CHANGELOG.md has entry for this release
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -120,7 +120,7 @@ IF all P1–P4 pass
   → go to Phase 2
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -144,7 +144,7 @@ IF production audit has critical/high
   → EXIT: FAILED
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -165,7 +165,7 @@ IF any hard-block gate failed
   → EXIT: FAILED — do NOT deploy
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -181,7 +181,7 @@ Actual:     [what was found]
 Fix:        [what must be done before release]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -197,7 +197,7 @@ Questions:
   2. Có bug nào HIGH/CRITICAL chưa fix không?
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -221,7 +221,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -248,7 +248,7 @@ Verdict:    [✅ SAFE TO DEPLOY | ❌ DO NOT DEPLOY — fix: list]
 Exit Code:  [SUCCESS | PARTIAL | BLOCKED | FAILED]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -280,5 +280,6 @@ schema_version: 2
 | FAILED | Any hard gate failed | Do NOT deploy |
 
 ---
+
 
 

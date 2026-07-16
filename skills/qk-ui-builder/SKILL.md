@@ -1,7 +1,7 @@
 ---
 name: qk-ui-builder
 category: frontend
-version: 7.5.0
+version: 7.5.1
 description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -444,3 +444,4 @@ Exit Code:   [SUCCESS | BLOCKED]
 - `references/anti-patterns.md` — Named tells to avoid
 
 ---
+

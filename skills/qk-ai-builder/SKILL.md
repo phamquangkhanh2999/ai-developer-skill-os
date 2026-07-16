@@ -1,7 +1,7 @@
 ---
 name: qk-ai-builder
 category: core
-version: 7.5.0
+version: 7.5.1
 description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -11,7 +11,7 @@ risk: high
 side_effects: edit_files
 produces: [code, schema]
 consumes: [user-description]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 token_budget:
@@ -211,5 +211,6 @@ Recommended Assumptions (if proceeding):
 ```
 
 ---
+
 
 

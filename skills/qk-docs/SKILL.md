@@ -1,7 +1,7 @@
 ---
 name: qk-docs
 category: documentation
-version: 7.5.0
+version: 7.5.1
 description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -17,7 +17,7 @@ token_budget:
   max_shell_commands: 0
   stop_early: true
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -195,4 +195,5 @@ Recommended Assumptions:
 ```
 
 ---
+
 

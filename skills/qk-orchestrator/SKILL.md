@@ -1,7 +1,7 @@
 ---
 name: qk-orchestrator
 category: core
-version: 7.5.0
+version: 7.5.1
 description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -43,7 +43,7 @@ On missing precondition:
   Message: "Vui lòng mô tả yêu cầu của bạn."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -59,7 +59,7 @@ schema_version: 2
 - ❌ Allow UI work without `DESIGN.md` verified
 - ❌ Allow logic work without context graph from `qk-context-loader`
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -73,7 +73,7 @@ schema_version: 2
 | P3 | Check pipeline dependencies (e.g., context-loader first) | Never for logic tasks |
 | P4 | Estimate cost/latency for user info | Budget < 70% |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -104,7 +104,7 @@ ELSE IF no match
 - Skill identified → go to Phase 2
 - No matching skill → EXIT: BLOCKED
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -128,7 +128,7 @@ ELSE
   → EXIT: BLOCKED
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -155,7 +155,7 @@ Release tasks:
   [qk-validation-gate] → [qk-production-release]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -183,7 +183,7 @@ Full table: see `references/routing-table.md`
 | new project, bootstrap, init | `qk-project-bootstrap` | direct |
 | memory, context, recall, lưu | `qk-project-memory` | direct |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -196,7 +196,7 @@ schema_version: 2
 | MEDIUM | Multiple possible skills | Route to most likely, note ambiguity |
 | LOW | Request is too vague | Ask clarifying question |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -213,7 +213,7 @@ Questions:
 Recommended Assumptions: none — routing requires clear intent
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -237,7 +237,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -259,7 +259,7 @@ Preconditions:
 Exit Code:   SUCCESS
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -274,5 +274,6 @@ schema_version: 2
 | FAILED | No skill matches and cannot escalate | Unknown domain request |
 
 ---
+
 
 

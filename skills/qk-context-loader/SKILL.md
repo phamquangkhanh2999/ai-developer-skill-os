@@ -1,7 +1,7 @@
 ---
 name: qk-context-loader
 category: utilities
-version: 7.5.0
+version: 7.5.1
 description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -44,7 +44,7 @@ On missing precondition:
   Message: "Vui lòng chỉ định entry point (file hoặc module cần map)."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -60,7 +60,7 @@ schema_version: 2
 - ❌ Guess file names — only follow explicit imports
 - ❌ Load entire repo (max 5 files)
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -74,7 +74,7 @@ schema_version: 2
 | P3 | Identify shared/risky modules | Budget < 60% |
 | P4 | Annotate with risk levels | Budget < 70% |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -97,7 +97,7 @@ ELSE IF entry file not found
   → EXIT: BLOCKED — ask for correct path
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -119,7 +119,7 @@ IF circular dependency detected
   → Continue building rest of graph
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -131,7 +131,7 @@ schema_version: 2
 2. Identify: entry points with many dependents = CRITICAL to change carefully
 3. Generate graph in standard JSON + Markdown format
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -162,7 +162,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -176,7 +176,7 @@ Imported by: [N files]
 Exports:    [key exports]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -200,7 +200,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -215,4 +215,5 @@ schema_version: 2
 | FAILED | Cannot determine architecture (circular imports, obfuscated code) | Report and escalate |
 
 ---
+
 

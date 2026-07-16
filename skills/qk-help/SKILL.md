@@ -1,7 +1,7 @@
 ---
 name: qk-help
 category: utilities
-version: 7.5.0
+version: 7.5.1
 description: "Hiển thị danh sách skills V7.5 và hướng dẫn dùng lệnh ./qk-[skill-name]."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -191,3 +191,4 @@ Exit Code: SUCCESS
 | BLOCKED | Cannot access skills.json | Setup required |
 
 ---
+

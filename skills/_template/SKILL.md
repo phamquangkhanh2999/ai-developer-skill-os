@@ -1,7 +1,7 @@
 ---
 name: qk-[skill-name]
 category: [core|frontend|backend|fullstack|security|qa|maintenance|devops|utilities]
-version: 7.5.0
+version: 7.5.1
 description: "[One sentence — what it does]"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -235,4 +235,5 @@ Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
 | PARTIAL | Task done with degraded quality or skipped P3/P4 checks | Notify user, continue |
 | BLOCKED | Missing precondition or ambiguous requirement | STOP, ask user |
 | FAILED | Task failed after 2 retry attempts | STOP, report error |
+
 

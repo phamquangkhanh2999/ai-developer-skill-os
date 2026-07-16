@@ -1,7 +1,7 @@
 ---
 name: qk-system-evolution
 category: maintenance
-version: 7.5.0
+version: 7.5.1
 description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -45,7 +45,7 @@ On missing precondition:
   Message: "Rollback plan required before any major upgrade. Specify: target version + rollback method."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -61,7 +61,7 @@ schema_version: 2
 - ❌ Skip reading Changelog for major version bumps
 - ❌ Upgrade multiple major versions at once (one at a time)
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -77,7 +77,7 @@ schema_version: 2
 | P5 | Fix breaking changes if minor (< 3 files affected) | Budget < 40% |
 | P6 | Update documentation/README | Budget < 70% |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -104,7 +104,7 @@ IF > 3 breaking changes OR affects core files
   → Recommend: plan as a dedicated migration project
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -122,7 +122,7 @@ schema_version: 2
 
 **Exit When:** Rollback procedure documented → go to Phase 3
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -143,7 +143,7 @@ IF install fails (peer dep conflict)
   → EXIT: PARTIAL — report conflict, suggest resolution
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -168,7 +168,7 @@ IF > 3 tests fail OR core tests fail
   → Provide exact rollback command
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -181,7 +181,7 @@ schema_version: 2
 | MEDIUM | Changelog read, some uncertainties remain | Proceed with caution, note risks |
 | LOW | Cannot access Changelog or no tests available | EXIT: BLOCKED |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -195,7 +195,7 @@ schema_version: 2
 | MEDIUM | Utility library, build tool upgrade |
 | LOW | Dev dependency, formatter upgrade |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -210,7 +210,7 @@ Confidence:       [HIGH|MEDIUM|LOW]
 Rollback:         git checkout [tag] OR npm install [name]@[old-version]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -226,7 +226,7 @@ Method 2 (npm):  npm install [package]@[previous-version]
 Snapshot tag:    [pre-upgrade-[package]-[date]]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -250,7 +250,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -277,5 +277,6 @@ schema_version: 2
 | FAILED | Tests fail after upgrade, rollback recommended | Provide rollback command |
 
 ---
+
 
 

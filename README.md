@@ -1,6 +1,6 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v7.5.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v7.5.1
 
-> **V7.5.0 "Anti-Slop & Zero-Trust Architecture"**
+> **v7.5.1 "Anti-Slop & Zero-Trust Architecture"**
 
 Hệ sinh thái AI Developer Skill OS đã được tái cấu trúc hoàn toàn. Thay vì cung cấp các "công cụ rời rạc" (Toolbox), phiên bản V7 được thiết kế như một **Hệ điều hành khép kín, hoạt động theo kỷ luật của một Kiến trúc sư Hệ thống (50 năm kinh nghiệm)**.
 
@@ -97,4 +97,5 @@ npm test
 ```bash
 ./qk-help
 ```
+
 

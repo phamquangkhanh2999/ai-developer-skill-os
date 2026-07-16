@@ -1,7 +1,7 @@
 ---
 name: qk-engineering-standard
 category: qa
-version: 7.5.0
+version: 7.5.1
 description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -43,7 +43,7 @@ On missing precondition:
   Message: "Vui lòng chỉ định file hoặc module cần kiểm tra."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -58,7 +58,7 @@ schema_version: 2
 - ❌ Rewrite architecture
 - ❌ Touch files outside the specified scope
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -89,7 +89,7 @@ dependency:
   max_imports_per_file: 15  # Beyond this: likely a God File
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -106,7 +106,7 @@ schema_version: 2
 | P6 | Naming convention violations | LOW | Budget < 70% |
 | P7 | Excessive imports / coupling | LOW | Budget < 80% |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -137,7 +137,7 @@ IF file line count > 300
 - All P1+P2+P3 checks done → go to Phase 2
 - Token budget < 30% → go to Phase 3 directly with PARTIAL flag
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -161,7 +161,7 @@ IF token budget < 50%
   → Skip P6+P7, go to Phase 3
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -193,7 +193,7 @@ IF score < 60 OR any CRITICAL violations
   → EXIT: FAILED — requires immediate action
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -206,7 +206,7 @@ schema_version: 2
 | MEDIUM | Inferred cyclomatic complexity without tool | Note estimate |
 | LOW | Architectural smell inferred from structure | Mark as "suspected — verify manually" |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -220,7 +220,7 @@ schema_version: 2
 | MEDIUM | DRY or SoC violation, fixable in < 1 hour | Same validation logic in 3 components |
 | LOW | Style/naming issue, non-blocking | Single-letter variable `x` outside loop |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -246,7 +246,7 @@ Fix:        Extract payment logic to `processPayment()`, shipping to `scheduleSh
 Deduction:  -10 pts
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -257,7 +257,7 @@ Audit is read-only — no retry needed.
 If file is inaccessible → skip and note in report as PARTIAL.
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -273,7 +273,7 @@ Questions:
   2. Có ngưỡng cụ thể nào bạn muốn thay đổi không? (mặc định: 30 lines/function)
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -297,7 +297,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -325,7 +325,7 @@ Required Actions:
 Exit Code:   [SUCCESS | PARTIAL | FAILED]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -339,7 +339,7 @@ schema_version: 2
 | BLOCKED | No target specified | Cannot audit without scope |
 | FAILED | Score < 60 or CRITICAL found | Immediate action required |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -348,4 +348,5 @@ schema_version: 2
 - Detailed thresholds with rationale: `references/thresholds.md`
 
 ---
+
 

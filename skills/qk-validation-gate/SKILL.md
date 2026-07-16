@@ -1,7 +1,7 @@
 ---
 name: qk-validation-gate
 category: qa
-version: 7.5.0
+version: 7.5.1
 description: "Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng mọi mã nguồn lỗi."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: false  # Must run all checks — cannot skip for token budget
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -44,7 +44,7 @@ On missing precondition:
   Message: "Không tìm thấy script lint/test. Vui lòng chỉ định lệnh kiểm tra."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -59,7 +59,7 @@ schema_version: 2
 - ❌ Skip any gate check unless user explicitly allows
 - ❌ Override failing thresholds with "ignore" flags
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -90,7 +90,7 @@ build:
   bundle_size_limit: 500KB    # Gzipped (if applicable)
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -108,7 +108,7 @@ schema_version: 2
 | P7 | Build | YES | Never |
 | P8 | Bundle size | WARN only | Budget < 80% |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -131,7 +131,7 @@ ELSE IF critical or high found
   → Report: exact package name, CVE, severity
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -155,7 +155,7 @@ ELSE IF lint errors > 0 (warnings OK)
   → EXIT: FAILED — list errors
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -186,7 +186,7 @@ Test fail
        └─ FAIL on retry → EXIT: FAILED — not flaky, real failure
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -209,7 +209,7 @@ ELSE IF warnings > 5
   → EXIT: PARTIAL — list warnings, continue to release if user confirms
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -222,7 +222,7 @@ schema_version: 2
 | MEDIUM | Inferred from partial output (truncated logs) | Note potential missing info |
 | LOW | Script not found or output format unknown | EXIT: BLOCKED — clarify commands |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -236,7 +236,7 @@ schema_version: 2
 | MEDIUM | Coverage below threshold | 67% coverage (threshold 80%) |
 | LOW | Build warning | Unused export |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -262,7 +262,7 @@ Actual:     47/50 tests passed
 Fix:        See failing tests: auth.test.ts:L45, user.test.ts:L23, order.test.ts:L89
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -282,7 +282,7 @@ Recommended Assumptions:
   - Standard: npm run lint + npm test + npm run build
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -306,7 +306,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -333,7 +333,7 @@ Failures (action required):
 Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -355,5 +355,6 @@ schema_version: 2
 | FAILED | Any gate failed at threshold | Do NOT release — fix first |
 
 ---
+
 
 

@@ -1,7 +1,7 @@
 ---
 name: qk-project-memory
 category: core
-version: 7.5.0
+version: 7.5.1
 description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -17,7 +17,7 @@ token_budget:
   max_shell_commands: 0
   stop_early: true
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -215,4 +215,5 @@ If user requests same theme/macrostructure as last build:
 - Proceed only if user explicitly overrides
 
 ---
+
 

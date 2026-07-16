@@ -1,7 +1,7 @@
 ---
 name: qk-api-lifecycle
 category: fullstack
-version: 7.5.0
+version: 7.5.1
 description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -173,4 +173,5 @@ Recommended Assumptions:
 ```
 
 ---
+
 

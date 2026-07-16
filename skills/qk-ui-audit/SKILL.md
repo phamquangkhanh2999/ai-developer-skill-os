@@ -1,7 +1,7 @@
 ---
 name: qk-ui-audit
 category: qa
-version: 7.5.0
+version: 7.5.1
 description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 execution_mode: deterministic
@@ -20,7 +20,7 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -29,7 +29,7 @@ schema_version: 2
 
 > **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -44,7 +44,7 @@ On missing precondition:
   Message: "DESIGN.md not found. Run qk-project-bootstrap to create one, or provide design tokens manually."
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -60,7 +60,7 @@ schema_version: 2
 - ❌ Pixel-level screenshot comparison
 - ❌ Read entire CSS files — use targeted reads
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -79,7 +79,7 @@ schema_version: 2
 
 **Total: 85 base + 5 bonus = 90 possible. Pass threshold: ≥ 90/100**
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -96,7 +96,7 @@ schema_version: 2
 - Tokens extracted → go to Phase 2
 - DESIGN.md empty or incomplete → EXIT: BLOCKED
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -123,7 +123,7 @@ IF CRITICAL violation found (e.g., hardcoded password in UI, broken ARIA)
 - All categories checked → go to Phase 3
 - Token budget < 20% → go to Phase 3 with PARTIAL flag
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -147,7 +147,7 @@ IF total score < 70
   → EXIT: FAILED — demand redesign, not patch
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -160,7 +160,7 @@ schema_version: 2
 | MEDIUM | Inferred from surrounding code patterns | Note assumption |
 | LOW | Cannot verify without rendering (e.g., animation timing) | Mark as "unverifiable — manual check required" |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -174,7 +174,7 @@ schema_version: 2
 | MEDIUM | UX degraded, workaround exists | Missing hover state, no loading indicator |
 | LOW | Minor inconsistency | Spacing off by 1 unit |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -200,7 +200,7 @@ Fix:        Replace with `var(--font-size-base)`
 Points:     -3 pts
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -211,7 +211,7 @@ Audit is read-only — no retry needed.
 If file is inaccessible → note as PARTIAL and continue with other files.
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -229,7 +229,7 @@ Recommended Assumptions (if proceeding):
   - Use industry-standard: 8px spacing unit, Inter font, neutral gray palette
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -253,7 +253,7 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -288,7 +288,7 @@ Verdict:     [PASS | FAIL — requires redesign]
 Exit Code:   [SUCCESS | PARTIAL | FAILED]
 ```
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -302,7 +302,7 @@ schema_version: 2
 | BLOCKED | DESIGN.md missing or target not specified | Cannot audit without design contract |
 | FAILED | Score < 70 or CRITICAL violation found | Generic slop detected, redesign required |
 
-skill_version: 7.5.0
+skill_version: 7.5.1
 runtime_version: 1
 schema_version: 2
 ---
@@ -311,5 +311,6 @@ schema_version: 2
 - Full 57-point checklist: `references/anti-slop-checklist.md`
 
 ---
+
 
 

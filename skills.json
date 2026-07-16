@@ -1,6 +1,6 @@
 {
     "$schema": "https://ai-developer-skill-os.dev/schema/skills-registry.json",
-    "version": "7.5.0",
+    "version": "7.5.1",
     "name": "AI Developer Skill OS",
     "description": "Enterprise-ready Agentic Framework for AI Coding Agents — Engineering + Frontend + Backend",
     "language": "en",
@@ -15,7 +15,7 @@
         {
             "name": "qk-access-policy",
             "path": "skills/qk-access-policy/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "security",
             "subcategory": "orchestration",
             "behavior": "static-analysis",
@@ -49,7 +49,7 @@
         {
             "name": "qk-ai-builder",
             "path": "skills/qk-ai-builder/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "ai",
             "subcategory": "engineering",
             "behavior": "development",
@@ -83,7 +83,7 @@
         {
             "name": "qk-api-lifecycle",
             "path": "skills/qk-api-lifecycle/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "engineering",
             "subcategory": "backend",
             "behavior": "development",
@@ -117,7 +117,7 @@
         {
             "name": "qk-bug-resolution",
             "path": "skills/qk-bug-resolution/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "engineering",
             "subcategory": "validation",
             "behavior": "development",
@@ -154,7 +154,7 @@
         {
             "name": "qk-context-loader",
             "path": "skills/qk-context-loader/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "utilities",
             "subcategory": "orchestration",
             "behavior": "static-analysis",
@@ -188,7 +188,7 @@
         {
             "name": "qk-data-lifecycle",
             "path": "skills/qk-data-lifecycle/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "database",
             "subcategory": "backend",
             "behavior": "development",
@@ -224,7 +224,7 @@
         {
             "name": "qk-db-optimizer",
             "path": "skills/qk-db-optimizer/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "database",
             "subcategory": "backend",
             "behavior": "development",
@@ -258,7 +258,7 @@
         {
             "name": "qk-ui-builder",
             "path": "skills/qk-ui-builder/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "frontend",
             "subcategory": "visual",
             "behavior": "development",
@@ -292,7 +292,7 @@
         {
             "name": "qk-docs",
             "path": "skills/qk-docs/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "documentation",
             "subcategory": "maintenance",
             "behavior": "static-analysis",
@@ -325,7 +325,7 @@
         {
             "name": "qk-engineering-standard",
             "path": "skills/qk-engineering-standard/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "standard",
             "subcategory": "validation",
             "behavior": "static-analysis",
@@ -361,7 +361,7 @@
         {
             "name": "qk-feature-delivery",
             "path": "skills/qk-feature-delivery/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "engineering",
             "subcategory": "fullstack",
             "behavior": "development",
@@ -395,7 +395,7 @@
         {
             "name": "qk-help",
             "path": "skills/qk-help/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "utilities",
             "subcategory": "orchestration",
             "behavior": "static-analysis",
@@ -429,7 +429,7 @@
         {
             "name": "qk-orchestrator",
             "path": "skills/qk-orchestrator/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "orchestration",
             "subcategory": "meta",
             "behavior": "static-analysis",
@@ -464,7 +464,7 @@
         {
             "name": "qk-production-release",
             "path": "skills/qk-production-release/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "operations",
             "subcategory": "devops",
             "behavior": "validation",
@@ -497,7 +497,7 @@
         {
             "name": "qk-project-bootstrap",
             "path": "skills/qk-project-bootstrap/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "setup",
             "subcategory": "engineering",
             "behavior": "development",
@@ -530,7 +530,7 @@
         {
             "name": "qk-project-health",
             "path": "skills/qk-project-health/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "architecture",
             "subcategory": "validation",
             "behavior": "static-analysis",
@@ -564,7 +564,7 @@
         {
             "name": "qk-project-memory",
             "path": "skills/qk-project-memory/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "utilities",
             "subcategory": "maintenance",
             "behavior": "static-analysis",
@@ -596,7 +596,7 @@
         {
             "name": "qk-system-evolution",
             "path": "skills/qk-system-evolution/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "operations",
             "subcategory": "maintenance",
             "behavior": "maintenance",
@@ -629,7 +629,7 @@
         {
             "name": "qk-ui-audit",
             "path": "skills/qk-ui-audit/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "validation",
             "subcategory": "frontend",
             "behavior": "static-analysis",
@@ -664,7 +664,7 @@
         {
             "name": "qk-ui-system-builder",
             "path": "skills/qk-ui-system-builder/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "frontend",
             "subcategory": "design",
             "behavior": "development",
@@ -697,7 +697,7 @@
         {
             "name": "qk-validation-gate",
             "path": "skills/qk-validation-gate/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "validation",
             "subcategory": "quality",
             "behavior": "validation",
@@ -733,7 +733,7 @@
         {
             "name": "qk-fe-api-integration",
             "path": "skills/qk-fe-api-integration/SKILL.md",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "category": "engineering",
             "subcategory": "frontend",
             "behavior": "development",
@@ -817,3 +817,4 @@
         "archivedSkills": 22
     }
 }
+
