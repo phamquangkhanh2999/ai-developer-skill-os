@@ -1,6 +1,6 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "7.5.0",
+  "version": "7.5.1",
   "description": "Behavior Specification Format Framework, AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 22 skills chuyên nghiệp.",
   "main": "bin/install.js",
   "bin": {
