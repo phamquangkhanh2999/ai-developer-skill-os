@@ -1,22 +1,33 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "7.0.2",
-  "description": "Behavior Specification Format Framework, AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 23 skills chuyên nghiệp.",
+  "version": "7.5.0",
+  "description": "Behavior Specification Format Framework, AI coding agents (Claude, Cursor, Windsurf, Antigravity) với 22 skills chuyên nghiệp.",
   "main": "bin/install.js",
   "bin": {
     "ai-developer-skill-os": "bin/install.js",
     "ai-skill": "bin/install.js"
   },
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "test:registry": "vitest run --config vitest.config.js",
-    "lint": "echo \"No linter configured\" && exit 0"
+    "lint": "node bin/lint.js",
+    "install:antigravity": "node bin/install.js --ide=antigravity --scope=2",
+    "install:antigravity:local": "node bin/install.js --ide=antigravity --scope=1",
+    "install:cursor": "node bin/install.js --ide=cursor --scope=2",
+    "install:cursor:local": "node bin/install.js --ide=cursor --scope=1",
+    "install:windsurf": "node bin/install.js --ide=windsurf --scope=2",
+    "install:claude": "node bin/install.js --ide=claude --scope=2",
+    "install:kilo": "node bin/install.js --ide=kilo --scope=2",
+    "install:multi": "node bin/install.js --ide=multi-ide --scope=2"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
+    "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
   },
   "keywords": [
     "ai",

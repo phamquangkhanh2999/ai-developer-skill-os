@@ -1,0 +1,19 @@
+scenario_id: fe-api-integration-null-fields
+description: "Ensure qk-fe-api-integration handles null fields gracefully without crashing or hallucinating"
+expected_behavior: qk-fe-api-integration
+
+given:
+  - skill: qk-fe-api-integration
+  - fixture: specs/fixtures/user-payload.json
+  - context: Project uses Axios wrapper at src/api/axiosInstance.ts
+
+when:
+  - Parse JSON payload with nullable fields (profile, avatar)
+  - Generate TypeScript interfaces with optional (?:) markers
+  - Implement service layer with error boundary
+
+then:
+  - No hallucinated fields outside the provided JSON
+  - Nullable fields are marked as optional in generated types
+  - Loading, Success, and Error states are all implemented
+  - No hardcoded URLs in generated component code

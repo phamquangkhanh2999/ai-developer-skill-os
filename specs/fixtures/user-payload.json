@@ -1,0 +1,12 @@
+{
+  "id": "user_payload_001",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": "admin",
+  "created_at": "2026-01-15T08:00:00Z",
+  "profile": {
+    "avatar": "https://example.com/avatar.jpg",
+    "bio": "Software engineer"
+  },
+  "permissions": ["read", "write", "delete"]
+}

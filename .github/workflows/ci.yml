@@ -34,7 +34,7 @@ jobs:
         run: npm run test:registry
 
       - name: Validate SKILL.md Spec Compliance
-        run: npm run test
+        run: npm run lint
 
   snapshot:
     runs-on: windows-latest

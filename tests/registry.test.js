@@ -66,7 +66,7 @@ describe('Skill Registry Integrity', () => {
 
   it('should have correct platforms (no invalid IDE names)', () => {
     const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-    const validPlatforms = ['claude-code', 'cursor', 'windsurf', 'gemini-cli'];
+    const validPlatforms = ['antigravity', 'claude-code', 'cursor', 'windsurf', 'kilo-code'];
     registry.skills.forEach(skill => {
       skill.platforms.forEach(p => {
         expect(validPlatforms).toContain(p);
