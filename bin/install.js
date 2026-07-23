@@ -9,6 +9,9 @@ import os from 'os';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const sourceDir = path.resolve(__dirname, '..', '.agents');
+const packageJsonPath = path.resolve(__dirname, '..', 'package.json');
+const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const version = pkg.version;
 const cwd = process.cwd();
 
 function parseArgs() {
@@ -75,7 +78,7 @@ function runInstall(ideChoice, scopeChoice) {
   }
 
   try {
-    console.log(`\n🚀 Đang cài đặt V8.1.4 Agent Engineering OS...`);
+    console.log(`\n🚀 Đang cài đặt V${version} Agent Engineering OS...`);
     
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true });
@@ -89,7 +92,7 @@ function runInstall(ideChoice, scopeChoice) {
       return;
     }
     
-    console.log(`\n🎉 HOÀN TẤT! Kiến trúc V8.1.4 đã sẵn sàng tại: ${targetDir}`);
+    console.log(`\n🎉 HOÀN TẤT! Kiến trúc V${version} đã sẵn sàng tại: ${targetDir}`);
     
     if (isGlobal && ide === 'antigravity') {
       console.log(`💡 Antigravity đã được cài Global. Từ nay bạn mở BẤT KỲ DỰ ÁN NÀO, Antigravity cũng sẽ tự động có đủ hệ thống OS mới nhất!`);

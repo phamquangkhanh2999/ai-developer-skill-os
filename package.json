@@ -1,6 +1,6 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "8.1.7",
+  "version": "8.1.8",
   "description": "Agent Engineering OS: A deterministic capability graph, governance rules, and dynamic knowledge base for AI coding agents.",
   "main": "bin/install.js",
   "files": [

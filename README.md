@@ -1,8 +1,8 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.1.4
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.1.7
 
-> **v8.1.4 "Agent Engineering OS + Design Intelligence"**
+> **v8.1.7 "Agent Engineering OS + Design Intelligence"**
 
-Hệ sinh thái AI Developer Skill OS đã lột xác hoàn toàn. Từ một bộ "công cụ phân tán" (Toolbox) ở V7, phiên bản V8.1.4 được thiết kế như một **Hệ điều hành khép kín (Agent Engineering OS)**, sở hữu năng lực giám sát, bảo vệ ranh giới quyết định (Decision Boundaries) và được trang bị thêm tầng **Design Intelligence**.
+Hệ sinh thái AI Developer Skill OS đã lột xác hoàn toàn. Từ một bộ "công cụ phân tán" (Toolbox) ở V7, phiên bản V8.1.7 được thiết kế như một **Hệ điều hành khép kín (Agent Engineering OS)**, sở hữu năng lực giám sát, bảo vệ ranh giới quyết định (Decision Boundaries) và được trang bị thêm tầng **Design Intelligence**.
 
 ---
 
