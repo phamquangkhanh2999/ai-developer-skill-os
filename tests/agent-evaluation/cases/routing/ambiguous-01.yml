@@ -1,0 +1,9 @@
+id: ambiguous-01
+description: "User provides an overly generic optimization request"
+intent: "Tối ưu app"
+context: []
+expected:
+  action: "request_clarification"
+  candidate_ranking:
+    - result: "multiple high score"
+    - constraint: "confidence < threshold"

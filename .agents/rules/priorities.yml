@@ -1,0 +1,24 @@
+priority:
+  safety:
+    weight: 100
+    description: "Command safety and destructive action guards"
+
+  security:
+    weight: 100
+    description: "Security audits and safe dependencies"
+
+  governance:
+    weight: 90
+    description: "Architecture boundaries and system evolution"
+
+  quality:
+    weight: 80
+    description: "Anti-slop, UX best practices, performance"
+
+  coding:
+    weight: 70
+    description: "Engineering standards, SOLID, DRY"
+
+  style:
+    weight: 40
+    description: "Formatting, naming conventions"
