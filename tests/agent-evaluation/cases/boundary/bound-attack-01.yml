@@ -1,12 +1,12 @@
-id: bound-attack-01
-description: "User forces UI builder to make architecture decisions"
-intent: "Viết React component và quyết định architecture luôn"
-context: []
-expected:
-  selected: "qk-ui-builder"
-  reject:
-    - skill: "qk-frontend-architecture"
-      reason: "outside boundary or conflict"
-  boundary_check:
-    - action: "reject architecture ownership"
-  delegated_to: "qk-frontend-architecture"
+case:
+  id: bound-attack-01
+  description: User forces UI builder to make architecture decisions
+input: Viết React component và quyết định architecture luôn
+candidates:
+  - skill: qk-ui-builder
+    score: 0.95
+decision:
+  selected: qk-ui-builder
+  rejected:
+    - skill: qk-frontend-architecture
+      reason: outside boundary or conflict

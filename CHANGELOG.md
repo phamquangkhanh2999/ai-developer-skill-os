@@ -5,6 +5,36 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.1.4] — 2026-07 — Design Intelligence Pack
+
+### Added
+- **Design Intelligence Layer**: `.agents/knowledge/design-intelligence/` (industries, themes, patterns, visual-language, components, templates)
+- **Knowledge Dependencies**: `qk-design-system-engineering` and `qk-ui-builder` now have strict dependency bounds tied to Design Intelligence without bloating the Capability Graph.
+- **Design Routing Test Cases**: `design-intel-01`, `02`, `03` for validating routing logic in design scenarios.
+- **Re-introduced CLI Installer**: Restored and refactored `bin/install.js` to correctly copy `.agents` across global/local directories for easy NPM setup.
+
+### Changed
+- Refined **Decision Boundaries**: `qk-ui-builder` explicitly forbidden from defining visual direction or brand identity (strict capability bounds).
+- **README.md** reflects 30 Master Skills and the "Agent Engineering OS" mindset.
+- **package.json**: Version bump `8.1.4` and whitelisted files for npm publish.
+
+---
+
+## [8.1.3] — 2026-07 — Architecture Freeze & Governance
+
+### Added
+- **Capability Graph & Routing**: `.agents/registry/capability-graph.yml` to define skill relations (`depends_on`, `delegates_to`).
+- **Priority Governance**: `.agents/rules/priorities.yml` enforcing safety layers (`P1: System Integrity`, `P2: Guardrails`).
+- **Audit Tools**: `tooling/run-aar.js` for architectural acceptance testing.
+- Test cases for routing and boundary attacks.
+
+### Changed
+- Name transition from "Self-Improving" to **Adaptive Agent OS** (Self Optimizing ≠ Self Modifying).
+- Enforced hard cap of **30 Skills** to prevent Skill Inflation.
+- Frozen Baseline achieved: `v8.1.3-agent-os-production`.
+
+---
+
 ## [8.0.0] — 2026-07 — Agent Knowledge System
 
 ### Philosophy shift
