@@ -115,6 +115,16 @@ function generate() {
       }
     }
     
+    if (s.decision_boundary?.delegates_to) {
+      for (const delegate of s.decision_boundary.delegates_to) {
+        edges.push({
+          from: s.name,
+          to: delegate,
+          relation: 'delegates_to'
+        });
+      }
+    }
+    
     if (s.related_skills) {
        for (const related of s.related_skills) {
          edges.push({
@@ -127,7 +137,7 @@ function generate() {
   }
 
   const graphData = {
-    version: "8.1.1",
+    version: "8.1.2",
     generated_at: new Date().toISOString(),
     nodes,
     edges

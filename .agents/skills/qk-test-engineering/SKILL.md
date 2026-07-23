@@ -49,11 +49,18 @@ knowledge_scope:
   domain:
     - testing-strategy
     - quality-assurance
+    - unit-testing
+    - integration-testing
+    - e2e-testing
+    - visual-regression
   concepts:
     - test-pyramid
     - mock-strategy
   references:
     - architecture
+    - playwright
+    - vitest
+    - storybook-testing
 
 decision_boundary:
   owns:
@@ -69,6 +76,22 @@ decision_boundary:
 verification:
   required: true
   strategy: feature
+
+lifecycle:
+  promotion_gate:
+    tests:
+      minimum_pass_rate: 0.9
+    usage:
+      minimum_runs: 20
+    conflicts:
+      zero_boundary_violation: true
+  demotion_gate:
+    triggers:
+      - repeated_failure
+      - boundary_violation
+      - outdated_reference
+    action:
+      change_status: "stable -> experimental"
 
 selection:
   priority: medium

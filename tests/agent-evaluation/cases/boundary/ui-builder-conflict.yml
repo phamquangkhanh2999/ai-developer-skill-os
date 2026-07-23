@@ -10,3 +10,7 @@ expected:
     - qk-frontend-architecture
   confidence:
     min: 0.8
+conflict_policy:
+  severity: critical
+  action: block
+  expected_message: "Conflict detected in bound-002"

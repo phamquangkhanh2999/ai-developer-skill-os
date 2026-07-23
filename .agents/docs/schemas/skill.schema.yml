@@ -158,4 +158,16 @@ optional:
         type: array
       conflicts_with:
         type: array
+      delegates_to:
+        type: array
+        description: "Other skills this skill can delegate implementation to"
+
+  lifecycle:
+    type: object
+    description: "Lifecycle governance for promotion and demotion"
+    fields:
+      promotion_gate:
+        type: object
+      demotion_gate:
+        type: object
 

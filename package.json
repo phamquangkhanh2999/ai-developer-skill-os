@@ -15,6 +15,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:registry": "vitest run --config vitest.config.js",
+    "test:graph": "node tooling/validate-graph.js",
     "lint": "node bin/lint.js",
     "test:agent": "node tests/agent-evaluation/runner/evaluate-routing.js",
     "install:antigravity": "node bin/install.js --ide=antigravity --scope=2",

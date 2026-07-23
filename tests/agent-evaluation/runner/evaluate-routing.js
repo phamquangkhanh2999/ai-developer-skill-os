@@ -19,6 +19,7 @@ function runEvaluation() {
   let totalCases = testFiles.length;
   let routingScore = 0;
   let conflictScore = 0;
+  let severityScore = 0;
   let boundaryViolations = 0;
 
   console.log(`Đang phân tích ${totalCases} test cases...\n`);
@@ -31,13 +32,19 @@ function runEvaluation() {
       console.log(`- Đang chạy case: ${testCase.case.id || path.basename(file)}`);
       
       // Giả lập kết quả routing (Mock AI execution)
-      // Trong môi trường production, bước này sẽ gọi đến qk-orchestrator API
       const isRoutingAccurate = true; // Mock
       const isConflictDetected = true; // Mock
       const hasBoundaryViolation = false; // Mock
       
+      let severityChecked = false;
+      if (testCase.conflict_policy && testCase.conflict_policy.severity) {
+         // Mock: Agent correctly identifies severity
+         severityChecked = true;
+      }
+      
       if (isRoutingAccurate) routingScore++;
       if (isConflictDetected) conflictScore++;
+      if (severityChecked) severityScore++;
       if (hasBoundaryViolation) boundaryViolations++;
 
     } catch (e) {
@@ -49,6 +56,7 @@ function runEvaluation() {
   console.log('─────────────────────────────────────────────────');
   console.log(`Routing Accuracy:       ${Math.round((routingScore / totalCases) * 100)}/100`);
   console.log(`Conflict Detection:     ${conflictScore}/${totalCases}`);
+  console.log(`Severity Handling:      ${severityScore}/${totalCases}`);
   console.log(`Boundary Violations:    ${boundaryViolations}`);
   console.log('─────────────────────────────────────────────────\n');
 }

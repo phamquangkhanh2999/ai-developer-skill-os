@@ -61,12 +61,32 @@ decision_boundary:
     - dependency-risk
   does_not_own:
     - access control implementation
+    - penetration testing
+    - compliance certification
   conflicts_with: []
+  delegates_to:
+    - qk-validation-gate
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
   required: true
   strategy: feature
+
+lifecycle:
+  promotion_gate:
+    tests:
+      minimum_pass_rate: 0.9
+    usage:
+      minimum_runs: 20
+    conflicts:
+      zero_boundary_violation: true
+  demotion_gate:
+    triggers:
+      - repeated_failure
+      - boundary_violation
+      - outdated_reference
+    action:
+      change_status: "stable -> experimental"
 
 selection:
   priority: high

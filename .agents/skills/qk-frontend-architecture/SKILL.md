@@ -62,11 +62,30 @@ decision_boundary:
     - pixel styling
   conflicts_with:
     - qk-ui-builder
+  delegates_to:
+    - qk-ui-builder
+    - qk-ui-system-builder
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
   required: true
   strategy: feature
+
+lifecycle:
+  promotion_gate:
+    tests:
+      minimum_pass_rate: 0.9
+    usage:
+      minimum_runs: 20
+    conflicts:
+      zero_boundary_violation: true
+  demotion_gate:
+    triggers:
+      - repeated_failure
+      - boundary_violation
+      - outdated_reference
+    action:
+      change_status: "stable -> experimental"
 
 selection:
   priority: medium

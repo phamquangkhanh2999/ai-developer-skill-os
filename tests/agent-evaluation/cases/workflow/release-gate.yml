@@ -9,3 +9,7 @@ expected:
     - qk-production-release
   confidence:
     min: 0.8
+conflict_policy:
+  severity: high
+  action: require_confirmation
+  expected_message: "Conflict detected in wf-002"

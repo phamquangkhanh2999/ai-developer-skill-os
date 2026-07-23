@@ -1,7 +1,7 @@
 # registry/capability-graph.yml
 # GENERATED FILE — DO NOT EDIT MANUALLY
-version: 8.1.1
-generated_at: '2026-07-23T04:47:25.518Z'
+version: 8.1.2
+generated_at: '2026-07-23T04:58:01.572Z'
 nodes:
   qk-access-policy:
     type: capability
@@ -184,6 +184,8 @@ nodes:
       - dependency-risk
     does_not_own:
       - access control implementation
+      - penetration testing
+      - compliance certification
     conflicts: []
     workflow: security-audit
   qk-system-evolution:
@@ -355,6 +357,12 @@ edges:
     to: qk-ui-builder
     relation: conflicts_with
   - from: qk-frontend-architecture
+    to: qk-ui-builder
+    relation: delegates_to
+  - from: qk-frontend-architecture
+    to: qk-ui-system-builder
+    relation: delegates_to
+  - from: qk-frontend-architecture
     to: qk-design-system-engineering
     relation: feeds
   - from: qk-frontend-architecture
@@ -375,6 +383,9 @@ edges:
   - from: qk-product-specification
     to: spec-driven-development
     relation: depends_on
+  - from: qk-product-specification
+    to: qk-feature-delivery
+    relation: delegates_to
   - from: qk-product-specification
     to: qk-feature-delivery
     relation: feeds
@@ -405,6 +416,9 @@ edges:
   - from: qk-security-audit
     to: security-audit
     relation: depends_on
+  - from: qk-security-audit
+    to: qk-validation-gate
+    relation: delegates_to
   - from: qk-security-audit
     to: qk-access-policy
     relation: feeds
