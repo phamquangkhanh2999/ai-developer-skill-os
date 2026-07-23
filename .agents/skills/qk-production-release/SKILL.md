@@ -1,11 +1,67 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-production-release
-category: devops
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - release-management
+  - production-deployment
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: false
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "release production"
+  - "deploy production"
+  - "chuẩn bị release"
+  - "kiểm tra release"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: internal
+
+rules:
+  - global
+  - safety
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-validation-gate
+
+knowledge_scope:
+  owns:
+    - release-checklist
+    - deployment-gate
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: release-safety
+
+selection:
+  priority: high
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: slow
 risk: high
@@ -20,9 +76,6 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-production-release — Release Gate

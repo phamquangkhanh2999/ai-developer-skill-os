@@ -4,7 +4,7 @@
 # Regenerate: node tooling/generate-registry.js
 #
 version: 8.0.0
-generated_at: "2026-07-23T04:17:38.474Z"
+generated_at: "2026-07-23T04:20:39.252Z"
 total_skills: 22
 
 # ── Skills catalog ────────────────────────────────────────
@@ -21,11 +21,15 @@ skills:
       - access-control
 
   - name: qk-ai-builder
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "build ai"
+    intent:
+      - ai-integration
 
   - name: qk-api-lifecycle
     version: "8.0.0"
@@ -127,11 +131,15 @@ skills:
       - feature-building
 
   - name: qk-help
-    version: "7.5.0"
-    status: legacy
-    description: "Hiển thị danh sách skills V7.5 và hướng dẫn dùng lệnh ./qk-[skill-name]."
-    complexity: medium
-    workflow: null
+    version: "8.0.0"
+    status: stable
+    description: "Hiển thị danh sách skills V8 và hướng dẫn dùng lệnh ./qk-[skill-name]."
+    complexity: low
+    workflow: internal
+    triggers:
+      - "help"
+    intent:
+      - skill-discovery
 
   - name: qk-orchestrator
     version: "8.0.0"
@@ -145,18 +153,26 @@ skills:
       - task-routing
 
   - name: qk-production-release
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: internal
+    triggers:
+      - "release production"
+    intent:
+      - release-management
 
   - name: qk-project-bootstrap
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ thiếu foundation."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "khởi tạo project"
+    intent:
+      - project-initialization
 
   - name: qk-project-health
     version: "8.0.0"

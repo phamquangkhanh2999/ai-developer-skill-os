@@ -1,28 +1,80 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-help
-category: utilities
-version: 7.5.0
-description: "Hiển thị danh sách skills V7.5 và hướng dẫn dùng lệnh ./qk-[skill-name]."
+version: 8.0.0
+status: stable
+description: "Hiển thị danh sách skills V8 và hướng dẫn dùng lệnh ./qk-[skill-name]."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - skill-discovery
+  - command-help
+
+complexity:
+  level: low
+  criteria:
+    files_affected: "1"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "help"
+  - "có những skill nào"
+  - "danh sách skill"
+  - "làm sao để dùng"
+  - "qk-help"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: internal
+
+rules:
+  - global
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-orchestrator
+
+knowledge_scope:
+  owns:
+    - skill-directory
+  references:
+    - registry
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: false
+  strategy: none
+
+selection:
+  priority: low
+  confidence_threshold: 0.75
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: low
 latency: fast
 risk: low
 side_effects: none
-produces: [report]
-consumes: [none]
+produces: [skill-recommendation]
+consumes: [registry]
 
 token_budget:
-  max_files_read: 0
-  max_lines_per_read: 0
+  max_files_read: 1
+  max_lines_per_read: 150
   max_shell_commands: 0
   stop_early: true
 
 exit_codes: [SUCCESS]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-help — Skill Directory V7.5
@@ -83,7 +135,7 @@ On missing precondition:
 ### Phase 1 — Display Skills
 
 **Steps:**
-1. Read `skills.json` to get active skill list
+1. Read `.agents/registry/skills-index.yml` to get active skill list
 2. Format as table: Command | Purpose | Cost
 3. Display common pipelines
 
@@ -96,9 +148,9 @@ On missing precondition:
 
 | Level | Condition | Action |
 |-------|-----------|--------|
-| HIGH | skills.json readable | Display directly |
-| MEDIUM | skills.json partially readable | Display what's available |
-| LOW | Cannot access skills.json | EXIT: BLOCKED |
+| HIGH | .agents/registry/skills-index.yml readable | Display directly |
+| MEDIUM | .agents/registry/skills-index.yml partially readable | Display what's available |
+| LOW | Cannot access .agents/registry/skills-index.yml | EXIT: BLOCKED |
 
 ---
 
@@ -127,7 +179,7 @@ Confidence: HIGH
 
 ```
 Display fails
-  └─ Check if skills.json is accessible
+  └─ Check if .agents/registry/skills-index.yml is accessible
        ├─ Accessible → retry display
        └─ Not accessible → EXIT: BLOCKED
 ```
@@ -137,9 +189,9 @@ Display fails
 ## Escalation Rules
 
 ```
-BLOCKED: Cannot access skills.json
+BLOCKED: Cannot access .agents/registry/skills-index.yml
 Missing:
-  - skills.json file
+  - .agents/registry/skills-index.yml file
 Questions:
   1. Bạn cần hỗ trợ gì? (liệt kê skills / hướng dẫn dùng)
 ```
@@ -188,6 +240,6 @@ Exit Code: SUCCESS
 | Code | Meaning | When |
 |------|---------|------|
 | SUCCESS | Help displayed successfully | Normal completion |
-| BLOCKED | Cannot access skills.json | Setup required |
+| BLOCKED | Cannot access .agents/registry/skills-index.yml | Setup required |
 
 ---

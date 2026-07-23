@@ -20,10 +20,10 @@
 | qk-ui-audit | 8.0.0 | stable | code-review |
 | qk-db-optimizer | 8.0.0 | stable | refactor |
 | qk-access-policy | 8.0.0 | stable | feature-delivery |
-| qk-production-release | 7.5.1 | pending | none |
-| qk-project-bootstrap | 7.5.1 | pending | none |
-| qk-ai-builder | 7.5.1 | pending | none |
-| qk-help | 7.5.1 | pending | none |
+| qk-production-release | 8.0.0 | stable | internal |
+| qk-project-bootstrap | 8.0.0 | stable | feature-delivery |
+| qk-ai-builder | 8.0.0 | stable | feature-delivery |
+| qk-help | 8.0.0 | stable | internal |
 
 Progress:
-18/22 migrated
+22/22 migrated

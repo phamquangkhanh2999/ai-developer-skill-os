@@ -1,25 +1,85 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-project-bootstrap
-category: fullstack
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ thiếu foundation."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - project-initialization
+  - setup
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "10+"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "khởi tạo project"
+  - "tạo dự án mới"
+  - "bootstrap"
+  - "setup project"
+  - "init repo"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - safety
+  - filesystem-boundary
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+
+knowledge_scope:
+  owns:
+    - project-structure
+    - initial-setup
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: bootstrap-validation
+
+selection:
+  priority: medium
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: high
 latency: slow
 risk: low
-side_effects: edit_files
+side_effects: 
+  - create_files
+  - create_structure
 produces: [code, schema, plan]
 consumes: [user-description]
+
 token_budget:
   max_files_read: 1
   max_lines_per_read: 50
   max_shell_commands: 2
   stop_early: false
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-project-bootstrap — Project Foundation Builder

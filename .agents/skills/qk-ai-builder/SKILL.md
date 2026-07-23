@@ -1,9 +1,67 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-ai-builder
-category: core
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - ai-integration
+  - agent-behavior
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "build ai"
+  - "viết prompt"
+  - "thiết kế bot"
+  - "ai logic"
+  - "tạo skill"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-system-evolution
+
+knowledge_scope:
+  owns:
+    - agent-architecture
+    - skill-generation
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+selection:
+  priority: high
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: high
 latency: slow
@@ -11,14 +69,13 @@ risk: high
 side_effects: edit_files
 produces: [code, schema]
 consumes: [user-description]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+
 token_budget:
   max_files_read: 3
   max_lines_per_read: 100
   max_shell_commands: 0
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
