@@ -2,6 +2,10 @@ name: research
 version: 8.0.0
 description: "Pipeline nghiên cứu codebase để hiểu context, dependency, và architecture trước khi thực hiện task lớn."
 
+owner:
+  type: engineering
+  maintained_by: qk-team
+
 verification_profile: review
 
 steps:

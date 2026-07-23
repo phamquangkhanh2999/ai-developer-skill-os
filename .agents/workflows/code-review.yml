@@ -2,6 +2,10 @@ name: code-review
 version: 8.0.0
 description: "Pipeline kiểm tra chất lượng code theo SOLID, DRY, Clean Code và ngưỡng số liệu cụ thể."
 
+owner:
+  type: engineering
+  maintained_by: qk-team
+
 verification_profile: review
 
 steps:

@@ -1,5 +1,25 @@
 # AI Developer Skill OS — V8 Architecture
 
+## Source of Truth
+
+> [!IMPORTANT]
+> The **only** editable skill metadata source is: `.agents/skills/**/SKILL.md`
+>
+> All other manifests are **generated artifacts** — manual modification is prohibited.
+
+| File | Editable? | Generated from |
+|---|---|---|
+| `.agents/skills/*/SKILL.md` | ✅ YES | — (source) |
+| `.agents/registry/skills-index.yml` | ❌ NO | `tooling/generate-registry.js` |
+| `skills.json` | ❌ NO | `tooling/generate-registry.js` |
+
+Regenerate after any SKILL.md change:
+```bash
+node tooling/generate-registry.js
+```
+
+---
+
 ## Request Flow
 
 ```

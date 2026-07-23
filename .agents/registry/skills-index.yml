@@ -1,0 +1,132 @@
+# registry/skills-index.yml
+# GENERATED FILE — DO NOT EDIT MANUALLY
+# Source: .agents/skills/*/SKILL.md
+# Regenerate: node tooling/generate-registry.js
+#
+version: 8.0.0
+generated_at: "2026-07-23T03:56:50.481Z"
+total_skills: 23
+
+# ── Skills catalog ────────────────────────────────────────
+skills:
+  - name: qk-access-policy
+    description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
+    complexity: medium
+    workflow: null
+
+  - name: qk-ai-builder
+    description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
+    complexity: medium
+    workflow: null
+
+  - name: qk-api-lifecycle
+    description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
+    complexity: medium
+    workflow: null
+
+  - name: qk-bug-resolution
+    description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
+    complexity: medium
+    workflow: null
+
+  - name: qk-context-loader
+    description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
+    complexity: medium
+    workflow: null
+
+  - name: qk-data-lifecycle
+    description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
+    complexity: medium
+    workflow: null
+
+  - name: qk-db-optimizer
+    description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
+    complexity: medium
+    workflow: null
+
+  - name: qk-docs
+    description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
+    complexity: medium
+    workflow: null
+
+  - name: qk-engineering-standard
+    description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
+    complexity: medium
+    workflow: null
+
+  - name: qk-fe-api-integration
+    description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
+    complexity: medium
+    workflow: null
+
+  - name: qk-feature-delivery
+    description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
+    complexity: medium
+    workflow: null
+
+  - name: qk-help
+    description: "Hiển thị danh sách skills V7.5 và hướng dẫn dùng lệnh ./qk-[skill-name]."
+    complexity: medium
+    workflow: null
+
+  - name: qk-orchestrator
+    description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
+    complexity: low
+    workflow: research                  # Uses research workflow to understand request
+    triggers:
+      - "which skill"
+    intent:
+      - task-routing
+
+  - name: qk-production-release
+    description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
+    complexity: medium
+    workflow: null
+
+  - name: qk-project-bootstrap
+    description: "Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ thiếu foundation."
+    complexity: medium
+    workflow: null
+
+  - name: qk-project-health
+    description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
+    complexity: medium
+    workflow: null
+
+  - name: qk-project-memory
+    description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
+    complexity: medium
+    workflow: null
+
+  - name: qk-system-evolution
+    description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
+    complexity: medium
+    workflow: null
+
+  - name: qk-ui-audit
+    description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
+    complexity: medium
+    workflow: null
+
+  - name: qk-ui-builder
+    description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
+    complexity: medium
+    workflow: null
+
+  - name: qk-ui-system-builder
+    description: "Xây dựng Design System và token library từ DESIGN.md — không tự đặt ra token ngoài contract."
+    complexity: medium
+    workflow: null
+
+  - name: qk-validation-gate
+    description: "Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng mọi mã nguồn lỗi."
+    complexity: medium
+    workflow: null
+
+  - name: qk-[skill-name]
+    description: "[One sentence — what this skill does and for whom]"
+    complexity: medium                    # low | medium | high | critical
+    workflow: [workflow-name]          # → workflows/[workflow-name].yml
+    intent:
+      - [primary-intent]               # e.g. bug-fixing, feature-building, code-review
+

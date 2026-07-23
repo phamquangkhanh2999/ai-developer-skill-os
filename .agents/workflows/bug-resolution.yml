@@ -2,6 +2,10 @@ name: bug-resolution
 version: 8.0.0
 description: "Pipeline chuẩn để diagnose và fix bugs theo chu trình: Observe → Hypothesize → Evidence → Patch → Verify."
 
+owner:
+  type: engineering
+  maintained_by: qk-team
+
 verification_profile: bug-fix
 
 steps:

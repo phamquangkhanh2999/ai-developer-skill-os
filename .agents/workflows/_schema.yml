@@ -9,8 +9,14 @@ required:
   - name          # string: workflow identifier (kebab-case)
   - version       # semver: 8.x.x
   - description   # string: one sentence
+  - owner         # object: {type, maintained_by} — who owns this workflow
   - steps         # array: minimum 2 steps
   - escalation    # object: retry + on_failure
+
+# ── Owner field structure ───────────────────────────────────
+owner_fields:
+  type:           # string: engineering | security | ux | data | devops
+  maintained_by:  # string: team or person identifier
 
 # ── Required fields per step ────────────────────────────────
 step_required:

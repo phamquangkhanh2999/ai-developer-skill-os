@@ -115,3 +115,18 @@ optional:
 
   consumes:
     type: array
+
+  knowledge_scope:
+    type: object
+    description: "Defines what knowledge this skill owns vs. references"
+    fields:
+      owns:
+        type: array
+        description: "Topics this skill is the authoritative source for"
+        example: [bug-diagnosis, error-analysis, fix-strategies]
+      references:
+        type: array
+        description: "Topics this skill uses but does NOT own"
+        example: [testing, git, linting]
+    note: "A skill should NOT embed knowledge it only references. Use rules/ or learnings/ instead."
+

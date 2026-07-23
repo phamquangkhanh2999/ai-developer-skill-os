@@ -1,11 +1,63 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-orchestrator
-category: core
-version: 7.5.0
+version: 8.0.0
 description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: orchestrator
+
+intent:
+  - task-routing
+  - skill-selection
+  - precondition-checking
+
+complexity:
+  level: low
+  criteria:
+    files_affected: "1"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "which skill"
+  - "what should i use"
+  - "route this"
+  - "help me choose"
+  - "what skill for"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: research                  # Uses research workflow to understand request
+
+rules:
+  - global
+
+tools:
+  - filesystem
+
+related_skills:
+  - qk-context-loader
+
+knowledge_scope:
+  owns:
+    - task-routing
+    - skill-selection
+    - precondition-validation
+  references:
+    - all-skills                    # References registry to make decisions
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: low
 latency: fast
 risk: low
@@ -20,19 +72,12 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-orchestrator — Request Routing
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Preconditions
 - [ ] User request is provided (any language)

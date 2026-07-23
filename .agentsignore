@@ -7,23 +7,40 @@ node_modules/
 dist/
 build/
 .cache/
+out/
+coverage/
 
 # Dev tooling (not knowledge)
 tooling/
 tests/
 
+# Archive (use git tag v7.5.1 to access V7 history)
+archive/
+
 # Version control
 .git/
 .github/
 
-# Packaging
+# Packaging / config
 *.lock
 package-lock.json
+package.json
+
+# Logs
+*.log
+logs/
 
 # Binary / generated
 *.min.js
 *.min.css
 *.map
+*.wasm
+*.png
+*.jpg
+*.ico
+*.woff
+*.woff2
+*.ttf
 
 # OS artifacts
 .DS_Store

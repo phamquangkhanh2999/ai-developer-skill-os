@@ -1,13 +1,16 @@
 /**
  * generate-registry.js
  * Generates registry/skills-index.yml from SKILL.md frontmatter.
- * 
+ *
  * Usage: node tooling/generate-registry.js
  * Output: .agents/registry/skills-index.yml
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SKILLS_DIR = path.join(__dirname, '../.agents/skills');
 const OUTPUT_FILE = path.join(__dirname, '../.agents/registry/skills-index.yml');

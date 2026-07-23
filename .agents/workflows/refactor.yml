@@ -2,6 +2,10 @@ name: refactor
 version: 8.0.0
 description: "Pipeline refactor an toàn: giữ nguyên behavior bên ngoài, cải thiện chất lượng bên trong."
 
+owner:
+  type: engineering
+  maintained_by: qk-team
+
 verification_profile: refactor
 
 steps:

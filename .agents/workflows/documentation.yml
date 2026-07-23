@@ -2,6 +2,10 @@ name: documentation
 version: 8.0.0
 description: "Pipeline viết và cập nhật tài liệu chính xác — phải match code thực tế, cấm bịa đặt."
 
+owner:
+  type: engineering
+  maintained_by: qk-team
+
 verification_profile: documentation
 
 steps:
