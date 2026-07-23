@@ -1,11 +1,69 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-engineering-standard
-category: qa
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - code-quality
+  - standards-enforcement
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "review code"
+  - "clean code"
+  - "check standard"
+  - "refactor clean"
+  - "kiểm tra chuẩn"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: code-review
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-project-health
+  - qk-system-evolution
+
+knowledge_scope:
+  owns:
+    - coding-standards
+    - best-practices
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+selection:
+  priority: high
+  confidence_threshold: 0.80
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: low
@@ -20,19 +78,11 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-engineering-standard — Code Quality Enforcer
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ## Preconditions
 - [ ] Target file(s) or module(s) are specified

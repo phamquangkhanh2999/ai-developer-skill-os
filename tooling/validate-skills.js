@@ -55,7 +55,7 @@ function validate() {
   }
 
   const skillDirs = fs.readdirSync(SKILLS_DIR)
-    .filter(d => fs.statSync(path.join(SKILLS_DIR, d)).isDirectory());
+    .filter(d => !d.startsWith('_') && fs.statSync(path.join(SKILLS_DIR, d)).isDirectory());
 
   let totalScanned = 0;
   let stableValid = 0;

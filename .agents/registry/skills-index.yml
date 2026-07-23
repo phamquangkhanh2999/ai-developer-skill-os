@@ -4,8 +4,8 @@
 # Regenerate: node tooling/generate-registry.js
 #
 version: 8.0.0
-generated_at: "2026-07-23T04:08:41.629Z"
-total_skills: 23
+generated_at: "2026-07-23T04:13:46.522Z"
+total_skills: 22
 
 # ── Skills catalog ────────────────────────────────────────
 skills:
@@ -67,18 +67,26 @@ skills:
     workflow: null
 
   - name: qk-docs
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
-    complexity: medium
-    workflow: null
+    complexity: low
+    workflow: documentation
+    triggers:
+      - "viết docs"
+    intent:
+      - documentation
 
   - name: qk-engineering-standard
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
     complexity: medium
-    workflow: null
+    workflow: code-review
+    triggers:
+      - "review code"
+    intent:
+      - code-quality
 
   - name: qk-fe-api-integration
     version: "7.5.0"
@@ -131,25 +139,37 @@ skills:
     workflow: null
 
   - name: qk-project-health
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: code-review
+    triggers:
+      - "audit code"
+    intent:
+      - project-audit
 
   - name: qk-project-memory
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
     complexity: medium
-    workflow: null
+    workflow: documentation
+    triggers:
+      - "lưu context"
+    intent:
+      - context-management
 
   - name: qk-system-evolution
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: refactor
+    triggers:
+      - "upgrade package"
+    intent:
+      - framework-upgrade
 
   - name: qk-ui-audit
     version: "7.5.0"
@@ -182,13 +202,4 @@ skills:
       - "verify"
     intent:
       - quality-assurance
-
-  - name: qk-[skill-name]
-    version: "8.0.0"
-    status: stable
-    description: "[One sentence — what this skill does and for whom]"
-    complexity: medium                    # low | medium | high | critical
-    workflow: [workflow-name]          # → workflows/[workflow-name].yml
-    intent:
-      - [primary-intent]               # e.g. bug-fixing, feature-building, code-review
 

@@ -1,9 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-docs
-category: documentation
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - documentation
+  - technical-writing
+
+complexity:
+  level: low
+  criteria:
+    files_affected: "1-3"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "viết docs"
+  - "viết tài liệu"
+  - "document this"
+  - "generate docs"
+  - "cập nhật readme"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: documentation
+
+rules:
+  - global
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+
+knowledge_scope:
+  owns:
+    - code-documentation
+    - architecture-docs
+  references:
+    - source-code
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: documentation
+
+selection:
+  priority: medium
+  confidence_threshold: 0.75
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: low
 latency: fast
@@ -11,20 +68,19 @@ risk: low
 side_effects: edit_files
 produces: [report]
 consumes: [source-code]
+
 token_budget:
   max_files_read: 3
   max_lines_per_read: 100
   max_shell_commands: 0
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-docs — Technical Writer & Documentation Maintainer
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 

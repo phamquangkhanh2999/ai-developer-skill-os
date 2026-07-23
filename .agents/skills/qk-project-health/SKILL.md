@@ -1,9 +1,67 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-project-health
-category: qa
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - project-audit
+  - codebase-health
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "10+"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "audit code"
+  - "check health"
+  - "tech debt"
+  - "code smell"
+  - "kiểm toán"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: code-review
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+
+knowledge_scope:
+  owns:
+    - tech-debt
+    - codebase-health
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+selection:
+  priority: medium
+  confidence_threshold: 0.75
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: high
 latency: slow
@@ -11,20 +69,19 @@ risk: low
 side_effects: read_only
 produces: [report]
 consumes: [source-code]
+
 token_budget:
   max_files_read: 5
   max_lines_per_read: 100
   max_shell_commands: 1
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-project-health — Complete Codebase Audit
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 

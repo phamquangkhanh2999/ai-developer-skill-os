@@ -56,7 +56,7 @@ function generate() {
   }
 
   const skillDirs = fs.readdirSync(SKILLS_DIR)
-    .filter(d => fs.statSync(path.join(SKILLS_DIR, d)).isDirectory());
+    .filter(d => !d.startsWith('_') && fs.statSync(path.join(SKILLS_DIR, d)).isDirectory());
 
   for (const dir of skillDirs) {
     const skillFile = path.join(SKILLS_DIR, dir, 'SKILL.md');

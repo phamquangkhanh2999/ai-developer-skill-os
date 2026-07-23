@@ -1,11 +1,70 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-system-evolution
-category: maintenance
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - framework-upgrade
+  - system-maintenance
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "10+"
+    has_behavior_change: false
+    has_external_dependency: true
+    has_breaking_change: true
+
+triggers:
+  - "upgrade package"
+  - "nâng cấp"
+  - "update framework"
+  - "migration framework"
+  - "system evolution"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: refactor
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+  - qk-project-health
+
+knowledge_scope:
+  owns:
+    - upgrade-strategy
+    - rollback-plan
+  references:
+    - testing
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: refactor
+
+selection:
+  priority: medium
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: high
 latency: slow
 risk: high
@@ -20,19 +79,11 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-system-evolution — Safe Upgrade Manager
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ## Preconditions
 - [ ] Current version and target version are specified

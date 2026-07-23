@@ -1,9 +1,67 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-project-memory
-category: core
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - context-management
+  - knowledge-retrieval
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-2"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "lưu context"
+  - "nhớ lại"
+  - "project memory"
+  - "lưu vào bộ nhớ"
+  - "tìm lại fact"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: documentation
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+
+knowledge_scope:
+  owns:
+    - project-facts
+    - verified-context
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+selection:
+  priority: medium
+  confidence_threshold: 0.75
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: low
 latency: fast
@@ -11,20 +69,19 @@ risk: low
 side_effects: edit_files
 produces: [plan]
 consumes: [source-code, context-graph]
+
 token_budget:
   max_files_read: 2
   max_lines_per_read: 100
   max_shell_commands: 0
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-project-memory — Long-Term Context Store
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
