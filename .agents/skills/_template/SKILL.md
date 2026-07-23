@@ -3,7 +3,7 @@
 name: qk-[skill-name]
 version: 8.0.0
 status: stable
-description: "[One sentence — what this skill does and for whom]"
+description: "[Một câu — skill này làm gì và dành cho ai]"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────

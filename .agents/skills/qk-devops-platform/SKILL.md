@@ -3,7 +3,7 @@
 name: qk-devops-platform
 version: 8.1.1
 status: experimental
-description: "Platform engineering: CI/CD strategy, deployment architecture, environment management, and rollback strategy."
+description: "Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường và chiến lược rollback."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────

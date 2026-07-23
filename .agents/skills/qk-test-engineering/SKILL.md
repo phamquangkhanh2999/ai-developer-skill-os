@@ -3,7 +3,7 @@
 name: qk-test-engineering
 version: 8.1.0
 status: experimental
-description: "Testing strategy decision engine (Unit, Integration, E2E, Coverage, Regression, Mock strategy)."
+description: "Công cụ quyết định chiến lược kiểm thử (Unit, Integration, E2E, Coverage, Regression, Mock)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────

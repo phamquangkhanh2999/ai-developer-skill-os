@@ -3,7 +3,7 @@
 name: qk-design-system-engineering
 version: 8.1.0
 status: experimental
-description: "Governance cho Design System (Định nghĩa system rules, tokens, component variants)."
+description: "Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
@@ -106,7 +106,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 - [ ] Brand guidelines hoặc UX heuristics cơ bản đã có.
 
 ## Scope
-- Define system rules for tokens, spacing, colors, typography.
+- Định nghĩa các quy tắc hệ thống cho tokens, khoảng cách (spacing), màu sắc, phông chữ (typography).
 - Xác định quy chuẩn xây dựng component (composition, variants).
 - Thiết lập quy tắc A11y (Accessibility) ở cấp độ token.
 - KHÔNG thay thế việc viết UI code (`qk-ui-system-builder`). Skill này là "governance", không phải "implementation".

@@ -2,7 +2,7 @@
 name: qk-agent-observability
 version: 8.1.3
 status: experimental
-description: "Agent Observability layer for tracking decisions, routing metrics, and failure patterns."
+description: "Lớp theo dõi (Observability) cho phép giám sát quyết định, luân chuyển và các mô hình lỗi."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 type: capability

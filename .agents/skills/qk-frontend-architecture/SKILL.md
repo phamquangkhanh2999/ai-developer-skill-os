@@ -3,7 +3,7 @@
 name: qk-frontend-architecture
 version: 8.1.0
 status: experimental
-description: "Frontend architecture decision engine (Component strategy, state management, routing)."
+description: "Công cụ quyết định kiến trúc Frontend (Chiến lược component, quản lý state, định tuyến)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
