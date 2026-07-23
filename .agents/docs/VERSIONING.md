@@ -4,6 +4,15 @@
 
 Current: `8.0.0`
 
+### Bản đồ Kiến trúc các Phiên bản
+
+| Version | Identity                  | Architecture                               |
+| ------- | ------------------------- | ------------------------------------------ |
+| V7      | Prompt Collection         | Static instructions                        |
+| V8.0    | Skill System              | Structured capabilities                    |
+| V8.1.x  | Governed Capability Graph | Decision boundaries + lifecycle governance |
+| V8.2    | Adaptive Agent OS         | Analytics + feedback + adaptive routing    |
+
 ---
 
 ## When to bump each segment

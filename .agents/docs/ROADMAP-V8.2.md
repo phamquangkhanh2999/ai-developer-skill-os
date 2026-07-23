@@ -1,65 +1,78 @@
-# V8.2 Roadmap: Self-Improving Agent System
+# V8.2 Roadmap: Adaptive Agent OS
 
 ## Triết lý cốt lõi (Core Philosophy)
 **Self Improving = Self Optimizing, NOT Self Modifying.**
-- Hệ thống đóng vai trò **Analytics + Proposal Engine**.
-- AI phân tích, đề xuất cải tiến và tối ưu hóa.
-- Quá trình phê duyệt (Approval) và thăng hạng (Promotion) bắt buộc phải có sự tham gia của con người (Human-in-the-loop) để giữ vững tính toàn vẹn của Governance.
-
-### V8.2 KHÔNG ĐƯỢC PHÉP (Anti-patterns):
-❌ Agent tự tạo skill vô hạn.
-❌ Agent tự sửa nội dung của stable skill.
-❌ Agent tự động promote skill (experimental -> stable).
-❌ Agent tự ý thay đổi Schema hoặc Routing weight.
+Hệ thống chuyển mình từ "Governed Capability Graph" sang "Decision Intelligence Layer" với khả năng "học từ vận hành" thông qua:
+```
+Observe -> Analyze -> Recommend -> Human Approval -> Controlled Evolution
+```
 
 ---
 
-## Kiến trúc V8.2 (The Self-Improving Control Loop)
+## 4 Ranh giới Anti-Pattern (Boundaries)
+Để tránh lặp lại sự phình to không kiểm soát, V8.2 thiết lập 4 rào cản tuyệt đối:
 
-Chu trình V8.2 sẽ hoạt động theo luồng sau:
-1. **Agent Execution**: Thực thi nhiệm vụ.
-2. **Decision Trace**: Ghi nhận lại bối cảnh ra quyết định.
-3. **Observability**: Giám sát hệ thống.
-4. **Analytics Engine**: Phân tích dữ liệu.
-5. **Skill Health Score**: Đánh giá sức khỏe tổng thể.
-6. **Improvement Proposal**: Đề xuất tối ưu.
-7. **Human Approval**: Con người phê duyệt.
-8. **Promotion Gate**: Cập nhật hệ thống.
+### Boundary 1 — Skill Inflation
+- Giữ nguyên giới hạn 30 capabilities.
+- KHÔNG tạo các skill như `qk-react-performance`, `qk-nextjs-specialist`. Những kỹ năng này thuộc **Knowledge Layer** (kiến thức tham khảo), không phải **Decision Capability Layer**.
 
----
+### Boundary 2 — Frontend Fragmentation
+- Giữ vững cấu trúc: `qk-frontend-architecture` -> `delegates_to` -> `qk-ui-builder`.
+- KHÔNG chia nhỏ frontend thành: `component`, `hooks`, `css`, `state`. Điều này sẽ phá vỡ boundary ra quyết định.
 
-## Các Module cốt lõi của V8.2
+### Boundary 3 — Graph Complexity
+- Chỉ giữ 5 loại relations cốt lõi (phục vụ Decision): `depends_on`, `conflicts_with`, `delegates_to`, `implemented_by`, `feeds`.
+- KHÔNG thêm các quan hệ Semantic mờ nhạt (như `related_to`, `similar_to`) biến graph thành Knowledge Map.
 
-Thay vì mở rộng Capability, V8.2 tập trung xây dựng Intelligence Layer:
-
-### 1. `qk-agent-analytics`
-- **Vai trò**: Phân tích dữ liệu (không viết code).
-- **Trọng tâm**: Routing accuracy, failure rates, conflict frequency.
-
-### 2. `qk-skill-optimizer`
-- **Vai trò**: Sinh đề xuất cải tiến.
-- **Ví dụ**: Phát hiện `qk-ui-builder` lỗi A11y 12% -> Đề xuất "Add accessibility checklist". Không tự động sửa file `SKILL.md`.
-
-### 3. `qk-decision-memory`
-- **Vai trò**: Ghi nhớ "Vì sao chọn Skill này?" (Pattern-based memory).
-- **Ví dụ**: Lưu trữ Candidate Scores và lý do (Reasoning) để học hỏi cho các lần routing sau, thay vì chỉ nhớ kết quả cuối cùng.
+### Boundary 4 — Agent Authority
+- **Agent được phép**: observe, measure, recommend, simulate.
+- **Agent KHÔNG được phép**: modify stable skill, change schema, promote itself, rewrite governance.
 
 ---
 
-## 4 Khoảng trống Kiến trúc cần giải quyết (V8.2 Targets)
+## Lộ trình 4 Phase (V8.2 Execution Phases)
 
-1. **Human Feedback Loop**: Kết nối đánh giá của con người (correction, rating, failure report) vào trong trọng số định tuyến (routing weight) và ưu tiên của skill.
-2. **Skill Version Compatibility**: Quản lý phiên bản chặt chẽ hơn (ví dụ: `requires: schema: 8.1`, `compatible_with: workflows: [...]`) để đảm bảo quá trình tự tiến hóa không làm vỡ các dependency.
-3. **Skill Benchmarking & Health Score**: Cấp độ sức khỏe động của skill (quality, usage, conflict, freshness). Ví dụ: Benchmark frontend với React (92), A11y (88), Performance (90).
-4. **Capability Knowledge Graph**: Nâng cấp capability-graph từ "static edges" sang chứa metadata động (success_rate, avg_latency, monthly_calls).
+### Phase 1 — Decision Memory (Ưu tiên số 1)
+Thu thập dữ liệu làm nền tảng cho Adaptive Routing.
+- Cấu trúc `decision_record`: Lưu trữ `input`, `candidates`, `selected`, `rejected`, `reason`, `confidence`, `human_feedback`.
+- Ghi nhớ "Vì sao chọn Skill này? Vì sao loại Skill kia?" để Agent có thể phân tích pattern.
+
+### Phase 2 — Skill Analytics
+Đánh giá sức khỏe của từng Capability thông qua công thức đa chiều:
+```yaml
+skill_health:
+  quality_score
+  usage_score
+  conflict_score
+  freshness_score
+  overall_score
+```
+*Lưu ý: Không chỉ đánh giá dựa trên tần suất sử dụng (usage), vì có những skill quan trọng nhưng ít gọi (như security).*
+
+### Phase 3 — Adaptive Routing
+Chuyển đổi từ đánh giá tĩnh sang động (với trọng số).
+- `dynamic score = intent_match + boundary_fit + historical_success + human_feedback`
+- **Ràng buộc tối thượng**: `Decision Boundary > Ranking Score`. Dù Score cao đến đâu, nếu vi phạm Boundary vẫn phải bị loại (Reject).
+
+### Phase 4 — Human Feedback Loop
+Thu thập phản hồi từ người dùng (Human correction).
+- **Khóa an toàn**: Human Feedback chỉ đóng vai trò là `routing signal` (tín hiệu định tuyến), không được phép trực tiếp thay đổi/đột biến (mutation) logic của Skill.
 
 ---
 
 ## Tầm nhìn V8.3+: Enterprise Multi-Agent (Deferred Domains)
+Các lĩnh vực dưới đây được khóa lại và không phát triển trong V8.2:
+1. **Product Management (`qk-product-strategy`)**: Ưu tiên, roadmap, market, user.
+2. **Backend Architecture (`qk-backend-architecture`)**: Phân định service boundary, architecture style, scalability.
+3. **Cloud Architecture (`qk-cloud-architecture`)**: AWS/GCP/Azure, networking, cost.
+4. **AI Engineering (`qk-ai-engineering`)**: Quản trị AI system, LLM architecture, RAG, prompt evaluation.
 
-Để tránh lặp lại sai lầm "nhiều skill, thiếu governance" của V7, các domain dưới đây được **khóa lại** và không phát triển trong V8.2. Chúng sẽ là nền tảng cho V8.3:
+---
 
-1. **Product Management (`qk-product-strategy`)**: Ưu tiên, roadmap, market, user (khác với `qk-product-specification` chỉ làm Idea -> Spec).
-2. **Backend Architecture (`qk-backend-architecture`)**: Phân định service boundary, architecture style, scalability (tách biệt với API lifecycle).
-3. **Cloud Architecture (`qk-cloud-architecture`)**: AWS/GCP/Azure, networking, cost (ủy quyền triển khai cho `qk-devops-platform`).
-4. **AI Engineering (`qk-ai-engineering`)**: Quản trị AI system, LLM architecture, RAG, prompt evaluation (bù đắp phần còn thiếu của AI System Management).
+## Non-Goals
+V8.2 will NOT:
+- create autonomous skill generation
+- modify stable capabilities automatically
+- replace human architecture review
+- optimize only for usage frequency
+- increase skill count without new decision boundary
