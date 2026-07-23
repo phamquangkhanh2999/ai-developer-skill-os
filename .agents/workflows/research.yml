@@ -1,0 +1,56 @@
+name: research
+version: 8.0.0
+description: "Pipeline nghiên cứu codebase để hiểu context, dependency, và architecture trước khi thực hiện task lớn."
+
+verification_profile: review
+
+steps:
+  - id: define_scope
+    name: "Xác định phạm vi nghiên cứu"
+    purpose: "Biết chính xác cần tìm hiểu gì để phục vụ task"
+    required: true
+    skip_if: null
+    inputs:
+      - research_goal    # What decision does this research enable?
+    outputs:
+      - research_questions   # Specific questions to answer
+      - entry_points         # Files to start reading
+    exit_on_fail: BLOCKED
+
+  - id: explore
+    name: "Khám phá codebase"
+    purpose: "Thu thập thông tin đủ để trả lời research questions"
+    required: true
+    skip_if: null
+    inputs:
+      - entry_points
+      - research_questions
+    outputs:
+      - findings           # Answers to research questions
+      - dependency_map     # How components relate
+      - relevant_files     # Files most relevant to the task
+    actions:
+      - "Dùng grep_search để tìm patterns, không đọc toàn bộ repo"
+      - "Đọc targeted sections (≤ 100 lines per read)"
+      - "Build mental model của dependency relationship"
+
+  - id: synthesize
+    name: "Tổng hợp kết quả"
+    purpose: "Trả lời research questions + tạo context cho task tiếp theo"
+    required: true
+    skip_if: null
+    inputs:
+      - findings
+      - dependency_map
+    outputs:
+      - context_summary      # Ready-to-use context for next skill
+      - architecture_notes   # Key patterns và conventions
+      - warnings             # Gotchas, deprecated patterns, risks
+    actions:
+      - "Viết summary ngắn gọn (không cần exhaustive)"
+      - "Flag các pattern cũ/deprecated nếu thấy"
+      - "Liệt kê relevant files để task tiếp theo load"
+
+escalation:
+  max_retries: 1
+  on_failure: "Report partial findings với confidence level"

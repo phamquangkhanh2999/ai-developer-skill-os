@@ -1,0 +1,99 @@
+name: feature-delivery
+version: 8.0.0
+description: "Pipeline end-to-end để phát triển tính năng mới: từ requirement đến verified implementation."
+
+verification_profile: feature
+
+steps:
+  - id: requirement
+    name: "Phân tích yêu cầu"
+    purpose: "Xác định rõ feature cần làm gì, cho ai, thành công trông như thế nào"
+    required: true
+    skip_if: null
+    inputs:
+      - user_description
+      - existing_context
+    outputs:
+      - feature_scope        # What's in, what's out
+      - acceptance_criteria  # How to know it's done
+      - affected_areas       # Which parts of codebase are touched
+    min_confidence: HIGH
+    actions:
+      - "Viết lại requirement bằng ngôn ngữ kỹ thuật"
+      - "Xác định acceptance criteria rõ ràng"
+      - "Identify files/modules sẽ bị ảnh hưởng"
+    exit_on_fail: BLOCKED
+
+  - id: context
+    name: "Load context"
+    purpose: "Hiểu codebase hiện tại đủ để implement đúng cách"
+    required: true
+    skip_if: "Context graph đã có từ qk-context-loader"
+    inputs:
+      - affected_areas
+    outputs:
+      - existing_patterns    # How similar things are done in this codebase
+      - integration_points   # Where new code will connect
+      - constraints          # Tech stack, conventions to follow
+    actions:
+      - "Đọc các file liên quan (targeted, không đọc toàn bộ)"
+      - "Tìm pattern tương tự trong codebase"
+      - "Xác định integration points"
+
+  - id: design
+    name: "Thiết kế solution"
+    purpose: "Quyết định approach trước khi code"
+    required: true
+    skip_if: "Feature đơn giản, single file, no design decision needed"
+    inputs:
+      - feature_scope
+      - existing_patterns
+      - constraints
+    outputs:
+      - implementation_plan  # Files to create/modify + what changes
+      - data_structures      # New types, interfaces if needed
+      - api_contract         # If adding/changing API
+    min_confidence: HIGH
+    actions:
+      - "Outline: files to create, files to modify"
+      - "Define data structures và types"
+      - "Xác định API contract nếu cần"
+
+  - id: implement
+    name: "Implement"
+    purpose: "Viết code theo design đã approved"
+    required: true
+    skip_if: null
+    inputs:
+      - implementation_plan
+      - existing_patterns
+    outputs:
+      - created_files
+      - modified_files
+      - implementation_summary
+    actions:
+      - "Implement theo thứ tự: types → logic → UI → tests"
+      - "Follow existing patterns và conventions"
+      - "Không refactor ngoài scope"
+
+  - id: verify
+    name: "Verify implementation"
+    purpose: "Xác nhận feature hoạt động đúng theo acceptance criteria"
+    required: true
+    skip_if: null
+    inputs:
+      - acceptance_criteria
+      - created_files
+      - modified_files
+    outputs:
+      - verification_result
+      - unmet_criteria      # Any criteria not yet met
+    actions:
+      - "Đối chiếu từng acceptance criterion"
+      - "Re-read key implementation sections"
+      - "Run tests nếu có"
+    exit_on_fail: PARTIAL
+
+escalation:
+  max_retries: 1
+  on_failure: "Report implementation_plan + what was completed + what remains + blocker reason"

@@ -1,0 +1,30 @@
+# .agentsignore — AI Agent Boundary File
+# Files and directories AI agents should NOT load as knowledge context.
+# Syntax follows .gitignore conventions.
+
+# Build artifacts
+node_modules/
+dist/
+build/
+.cache/
+
+# Dev tooling (not knowledge)
+tooling/
+tests/
+
+# Version control
+.git/
+.github/
+
+# Packaging
+*.lock
+package-lock.json
+
+# Binary / generated
+*.min.js
+*.min.css
+*.map
+
+# OS artifacts
+.DS_Store
+Thumbs.db

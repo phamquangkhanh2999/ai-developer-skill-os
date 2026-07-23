@@ -1,0 +1,71 @@
+name: documentation
+version: 8.0.0
+description: "Pipeline viết và cập nhật tài liệu chính xác — phải match code thực tế, cấm bịa đặt."
+
+verification_profile: documentation
+
+steps:
+  - id: audit_existing
+    name: "Kiểm tra tài liệu hiện tại"
+    purpose: "Xác định docs nào cần tạo mới, cập nhật, hay xóa"
+    required: true
+    skip_if: "Task là tạo doc mới hoàn toàn"
+    inputs:
+      - target_docs
+      - relevant_code
+    outputs:
+      - outdated_sections    # Sections that no longer match code
+      - missing_sections     # Things in code but not in docs
+      - accurate_sections    # Keep as-is
+
+  - id: read_source
+    name: "Đọc source code"
+    purpose: "Hiểu chính xác behavior của code trước khi viết về nó"
+    required: true
+    skip_if: null
+    inputs:
+      - relevant_code_files
+    outputs:
+      - verified_behavior    # What the code actually does
+      - api_signatures       # Function signatures, types, params
+      - examples_from_code   # Real usage examples found in codebase
+    min_confidence: HIGH
+    actions:
+      - "Đọc implementation, không chỉ interface"
+      - "Xác nhận examples từ test files nếu có"
+      - "Không assume behavior — phải verify từ code"
+
+  - id: write
+    name: "Viết tài liệu"
+    purpose: "Tạo tài liệu chính xác và hữu ích"
+    required: true
+    skip_if: null
+    inputs:
+      - verified_behavior
+      - api_signatures
+      - examples_from_code
+    outputs:
+      - draft_documentation
+    actions:
+      - "Chỉ viết những gì đã verify từ code"
+      - "Dùng examples thật từ codebase"
+      - "Structure: What → Why → How → Examples"
+
+  - id: verify_accuracy
+    name: "Xác minh độ chính xác"
+    purpose: "Đảm bảo doc không có thông tin sai hoặc lỗi thời"
+    required: true
+    skip_if: null
+    inputs:
+      - draft_documentation
+      - verified_behavior
+    outputs:
+      - accuracy_check    # PASS | FAIL with specific issues
+    actions:
+      - "So sánh từng claim trong doc với code thực tế"
+      - "Flag bất kỳ thứ gì không thể verify từ code"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 1
+  on_failure: "Report which sections could not be verified. Do not publish unverified content."

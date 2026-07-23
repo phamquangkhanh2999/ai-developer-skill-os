@@ -1,0 +1,73 @@
+name: code-review
+version: 8.0.0
+description: "Pipeline kiểm tra chất lượng code theo SOLID, DRY, Clean Code và ngưỡng số liệu cụ thể."
+
+verification_profile: review
+
+steps:
+  - id: scope
+    name: "Xác định phạm vi review"
+    purpose: "Biết chính xác files/modules cần review"
+    required: true
+    skip_if: "Files đã được chỉ định rõ ràng"
+    inputs:
+      - target_files_or_module
+    outputs:
+      - file_list
+      - review_focus    # bug, quality, security, performance, all
+    exit_on_fail: BLOCKED
+
+  - id: static_analysis
+    name: "Phân tích tĩnh"
+    purpose: "Thu thập findings có bằng chứng rõ ràng"
+    required: true
+    skip_if: null
+    inputs:
+      - file_list
+      - review_focus
+    outputs:
+      - findings         # Each: severity + file + line + quote + reason + suggestion
+    min_confidence: HIGH
+    actions:
+      - "Đọc từng file theo budget (max 150 lines per read)"
+      - "Flag SOLID violations với ngưỡng cụ thể"
+      - "Flag DRY violations (≥ 2 duplications)"
+      - "Flag naming violations"
+      - "Flag error handling issues"
+
+  - id: severity_triage
+    name: "Phân loại mức độ"
+    purpose: "Xếp findings theo priority để human biết fix gì trước"
+    required: true
+    skip_if: null
+    inputs:
+      - findings
+    outputs:
+      - critical_findings    # Must fix: security, data loss risk
+      - high_findings        # Should fix: logic bugs, architecture violations
+      - medium_findings      # Consider: quality improvements
+      - low_findings         # Optional: style, minor naming
+    actions:
+      - "Áp dụng severity matrix: CRITICAL > HIGH > MEDIUM > LOW"
+      - "Không inflate severity để look impressive"
+
+  - id: report
+    name: "Tổng hợp báo cáo"
+    purpose: "Cung cấp báo cáo actionable cho developer"
+    required: true
+    skip_if: null
+    inputs:
+      - critical_findings
+      - high_findings
+      - medium_findings
+    outputs:
+      - review_report    # Structured markdown report
+      - health_score     # 0-100
+    actions:
+      - "Group findings theo file"
+      - "Mỗi finding: file:line + code quote + explanation + suggestion"
+      - "Tính health score: 100 - (critical×20 + high×10 + medium×3 + low×1)"
+
+escalation:
+  max_retries: 1
+  on_failure: "Report partial findings với số files đã review / tổng"

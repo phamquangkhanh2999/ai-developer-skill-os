@@ -1,0 +1,103 @@
+# Workflow Schema — V8 Standard
+# Every workflow YAML file MUST conform to this schema.
+# Version: 8.0.0
+
+schema_version: 8.0.0
+
+# ── Required top-level fields ──────────────────────────────
+required:
+  - name          # string: workflow identifier (kebab-case)
+  - version       # semver: 8.x.x
+  - description   # string: one sentence
+  - steps         # array: minimum 2 steps
+  - escalation    # object: retry + on_failure
+
+# ── Required fields per step ────────────────────────────────
+step_required:
+  - id            # string: unique within workflow (snake_case)
+  - name          # string: human-readable step name
+  - purpose       # string: WHAT the step achieves (not HOW)
+  - inputs        # array: what this step needs to start
+  - outputs       # array: what this step produces when done
+  - required      # bool: true = cannot be skipped
+
+# ── Optional fields per step ────────────────────────────────
+step_optional:
+  - skip_if       # string: condition under which step can be skipped
+  - exit_on_fail  # enum: BLOCKED | PARTIAL | FAILED
+  - min_confidence # enum: HIGH | MEDIUM (default: HIGH)
+  - actions       # array: hints for HOW to achieve the purpose
+
+# ── Complexity definitions ──────────────────────────────────
+complexity_levels:
+  low:
+    files_affected: "1"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+    examples: ["fix typo", "rename variable", "add comment"]
+
+  medium:
+    files_affected: "2-5"
+    has_behavior_change: true
+    has_external_dependency: false
+    has_breaking_change: false
+    examples: ["fix bug", "add feature to existing module", "refactor function"]
+
+  high:
+    files_affected: "5+"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+    examples: ["add new API endpoint", "database migration", "new component with state"]
+
+  critical:
+    files_affected: "many"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: true
+    examples: ["architecture change", "breaking API change", "auth system overhaul"]
+
+# ── Verification profiles ────────────────────────────────────
+verification_profiles:
+  bug-fix:
+    - regression_check    # Does the fix break anything else?
+    - root_cause_fixed    # Is the real cause addressed (not patched)?
+    - lint_clean          # No lint errors introduced
+    - test_if_available   # Run related tests if they exist
+
+  refactor:
+    - behavior_unchanged  # External behavior identical before/after
+    - test_pass           # All existing tests still pass
+    - lint_clean
+    - no_new_complexity   # Cyclomatic complexity not increased
+
+  feature:
+    - acceptance_criteria # Does it meet the stated requirements?
+    - test_coverage       # New logic has tests
+    - integration_check   # Works with existing system
+    - lint_clean
+
+  documentation:
+    - accuracy            # Content matches actual code behavior
+    - completeness        # All required sections present
+    - no_broken_links     # References are valid
+
+  review:
+    - findings_have_evidence   # Each finding has file+line+quote
+    - severity_justified       # Severity level is appropriate
+    - actionable_suggestions   # Each finding has a fix suggestion
+
+# ── Escalation schema ────────────────────────────────────────
+escalation_required: true
+escalation_fields:
+  required:
+    - max_retries    # int: max retry attempts (recommended: 2)
+    - on_failure     # string: what to do when all retries exhausted
+
+# ── Exit codes ───────────────────────────────────────────────
+exit_codes:
+  SUCCESS:  "Task completed and verified"
+  BLOCKED:  "Precondition not met — waiting for input"
+  FAILED:   "Execution failed after max_retries"
+  PARTIAL:  "Partially completed — output + reason provided"

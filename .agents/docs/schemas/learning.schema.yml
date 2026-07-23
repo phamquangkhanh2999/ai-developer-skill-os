@@ -1,0 +1,69 @@
+# Learning Schema — V8
+# Defines the required structure for all learning files.
+
+schema_version: 8.0.0
+
+# ── Required fields for all learnings ──────────────────────
+required:
+  claim:
+    type: string
+    description: "A specific, falsifiable statement about agent/workflow behavior"
+    example: "Bug fixes using hypothesis-first approach have 40% lower regression rate"
+
+  context:
+    type: string
+    description: "When does this learning apply?"
+    example: "When diagnosing bugs with incomplete stack traces"
+
+  lifecycle:
+    type: enum
+    values: [draft, validated, deprecated]
+
+# ── Required only for validated learnings ──────────────────
+validated_required:
+  evidence:
+    type: array
+    description: "References to issues, experiments, or benchmarks that support this claim"
+    example: ["issue-102", "experiment-2026-07"]
+
+  validated_by:
+    type: enum
+    values: [human, benchmark]
+
+  validated_date:
+    type: date
+    example: "2026-07"
+
+# ── Optional fields ─────────────────────────────────────────
+optional:
+  counter_examples:
+    type: array
+    description: "Cases where this learning does NOT apply"
+
+  superseded_by:
+    type: string
+    description: "For deprecated: which learning replaced this one"
+
+  related_skills:
+    type: array
+    description: "Skills that should reference this learning"
+
+# ── Lifecycle transitions ────────────────────────────────────
+lifecycle_rules:
+  draft_to_validated:
+    - "Human review required"
+    - "Evidence field must be filled"
+    - "Git commit message must include [validated]"
+
+  validated_to_deprecated:
+    - "Superseded_by field must reference the newer learning"
+    - "Keep file in deprecated/ for 6 months then can archive"
+
+  agent_can:
+    - "Create draft learnings"
+    - "Read validated learnings"
+
+  agent_cannot:
+    - "Promote draft to validated"
+    - "Delete any learning"
+    - "Modify validated learnings"

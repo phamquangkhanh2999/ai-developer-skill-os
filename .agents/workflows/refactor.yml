@@ -1,0 +1,77 @@
+name: refactor
+version: 8.0.0
+description: "Pipeline refactor an toàn: giữ nguyên behavior bên ngoài, cải thiện chất lượng bên trong."
+
+verification_profile: refactor
+
+steps:
+  - id: baseline
+    name: "Thiết lập baseline"
+    purpose: "Hiểu code hiện tại trước khi thay đổi"
+    required: true
+    skip_if: null
+    inputs:
+      - target_files
+      - refactor_goal    # e.g. "extract functions", "reduce complexity", "improve naming"
+    outputs:
+      - current_behavior_summary   # What the code does now
+      - pain_points                # Specific issues to address
+      - test_coverage_status       # Có tests không?
+    actions:
+      - "Đọc toàn bộ target section"
+      - "Mô tả behavior hiện tại"
+      - "Identify specific code smells"
+    exit_on_fail: BLOCKED
+
+  - id: plan
+    name: "Lên kế hoạch refactor"
+    purpose: "Quyết định approach để không thay đổi external behavior"
+    required: true
+    skip_if: null
+    inputs:
+      - pain_points
+      - current_behavior_summary
+    outputs:
+      - refactor_steps     # Ordered list of changes
+      - risk_assessment    # What could break
+      - rollback_point     # Git commit or checkpoint
+    min_confidence: HIGH
+    actions:
+      - "Outline từng bước thay đổi"
+      - "Xác định gì có thể break"
+
+  - id: execute
+    name: "Thực hiện refactor"
+    purpose: "Apply changes theo plan, step by step"
+    required: true
+    skip_if: null
+    inputs:
+      - refactor_steps
+    outputs:
+      - modified_files
+      - changes_summary
+    actions:
+      - "Làm từng bước nhỏ, verify sau mỗi bước"
+      - "Không refactor ngoài scope đã định"
+      - "Không add functionality mới trong khi refactor"
+
+  - id: verify
+    name: "Verify behavior unchanged"
+    purpose: "Xác nhận external behavior giống hệt trước refactor"
+    required: true
+    skip_if: null
+    inputs:
+      - current_behavior_summary
+      - modified_files
+    outputs:
+      - behavior_preserved    # true/false
+      - test_results          # pass/fail/na
+    actions:
+      - "Re-read modified sections"
+      - "So sánh với current_behavior_summary"
+      - "Chạy tests nếu có"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 1
+  on_failure: "Revert to rollback_point. Report what was completed and what remains."

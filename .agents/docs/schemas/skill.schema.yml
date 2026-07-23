@@ -1,0 +1,117 @@
+# Skill Schema — V8
+
+# This file defines the required and optional fields for all SKILL.md frontmatter.
+# Every skill MUST conform to this schema. Validator: tooling/validate-skills.js
+
+schema_version: 8.0.0
+
+# ── Required fields ────────────────────────────────────────
+required:
+  name:
+    type: string
+    pattern: "^qk-[a-z-]+$"
+    example: "qk-bug-resolution"
+
+  version:
+    type: semver
+    example: "8.0.0"
+
+  description:
+    type: string
+    maxLength: 120
+    example: "Sửa lỗi bằng chu trình khép kín: Observe → Hypothesize → Evidence → Fix."
+
+  platforms:
+    type: array
+    items: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+  type:
+    type: enum
+    values: [capability, utility, orchestrator]
+    example: "capability"
+
+  intent:
+    type: array
+    minItems: 1
+    example: [bug-fixing, debugging]
+
+  complexity:
+    type: object
+    required_fields: [level]
+    optional_fields: [criteria]
+    levels: [low, medium, high, critical]
+
+  triggers:
+    type: array
+    minItems: 2
+    description: "Keywords that cause AI to select this skill"
+    example: ["fix bug", "lỗi", "crash"]
+
+  workflow:
+    type: string
+    description: "References workflows/<name>.yml"
+    example: "bug-resolution"
+
+  verification:
+    type: object
+    required_fields: [required, strategy]
+    strategies: [bug-fix, refactor, feature, documentation, review, none]
+
+  execution_mode:
+    type: enum
+    values: [deterministic]
+
+  token_budget:
+    type: object
+    required_fields: [max_files_read, max_lines_per_read, max_shell_commands, stop_early]
+
+  exit_codes:
+    type: array
+    items: [SUCCESS, BLOCKED, FAILED, PARTIAL]
+
+# ── Optional fields ─────────────────────────────────────────
+optional:
+  rules:
+    type: array
+    description: "References rules/<name>.md"
+    example: [global, coding]
+
+  tools:
+    type: array
+    example: [filesystem, git, browser]
+
+  related_skills:
+    type: array
+    description: "Skills often used together"
+    example: [qk-engineering-standard]
+
+  examples:
+    type: array
+    description: "References examples/good/*.md"
+
+  learnings:
+    type: array
+    description: "References learnings/validated/*.md"
+
+  cost:
+    type: enum
+    values: [low, medium, high]
+
+  latency:
+    type: enum
+    values: [fast, medium, slow]
+
+  risk:
+    type: enum
+    values: [low, medium, high]
+
+  side_effects:
+    type: enum
+    values: [edit_files, run_commands, read_only, none]
+
+  produces:
+    type: array
+    items: [code, report, schema, plan, tokens]
+
+  consumes:
+    type: array

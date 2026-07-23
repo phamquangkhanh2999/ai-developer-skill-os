@@ -1,0 +1,97 @@
+name: bug-resolution
+version: 8.0.0
+description: "Pipeline chuẩn để diagnose và fix bugs theo chu trình: Observe → Hypothesize → Evidence → Patch → Verify."
+
+verification_profile: bug-fix
+
+steps:
+  - id: observe
+    name: "Thu thập triệu chứng"
+    purpose: "Xác định chính xác bug xảy ra ở đâu và biểu hiện thế nào"
+    required: true
+    skip_if: "Stack trace + affected file đã được cung cấp đầy đủ"
+    inputs:
+      - error_message
+      - stack_trace
+      - user_description
+    outputs:
+      - affected_file
+      - affected_line_range
+      - error_signature
+    actions:
+      - "Đọc error message và stack trace"
+      - "Xác định file và line range bị ảnh hưởng"
+      - "Mô tả triệu chứng bằng ngôn ngữ kỹ thuật"
+    exit_on_fail: BLOCKED
+
+  - id: hypothesize
+    name: "Đặt giả thuyết nguyên nhân"
+    purpose: "Xác định top 3 nguyên nhân có thể, xếp theo xác suất"
+    required: true
+    skip_if: null
+    inputs:
+      - error_signature
+      - affected_file
+    outputs:
+      - hypothesis_list      # Ordered list: [H1 (most likely), H2, H3]
+      - selected_hypothesis  # H1 unless evidence suggests otherwise
+    min_confidence: HIGH
+    actions:
+      - "List 3 nguyên nhân có thể gây ra triệu chứng này"
+      - "Xếp hạng theo xác suất dựa trên stack trace"
+      - "Chọn H1 để kiểm chứng trước"
+
+  - id: evidence
+    name: "Tìm bằng chứng xác nhận"
+    purpose: "Xác nhận hoặc loại bỏ hypothesis bằng code thực tế"
+    required: true
+    skip_if: null
+    inputs:
+      - selected_hypothesis
+      - affected_file
+    outputs:
+      - confirmed_root_cause   # File + line + quoted code
+      - evidence_quote         # Exact code causing the bug
+    min_confidence: HIGH
+    actions:
+      - "Dùng grep_search để tìm pattern liên quan"
+      - "Dùng view_file[StartLine:EndLine] để đọc section cụ thể"
+      - "Quote chính xác đoạn code gây bug"
+    exit_on_fail: PARTIAL
+
+  - id: patch
+    name: "Áp dụng fix"
+    purpose: "Sửa root cause, không chỉ patch triệu chứng"
+    required: true
+    skip_if: null
+    inputs:
+      - confirmed_root_cause
+      - evidence_quote
+    outputs:
+      - patched_files    # List of files modified
+      - diff_summary     # What changed and why
+    actions:
+      - "Edit source file trực tiếp với replace_file_content hoặc multi_replace_file_content"
+      - "Không tạo wrapper script"
+      - "Không dùng ?. hoặc ! để silence lỗi"
+      - "Fix root cause, không patch bề mặt"
+
+  - id: verify
+    name: "Xác minh fix"
+    purpose: "Xác nhận bug đã được fix và không có regression"
+    required: true
+    skip_if: null
+    inputs:
+      - patched_files
+    outputs:
+      - verification_result   # PASS | FAIL | PARTIAL
+      - evidence_of_fix       # Re-read patched section
+    actions:
+      - "Re-read patched code section"
+      - "Chạy test liên quan nếu có"
+      - "Kiểm tra caller/dependent nếu interface thay đổi"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 2
+  on_failure: "Report với full evidence chain (observe→hypothesis→evidence), escalate to human với gợi ý bước tiếp theo"
