@@ -1,0 +1,11 @@
+case:
+  id: wf-001
+input:
+  "Từ ý tưởng app chat, viết spec xong mới làm"
+expected:
+  primary_skill:
+    qk-product-specification
+  forbidden:
+    - qk-feature-delivery
+  confidence:
+    min: 0.8

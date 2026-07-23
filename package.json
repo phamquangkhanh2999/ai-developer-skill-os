@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:registry": "vitest run --config vitest.config.js",
     "lint": "node bin/lint.js",
+    "test:agent": "node tests/agent-evaluation/runner/evaluate-routing.js",
     "install:antigravity": "node bin/install.js --ide=antigravity --scope=2",
     "install:antigravity:local": "node bin/install.js --ide=antigravity --scope=1",
     "install:cursor": "node bin/install.js --ide=cursor --scope=2",

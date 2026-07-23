@@ -139,15 +139,23 @@ optional:
 
   knowledge_scope:
     type: object
-    description: "Defines what knowledge this skill owns vs. references"
+    description: "Defines what knowledge this skill knows vs. references"
+    fields:
+      domain:
+        type: array
+      concepts:
+        type: array
+      references:
+        type: array
+
+  decision_boundary:
+    type: object
+    description: "Defines what decisions this skill is authorized to make"
     fields:
       owns:
         type: array
-        description: "Topics this skill is the authoritative source for"
-        example: [bug-diagnosis, error-analysis, fix-strategies]
-      references:
+      does_not_own:
         type: array
-        description: "Topics this skill uses but does NOT own"
-        example: [testing, git, linting]
-    note: "A skill should NOT embed knowledge it only references. Use rules/ or learnings/ instead."
+      conflicts_with:
+        type: array
 

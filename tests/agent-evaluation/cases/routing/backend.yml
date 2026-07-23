@@ -1,0 +1,11 @@
+case:
+  id: backend-001
+input:
+  "Viết middleware auth cho API"
+expected:
+  primary_skill:
+    qk-access-policy
+  forbidden:
+    - qk-api-lifecycle
+  confidence:
+    min: 0.8

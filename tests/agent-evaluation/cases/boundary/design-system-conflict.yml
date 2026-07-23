@@ -1,0 +1,11 @@
+case:
+  id: bound-001
+input:
+  "Tạo màu và typography cho thương hiệu mới"
+expected:
+  primary_skill:
+    qk-design-system-engineering
+  forbidden:
+    - qk-ui-system-builder
+  confidence:
+    min: 0.8

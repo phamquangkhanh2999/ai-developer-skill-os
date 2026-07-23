@@ -1,0 +1,11 @@
+case:
+  id: wf-003
+input:
+  "Quét hệ thống trước khi deploy"
+expected:
+  primary_skill:
+    qk-security-audit
+  forbidden:
+    - qk-production-release
+  confidence:
+    min: 0.8

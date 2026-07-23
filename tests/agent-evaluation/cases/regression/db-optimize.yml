@@ -1,0 +1,11 @@
+case:
+  id: reg-002
+input:
+  "Câu query chậm"
+expected:
+  primary_skill:
+    qk-db-optimizer
+  forbidden:
+    - qk-bug-resolution
+  confidence:
+    min: 0.8

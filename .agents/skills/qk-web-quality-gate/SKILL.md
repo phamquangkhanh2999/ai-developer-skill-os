@@ -46,16 +46,33 @@ related_skills:
   - qk-frontend-architecture
 
 knowledge_scope:
-  owns:
+  domain:
     - web-performance
     - web-accessibility
+  concepts:
+    - lighthouse
+    - seo
+    - ux-heuristics
   references:
     - architecture
+
+decision_boundary:
+  owns:
+    - lighthouse audit
+    - accessibility review
+    - performance audit
+    - seo audit
+  does_not_own:
+    - ui component implementation
+  conflicts_with: []
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
   required: true
-  strategy: feature
+  strategy: 
+    - lighthouse
+    - accessibility
+    - performance
 
 selection:
   priority: medium

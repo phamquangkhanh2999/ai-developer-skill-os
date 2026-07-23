@@ -1,0 +1,11 @@
+case:
+  id: bound-004
+input:
+  "Viết tiêu chí nghiệm thu cho tính năng giỏ hàng"
+expected:
+  primary_skill:
+    qk-product-specification
+  forbidden:
+    - qk-feature-delivery
+  confidence:
+    min: 0.8

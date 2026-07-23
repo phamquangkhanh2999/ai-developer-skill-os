@@ -1,0 +1,11 @@
+case:
+  id: sec-001
+input:
+  "Kiểm tra xem thư viện có lỗi bảo mật không"
+expected:
+  primary_skill:
+    qk-security-audit
+  forbidden:
+    - qk-validation-gate
+  confidence:
+    min: 0.8

@@ -1,0 +1,12 @@
+case:
+  id: bound-002
+input:
+  "Code nút bấm màu đỏ theo thiết kế figma"
+expected:
+  primary_skill:
+    qk-ui-builder
+  forbidden:
+    - qk-design-system-engineering
+    - qk-frontend-architecture
+  confidence:
+    min: 0.8

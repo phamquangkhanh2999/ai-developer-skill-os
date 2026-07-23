@@ -1,50 +1,31 @@
 /**
  * generate-registry.js
- * Generates registry/skills-index.yml from SKILL.md frontmatter.
+ * Generates registry/skills-index.yml and registry/capability-graph.yml
  *
  * Usage: node tooling/generate-registry.js
- * Output: .agents/registry/skills-index.yml
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SKILLS_DIR = path.join(__dirname, '../.agents/skills');
-const OUTPUT_FILE = path.join(__dirname, '../.agents/registry/skills-index.yml');
+const INDEX_FILE = path.join(__dirname, '../.agents/registry/skills-index.yml');
+const GRAPH_FILE = path.join(__dirname, '../.agents/registry/capability-graph.yml');
 
 function parseFrontmatter(content) {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return null;
   
-  // Simple YAML key extraction (for specific fields we need)
-  const yaml = match[1];
-  const extract = (key, isArray = false) => {
-    if (isArray) {
-      const arrayMatch = yaml.match(new RegExp(`^${key}:\\s*\\n([\\s\\S]*?)(?=^\\w|$)`, 'm'));
-      if (!arrayMatch) return [];
-      return arrayMatch[1].match(/^\s+-\s+"?([^"\n]+)"?/gm)
-        ?.map(l => l.replace(/^\s+-\s+"?|"?$/g, '').trim()) || [];
-    }
-    const m = yaml.match(new RegExp(`^${key}:\\s*(.+)`, 'm'));
-    return m ? m[1].trim().replace(/^["']|["']$/g, '') : null;
-  };
-
-  return {
-    name: extract('name'),
-    description: extract('description'),
-    version: extract('version') || '7.5.0',
-    status: extract('status') || 'legacy',
-    complexity_level: yaml.match(/^\s+level:\s*(.+)/m)?.[1]?.trim() || extract('complexity'),
-    triggers: extract('triggers', true),
-    intent: extract('intent', true),
-    workflow: extract('workflow'),
-    related_skills: extract('related_skills', true),
-    verification: yaml.includes('verification:'),
-    selection: yaml.includes('selection:')
-  };
+  try {
+    return yaml.load(match[1]);
+  } catch (e) {
+    console.error('YAML parse error:', e.message);
+    return null;
+  }
 }
 
 function generate() {
@@ -72,9 +53,9 @@ function generate() {
     }
 
     // Schema Validation Enforcement
-    if (meta.status === 'stable' && meta.version.startsWith('8.')) {
+    if (meta.status === 'stable' && meta.version && meta.version.startsWith('8.')) {
       if (!meta.intent || !meta.workflow || !meta.verification || !meta.selection) {
-        console.warn(`[WARN] Rejecting ${meta.name} (v8): Missing required schema fields (intent, workflow, verification, selection)`);
+        console.warn(`[WARN] Rejecting ${meta.name} (v8): Missing required schema fields`);
         continue;
       }
     }
@@ -82,48 +63,79 @@ function generate() {
     skills.push(meta);
   }
 
-  // Build index grouped by triggers
-  const triggerMap = {};
-  for (const skill of skills) {
-    for (const trigger of (skill.triggers || [])) {
-      if (!triggerMap[trigger]) triggerMap[trigger] = [];
-      triggerMap[trigger].push(skill.name);
+  // 1. Generate skills-index.yml (Backward compatibility)
+  const indexData = {
+    version: "8.1.1",
+    generated_at: new Date().toISOString(),
+    total_skills: skills.length,
+    skills: skills.map(s => ({
+      name: s.name,
+      version: s.version || "8.0.0",
+      status: s.status || "legacy",
+      description: s.description || "",
+      complexity: s.complexity?.level || "medium",
+      workflow: s.workflow || null,
+      triggers: s.triggers || [],
+      intent: s.intent || []
+    }))
+  };
+
+  fs.mkdirSync(path.dirname(INDEX_FILE), { recursive: true });
+  fs.writeFileSync(INDEX_FILE, `# registry/skills-index.yml\n# GENERATED FILE — DO NOT EDIT MANUALLY\n` + yaml.dump(indexData, { indent: 2 }), 'utf8');
+
+  // 2. Generate capability-graph.yml (V8.1.1)
+  const nodes = {};
+  const edges = [];
+
+  for (const s of skills) {
+    nodes[s.name] = {
+      type: s.type || 'capability',
+      maturity: s.status || 'legacy',
+      owns: s.decision_boundary?.owns || [],
+      does_not_own: s.decision_boundary?.does_not_own || [],
+      conflicts: s.decision_boundary?.conflicts_with || [],
+      workflow: s.workflow || null
+    };
+
+    if (s.workflow) {
+      edges.push({
+        from: s.name,
+        to: s.workflow,
+        relation: 'depends_on'
+      });
+    }
+    
+    if (s.decision_boundary?.conflicts_with) {
+      for (const conflict of s.decision_boundary.conflicts_with) {
+        edges.push({
+          from: s.name,
+          to: conflict,
+          relation: 'conflicts_with'
+        });
+      }
+    }
+    
+    if (s.related_skills) {
+       for (const related of s.related_skills) {
+         edges.push({
+           from: s.name,
+           to: related,
+           relation: 'feeds'
+         });
+       }
     }
   }
 
-  // Generate YAML output
-  let yaml = `# registry/skills-index.yml
-# GENERATED FILE — DO NOT EDIT MANUALLY
-# Source: .agents/skills/*/SKILL.md
-# Regenerate: node tooling/generate-registry.js
-#
-version: 8.0.0
-generated_at: "${new Date().toISOString()}"
-total_skills: ${skills.length}
+  const graphData = {
+    version: "8.1.1",
+    generated_at: new Date().toISOString(),
+    nodes,
+    edges
+  };
 
-# ── Skills catalog ────────────────────────────────────────
-skills:\n`;
+  fs.writeFileSync(GRAPH_FILE, `# registry/capability-graph.yml\n# GENERATED FILE — DO NOT EDIT MANUALLY\n` + yaml.dump(graphData, { indent: 2 }), 'utf8');
 
-  for (const skill of skills) {
-    yaml += `  - name: ${skill.name}\n`;
-    yaml += `    version: "${skill.version}"\n`;
-    yaml += `    status: ${skill.status}\n`;
-    yaml += `    description: "${skill.description || ''}"\n`;
-    yaml += `    complexity: ${skill.complexity_level || 'medium'}\n`;
-    yaml += `    workflow: ${skill.workflow || 'null'}\n`;
-    if (skill.triggers?.length) {
-      yaml += `    triggers:\n${skill.triggers.map(t => `      - "${t}"`).join('\n')}\n`;
-    }
-    if (skill.intent?.length) {
-      yaml += `    intent:\n${skill.intent.map(i => `      - ${i}`).join('\n')}\n`;
-    }
-    yaml += '\n';
-  }
-
-  // Write output
-  fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
-  fs.writeFileSync(OUTPUT_FILE, yaml, 'utf8');
-  console.log(`✅ Generated registry with ${skills.length} skills → ${OUTPUT_FILE}`);
+  console.log(`✅ Generated registry index and capability graph with ${skills.length} skills`);
 }
 
 generate();

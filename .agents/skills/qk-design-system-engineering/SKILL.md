@@ -43,11 +43,25 @@ related_skills:
   - qk-frontend-architecture
 
 knowledge_scope:
-  owns:
-    - design-system-rules
+  domain:
+    - design-system
+    - tokens
+  concepts:
     - visual-consistency
+    - components-rules
   references:
     - architecture
+
+decision_boundary:
+  owns:
+    - tokens
+    - components rules
+    - design governance
+  does_not_own:
+    - page implementation
+    - business logic
+  conflicts_with:
+    - qk-ui-system-builder
 
 # ── V8: Verification ───────────────────────────────────────
 verification:

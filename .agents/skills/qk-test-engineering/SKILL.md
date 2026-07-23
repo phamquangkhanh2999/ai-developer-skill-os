@@ -46,11 +46,24 @@ related_skills:
   - qk-engineering-standard
 
 knowledge_scope:
-  owns:
+  domain:
     - testing-strategy
-    - testing-pyramid
+    - quality-assurance
+  concepts:
+    - test-pyramid
+    - mock-strategy
   references:
     - architecture
+
+decision_boundary:
+  owns:
+    - test pyramid
+    - coverage strategy
+    - regression planning
+  does_not_own:
+    - business logic implementation
+    - writing tests
+  conflicts_with: []
 
 # ── V8: Verification ───────────────────────────────────────
 verification:

@@ -1,0 +1,11 @@
+case:
+  id: wf-002
+input:
+  "Đóng gói app nhưng nhớ check bảo mật trước"
+expected:
+  primary_skill:
+    qk-validation-gate
+  forbidden:
+    - qk-production-release
+  confidence:
+    min: 0.8

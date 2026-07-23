@@ -1,0 +1,11 @@
+case:
+  id: bound-003
+input:
+  "Lên chiến lược viết test cho app e-commerce"
+expected:
+  primary_skill:
+    qk-test-engineering
+  forbidden:
+    - qk-validation-gate
+  confidence:
+    min: 0.8

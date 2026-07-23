@@ -44,11 +44,24 @@ related_skills:
   - qk-access-policy
 
 knowledge_scope:
-  owns:
+  domain:
     - security-practices
     - vulnerability-detection
+  concepts:
+    - owasp
+    - secret-detection
   references:
     - architecture
+
+decision_boundary:
+  owns:
+    - application-security
+    - agent-security
+    - prompt-injection
+    - dependency-risk
+  does_not_own:
+    - access control implementation
+  conflicts_with: []
 
 # ── V8: Verification ───────────────────────────────────────
 verification:

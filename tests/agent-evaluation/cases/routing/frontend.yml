@@ -1,0 +1,11 @@
+case:
+  id: frontend-001
+input:
+  "App React 100 pages tổ chức thế nào?"
+expected:
+  primary_skill:
+    qk-frontend-architecture
+  forbidden:
+    - qk-ui-builder
+  confidence:
+    min: 0.8

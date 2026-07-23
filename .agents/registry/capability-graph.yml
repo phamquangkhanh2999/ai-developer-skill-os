@@ -1,0 +1,455 @@
+# registry/capability-graph.yml
+# GENERATED FILE — DO NOT EDIT MANUALLY
+version: 8.1.1
+generated_at: '2026-07-23T04:47:25.518Z'
+nodes:
+  qk-access-policy:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-ai-builder:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-api-lifecycle:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-bug-resolution:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: bug-resolution
+  qk-context-loader:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: research
+  qk-data-lifecycle:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-db-optimizer:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: refactor
+  qk-design-system-engineering:
+    type: capability
+    maturity: experimental
+    owns:
+      - tokens
+      - components rules
+      - design governance
+    does_not_own:
+      - page implementation
+      - business logic
+    conflicts:
+      - qk-ui-system-builder
+    workflow: feature-delivery
+  qk-devops-platform:
+    type: capability
+    maturity: experimental
+    owns:
+      - CI/CD strategy
+      - deployment architecture
+      - environment management
+      - rollback strategy
+    does_not_own:
+      - application code
+      - cloud billing
+      - releasing features
+    conflicts:
+      - qk-production-release
+    workflow: feature-delivery
+  qk-docs:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: documentation
+  qk-engineering-standard:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+  qk-fe-api-integration:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-feature-delivery:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-frontend-architecture:
+    type: capability
+    maturity: experimental
+    owns:
+      - architecture decisions
+      - state strategy
+    does_not_own:
+      - component implementation
+      - pixel styling
+    conflicts:
+      - qk-ui-builder
+    workflow: feature-delivery
+  qk-help:
+    type: capability
+    maturity: deprecated
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: internal
+  qk-orchestrator:
+    type: orchestrator
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: research
+  qk-product-specification:
+    type: capability
+    maturity: experimental
+    owns:
+      - technical-ready specification
+      - acceptance criteria
+    does_not_own:
+      - market research
+      - pricing
+      - roadmap
+    conflicts: []
+    workflow: spec-driven-development
+  qk-production-release:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: internal
+  qk-project-bootstrap:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-project-health:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+  qk-project-memory:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: documentation
+  qk-security-audit:
+    type: capability
+    maturity: experimental
+    owns:
+      - application-security
+      - agent-security
+      - prompt-injection
+      - dependency-risk
+    does_not_own:
+      - access control implementation
+    conflicts: []
+    workflow: security-audit
+  qk-system-evolution:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: refactor
+  qk-test-engineering:
+    type: capability
+    maturity: experimental
+    owns:
+      - test pyramid
+      - coverage strategy
+      - regression planning
+    does_not_own:
+      - business logic implementation
+      - writing tests
+    conflicts: []
+    workflow: feature-delivery
+  qk-ui-audit:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+  qk-ui-builder:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-ui-system-builder:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+  qk-validation-gate:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+  qk-web-quality-gate:
+    type: capability
+    maturity: experimental
+    owns:
+      - lighthouse audit
+      - accessibility review
+      - performance audit
+      - seo audit
+    does_not_own:
+      - ui component implementation
+    conflicts: []
+    workflow: feature-delivery
+edges:
+  - from: qk-access-policy
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-access-policy
+    to: qk-api-lifecycle
+    relation: feeds
+  - from: qk-ai-builder
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-ai-builder
+    to: qk-system-evolution
+    relation: feeds
+  - from: qk-api-lifecycle
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-api-lifecycle
+    to: qk-data-lifecycle
+    relation: feeds
+  - from: qk-bug-resolution
+    to: bug-resolution
+    relation: depends_on
+  - from: qk-bug-resolution
+    to: qk-context-loader
+    relation: feeds
+  - from: qk-bug-resolution
+    to: qk-validation-gate
+    relation: feeds
+  - from: qk-context-loader
+    to: research
+    relation: depends_on
+  - from: qk-context-loader
+    to: qk-feature-delivery
+    relation: feeds
+  - from: qk-context-loader
+    to: qk-orchestrator
+    relation: feeds
+  - from: qk-data-lifecycle
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-data-lifecycle
+    to: qk-db-optimizer
+    relation: feeds
+  - from: qk-db-optimizer
+    to: refactor
+    relation: depends_on
+  - from: qk-db-optimizer
+    to: qk-data-lifecycle
+    relation: feeds
+  - from: qk-design-system-engineering
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-design-system-engineering
+    to: qk-ui-system-builder
+    relation: conflicts_with
+  - from: qk-design-system-engineering
+    to: qk-frontend-architecture
+    relation: feeds
+  - from: qk-devops-platform
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-devops-platform
+    to: qk-production-release
+    relation: conflicts_with
+  - from: qk-devops-platform
+    to: qk-production-release
+    relation: feeds
+  - from: qk-devops-platform
+    to: qk-security-audit
+    relation: feeds
+  - from: qk-docs
+    to: documentation
+    relation: depends_on
+  - from: qk-docs
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-engineering-standard
+    to: code-review
+    relation: depends_on
+  - from: qk-engineering-standard
+    to: qk-project-health
+    relation: feeds
+  - from: qk-engineering-standard
+    to: qk-system-evolution
+    relation: feeds
+  - from: qk-fe-api-integration
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-fe-api-integration
+    to: qk-api-lifecycle
+    relation: feeds
+  - from: qk-fe-api-integration
+    to: qk-ui-builder
+    relation: feeds
+  - from: qk-feature-delivery
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-feature-delivery
+    to: qk-context-loader
+    relation: feeds
+  - from: qk-feature-delivery
+    to: qk-validation-gate
+    relation: feeds
+  - from: qk-frontend-architecture
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-frontend-architecture
+    to: qk-ui-builder
+    relation: conflicts_with
+  - from: qk-frontend-architecture
+    to: qk-design-system-engineering
+    relation: feeds
+  - from: qk-frontend-architecture
+    to: qk-web-quality-gate
+    relation: feeds
+  - from: qk-help
+    to: internal
+    relation: depends_on
+  - from: qk-help
+    to: qk-orchestrator
+    relation: feeds
+  - from: qk-orchestrator
+    to: research
+    relation: depends_on
+  - from: qk-orchestrator
+    to: qk-context-loader
+    relation: feeds
+  - from: qk-product-specification
+    to: spec-driven-development
+    relation: depends_on
+  - from: qk-product-specification
+    to: qk-feature-delivery
+    relation: feeds
+  - from: qk-production-release
+    to: internal
+    relation: depends_on
+  - from: qk-production-release
+    to: qk-validation-gate
+    relation: feeds
+  - from: qk-project-bootstrap
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-project-bootstrap
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-project-health
+    to: code-review
+    relation: depends_on
+  - from: qk-project-health
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-project-memory
+    to: documentation
+    relation: depends_on
+  - from: qk-project-memory
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-security-audit
+    to: security-audit
+    relation: depends_on
+  - from: qk-security-audit
+    to: qk-access-policy
+    relation: feeds
+  - from: qk-system-evolution
+    to: refactor
+    relation: depends_on
+  - from: qk-system-evolution
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-system-evolution
+    to: qk-project-health
+    relation: feeds
+  - from: qk-test-engineering
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-test-engineering
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-ui-audit
+    to: code-review
+    relation: depends_on
+  - from: qk-ui-audit
+    to: qk-ui-builder
+    relation: feeds
+  - from: qk-ui-builder
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-ui-builder
+    to: qk-ui-system-builder
+    relation: feeds
+  - from: qk-ui-system-builder
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-ui-system-builder
+    to: qk-ui-builder
+    relation: feeds
+  - from: qk-validation-gate
+    to: code-review
+    relation: depends_on
+  - from: qk-validation-gate
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-web-quality-gate
+    to: feature-delivery
+    relation: depends_on
+  - from: qk-web-quality-gate
+    to: qk-frontend-architecture
+    relation: feeds

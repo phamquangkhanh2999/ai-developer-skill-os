@@ -1,32 +1,34 @@
 ---
 # ── Identity ───────────────────────────────────────────────
-name: qk-frontend-architecture
-version: 8.1.0
+name: qk-devops-platform
+version: 8.1.1
 status: experimental
-description: "Frontend architecture decision engine (Component strategy, state management, routing)."
+description: "Platform engineering: CI/CD strategy, deployment architecture, environment management, and rollback strategy."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
 type: capability
 
 intent:
-  - frontend-architecture
-  - component-strategy
-  - state-management
+  - devops-strategy
+  - cicd-pipeline
+  - deployment-architecture
+  - environment-management
 
 complexity:
   level: high
   criteria:
-    files_affected: "5-10"
+    files_affected: "1-5"
     has_behavior_change: true
     has_external_dependency: true
     has_breaking_change: false
 
 triggers:
-  - "cấu trúc frontend"
-  - "thiết kế component"
-  - "quản lý state"
-  - "kiến trúc react"
+  - "cấu hình ci/cd"
+  - "deployment strategy"
+  - "quản lý môi trường"
+  - "devops platform"
+  - "dockerize"
 
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
@@ -34,34 +36,41 @@ workflow: feature-delivery
 rules:
   - global
   - coding
+  - security
 
 tools:
   - filesystem
+  - terminal
 
 related_skills:
-  - qk-design-system-engineering
-  - qk-web-quality-gate
+  - qk-production-release
+  - qk-security-audit
 
 knowledge_scope:
   domain:
-    - react
-    - frontend-architecture
-    - state-management
+    - devops
+    - platform-engineering
+    - cloud-infrastructure
   concepts:
-    - component-hierarchy
-    - routing-strategy
+    - continuous-integration
+    - continuous-deployment
+    - containerization
+    - rollback-strategy
   references:
     - architecture
 
 decision_boundary:
   owns:
-    - architecture decisions
-    - state strategy
+    - CI/CD strategy
+    - deployment architecture
+    - environment management
+    - rollback strategy
   does_not_own:
-    - component implementation
-    - pixel styling
+    - application code
+    - cloud billing
+    - releasing features
   conflicts_with:
-    - qk-ui-builder
+    - qk-production-release
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -79,31 +88,30 @@ learnings: []
 execution_mode: deterministic
 cost: medium
 latency: medium
-risk: low
-side_effects: read_only
-produces: [report, architecture_plan]
+risk: high
+side_effects: edit_files
+produces: [report, plan, code]
 consumes: [user-description]
 
 token_budget:
   max_files_read: 5
   max_lines_per_read: 150
-  max_shell_commands: 0
+  max_shell_commands: 2
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-frontend-architecture — Frontend Architect
+# qk-devops-platform — Platform Engineer
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ## Preconditions
-- [ ] Xác định framework (React/Next.js/Vue, v.v.).
-- [ ] Phạm vi hệ thống frontend cần phân tích rõ ràng.
+- [ ] Requirements cho môi trường triển khai đã có sẵn.
 
 ## Scope
-- Đánh giá kiến trúc hiện tại của dự án Frontend.
-- Đưa ra quyết định chia nhỏ (breakdown) components.
-- Lựa chọn mô hình quản lý state (Global vs Local, Client vs Server).
-- Thiết kế hệ thống routing.
-- KHÔNG thay thế việc viết UI code (`qk-ui-builder`). Chỉ giới hạn ở quyết định kiến trúc.
+- Thiết kế và thiết lập luồng CI/CD (GitHub Actions, GitLab CI, v.v.).
+- Xây dựng kiến trúc deployment, quản lý các container (Docker, Kubernetes).
+- Đưa ra chiến lược Rollback an toàn khi có sự cố.
+- Quản lý và phân tách các môi trường (Dev, Staging, Prod).
+- KHÔNG thay thế `qk-production-release` (đóng gói và release app), skill này quản lý *hạ tầng và quy trình* bên dưới việc release đó.

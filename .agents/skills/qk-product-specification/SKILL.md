@@ -43,11 +43,24 @@ related_skills:
   - qk-feature-delivery
 
 knowledge_scope:
-  owns:
+  domain:
     - product-requirements
     - technical-specifications
+  concepts:
+    - user-story
+    - acceptance-criteria
   references:
     - architecture
+
+decision_boundary:
+  owns:
+    - technical-ready specification
+    - acceptance criteria
+  does_not_own:
+    - market research
+    - pricing
+    - roadmap
+  conflicts_with: []
 
 # ── V8: Verification ───────────────────────────────────────
 verification:

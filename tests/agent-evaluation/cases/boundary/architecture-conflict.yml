@@ -1,0 +1,11 @@
+case:
+  id: bound-005
+input:
+  "Chia nhỏ component React cho dễ bảo trì"
+expected:
+  primary_skill:
+    qk-frontend-architecture
+  forbidden:
+    - qk-ui-builder
+  confidence:
+    min: 0.8

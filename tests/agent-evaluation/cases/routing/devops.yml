@@ -1,0 +1,11 @@
+case:
+  id: devops-001
+input:
+  "Thiết lập pipeline github actions"
+expected:
+  primary_skill:
+    qk-devops-platform
+  forbidden:
+    - qk-production-release
+  confidence:
+    min: 0.8
