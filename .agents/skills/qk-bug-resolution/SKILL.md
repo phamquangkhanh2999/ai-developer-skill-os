@@ -29,6 +29,10 @@ triggers:
   - "error"
   - "not working"
 
+selection:
+  priority: high
+  confidence_threshold: 0.65
+
 # ── V8: References ─────────────────────────────────────────
 workflow: bug-resolution
 

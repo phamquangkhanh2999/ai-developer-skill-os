@@ -56,6 +56,23 @@ required:
     description: "References workflows/<name>.yml"
     example: "bug-resolution"
 
+  selection:
+    type: object
+    required_fields: [priority]
+    optional_fields: [confidence_threshold, fallback_skill]
+    priority:
+      type: enum
+      values: [high, medium, low]
+    confidence_threshold:
+      type: number
+      default: 0.75
+      range:
+        min: 0.0
+        max: 1.0
+    fallback_skill:
+      type: string
+      optional: true
+
   verification:
     type: object
     required_fields: [required, strategy]

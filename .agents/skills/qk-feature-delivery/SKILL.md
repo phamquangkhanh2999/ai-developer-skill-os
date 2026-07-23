@@ -29,6 +29,10 @@ triggers:
   - "phát triển tính năng"
   - "tạo mới"
 
+selection:
+  priority: medium
+  confidence_threshold: 0.85
+
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
 

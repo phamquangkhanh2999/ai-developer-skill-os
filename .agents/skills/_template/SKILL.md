@@ -26,6 +26,11 @@ triggers:                          # Keywords that route AI to this skill
   - "[trigger phrase 2]"
   - "[trigger phrase 3]"
 
+selection:
+  priority: medium                 # high | medium | low
+  confidence_threshold: 0.75       # 0.0 to 1.0
+  # fallback_skill: [skill-name]   # Optional fallback
+
 # ── V8: References ─────────────────────────────────────────
 workflow: [workflow-name]          # → workflows/[workflow-name].yml
 

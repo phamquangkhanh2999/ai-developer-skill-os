@@ -29,6 +29,10 @@ triggers:
   - "vẽ dependency graph"
   - "build context"
 
+selection:
+  priority: high
+  confidence_threshold: 0.75
+
 # ── V8: References ─────────────────────────────────────────
 workflow: research
 

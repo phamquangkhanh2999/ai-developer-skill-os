@@ -29,6 +29,10 @@ triggers:
   - "help me choose"
   - "what skill for"
 
+selection:
+  priority: high
+  confidence_threshold: 0.80
+
 # ── V8: References ─────────────────────────────────────────
 workflow: research                  # Uses research workflow to understand request
 

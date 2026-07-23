@@ -108,3 +108,28 @@ Never silently terminate. Always report exit code and reason.
 **NEVER** use `?.`, `!`, `try/catch {}` (empty catch), or type casting to suppress errors.
 
 Fix root cause. If root cause is unclear → report as BLOCKED with evidence.
+
+---
+
+## R-G-09: Legacy Skill Handling
+
+Agent **MUST** prefer stable skills.
+
+Legacy skills **MAY** be selected only when:
+1. No stable candidate exists
+2. User explicitly requests legacy behavior
+3. Migration incomplete
+
+Legacy skills **MUST NOT** outrank stable skills.
+
+---
+
+## R-G-10: Ambiguity Resolution
+
+Agent **MUST NOT** execute when:
+`selection confidence < threshold`
+
+Agent **SHOULD**:
+1. Ask clarification
+2. Present top candidates
+3. Explain missing information

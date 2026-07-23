@@ -29,6 +29,10 @@ triggers:
   - "test"
   - "run checks"
 
+selection:
+  priority: high
+  confidence_threshold: 0.75
+
 # ── V8: References ─────────────────────────────────────────
 workflow: code-review
 
