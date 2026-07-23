@@ -1,0 +1,8 @@
+id: design-intel-03
+description: "User requests style selection for a healthcare app"
+intent: "Chọn phong cách UI cho app healthcare"
+context: []
+expected:
+  selected: "qk-design-system-engineering"
+  knowledge_lookups:
+    - "design-intelligence/industries/healthcare"

@@ -63,6 +63,11 @@ decision_boundary:
   conflicts_with:
     - qk-ui-system-builder
 
+knowledge_dependencies:
+  - design-intelligence
+  - accessibility-guidelines
+  - component-patterns
+
 # ── V8: Verification ───────────────────────────────────────
 verification:
   required: true

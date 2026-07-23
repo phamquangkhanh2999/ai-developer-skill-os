@@ -45,9 +45,18 @@ related_skills:
 knowledge_scope:
   owns:
     - ui-components
-    - styling
+    - styling execution
+    - component implementation
+  does_not_own:
+    - choose product visual direction
+    - define brand identity
+    - create design system rules
   references:
     - design-system
+
+knowledge_dependencies:
+  - design-intelligence
+  - component-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:

@@ -1,0 +1,9 @@
+id: design-intel-02
+description: "User requests modifying a component styling"
+intent: "Tạo button màu đỏ đẹp hơn"
+context: []
+expected:
+  selected: "qk-ui-builder"
+  reject:
+    - skill: "qk-design-system-engineering"
+      reason: "does not own component implementation"

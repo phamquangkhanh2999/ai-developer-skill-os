@@ -1,0 +1,12 @@
+id: design-intel-01
+description: "User requests a specific industry dashboard design"
+intent: "Thiết kế dashboard ngân hàng doanh nghiệp"
+context: []
+expected:
+  selected: "qk-frontend-architecture"
+  delegated_to: "qk-design-system-engineering"
+  knowledge_lookups:
+    - "design-intelligence/industries/fintech"
+  reject:
+    - skill: "qk-ui-builder"
+      reason: "does not own visual direction"
