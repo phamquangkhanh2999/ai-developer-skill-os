@@ -1,0 +1,41 @@
+# Skill Workflow: Resolution Flow
+# Path: .agents/skills/qk-bug-resolution/workflows/resolution-flow.yml
+
+workflow_id: "bug.resolution.lifecycle"
+version: "2.0.0"
+
+trigger:
+  type: "bug_resolution_request"
+  input_entities: ["Finding", "Decision"]
+
+stages:
+  - id: validate_diagnosis
+    consumes: ["Finding", "Decision"]
+    produces: "ValidatedResolutionContext"
+
+  - id: select_fix_strategy
+    consumes: "ValidatedResolutionContext"
+    produces: "ResolutionStrategy"
+
+  - id: generate_mutation_plan
+    consumes: "ResolutionStrategy"
+    produces: "MutationPlan"
+
+  - id: safety_check
+    guards:
+      - "compensation_defined == TRUE"
+      - "target_scope_valid == TRUE"
+      - "risk_classification_evaluated == TRUE"
+
+  - id: execute_change
+    requires_capabilities:
+      - "code.modify"
+    produces: "ExecutionResult"
+
+  - id: verify_resolution
+    consumes: ["ExecutionResult", "PolicyContext"]
+    produces: "Outcome"
+
+  - id: learn
+    consumes: "Outcome"
+    produces: "Learning"

@@ -1,0 +1,41 @@
+# EDAOS Kernel: State Store Runtime Specification
+# Path: .agents/kernel/20-state-store-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "StateStoreRuntime"
+status: "APPROVED"
+
+description: >
+  State Store Runtime manages the state persistence, resource locks, and transaction boundaries 
+  for Resource State Machines across the EDAOS Kernel.
+
+---
+
+state_store_spec:
+  storage_engine: "ACID_Embedded_KV_Store"
+  persistence_path: ".agents/runtime/state_store.db"
+
+  transaction_isolation: "SERIALIZABLE"
+  lock_manager:
+    timeout_ms: 10000
+    lock_type: "REENTRANT_READ_WRITE"
+
+  resource_state_persistence:
+    - resource: "Observation"
+      retention_policy: "IMMUTABLE_APPEND_ONLY"
+
+    - resource: "Evidence"
+      retention_policy: "INDEXED_BY_POLICY"
+
+    - resource: "Finding"
+      retention_policy: "STATE_MACHINE_PERSISTED"
+
+    - resource: "Decision"
+      retention_policy: "AUDITABLE_DECISION_TREE"
+
+    - resource: "Action"
+      retention_policy: "SAGA_MUTATION_JOURNAL"
+
+  snapshot_policy:
+    auto_snapshot_interval_seconds: 300
+    max_retained_snapshots: 10

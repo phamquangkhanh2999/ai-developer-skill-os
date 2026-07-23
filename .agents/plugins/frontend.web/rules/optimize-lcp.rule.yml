@@ -1,0 +1,30 @@
+# Frontend Plugin Rule: Optimize LCP Render Blocking
+# Path: .agents/plugins/frontend.web/rules/optimize-lcp.rule.yml
+
+rule_id: "frontend.performance.hero_render_optimization"
+version: "1.0.0"
+domain: "frontend"
+category: "Performance"
+
+trigger:
+  consumes:
+    - entity_type: "Finding"
+      condition: "finding.type == 'render_blocking_asset'"
+    - entity_type: "Evidence"
+      condition: "evidence.category == 'Performance' AND evidence.status == 'FAIL'"
+
+requires_capabilities:
+  - capability_id: "browser.performance"
+  - capability_id: "code.react-analysis"
+
+policy_binding:
+  primary_policy_ref: "POL-FE-PERF-CORE-01"
+
+produces:
+  decision:
+    decision_type: "OPTIMIZE_RESOURCE_LOADING"
+    strategy_summary: "Add rel=preload tag and convert hero asset to modern WebP format"
+
+risk:
+  risk_level: "LOW"
+  human_gate_required: false

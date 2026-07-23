@@ -1,0 +1,22 @@
+# EDAOS Intelligence: Autonomous Engineering Research Engine Specification
+# Path: .agents/intelligence/research/91-autonomous-research-engine.yml
+
+schema_version: "1.0.0"
+contract_type: "AutonomousEngineeringResearchEngine"
+status: "APPROVED"
+
+description: >
+  Autonomous Engineering Research Engine continuously analyzes execution metrics, 
+  discovers novel optimization patterns, and proposes systemic rule enhancements.
+
+---
+
+autonomous_research_spec:
+  research_engine: "NovelPatternDiscoveryEngine"
+
+  discovery_workflow:
+    1_aggregate_traces: "Aggregate 1,000,000+ decision provenance traces"
+    2_pattern_mining: "Mine recurring high-performance, zero-defect code structures"
+    3_hypothesis_formulation: "Formulate candidate optimization rule"
+    4_digital_twin_lab_test: "Test hypothesis in 66-engineering-simulation-lab.yml"
+    5_evolution_board_submit: "Submit verified pattern to 30-evolution-governance-board.yml"

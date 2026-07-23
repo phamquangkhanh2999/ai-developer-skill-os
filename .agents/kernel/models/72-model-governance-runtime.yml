@@ -1,0 +1,36 @@
+# EDAOS Kernel: AI Model Governance Runtime Specification
+# Path: .agents/kernel/models/72-model-governance-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "ModelGovernanceRuntime"
+status: "APPROVED"
+
+description: >
+  Model Governance Runtime manages the registry, risk profiles, cost profiles, and capability 
+  bindings for multi-LLM providers (GPT-4, Claude-3.5, Gemini-1.5, Local Llama 3).
+
+---
+
+model_governance_spec:
+  model_registry:
+    - model_id: "claude-3-5-sonnet"
+      provider: "Anthropic"
+      capabilities_bound: ["code.ast", "reasoning.graph"]
+      risk_profile: "LOW"
+      cost_per_1k_tokens: 0.003
+
+    - model_id: "gemini-1-5-pro"
+      provider: "Google"
+      capabilities_bound: ["context.assembly", "code.references"]
+      risk_profile: "LOW"
+      cost_per_1k_tokens: 0.00125
+
+    - model_id: "local-llama-3-70b"
+      provider: "Self-Hosted-Ollama"
+      capabilities_bound: ["policy.evaluation", "local.audit"]
+      risk_profile: "ZERO_DATA_LEAK"
+      cost_per_1k_tokens: 0.000
+
+  model_selection_policy:
+    prefer_zero_data_leak_for_sensitive_scope: true
+    fallback_on_rate_limit: true

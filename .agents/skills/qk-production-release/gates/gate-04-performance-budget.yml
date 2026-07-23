@@ -1,0 +1,15 @@
+# Gate 4: Performance Budget Gate
+# Path: .agents/skills/qk-production-release/gates/gate-04-performance-budget.yml
+
+gate_id: "gate_04_performance_budget"
+gate_name: "Performance Budget Gate"
+
+thresholds:
+  - metric: LCP
+    max_allowed: 2500 # ms
+  - metric: CLS
+    max_allowed: 0.10
+  - metric: BundleJS
+    max_allowed: 600 # KB
+
+fail_action: "BLOCK_RELEASE"

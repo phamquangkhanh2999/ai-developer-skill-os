@@ -1,0 +1,35 @@
+# EDAOS Intelligence: Policy Feedback Loop Specification
+# Path: .agents/intelligence/policy-feedback/17-policy-feedback-loop.yml
+
+schema_version: "1.0.0"
+contract_type: "PolicyFeedbackLoop"
+status: "APPROVED"
+
+description: >
+  Policy Feedback Loop monitors project scaling, policy breach frequencies, and business growth 
+  to propose data-backed adjustments to policy thresholds without compromising system stability.
+
+---
+
+policy_feedback_schema:
+  monitoring:
+    sample_window_days: 60
+    breach_frequency_threshold: 0.02 # < 2% breaches indicates policy may be too tight or ready for scale adjustment
+
+  evolution_proposal_contract:
+    proposal_id: "PROP-POL-2026-004"
+    target_policy_id: "POL-FE-PERF-CORE-01"
+    metric_target: "BundleJS"
+
+    current_threshold:
+      target: 600 # KB
+    
+    proposed_threshold:
+      target: 750 # KB
+      rationale: "Project added rich 3D analytics dashboard capabilities. 0% runtime performance regressions observed across 90 days."
+
+  governance_guards:
+    require_zero_regression_proof: true
+    require_simulation_benchmark: true
+    human_approval_required: true # Human Gate mandatory before updating project policy targets
+    promotion_state: "PROMOTED_TO_PROJECT_POLICY"

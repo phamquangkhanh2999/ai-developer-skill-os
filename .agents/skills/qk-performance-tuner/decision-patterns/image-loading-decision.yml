@@ -1,0 +1,24 @@
+# Decision Pattern: Image Loading Decision Tree
+# Path: .agents/skills/qk-performance-tuner/decision-patterns/image-loading-decision.yml
+
+pattern_id: "image_loading_decision_tree"
+
+decision_tree:
+  node: "Check Above Fold"
+  condition: "is_above_fold == true"
+  if_true:
+    node: "Check Preload Tag"
+    condition: "has_preload_tag == false"
+    if_true:
+      node: "Check Format"
+      condition: "is_legacy_format (PNG|JPEG) == true"
+      if_true:
+        formulate_decision: "OPTIMIZE_RESOURCE_LOADING"
+        selected_strategy: "optimize_lcp_image_loading"
+        actions:
+          - "add_preload_tag"
+          - "convert_to_webp"
+          - "set_explicit_dimensions"
+  if_false:
+    node: "Lazy Load Candidate"
+    formulate_decision: "APPLY_LAZY_LOADING"

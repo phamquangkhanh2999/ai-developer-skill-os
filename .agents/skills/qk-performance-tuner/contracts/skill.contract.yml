@@ -1,0 +1,34 @@
+# Skill Contract: qk-performance-tuner
+# Path: .agents/skills/qk-performance-tuner/contracts/skill.contract.yml
+
+skill_id: "qk-performance-tuner"
+version: "2.0.0"
+type: "optimization_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "Finding"
+  - entity_type: "EvidenceBundle"
+  - entity_type: "PolicyContext"
+
+produces:
+  - entity_type: "Decision"
+  - entity_type: "ActionPlan"
+
+delegates_execution_to:
+  - skill_id: "qk-feature-delivery"
+  - skill_id: "qk-bug-resolution"
+
+required_capabilities:
+  - capability_id: "browser.performance"
+    min_maturity: 3
+  - capability_id: "bundle.analyze"
+    min_maturity: 2
+  - capability_id: "code.react-analysis"
+    min_maturity: 2
+
+strategies:
+  - "lcp-optimization.strategy.yml"
+  - "cls-stabilization.strategy.yml"
+  - "bundle-reduction.strategy.yml"
+  - "runtime-performance.strategy.yml"

@@ -1,0 +1,37 @@
+# Skill Contract: qk-project-health
+# Path: .agents/skills/qk-project-health/contracts/skill.contract.yml
+
+skill_id: "qk-project-health"
+version: "2.0.0"
+type: "health_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "EvidenceBundle"
+  - entity_type: "GovernanceDecision"
+  - entity_type: "ValidationReport"
+  - entity_type: "ReleaseDecision"
+  - entity_type: "DeploymentLog"
+
+produces:
+  - entity_type: "ProjectHealthReport"
+  - entity_type: "HealthDecision"
+  - entity_type: "TechnicalDebtRoadmap"
+  - entity_type: "Learning"
+
+required_capabilities:
+  - capability_id: "code.ast"
+    min_maturity: 2
+  - capability_id: "code.references"
+    min_maturity: 2
+  - capability_id: "browser.performance"
+    min_maturity: 3
+  - capability_id: "ui.capture"
+    min_maturity: 2
+
+health_engine:
+  dimensions_count: 6
+  scoring_range: [0, 100]
+
+policies:
+  - "policies/health-score-policy.yml"

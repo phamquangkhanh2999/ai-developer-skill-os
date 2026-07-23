@@ -1,0 +1,20 @@
+adapter:
+  id: antigravity
+  version: 1.0.0
+  type: editor_gateway
+
+  trust:
+    level: L1
+
+  verification:
+    native_runtime: true
+
+  produces:
+    - observation_bundle
+    - capability_request
+
+  governance:
+    required:
+      - observation_provenance
+      - certification_check
+      - decision_contract_validation

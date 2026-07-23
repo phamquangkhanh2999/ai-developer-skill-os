@@ -1,0 +1,38 @@
+# EDAOS SDK: Client SDK Specification (Python, TypeScript, Go)
+# Path: .agents/sdk/43-edaos-sdk-spec.yml
+
+schema_version: "1.0.0"
+contract_type: "EDAOSClientSDKSpecification"
+status: "APPROVED"
+
+description: >
+  Official Client SDK specification enabling enterprise developers to programatically 
+  interact with EDAOS Kernel, register custom Capabilities, and listen to Event Bus topics.
+
+---
+
+sdk_languages:
+  typescript:
+    package: "@edaos/sdk"
+    async_model: "Promises / Async-Await"
+
+  python:
+    package: "edaos-sdk"
+    async_model: "asyncio / Coroutines"
+
+  golang:
+    package: "github.com/edaos/edaos-go-sdk"
+    async_model: "Goroutines / Channels"
+
+core_client_methods:
+  - method: "edaos.audit(targetScope, options)"
+    returns: "Promise<AuditReport>"
+
+  - method: "edaos.diagnose(findingId)"
+    returns: "Promise<FindingDiagnosis>"
+
+  - method: "edaos.optimize(strategyId, targetFile)"
+    returns: "Promise<ActionPlan>"
+
+  - method: "edaos.release(candidateVersion, options)"
+    returns: "Promise<ReleaseDecision>"

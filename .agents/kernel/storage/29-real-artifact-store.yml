@@ -1,0 +1,28 @@
+# EDAOS Kernel: Real Artifact & Persistent Store Specification
+# Path: .agents/kernel/storage/29-real-artifact-store.yml
+
+schema_version: "1.0.0"
+runtime_component: "RealArtifactStore"
+status: "APPROVED"
+
+description: >
+  Real Artifact Store specifies enterprise database engines for storing Observations, Evidences, 
+  Immutable Execution Journals, and Vector Embeddings with ACID crash-recovery guarantees.
+
+---
+
+artifact_store_spec:
+  database_engines:
+    state_store: "SQLite_WAL / PostgreSQL"
+    journal_store: "Immutable_JSONL_Audit_DB"
+    knowledge_store: "VectorDB_Knowledge_Graph"
+    blob_store: "S3_Compatible_Artifact_Registry"
+
+  crash_recovery:
+    write_ahead_logging: true
+    checkpoint_frequency_seconds: 60
+    auto_repair_on_corruption: true
+
+  retention_and_archival:
+    hot_tier_retention_days: 90
+    cold_archive_policy: "COMPRESS_AND_UPLOAD_TO_S3"

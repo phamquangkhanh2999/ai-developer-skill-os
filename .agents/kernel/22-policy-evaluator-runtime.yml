@@ -1,0 +1,34 @@
+# EDAOS Kernel: Policy Evaluator Runtime Specification
+# Path: .agents/kernel/22-policy-evaluator-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "PolicyEvaluatorRuntime"
+status: "APPROVED"
+
+description: >
+  Policy Evaluator Runtime executes fast, deterministic expression matching 
+  between Normalized Observations and resolved Policy Thresholds to emit Level-2 Evidences.
+
+---
+
+policy_evaluator_spec:
+  evaluator_engine: "JIT_Expression_Evaluator"
+  execution_mode: "STRICT_NON_BLOCKING"
+
+  expression_operators:
+    - "LESS_THAN_OR_EQUAL"
+    - "GREATER_THAN_OR_EQUAL"
+    - "EQUALS"
+    - "BETWEEN"
+    - "CONTAINS"
+    - "MATCHES_REGEX"
+
+  resolution_cascade:
+    1_context_override: ".agents/policies/environment-override.yml"
+    2_project_policy: ".agents/policies/project-policy.yml"
+    3_plugin_policy: ".agents/plugins/*/policies/*.policy.yml"
+    4_core_baseline: ".agents/core/default-baseline.policy.yml"
+
+  output_emission:
+    emits_entity: "Evidence"
+    emits_event: "EvidenceCreated"

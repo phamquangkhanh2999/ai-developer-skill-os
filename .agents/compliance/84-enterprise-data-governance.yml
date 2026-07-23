@@ -1,0 +1,23 @@
+# EDAOS Compliance: Enterprise Data Governance Plane Specification
+# Path: .agents/compliance/84-enterprise-data-governance.yml
+
+schema_version: "1.0.0"
+contract_type: "EnterpriseDataGovernancePlane"
+status: "APPROVED"
+
+description: >
+  Enterprise Data Governance Plane manages Data Lineage, Data Residency, Data Classification, 
+  and Training Data Provenance to satisfy global enterprise privacy laws.
+
+---
+
+data_governance_spec:
+  data_classification_tiers:
+    PUBLIC: "Open documentation and public API specifications"
+    INTERNAL: "Internal source code and architecture diagrams"
+    RESTRICTED: "Customer PII, payment logic, and secret tokens"
+
+  residency_and_lineage:
+    data_residency_enforcement: "EU_DATA_BOUNDARY_PER_TENANT"
+    training_data_provenance: "ZERO_COMMERCIAL_LLM_TRAINING_ON_CUSTOMER_CODE"
+    gdpr_right_to_be_forgotten: "AUTOMATED_TENANT_PURGE_PROTOCOL"

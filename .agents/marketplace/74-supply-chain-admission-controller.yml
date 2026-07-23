@@ -1,0 +1,24 @@
+# EDAOS Marketplace: Supply Chain Admission Controller Specification
+# Path: .agents/marketplace/74-supply-chain-admission-controller.yml
+
+schema_version: "1.0.0"
+contract_type: "SupplyChainAdmissionController"
+status: "APPROVED"
+
+description: >
+  Supply Chain Admission Controller verifies SBOM (Software Bill of Materials), scans for 
+  malicious code, and checks cryptographic signatures before admitting third-party plugins.
+
+---
+
+admission_controller_spec:
+  admission_pipeline:
+    1_sbom_generation: "Generate CycloneDX / SPDX SBOM for plugin package"
+    2_static_security_analysis: "Scan AST for unverified network egress or eval() calls"
+    3_vulnerability_db_lookup: "Cross-reference dependencies against OSV / NVD vulnerability databases"
+    4_signature_verification: "Verify X.509 signature against trusted EDAOS Certificate Authority"
+    5_sandbox_trial_run: "Execute plugin inside container sandbox to record runtime behavior"
+
+  admission_decision:
+    REJECT_IF_CRITICAL_CVE: true
+    REJECT_IF_UNSIGNED: true

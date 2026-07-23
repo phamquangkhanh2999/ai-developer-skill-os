@@ -1,0 +1,43 @@
+# EDAOS Kernel: Event Bus Runtime Specification
+# Path: .agents/kernel/19-event-bus-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "EventBusRuntime"
+status: "APPROVED"
+
+description: >
+  Event Bus Runtime provides the asynchronous Pub/Sub event backbone for EDAOS Kernel.
+  It enables zero-coupling communication between Processors, Engines, and Domain Plugins.
+
+---
+
+event_bus_runtime_spec:
+  engine: "AsyncEventDispatcher"
+  concurrency_model: "NON_BLOCKING_EVENT_LOOP"
+  max_queue_depth: 10000
+
+  topic_channels:
+    - topic: "edaos.events.observation"
+      events: ["ObservationCreated", "ObservationNormalized"]
+      buffer_policy: "DROPTAIL_WHEN_FULL"
+
+    - topic: "edaos.events.evidence"
+      events: ["EvidenceCreated", "EvidenceValidated"]
+      buffer_policy: "PERSIST_TO_DISK"
+
+    - topic: "edaos.events.reasoning"
+      events: ["FindingCreated", "DecisionFormulated", "DecisionApproved"]
+      buffer_policy: "STRICT_FIFO"
+
+    - topic: "edaos.events.execution"
+      events: ["ActionPlanned", "ActionExecuted", "CompensationExecuted"]
+      buffer_policy: "AUDITABLE_JOURNAL"
+
+    - topic: "edaos.events.learning"
+      events: ["OutcomeVerified", "KnowledgePersisted"]
+      buffer_policy: "BACKGROUND_ASYNC"
+
+  dead_letter_queue:
+    enabled: true
+    max_retries: 3
+    quarantine_path: ".agents/runtime/dead_letter_events.jsonl"

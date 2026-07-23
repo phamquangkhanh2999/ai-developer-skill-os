@@ -1,0 +1,60 @@
+capability:
+  id: market-research-last30days
+  version: 1.0.0
+  domain: research
+
+  # 1. Identity Block
+  owner: external
+  created_by: "EDAOS Reference Implementation"
+  lifecycle: approved
+
+  # 2. Purpose & Evidence
+  purpose:
+    produces:
+      - audience_signal
+      - market_trend
+      - pain_point_cluster
+
+  input:
+    required:
+      - topic
+      - audience
+      - time_window
+
+  evidence:
+    output_type:
+      - observation_bundle
+    provenance:
+      required:
+        - source
+        - timestamp
+        - extraction_method
+        - evidence_hash
+        - parent_observation_id
+
+  # 3. Decision Contract
+  decision_contract:
+    allowed:
+      - validate_market_need
+      - prioritize_feature
+      - generate_content_angle
+
+  # 4. Execution Guards
+  execution:
+    forbidden:
+      - direct_publish
+      - autonomous_purchase
+      - user_contact
+      - modify_runtime_policy
+      - modify_other_capability
+      - bypass_review_gate
+
+  # 5. Trust Lifecycle
+  trust:
+    level:
+      default: L2
+    promotion:
+      requires:
+        - golden_flow_pass
+        - provenance_verified
+        - human_review

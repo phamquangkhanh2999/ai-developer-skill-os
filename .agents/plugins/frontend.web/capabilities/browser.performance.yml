@@ -1,0 +1,32 @@
+# Frontend Plugin Capability: Browser Performance
+# Path: .agents/plugins/frontend.web/capabilities/browser.performance.yml
+
+capability_id: "browser.performance"
+version: "1.0.0"
+domain: "frontend"
+category: "Performance"
+
+maturity:
+  level: 4
+
+intent:
+  description: "Measures real runtime Core Web Vitals (LCP, CLS, INP, TTFB) and render timelines"
+  produces_observation_types:
+    - "observation.web_vitals"
+  produces_artifact_types:
+    - "artifact.performance_trace"
+
+inputs:
+  target:
+    type: "ResourceReference"
+    required: true
+    description: "Target web URL or local preview endpoint"
+
+outputs:
+  observations:
+    - type: "Observation"
+      schema_ref: "evidence/web-vital-evidence.yml"
+
+reliability:
+  default_confidence: 0.95
+  timeout_ms: 30000

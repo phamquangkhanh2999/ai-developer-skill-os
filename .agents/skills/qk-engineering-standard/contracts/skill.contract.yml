@@ -1,0 +1,33 @@
+# Skill Contract: qk-engineering-standard
+# Path: .agents/skills/qk-engineering-standard/contracts/skill.contract.yml
+
+skill_id: "qk-engineering-standard"
+version: "2.0.0"
+type: "governance_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "ChangedFiles"
+  - entity_type: "EngineeringEvidence"
+  - entity_type: "ArchitectureContext"
+  - entity_type: "EngineeringPolicies"
+
+produces:
+  - entity_type: "EngineeringFinding"
+  - entity_type: "GovernanceDecision"
+
+delegates_refactoring_to:
+  - skill_id: "qk-bug-resolution"
+  - skill_id: "qk-feature-delivery"
+
+required_capabilities:
+  - capability_id: "code.ast"
+    min_maturity: 2
+  - capability_id: "code.references"
+    min_maturity: 2
+
+standards:
+  - "standards/clean-code.standard.yml"
+  - "standards/solid-principles.standard.yml"
+  - "standards/architecture-boundary.standard.yml"
+  - "standards/maintainability.standard.yml"

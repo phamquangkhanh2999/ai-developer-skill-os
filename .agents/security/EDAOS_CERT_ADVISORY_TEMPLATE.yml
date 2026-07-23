@@ -1,0 +1,135 @@
+# EDAOS Security Advisory Template
+# EDAOS-CERT Security Response Process
+# Spec: 38 (Threat Model), 89 (Constitution Art. 3 — No Unsigned Mutation)
+#
+# Usage: Copy this file, fill in the sections, and submit via:
+#   security@edaos.org  |  GPG key: keys.openpgp.org/edaos-cert
+
+advisory_id: EDAOS-CERT-2026-0001      # Assigned by Security Committee
+status: TEMPLATE                        # DRAFT | UNDER_REVIEW | PUBLISHED | RESOLVED
+severity: CRITICAL                      # INFO | LOW | MEDIUM | HIGH | CRITICAL
+cvss_score: 0.0                         # 0.0 – 10.0  (NVD CVSS v3.1)
+
+---
+
+# ADVISORY HEADER
+
+title: "[Brief one-line description of the vulnerability]"
+
+affected_specs:
+  - "Spec NN — [Spec name]"
+
+affected_components:
+  - "Evidence Engine"        # or: PolicyEngine | SagaManager | IdentityLayer | ...
+
+affected_cert_levels:        # Which certified runtimes are impacted?
+  - "L4"
+  - "L3"
+
+affected_versions:
+  - "EDAOS <= 11.0.0"
+
+fixed_in_version: "11.1.0"  # Once patch is released
+
+---
+
+# TIMELINE  (all timestamps UTC)
+
+timeline:
+  reported_at:    ""         # ISO 8601
+  triaged_at:     ""
+  patch_ready_at: ""
+  disclosed_at:   ""         # Public disclosure (max 90 days from report)
+  resolved_at:    ""
+
+---
+
+# VULNERABILITY DESCRIPTION
+
+summary: |
+  [2–4 sentences describing what the vulnerability is, which invariant it violates,
+  and what impact it has on the Evidence → Decision → Execution chain.]
+
+invariant_violated:
+  - "No Evidence => No Decision => No Execution"   # if applicable
+  - "No Unsigned Mutation (Constitution Art. 3)"   # if applicable
+
+attack_vector: "NETWORK"       # NETWORK | ADJACENT | LOCAL | PHYSICAL
+attack_complexity: "HIGH"      # LOW | HIGH
+privileges_required: "LOW"     # NONE | LOW | HIGH
+user_interaction: "NONE"       # NONE | REQUIRED
+scope: "UNCHANGED"             # UNCHANGED | CHANGED
+
+impact:
+  confidentiality: "NONE"      # NONE | LOW | HIGH
+  integrity: "HIGH"
+  availability: "NONE"
+
+---
+
+# PROOF OF CONCEPT
+
+# Describe the minimal reproducing scenario.
+# Do NOT include working exploit code in public advisories.
+reproduction_steps: |
+  1. [Step 1]
+  2. [Step 2]
+  3. Observe that [invariant X] is violated.
+
+---
+
+# REMEDIATION
+
+patches:
+  - version: "11.1.0"
+    commit: ""
+    pr_url:  ""
+
+workarounds: |
+  [If a patch is not yet available, describe a workaround that preserves the invariant.]
+
+---
+
+# CERTIFICATION IMPACT
+
+cert_action_required:
+  revoke_immediately: false     # Set true for CRITICAL with active exploit
+  re_certification_required: true
+  re_certification_deadline: "" # ISO 8601 — typically 30 days from patch release
+
+runtime_operators_must:
+  - "Upgrade to EDAOS 11.1.0 or later within [N] days."
+  - "Re-run edaos_conformance_suite_v2.py and upload results to registry.edaos.org."
+
+---
+
+# CREDITS
+
+reporter: ""                    # Name / handle / organization (if they consent)
+reporter_contact: ""
+security_committee_lead: ""
+
+---
+
+# REFERENCES
+
+references:
+  - "https://spec.edaos.org/specs/38-threat-model"
+  - "https://spec.edaos.org/specs/89-constitution"
+  - ""
+
+---
+
+# SIGNING
+
+# This advisory must be signed by 3 Security Committee members before publication.
+signatures:
+  - member: ""
+    signed_at: ""
+    pgp_fingerprint: ""
+  - member: ""
+    signed_at: ""
+    pgp_fingerprint: ""
+  - member: ""
+    signed_at: ""
+    pgp_fingerprint: ""

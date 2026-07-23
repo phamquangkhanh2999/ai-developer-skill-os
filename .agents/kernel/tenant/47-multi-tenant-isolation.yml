@@ -1,0 +1,28 @@
+# EDAOS Kernel: Multi-Tenant Workspace & Memory Isolation Specification
+# Path: .agents/kernel/tenant/47-multi-tenant-isolation.yml
+
+schema_version: "1.0.0"
+runtime_component: "MultiTenantIsolation"
+status: "APPROVED"
+
+description: >
+  Multi-Tenant Isolation enforces strict cryptographic and namespace separation 
+  between multiple organization accounts sharing the same EDAOS Control Plane.
+
+---
+
+multi_tenant_spec:
+  tenant_context_header: "X-EDAOS-Tenant-ID"
+
+  isolation_guarantees:
+    memory_isolation:
+      namespace_prefix: "edaos.learning.{tenant_id}.*"
+      cross_tenant_memory_access: "STRICTLY_FORBIDDEN"
+
+    state_store_isolation:
+      row_level_security: true
+      tenant_encryption_key: "AES_256_GCM_PER_TENANT"
+
+    resource_quotas:
+      max_concurrent_tasks_per_tenant: 16
+      max_token_budget_per_day: 10000000

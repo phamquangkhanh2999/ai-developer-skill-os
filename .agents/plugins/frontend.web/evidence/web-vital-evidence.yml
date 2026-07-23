@@ -1,0 +1,24 @@
+# Frontend Plugin Evidence Schema: Web Vital Evidence
+# Path: .agents/plugins/frontend.web/evidence/web-vital-evidence.yml
+
+evidence_type: "WebVitalEvidence"
+extends: "Evidence"
+domain: "frontend"
+category: "Performance"
+
+schema:
+  lcp:
+    value: "number"
+    unit: "milliseconds"
+  cls:
+    value: "number"
+    unit: "ratio"
+  inp:
+    value: "number"
+    unit: "milliseconds"
+  ttfb:
+    value: "number"
+    unit: "milliseconds"
+  render_blocking_elements:
+    type: "array"
+    items: "string"

@@ -1,0 +1,9 @@
+registry_version: 1
+schema_version: 2
+runtime:
+  min: 15
+  max: 15
+
+files:
+  skill-mcp-routing.yml:
+    sha256: 30c5ebdbbcd0d9ced7bd8363a200af665c49d88e561a4a6cdc070cbe747575ee

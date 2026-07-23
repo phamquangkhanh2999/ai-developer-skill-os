@@ -1,0 +1,21 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-DOC-96788
+skill:         qk-docs
+intent:        "sig-test"
+approved_by:   AUTO
+timestamp:     2026-07-22T09:13:16.788389+00:00
+
+hashes:
+  evidence_hash: db54c1281a4d2a941114ebf98a24f988126d833938def8442efb77b0a7206068
+  decision_hash: d4a6a35763f7b35a533a80d540f8c1ea0a7e3aa4d6c411af0516573fc2a2e2d5
+
+evidence_ids:
+  - EV-QK-DOC-96788
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - git.inspect
+
+alternatives_rejected:
+  []

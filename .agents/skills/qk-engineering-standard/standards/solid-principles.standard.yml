@@ -1,0 +1,19 @@
+# Standard Contract: SOLID Principles Standard
+# Path: .agents/skills/qk-engineering-standard/standards/solid-principles.standard.yml
+
+standard_id: "solid_principles"
+domain: "engineering"
+category: "Architecture"
+
+rules:
+  - id: "single_responsibility"
+    name: "Single Responsibility Principle (SRP)"
+    description: "Component or module must have exactly one reason to change"
+
+  - id: "open_closed"
+    name: "Open/Closed Principle (OCP)"
+    description: "Software entities should be open for extension, closed for modification"
+
+  - id: "dependency_inversion"
+    name: "Dependency Inversion Principle (DIP)"
+    description: "High-level modules should not depend on low-level modules; both should depend on abstractions"

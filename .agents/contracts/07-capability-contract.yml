@@ -1,0 +1,185 @@
+# EDAOS Contracts: Capability Contract Specification
+# Path: .agents/contracts/07-capability-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "CapabilityContract"
+status: "APPROVED"
+
+description: >
+  Capability Contract serves as the primary API Boundary between EDAOS Core / Skills 
+  and the external world (MCP Servers, CLI Tools, Agent Adapters, and Native Plugins).
+  It completely decouples skills from underlying tools, enabling zero tool lock-in.
+
+---
+
+# 1. Capability Contract Schema Definition
+
+capability_schema:
+  # -------------------------------------------------------------------
+  # Pillar 1: Capability Identity
+  # -------------------------------------------------------------------
+  identity:
+    capability_id: "domain.subdomain.action" # e.g. ui.capture, browser.performance
+    version: "1.0.0"
+    domain: "frontend" # frontend | backend | security | devops | mobile | data
+    category: "Visual" # Performance | Visual | Accessibility | Security | Runtime | Network
+
+  # -------------------------------------------------------------------
+  # Pillar 2: Capability Maturity Level (Level 0 to 5)
+  # -------------------------------------------------------------------
+  maturity:
+    level: 3 # Current system maturity level for this capability
+    supported_levels:
+      - level: 0
+        description: "No capability or tool installed"
+      - level: 1
+        description: "Raw tool/CLI execution (No EDAOS evidence output)"
+      - level: 2
+        description: "Emits normalized Level-1 Observations"
+      - level: 3
+        description: "Supports Level-2 Evidence Validation against Policies"
+      - level: 4
+        description: "Supports automated Level-3 Finding & Decision formulation"
+      - level: 5
+        description: "Supports Level-4 Learning Feedback & Historical Memory"
+
+  # -------------------------------------------------------------------
+  # Pillar 3: Intent Contract
+  # -------------------------------------------------------------------
+  intent:
+    description: "Captures rendered visual UI state and DOM snapshots from target environment"
+    produces_observation_types:
+      - "observation.visual_state"
+      - "observation.dom_layout"
+    produces_artifact_types:
+      - "artifact.screenshot"
+      - "artifact.dom_snapshot"
+
+  # -------------------------------------------------------------------
+  # Pillar 4: Input Contract
+  # -------------------------------------------------------------------
+  inputs:
+    target:
+      type: "ResourceReference"
+      required: true
+      description: "Target URL, local file path, or component selector"
+    
+    parameters:
+      viewport:
+        width: 1280
+        height: 800
+        device_scale_factor: 1
+      full_page: false
+      wait_for_selector: "div#root"
+
+    context:
+      environment: "staging" # dev | staging | production
+      auth_token_ref: "ENV_STAGING_AUTH_TOKEN"
+
+  # -------------------------------------------------------------------
+  # Pillar 5: Output Contract (Strict EDAOS Entities Only)
+  # -------------------------------------------------------------------
+  outputs:
+    observations:
+      - type: "Observation"
+        schema_ref: "schemas/visual-observation.schema.json"
+        guarantee: "IMMUTABLE"
+
+    artifacts:
+      - type: "ArtifactResource"
+        mime_type: "image/png"
+        storage_policy: "TEMPORARY_CACHE"
+
+  # -------------------------------------------------------------------
+  # Pillar 6: Reliability Contract & Confidence Engine Integration
+  # -------------------------------------------------------------------
+  reliability:
+    confidence:
+      default_measurement_confidence: 0.95
+      decay_factor_per_hop: 0.02
+    
+    timeout_ms: 30000
+    
+    retry_policy:
+      max_attempts: 2
+      backoff_strategy: "EXPONENTIAL"
+      initial_delay_ms: 1000
+
+    fallback:
+      allow_fallback: true
+      fallback_capability_id: "ui.capture.cli"
+
+  # -------------------------------------------------------------------
+  # Pillar 7: Capability Requirements
+  # -------------------------------------------------------------------
+  requirements:
+    environment:
+      browser_engine: "chromium"
+      network_access: "required"
+    
+    permissions:
+      filesystem: "read_write"
+      exec: "allowed"
+
+---
+
+# 2. Canonical Standard Capability Registry (Examples)
+
+standard_capabilities:
+  - id: "ui.capture"
+    category: "Visual"
+    description: "Captures rendered screenshot and DOM state"
+
+  - id: "ui.visual_diff"
+    category: "Visual"
+    description: "Calculates pixel diff matrix between two screenshot artifacts"
+
+  - id: "browser.performance"
+    category: "Performance"
+    description: "Measures Core Web Vitals (LCP, CLS, INP, TTFB)"
+
+  - id: "browser.network"
+    category: "Network"
+    description: "Captures HAR traces, API waterfall timing, and network payload"
+
+  - id: "accessibility.evaluate"
+    category: "Accessibility"
+    description: "Scans DOM for ARIA, contrast, and focus violations"
+
+  - id: "code.ast"
+    category: "Code Quality"
+    description: "Parses source code into AST for reference & definition resolution"
+
+---
+
+# 3. Capability Composition & Router Mapping
+
+composition_example:
+  skill_ref: "qk-ui-audit"
+  
+  required_capabilities:
+    - capability_id: "ui.capture"
+      min_maturity: 2
+    - capability_id: "browser.performance"
+      min_maturity: 3
+    - capability_id: "ui.visual_diff"
+      min_maturity: 2
+    - capability_id: "accessibility.evaluate"
+      min_maturity: 3
+
+  router_resolution:
+    ui.capture:
+      selected_provider: "playwright-mcp"
+      fallback_provider: "puppeteer-adapter"
+
+    browser.performance:
+      selected_provider: "chrome-devtools-mcp"
+      fallback_provider: "lighthouse-cli-adapter"
+
+    ui.visual_diff:
+      selected_provider: "pixelmatch-native-adapter"
+      fallback_provider: "image-magick-cli"
+
+    accessibility.evaluate:
+      selected_provider: "axe-core-mcp"
+      fallback_provider: "lighthouse-a11y-adapter"

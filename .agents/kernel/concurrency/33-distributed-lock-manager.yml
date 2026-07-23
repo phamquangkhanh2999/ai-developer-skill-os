@@ -1,0 +1,28 @@
+# EDAOS Kernel: Distributed Lock Manager Specification
+# Path: .agents/kernel/concurrency/33-distributed-lock-manager.yml
+
+schema_version: "1.0.0"
+runtime_component: "DistributedLockManager"
+status: "APPROVED"
+
+description: >
+  Distributed Lock Manager coordinates concurrency, resource leases, and mutual exclusion 
+  across multi-node Worker Agents to prevent race conditions and state corruptions.
+
+---
+
+lock_manager_spec:
+  lock_provider: "Redis_Redlock / Etcd_Lease"
+  lease_ttl_ms: 15000
+  auto_renewal: true
+
+  deadlock_prevention:
+    lock_acquisition_timeout_ms: 5000
+    preemption_policy: "HIGHER_PRIORITY_TASK_PREEMPTS"
+
+  resource_locks:
+    - resource_type: "SourceFile"
+      lock_granularity: "FILE_LEVEL"
+
+    - resource_type: "StateStore"
+      lock_granularity: "TRANSACTION_LEVEL"

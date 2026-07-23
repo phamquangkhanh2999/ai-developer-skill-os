@@ -1,0 +1,21 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-DOC-96785
+skill:         qk-docs
+intent:        "chain-test"
+approved_by:   AUTO
+timestamp:     2026-07-22T09:13:16.785070+00:00
+
+hashes:
+  evidence_hash: 6a65a550e0f770735ee5890747b85712d2ab9387372ffc28779c406d3dd4fc8d
+  decision_hash: 9a1908e7d85118ca116996e699eca44b54593a752dcee923d366632dea50f9a8
+
+evidence_ids:
+  - EV-QK-DOC-96785
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - git.inspect
+
+alternatives_rejected:
+  []

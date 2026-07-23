@@ -1,0 +1,38 @@
+# EDAOS Kernel: System Operational Metrics Contract
+# Path: .agents/kernel/metrics/32-metrics-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "OperationalMetricsContract"
+status: "APPROVED"
+
+description: >
+  Defines standard KPI metrics for monitoring the performance, accuracy, 
+  and decision latency of the EDAOS AI Engineering Operating System.
+
+---
+
+metrics_catalog:
+  - metric_name: "edaos_decision_latency_seconds"
+    type: "HISTOGRAM"
+    description: "Time taken to evaluate Policy, execute Rules, and formulate a Decision"
+    target_p95: 1.5
+
+  - metric_name: "edaos_rule_accuracy_ratio"
+    type: "GAUGE"
+    description: "Percentage of decisions yielding successful post-verification outcomes"
+    target_min: 0.90
+
+  - metric_name: "edaos_false_positive_rate"
+    type: "GAUGE"
+    description: "Rate of incorrect finding diagnoses"
+    target_max: 0.05
+
+  - metric_name: "edaos_rollback_success_rate"
+    type: "GAUGE"
+    description: "Success rate of Saga Compensating Actions"
+    target_min: 0.99
+
+  - metric_name: "edaos_human_override_rate"
+    type: "GAUGE"
+    description: "Frequency of human engineer overrides on AI decisions"
+    target_max: 0.10

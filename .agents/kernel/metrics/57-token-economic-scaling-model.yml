@@ -1,0 +1,24 @@
+# EDAOS Kernel: Token Economic Scaling & ROI Model
+# Path: .agents/kernel/metrics/57-token-economic-scaling-model.yml
+
+schema_version: "1.0.0"
+contract_type: "TokenEconomicScalingModel"
+status: "APPROVED"
+
+description: >
+  Tracks economic cost efficiency, token budget consumption, and ROI metrics per repository 
+  and decision across enterprise scaling.
+
+---
+
+token_economics_spec:
+  cost_metrics:
+    average_cost_per_decision_usd: 0.0012
+    average_cost_per_repo_monthly_usd: 15.00
+    average_cost_per_engineer_monthly_usd: 5.00
+
+  roi_metrics:
+    mean_time_to_repair_reduction_pct: 65.0
+    release_regression_reduction_pct: 88.0
+    estimated_engineer_hours_saved_monthly: 420.0
+    estimated_cost_savings_monthly_usd: 42000.00

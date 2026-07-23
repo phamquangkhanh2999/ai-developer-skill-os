@@ -1,0 +1,22 @@
+# Code Quality Policy: Project Baseline Code Quality
+# Path: .agents/skills/qk-engineering-standard/policies/code-quality.policy.yml
+
+policy_id: "POL-ENG-QUALITY-CORE-01"
+version: "1.0.0"
+domain: "engineering"
+enforcement_level: "STRICT"
+
+thresholds:
+  - metric: "CognitiveComplexity"
+    target: 15
+    warning: 20
+    critical: 30
+
+  - metric: "DuplicationPercentage"
+    target: 5.0
+    warning: 10.0
+    critical: 15.0
+
+  - metric: "CircularDependencies"
+    target: 0
+    critical: 1

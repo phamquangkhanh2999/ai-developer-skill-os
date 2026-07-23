@@ -1,0 +1,23 @@
+# EDAOS Intelligence: Customer Success & Enterprise Adoption Intelligence
+# Path: .agents/intelligence/customer/77-customer-success-intelligence.yml
+
+schema_version: "1.0.0"
+contract_type: "CustomerSuccessIntelligence"
+status: "APPROVED"
+
+description: >
+  Customer Success Intelligence continuously tracks MTTR reduction, defect escape rates, 
+  and cost savings for each enterprise customer account to demonstrate measurable platform value.
+
+---
+
+customer_success_intelligence_spec:
+  account_metrics_tracker:
+    mttr_reduction_pct: 66.7
+    defect_escape_reduction_pct: 90.5
+    human_time_saved_hours_monthly: 420
+    calculated_roi_multiplier: "10.4x"
+
+  automated_executive_reporting:
+    generate_monthly_c_suite_report: true
+    metrics_included: ["MTTR", "DefectEscapeRate", "RevenueImpactUSD", "TokenCostUSD"]

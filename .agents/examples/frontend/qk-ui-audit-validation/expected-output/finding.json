@@ -1,0 +1,12 @@
+{
+  "finding_id": "FND-2026-HERO-BLOCK",
+  "supported_by": ["EVI-2026-PERF-LCP-01"],
+  "finding_type": "render_blocking_resource",
+  "primary_cause": "hero-image-loading",
+  "culprit_details": {
+    "target_file": "src/components/HeroBanner.tsx",
+    "asset": "hero-main.png",
+    "missing_optimization": ["rel=preload", "webp_format"]
+  },
+  "confidence": 0.90
+}

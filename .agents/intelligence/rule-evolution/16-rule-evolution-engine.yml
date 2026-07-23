@@ -1,0 +1,43 @@
+# EDAOS Intelligence: Rule Evolution Engine Specification
+# Path: .agents/intelligence/rule-evolution/16-rule-evolution-engine.yml
+
+schema_version: "1.0.0"
+contract_type: "RuleEvolutionEngine"
+status: "APPROVED"
+
+description: >
+  Rule Evolution Engine analyzes long-term execution journals and outcome patterns to propose 
+  automated improvements to existing Rules and Strategies. It upgrades low-performing rules 
+  without breaking human governance.
+
+---
+
+rule_evolution_schema:
+  evaluation_window:
+    min_execution_samples: 50
+    evaluation_interval_days: 30
+
+  proposal_triggers:
+    rule_success_rate_below: 0.80
+    alternative_strategy_outperformance_delta: 0.15
+
+  proposal_contract:
+    proposal_id: "PROP-RUL-2026-001"
+    target_rule_id: "frontend.performance.hero_render_optimization"
+    
+    analysis_findings:
+      sample_size: 120
+      current_success_rate: 0.72
+      identified_bottleneck: "Static preloading fails on lazy-hydrated SSR routes"
+
+    proposed_evolution:
+      action: "REPLACE_STRATEGY"
+      old_strategy_ref: "strategies/lcp-optimization.strategy.yml"
+      new_strategy_ref: "strategies/adaptive-preload.strategy.yml"
+      expected_success_rate_increase: 0.23
+
+  validation_and_promotion_pipeline:
+    require_simulation_test: true
+    require_validation_suite_pass: true
+    require_human_approval: true # Human Gate mandatory before promoting Core Rule evolution
+    promotion_action: "COMMIT_NEW_RULE_VERSION"

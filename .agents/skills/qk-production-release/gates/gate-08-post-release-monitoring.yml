@@ -1,0 +1,14 @@
+# Gate 8: Post-Release Monitoring Gate
+# Path: .agents/skills/qk-production-release/gates/gate-08-post-release-monitoring.yml
+
+gate_id: "gate_08_post_release_monitoring"
+gate_name: "Post-Release Baseline Verification Gate"
+
+monitoring_window:
+  duration_minutes: 5
+
+revert_triggers:
+  - condition: "production_error_rate > 0.01" # 1% error rate threshold
+  - condition: "production_lcp > 3500" # ms
+
+action_on_trigger: "TRIGGER_AUTOMATIC_ROLLBACK"

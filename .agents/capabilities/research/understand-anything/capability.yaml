@@ -1,0 +1,37 @@
+capability:
+  id: understand-anything
+  version: 1.0.0
+  domain: knowledge
+
+  purpose:
+    produces:
+      - concept_map
+      - source_summary
+      - claim_relationship
+
+  evidence:
+    output_type:
+      - knowledge_bundle
+    provenance:
+      required:
+        - source_reference
+        - extraction_method
+        - evidence_hash
+        - observation_id
+
+  decision_contract:
+    allowed:
+      - summarize_knowledge
+      - compare_concepts
+      - identify_relationships
+
+  execution:
+    forbidden:
+      - answer_as_authority
+      - modify_source
+      - publish_content
+      - create_external_claim
+
+  trust:
+    level:
+      default: L2

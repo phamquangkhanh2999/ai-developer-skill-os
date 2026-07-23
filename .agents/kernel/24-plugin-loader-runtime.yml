@@ -1,0 +1,27 @@
+# EDAOS Kernel: Plugin Loader Runtime Specification
+# Path: .agents/kernel/24-plugin-loader-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "PluginLoaderRuntime"
+status: "APPROVED"
+
+description: >
+  Plugin Loader Runtime dynamically discovers, validates, and loads Domain Plugins 
+  into the EDAOS Microkernel without mutating Core binaries.
+
+---
+
+plugin_loader_spec:
+  discovery_path: ".agents/plugins/*/"
+  manifest_filename: "plugin.yml"
+
+  validation_pipeline:
+    1_parse_manifest: "Read plugin.yml manifest"
+    2_validate_abi: "Verify edaos_core_requirement against running Core version"
+    3_check_dependencies: "Verify required inter-plugin dependencies"
+    4_verify_boundary_rules: "Ensure plugin contains no forbidden core mutations"
+    5_register_exports: "Register capabilities, evidence schemas, policies, and rules"
+
+  isolation_manager:
+    namespace_isolation: true
+    memory_limit_mb: 1024

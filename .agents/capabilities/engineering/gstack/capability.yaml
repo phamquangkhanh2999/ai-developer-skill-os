@@ -1,0 +1,41 @@
+capability:
+  id: gstack
+  version: 1.0.0
+  domain: engineering
+
+  role:
+    type: execution_advisor
+
+  purpose:
+    produces:
+      - architecture_analysis
+      - code_quality_evidence
+      - implementation_plan
+
+  evidence:
+    output_type:
+      - engineering_assessment_bundle
+    provenance:
+      required:
+        - repository_reference
+        - analysis_method
+        - evidence_hash
+        - observation_id
+
+  decision_contract:
+    allowed:
+      - architecture_review
+      - code_quality_assessment
+      - implementation_planning
+
+  execution:
+    forbidden:
+      - commit_code
+      - merge_pull_request
+      - deploy_application
+      - modify_runtime_policy
+      - bypass_review_gate
+
+  trust:
+    level:
+      default: L2

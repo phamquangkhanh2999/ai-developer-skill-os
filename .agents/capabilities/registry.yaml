@@ -1,0 +1,51 @@
+registry:
+  version: 1.1
+
+capabilities:
+  - id: market-research-last30days
+    status: certified
+    classification:
+      class: evidence_producer
+      trust_level: L2
+      guarantees:
+        - hash_verification
+        - malicious_rejection
+        - evidence_immutability
+        - semantic_drift_protection
+    certification:
+      version: 1.0.0
+      pipeline: 1.0.0
+
+  - id: understand-anything
+    status: certified
+    classification:
+      class: evidence_producer
+      trust_level: L2
+      guarantees:
+        - hash_verification
+        - malicious_rejection
+        - evidence_immutability
+        - semantic_drift_protection
+    certification:
+      version: 1.0.0
+      pipeline: 1.0.0
+
+  - id: gstack
+    status: certified
+    classification:
+      class: execution_advisor
+      trust_level: L2
+      guarantees:
+        - hash_verification
+        - malicious_rejection
+        - evidence_immutability
+        - semantic_drift_protection
+        - decision_tension
+        - execution_boundary
+    certification:
+      version: 1.0.0
+      pipeline: 1.0.0
+
+  - id: remotion-video-agent
+    status: quarantine
+    reason: missing provenance contract

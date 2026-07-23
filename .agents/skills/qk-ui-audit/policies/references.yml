@@ -1,0 +1,13 @@
+# Skill Policy References: qk-ui-audit
+# Path: .agents/skills/qk-ui-audit/policies/references.yml
+
+active_policies:
+  - id: "POL-FE-PERF-CORE-01"
+    name: "Performance Core Vitals Policy"
+    domain: "frontend"
+
+  - id: "POL-FE-A11Y-AA-01"
+    name: "Accessibility Level AA Policy"
+    domain: "frontend"
+
+fallback_policy: "default-baseline.policy.yml"

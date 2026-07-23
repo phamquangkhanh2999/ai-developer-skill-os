@@ -1,0 +1,30 @@
+# EDAOS Compliance: Community Open-Source & Enterprise Tier Split
+# Path: .agents/compliance/79-community-enterprise-split.yml
+
+schema_version: "1.0.0"
+contract_type: "CommunityEnterpriseSplitSpecification"
+status: "APPROVED"
+
+description: >
+  Defines feature boundaries between open-source EDAOS Community Edition (Apache 2.0) 
+  and commercial EDAOS Enterprise Edition.
+
+---
+
+tier_feature_matrix:
+  community_edition:
+    license: "Apache 2.0"
+    features:
+      - "EDAOS Core Kernel (Event Bus, Capability Router, Policy Evaluator)"
+      - "edaos CLI & TypeScript/Python SDKs"
+      - "Single-Tenant Local Execution"
+      - "Standard Evidence Policies & 5 Invariant Conformance Suite"
+
+  enterprise_edition:
+    license: "Commercial Enterprise License"
+    features:
+      - "Multi-Tenant Isolation with Row-Level Encryption (47)"
+      - "Zero-Trust Capability RBAC & Secret Vault (27)"
+      - "Autonomous SRE Incident Remediation Fabric (68)"
+      - "SOC2 / ISO 27001 / EU AI Act Compliance Engine (37)"
+      - "Digital Twin AST In-Memory Simulation Lab (60, 66)"

@@ -1,0 +1,35 @@
+# Skill Contract: qk-ui-audit
+# Path: .agents/skills/qk-ui-audit/contracts/skill.contract.yml
+
+skill_id: "qk-ui-audit"
+version: "2.0.0"
+type: "reasoning_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "Evidence"
+  - entity_type: "Finding"
+  - entity_type: "Policy"
+
+produces:
+  - entity_type: "Decision"
+  - entity_type: "ActionPlan"
+
+required_capabilities:
+  - capability_id: "ui.capture"
+    min_maturity: 2
+  - capability_id: "browser.performance"
+    min_maturity: 3
+  - capability_id: "ui.visual_diff"
+    min_maturity: 2
+  - capability_id: "accessibility.evaluate"
+    min_maturity: 3
+
+rules:
+  - "frontend.performance.hero_render_optimization"
+  - "frontend.performance.prevent_layout_shift"
+  - "frontend.performance.reduce_bundle_size"
+
+policy_references:
+  - "POL-FE-PERF-CORE-01"
+  - "POL-FE-A11Y-AA-01"

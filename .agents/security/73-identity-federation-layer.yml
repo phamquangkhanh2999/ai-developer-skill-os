@@ -1,0 +1,23 @@
+# EDAOS Security: Full Identity Federation Layer Specification
+# Path: .agents/security/73-identity-federation-layer.yml
+
+schema_version: "1.0.0"
+contract_type: "IdentityFederationLayer"
+status: "APPROVED"
+
+description: >
+  Identity Federation Layer links Human Engineers, AI Agents, Service Accounts, and Plugins 
+  into a unified cryptographic identity chain for total auditability.
+
+---
+
+identity_chain_spec:
+  identity_types:
+    human_identity: "OIDC / SAML SSO (Alice, Staff Security Officer)"
+    agent_identity: "SPIFFE ID (spiffe://edaos.org/agent/resolution-orchestrator)"
+    service_identity: "Kubernetes ServiceAccount (edaos-kernel-sa)"
+    plugin_identity: "Cryptographic X.509 Certificate (signed by EDAOS Registry)"
+
+  cryptographic_provenance:
+    enforce_identity_chain_signature: true
+    journal_signature_payload: "HumanID + AgentID + ServiceID + PluginID + InputHash"

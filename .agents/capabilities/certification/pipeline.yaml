@@ -1,0 +1,20 @@
+certification_pipeline:
+  version: 1.0
+
+  policy:
+    capability_schema:
+      version: 1.0
+    evidence_schema:
+      version: 1.0
+    decision_contract:
+      version: 1.0
+
+  stages:
+    - submitted
+    - sandbox
+    - schema_check
+    - provenance_check
+    - permission_audit
+    - golden_flow_test
+    - certified
+    - periodic_audit

@@ -1,0 +1,27 @@
+# EDAOS Marketplace: Cross-Enterprise Ecosystem Federation Protocol
+# Path: .agents/marketplace/86-ecosystem-federation-protocol.yml
+
+schema_version: "1.0.0"
+contract_type: "EcosystemFederationProtocol"
+status: "APPROVED"
+
+description: >
+  Defines inter-organization agent federation protocols, allowing vendor agents (AWS Agent, 
+  Google Cloud Agent, Security Partner Agents) to securely interact with the EDAOS Control Plane.
+
+---
+
+federation_protocol_spec:
+  protocol_standard: "EDAOS_Federation_v1.0"
+
+  federated_partners:
+    - partner: "AWS_Cloud_Agent"
+      capabilities_offered: ["infra.aws.provision", "infra.aws.scale"]
+    - partner: "GCP_Cloud_Agent"
+      capabilities_offered: ["infra.gcp.provision", "infra.gcp.spanner"]
+    - partner: "Security_Vendor_Agent"
+      capabilities_offered: ["security.static_analysis", "security.pentest"]
+
+  security_boundary:
+    require_mutual_tls: true
+    require_federation_attestation: true

@@ -1,0 +1,29 @@
+# EDAOS Kernel: Capability Router Runtime Specification
+# Path: .agents/kernel/21-capability-router-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "CapabilityRouterRuntime"
+status: "APPROVED"
+
+description: >
+  Capability Router Runtime performs dynamic resolution, ranking, and dispatching 
+  of Capability requests to registered Provider Adapters.
+
+---
+
+capability_router_spec:
+  dispatch_engine: "DynamicProviderDispatcher"
+
+  ranking_evaluator:
+    refresh_interval_ms: 60000
+    formula_ref: ".agents/contracts/08-provider-contract.yml"
+
+  resolution_flow:
+    1_parse_capability_request: "Extract capability_id, target, and min_maturity requirement"
+    2_lookup_provider_registry: "Find all active providers claiming the capability"
+    3_evaluate_provider_ranks: "Calculate rank scores based on SLA, latency, and quality"
+    4_select_primary_provider: "Dispatch payload to highest ranking provider"
+    5_handle_provider_fallback: "If primary fails, activate fallback provider transparently"
+
+  caching_policy:
+    cache_provider_routing_ms: 300000

@@ -1,0 +1,22 @@
+skills:
+  qk-ui-builder:
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - browser.screenshot
+    level: L3
+
+  qk-bug-resolution:
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - terminal.run
+      - git.diff
+    level: L4
+
+  qk-docs:
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - git.inspect
+    level: L1

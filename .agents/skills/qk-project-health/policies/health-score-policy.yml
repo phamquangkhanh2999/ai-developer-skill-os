@@ -1,0 +1,23 @@
+# Health Score Policy
+# Path: .agents/skills/qk-project-health/policies/health-score-policy.yml
+
+grade_thresholds:
+  GRADE_A:
+    min_score: 90
+    status: "HEALTHY"
+
+  GRADE_B:
+    min_score: 80
+    status: "HEALTHY"
+
+  GRADE_C:
+    min_score: 70
+    status: "WARNING"
+
+  GRADE_D:
+    min_score: 60
+    status: "DEGRADED"
+
+  GRADE_F:
+    max_score: 59
+    status: "CRITICAL"

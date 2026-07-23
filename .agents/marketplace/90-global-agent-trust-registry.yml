@@ -1,0 +1,22 @@
+# EDAOS Marketplace: Global Agent Trust Registry & CA Specification
+# Path: .agents/marketplace/90-global-agent-trust-registry.yml
+
+schema_version: "1.0.0"
+contract_type: "GlobalAgentTrustRegistry"
+status: "APPROVED"
+
+description: >
+  Global Agent Trust Registry functions as a root Certificate Authority (CA) and 
+  global trust network for federated autonomous agents across enterprise boundaries.
+
+---
+
+global_trust_registry_spec:
+  root_ca_authority: "https://ca.edaos.org/root-v1"
+  revocation_list_uri: "https://ca.edaos.org/crl"
+
+  trust_verification_levels:
+    level_1_basic: "Signed by Verified Publisher"
+    level_2_conformance: "Passes 5-Invariant Conformance Suite"
+    level_3_formal_proof: "Passes 83-formal-verification-engine.yml proofs"
+    level_4_constitutional: "Fully compliant with 89-edaos-constitution-framework.md"

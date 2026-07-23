@@ -1,0 +1,10 @@
+# Gate 1: Engineering Quality Gate
+# Path: .agents/skills/qk-production-release/gates/gate-01-engineering-quality.yml
+
+gate_id: "gate_01_engineering_quality"
+gate_name: "Engineering Compliance Gate"
+
+rule:
+  consumes: "GovernanceDecision"
+  pass_condition: "governance_decision.type in ['ACCEPT', 'ACCEPT_WITH_WARNING']"
+  fail_action: "BLOCK_RELEASE"

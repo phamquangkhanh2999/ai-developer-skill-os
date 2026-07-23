@@ -1,0 +1,28 @@
+# EDAOS Kernel: Observability Runtime Specification
+# Path: .agents/kernel/observability/31-observability-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "ObservabilityRuntime"
+status: "APPROVED"
+
+description: >
+  Observability Runtime provides end-to-end tracing, OpenTelemetry metrics exporting, 
+  and decision latency monitoring across the EDAOS Control Plane.
+
+---
+
+observability_runtime_spec:
+  tracing:
+    telemetry_standard: "OpenTelemetry_v1.0"
+    sampler: "ALWAYS_ON"
+    export_target: "OTLP_GRPC_EXPORTER"
+
+  log_aggregation:
+    structured_json: true
+    log_level: "INFO"
+    correlation_id_header: "X-EDAOS-Trace-ID"
+
+  realtime_metrics_exporter:
+    exporter_type: "Prometheus_Exporter"
+    scrape_endpoint: "/metrics"
+    scrape_port: 9090

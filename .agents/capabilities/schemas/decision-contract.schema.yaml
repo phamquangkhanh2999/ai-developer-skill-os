@@ -1,0 +1,31 @@
+schema_version: 0.1
+name: Decision Contract Schema
+description: Enforces the structure of Decisions produced by the Runtime based on Capability Evidence.
+
+properties:
+  decision_record:
+    type: object
+    properties:
+      decision_id:
+        type: string
+      source_capability:
+        type: string
+        description: ID of the Capability that provided the Evidence.
+      evidence_hash:
+        type: string
+        description: SHA256 of the Evidence Bundle that led to this Decision.
+      observation_ids:
+        type: array
+        items: { type: string }
+        description: Upstream Observations that trace the provenance.
+      intent:
+        type: string
+      execution_plan:
+        type: object
+
+required:
+  - decision_id
+  - source_capability
+  - evidence_hash
+  - observation_ids
+  - intent

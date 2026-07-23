@@ -1,0 +1,32 @@
+# EDAOS Certification: Ecosystem Certification Standard
+# Path: .agents/certification/51-edaos-certification-standard.yml
+
+schema_version: "1.0.0"
+contract_type: "EDAOSCertificationStandard"
+status: "APPROVED"
+
+description: >
+  Defines formal compliance criteria for EDAOS Certified Agents, Skills, 
+  Plugins, and Enterprise Runtimes.
+
+---
+
+certification_matrix:
+  edaos_certified_skill:
+    requirements:
+      - "Must contain valid SKILL.md with frontmatter YAML"
+      - "Must contain skill.contract.yml specifying consumes/produces"
+      - "Must pass 5 Invariant Assertions (conformance_test_suite.py)"
+      - "Must be tool-blind (Capability Layer abstraction)"
+
+  edaos_certified_plugin:
+    requirements:
+      - "Must provide plugin.yml manifest with ABI version requirement"
+      - "Must pass container sandbox security isolation scan"
+      - "Must be cryptographically signed by EDAOS Authority"
+
+  edaos_certified_runtime:
+    requirements:
+      - "Must achieve > 99.9% uptime availability"
+      - "Must enforce Zero-Trust RBAC and Secret Isolation"
+      - "Must pass 1000-decision Battle Testing Suite without crash"

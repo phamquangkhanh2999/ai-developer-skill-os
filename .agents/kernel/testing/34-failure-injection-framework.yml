@@ -1,0 +1,31 @@
+# EDAOS Kernel: Chaos & Failure Injection Framework Specification
+# Path: .agents/kernel/testing/34-failure-injection-framework.yml
+
+schema_version: "1.0.0"
+runtime_component: "FailureInjectionFramework"
+status: "APPROVED"
+
+description: >
+  Failure Injection Framework simulates real-world infrastructure chaos (worker crashes, 
+  network latency spikes, provider failures, storage corruption) to verify EDAOS self-healing.
+
+---
+
+chaos_testing_spec:
+  engine: "ChaosMesh_EDAOS_Engine"
+
+  injection_scenarios:
+    - name: "Provider Failure Injection"
+      target: "CapabilityRouter"
+      failure_type: "SIMULATE_TIMEOUT_AND_ERROR_500"
+      expected_recovery: "AUTO_FALLBACK_TO_SECONDARY_PROVIDER"
+
+    - name: "Worker Node Crash"
+      target: "ExecutionScheduler"
+      failure_type: "PROCESS_KILL_SIGKILL"
+      expected_recovery: "REASSIGN_TASK_AND_RESUME_JOURNAL"
+
+    - name: "Saga Rollback Verification"
+      target: "ActionExecution"
+      failure_type: "INJECT_VERIFICATION_FAILURE"
+      expected_recovery: "TRIGGER_SAGA_COMPENSATING_ACTION"

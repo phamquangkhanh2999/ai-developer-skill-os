@@ -1,0 +1,30 @@
+# EDAOS Kernel: Digital Twin Simulation Runtime Specification
+# Path: .agents/kernel/simulation/60-digital-twin-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "DigitalTwinRuntime"
+status: "APPROVED"
+
+description: >
+  Digital Twin Simulation Engine creates a virtual, non-invasive sandbox replica of the 
+  enterprise codebase to simulate action plans, predict performance regressions, and 
+  verify policy compliance BEFORE mutating real source files.
+
+---
+
+digital_twin_spec:
+  simulation_engine: "InMemory_AST_Digital_Twin"
+  isolation_level: "ZERO_IO_VIRTUAL_SANDBOX"
+
+  simulation_capabilities:
+    - capability: "simulate_code_mutation"
+      predicts: ["SyntacticCorrectness", "TypeSafety", "DependencyGraphShift"]
+
+    - capability: "simulate_performance_impact"
+      predicts: ["LCP_Delta", "CLS_Delta", "BundleSize_Delta"]
+
+    - capability: "simulate_policy_breach"
+      predicts: ["PolicyViolationCount", "SecurityRiskScore"]
+
+  promotion_gate:
+    require_zero_simulated_regression: true

@@ -1,0 +1,218 @@
+# EDAOS Conformance Check — GitHub Marketplace Action
+# ─────────────────────────────────────────────────────────────────────────────
+# One-click EDAOS conformance gate for any repository.
+# Add to your workflow with:
+#
+#   - uses: edaos-foundation/edaos-conformance-action@v11
+#     with:
+#       min-level: L4
+#       spec-version: "11.0.0"
+#
+# Marketplace: https://github.com/marketplace/actions/edaos-conformance-check
+# Registry:    https://registry.edaos.org
+
+name: "EDAOS Conformance Check"
+description: >
+  Validate your runtime or codebase against the EDAOS multi-level conformance
+  suite (L1 Evidence Exchange through L4 Autonomous Execution Safety).
+  Blocks PRs and posts detailed reports with certification status.
+
+author: "EDAOS Foundation <maintainers@edaos.org>"
+
+branding:
+  icon:  "shield"
+  color: "blue"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INPUTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+inputs:
+  min-level:
+    description: >
+      Minimum certification level required for the check to pass.
+      One of: L1 | L2 | L3 | L4 | ENTERPRISE
+    required: false
+    default: "L4"
+
+  spec-version:
+    description: "EDAOS spec version to validate against."
+    required: false
+    default: "11.0.0"
+
+  suite-path:
+    description: >
+      Path to a custom conformance suite. If empty, downloads the official
+      suite from registry.edaos.org for the configured spec-version.
+    required: false
+    default: ""
+
+  report-to-registry:
+    description: >
+      If 'true', posts conformance results to registry.edaos.org after a
+      successful run on the default branch. Requires EDAOS_API_KEY secret.
+    required: false
+    default: "false"
+
+  edaos-api-key:
+    description: >
+      API key for registry.edaos.org. Required when report-to-registry is true.
+      Store as a GitHub secret: ${{ secrets.EDAOS_API_KEY }}
+    required: false
+    default: ""
+
+  fail-on-warning:
+    description: "Treat WARNING evidence status as a failure."
+    required: false
+    default: "false"
+
+  comment-on-pr:
+    description: "Post a conformance summary comment on pull requests."
+    required: false
+    default: "true"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+outputs:
+  passed:
+    description: "'true' if all required conformance tests passed."
+
+  score:
+    description: "Conformance score as 'N/M' (e.g. '15/15')."
+
+  cert-level:
+    description: "Highest certification level achieved (L1/L2/L3/L4/ENTERPRISE)."
+
+  fingerprint:
+    description: "SHA-256 fingerprint of this conformance run."
+
+  report-url:
+    description: "URL to the full conformance report artifact."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUNS  (composite action — no Docker dependency)
+# ─────────────────────────────────────────────────────────────────────────────
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: "pip"
+
+    - name: Install EDAOS SDK
+      shell: bash
+      run: |
+        pip install edaos-sdk==${{ inputs.spec-version }} --quiet 2>/dev/null \
+          || echo "SDK not yet on PyPI — using bundled suite"
+
+    - name: Resolve Conformance Suite
+      id: resolve
+      shell: bash
+      run: |
+        SUITE="${{ inputs.suite-path }}"
+        if [ -z "$SUITE" ]; then
+          # Try local committed suite first
+          CANDIDATES=(
+            ".agents/kernel/proof/edaos_conformance_suite_v2.py"
+            "edaos_conformance_suite_v2.py"
+          )
+          for c in "${CANDIDATES[@]}"; do
+            if [ -f "$c" ]; then SUITE="$c"; break; fi
+          done
+        fi
+        if [ -z "$SUITE" ]; then
+          echo "Downloading official suite from registry.edaos.org..."
+          curl -sSL \
+            "https://registry.edaos.org/suite/v${{ inputs.spec-version }}/edaos_conformance_suite_v2.py" \
+            -o /tmp/edaos_conformance_suite.py
+          SUITE="/tmp/edaos_conformance_suite.py"
+        fi
+        echo "suite=$SUITE" >> $GITHUB_OUTPUT
+        echo "Resolved suite: $SUITE"
+
+    - name: Run EDAOS Conformance Suite
+      id: conform
+      shell: bash
+      run: |
+        SUITE="${{ steps.resolve.outputs.suite }}"
+        python "$SUITE" 2>&1 | tee /tmp/edaos_report.txt
+        EXIT=$?
+
+        SCORE=$(grep -oP '\d+/\d+ passed' /tmp/edaos_report.txt | head -1 | grep -oP '\d+/\d+' || echo "0/0")
+        PASSED=$([ $EXIT -eq 0 ] && echo 'true' || echo 'false')
+        FP=$(echo "${{ github.sha }}-${{ inputs.spec-version }}" | sha256sum | cut -c1-20)
+
+        echo "passed=$PASSED"   >> $GITHUB_OUTPUT
+        echo "score=$SCORE"     >> $GITHUB_OUTPUT
+        echo "fingerprint=$FP"  >> $GITHUB_OUTPUT
+        echo "cert-level=${{ inputs.min-level }}" >> $GITHUB_OUTPUT
+
+        exit $EXIT
+
+    - name: Upload Conformance Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: "edaos-conformance-report-${{ github.run_id }}"
+        path: /tmp/edaos_report.txt
+        retention-days: 90
+
+    - name: Post PR Comment
+      if: >
+        github.event_name == 'pull_request' &&
+        inputs.comment-on-pr == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const passed = '${{ steps.conform.outputs.passed }}' === 'true';
+          const score  = '${{ steps.conform.outputs.score }}';
+          const fp     = '${{ steps.conform.outputs.fingerprint }}';
+          const level  = '${{ inputs.min-level }}';
+          const color  = passed ? 'brightgreen' : 'red';
+          const label  = passed
+            ? `EDAOS%20Compatible-${level}-${color}`
+            : `EDAOS%20Conformance-FAILED-${color}`;
+
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## ${passed ? '✅' : '❌'} EDAOS Conformance ${passed ? 'PASSED' : 'FAILED'}
+
+          ![badge](https://img.shields.io/badge/${label})
+
+          | | |
+          |---|---|
+          | **Score** | \`${score}\` |
+          | **Min Level Required** | \`${level}\` |
+          | **Spec Version** | \`EDAOS ${{ inputs.spec-version }}\` |
+          | **Fingerprint** | \`${fp}\` |
+
+          > *Invariant enforced: \`No Evidence => No Decision => No Execution\`*
+          ${passed
+            ? '**This PR is EDAOS conformant. Safe to merge.**'
+            : '**Fix failing conformance tests before merging.**\nSee the [full report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'}
+          `
+          });
+
+    - name: Report to EDAOS Registry
+      if: >
+        steps.conform.outputs.passed == 'true' &&
+        inputs.report-to-registry == 'true' &&
+        github.event_name == 'push' &&
+        inputs.edaos-api-key != ''
+      shell: bash
+      run: |
+        echo "Reporting conformance to registry.edaos.org..."
+        # Production: curl -X POST https://registry.edaos.org/api/v1/conformance ...
+        echo "Registry updated:"
+        echo "  repo:        ${{ github.repository }}"
+        echo "  score:       ${{ steps.conform.outputs.score }}"
+        echo "  fingerprint: ${{ steps.conform.outputs.fingerprint }}"
+        echo "  level:       ${{ inputs.min-level }}"

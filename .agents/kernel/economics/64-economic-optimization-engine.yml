@@ -1,0 +1,20 @@
+# EDAOS Kernel: Multi-Objective Economic Optimization Engine
+# Path: .agents/kernel/economics/64-economic-optimization-engine.yml
+
+schema_version: "1.0.0"
+runtime_component: "EconomicOptimizationEngine"
+status: "APPROVED"
+
+description: >
+  Economic Optimization Engine balances decision quality, ROI, token cost, and risk 
+  to select the most cost-effective action strategy for the enterprise.
+
+---
+
+economic_optimization_spec:
+  optimization_formula: >
+    OptimalStrategy = (QualityScore * 0.40) + (ROIScore * 0.30) - (TokenCostScore * 0.15) - (RiskScore * 0.15)
+
+  cost_efficiency_guards:
+    max_token_budget_per_decision_usd: 0.005
+    prefer_cached_reasoning_paths: true

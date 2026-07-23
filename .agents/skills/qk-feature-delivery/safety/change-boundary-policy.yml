@@ -1,0 +1,19 @@
+# Safety Policy: Change Boundary Risk Policy
+# Path: .agents/skills/qk-feature-delivery/safety/change-boundary-policy.yml
+
+change_boundary_classification:
+  LOW:
+    change_type: "New Component Creation"
+    human_gate_required: false
+
+  MEDIUM:
+    change_type: "New API Endpoint Integration"
+    human_gate_required: false # Triggered if confidence < 0.85
+
+  HIGH:
+    change_type: "Database Schema Migration"
+    human_gate_required: true
+
+  CRITICAL:
+    change_type: "Authentication & Permission Model Change"
+    human_gate_required: true

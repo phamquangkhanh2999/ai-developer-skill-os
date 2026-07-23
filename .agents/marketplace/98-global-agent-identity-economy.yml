@@ -1,0 +1,20 @@
+# EDAOS Marketplace: Global Agent Identity Economy & Micro-Payment Protocol
+# Path: .agents/marketplace/98-global-agent-identity-economy.yml
+
+schema_version: "1.0.0"
+contract_type: "GlobalAgentIdentityEconomy"
+status: "APPROVED"
+
+description: >
+  Global Agent Identity Economy standardizes inter-enterprise cryptographic agent identities 
+  and micro-payments for cross-cloud capability invocation.
+
+---
+
+global_economy_spec:
+  identity_resolution: "Decentralized Identifiers (DIDs)"
+
+  payment_settlement:
+    protocol: "Interledger Protocol (ILP) / ISO 20022 Micro-Payments"
+    settlement_latency_ms: 250
+    transaction_fee_percentage: 0.01 # 0.01% protocol fee

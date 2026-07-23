@@ -1,0 +1,31 @@
+# EDAOS Intelligence: Cross-Domain Multi-Agent Negotiation Protocol
+# Path: .agents/intelligence/negotiation/61-agent-negotiation-protocol.yml
+
+schema_version: "1.0.0"
+contract_type: "AgentNegotiationProtocol"
+status: "APPROVED"
+
+description: >
+  Cross-Domain Negotiation Protocol coordinates trade-offs and proposal resolutions 
+  between specialized domain agents (Frontend Agent, Backend Agent, Security Agent, Architecture Agent).
+
+---
+
+negotiation_protocol_spec:
+  protocol_engine: "MultiAgentContractArbitrator"
+
+  participating_agents:
+    - agent_id: "frontend_agent"
+      domain: "frontend.web"
+    - agent_id: "backend_agent"
+      domain: "backend.golang"
+    - agent_id: "security_agent"
+      domain: "security.application"
+    - agent_id: "architecture_agent"
+      domain: "engineering.governance"
+
+  negotiation_workflow:
+    1_proposal_submission: "Agent A submits proposal impacting multi-domain contracts"
+    2_cross_agent_review: "Participating agents evaluate proposal against domain policies"
+    3_conflict_arbitration: "If conflict arises, invoke 14-decision-arbitration-engine.yml"
+    4_contract_signoff: "All participating agents emit ConsensusSigned Event"

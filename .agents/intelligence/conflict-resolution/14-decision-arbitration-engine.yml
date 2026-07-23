@@ -1,0 +1,40 @@
+# EDAOS Intelligence: Decision Arbitration Engine Specification
+# Path: .agents/intelligence/conflict-resolution/14-decision-arbitration-engine.yml
+
+schema_version: "1.0.0"
+contract_type: "DecisionArbitrationEngine"
+status: "APPROVED"
+
+description: >
+  Decision Arbitration Engine resolves rule collisions, optimization trade-offs, 
+  and policy conflicts when multiple valid decisions compete within the reasoning graph.
+
+---
+
+arbitration_matrix:
+  priority_hierarchy:
+    - category: "Security"
+      weight: 100
+    - category: "UserExperience"
+      weight: 95
+    - category: "ArchitectureIntegrity"
+      weight: 90
+    - category: "Correctness"
+      weight: 85
+    - category: "Performance"
+      weight: 70
+    - category: "CodeStyle"
+      weight: 30
+
+  collision_resolution_strategies:
+    merge_if_possible:
+      description: "Combines non-conflicting actions into a unified Action Plan"
+      example: "Preload Hero Image + Convert to WebP format"
+
+    hierarchy_precedence:
+      description: "Higher priority category overrides lower priority category"
+      example: "Security Policy (100) overrides Style Refactor (30)"
+
+    otherwise_human_gate:
+      description: "Triggers Human Gate when two equal-priority decisions collide without merge path"
+      example: "Preload Above-Fold Asset vs Lazy Load Below-Fold Asset collision"

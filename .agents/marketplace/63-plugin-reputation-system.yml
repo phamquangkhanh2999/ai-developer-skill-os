@@ -1,0 +1,26 @@
+# EDAOS Marketplace: Plugin Reputation & Security Trust Scoring
+# Path: .agents/marketplace/63-plugin-reputation-system.yml
+
+schema_version: "1.0.0"
+contract_type: "PluginReputationSystem"
+status: "APPROVED"
+
+description: >
+  Plugin Reputation System automatically evaluates third-party Marketplace Plugins 
+  for security vulnerabilities, performance overhead, and community trust scores.
+
+---
+
+reputation_system_spec:
+  scoring_algorithm: "CompositeTrustScoreEngine"
+  target_trust_score: 90 # Out of 100
+
+  trust_score_weights:
+    security_audit_scan: 0.40 # Zero CVEs & zero unverified IO
+    publisher_attestation: 0.30 # Signed by Verified Publisher
+    runtime_reliability_history: 0.20 # > 99.5% execution success
+    community_rating: 0.10
+
+  auto_quarantine_policy:
+    trigger_condition: "trust_score < 70 || vulnerability_detected"
+    action: "QUARANTINE_PLUGIN_IMMEDIATELY"

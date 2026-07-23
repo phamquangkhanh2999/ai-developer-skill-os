@@ -1,0 +1,35 @@
+schema_version: 1.0
+name: Antigravity Input Observation Schema
+
+properties:
+  observation:
+    type: object
+    properties:
+      source:
+        type: object
+        properties:
+          type:
+            type: string
+            enum: [antigravity]
+        required: [type]
+
+      context:
+        type: object
+        properties:
+          workspace: { type: string }
+          file_reference: { type: string }
+          ast_node: { type: string }
+          selection: { type: string }
+        required: [workspace, file_reference]
+
+      provenance:
+        type: object
+        properties:
+          source_type: { type: string, enum: [antigravity] }
+          adapter_id: { type: string }
+          adapter_version: { type: string }
+          timestamp: { type: string }
+        required: [source_type, adapter_id, adapter_version, timestamp]
+
+required:
+  - observation

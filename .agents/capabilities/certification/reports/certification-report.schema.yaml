@@ -1,0 +1,65 @@
+schema_version: 1.0
+name: Certification Report Schema
+description: Enforces the structure of the Certification Report output by the pipeline.
+
+properties:
+  certification_report:
+    type: object
+    properties:
+      capability:
+        type: object
+        properties:
+          id: { type: string }
+          version: { type: string }
+        required: [id, version]
+
+      certification_id:
+        type: string
+        description: UUID for this certification run.
+
+      evaluated_at:
+        type: string
+
+      pipeline_version:
+        type: string
+
+      checks:
+        type: object
+        properties:
+          schema:
+            type: object
+            properties:
+              result: { type: string, enum: [pass, fail] }
+              evidence: { type: string }
+          provenance:
+            type: object
+            properties:
+              result: { type: string, enum: [pass, fail] }
+              evidence_hash: { type: string }
+          permission:
+            type: object
+            properties:
+              result: { type: string, enum: [pass, fail] }
+              violations: { type: array, items: { type: string } }
+          golden_flow:
+            type: object
+            properties:
+              result: { type: string, enum: [pass, fail] }
+              test_reference: { type: string }
+
+      final:
+        type: object
+        properties:
+          status:
+            type: string
+            enum: [certified, rejected, sandbox, pending]
+          confidence:
+            type: number
+
+required:
+  - capability
+  - certification_id
+  - evaluated_at
+  - pipeline_version
+  - checks
+  - final

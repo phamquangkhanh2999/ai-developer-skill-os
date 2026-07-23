@@ -1,0 +1,21 @@
+# EDAOS Marketplace: Inter-Agent Economy & Bidding Protocol
+# Path: .agents/marketplace/81-agent-economy-protocol.yml
+
+schema_version: "1.0.0"
+contract_type: "AgentEconomyProtocol"
+status: "APPROVED"
+
+description: >
+  Defines inter-agent resource bidding, capability monetization, and token settlement 
+  between autonomous domain agents.
+
+---
+
+agent_economy_spec:
+  settlement_currency: "EDAOS_Token_Credits"
+
+  capability_bidding_flow:
+    1_task_broadcast: "Control Plane broadcasts task requirement to registered Agent Providers"
+    2_agent_bids: "Agents submit bids specifying latency, accuracy guarantee, and token cost"
+    3_contract_award: "Control Plane awards task via 64-economic-optimization-engine formula"
+    4_settlement: "Saga compensation releases token credits upon verified outcome"

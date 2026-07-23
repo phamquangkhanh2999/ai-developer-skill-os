@@ -1,0 +1,29 @@
+# EDAOS Kernel: Rule Execution Engine Specification
+# Path: .agents/kernel/23-rule-execution-engine.yml
+
+schema_version: "1.0.0"
+runtime_component: "RuleExecutionEngine"
+status: "APPROVED"
+
+description: >
+  Rule Execution Engine processes Findings and Evidences against active Rule Catalogs, 
+  invokes Decision Arbitration, and formulates strategic Decisions.
+
+---
+
+rule_execution_engine_spec:
+  engine: "ReasoningGraphEvaluator"
+
+  conflict_arbitration_ref: ".agents/intelligence/conflict-resolution/14-decision-arbitration-engine.yml"
+
+  execution_pipeline:
+    1_match_triggers: "Match Finding category against active Rule Contract triggers"
+    2_verify_capabilities: "Confirm required capabilities are available via Capability Router"
+    3_evaluate_rule_conditions: "Evaluate rule assertions against evidence payload"
+    4_arbitrate_conflicts: "Resolve collisions via Decision Arbitration Engine"
+    5_calculate_decision_confidence: "Propagate confidence scores via Monotonic Decay formula"
+    6_formulate_decision: "Emit Decision entity + DecisionFormulated Event"
+
+  explainability_enforcer:
+    require_evidence_chain: true
+    require_rationale: true

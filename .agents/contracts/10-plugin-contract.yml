@@ -1,0 +1,204 @@
+# EDAOS Contracts: Plugin Contract Specification
+# Path: .agents/contracts/10-plugin-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "PluginContract"
+status: "APPROVED"
+
+description: >
+  Plugin Contract establishes the Microkernel Boundary of EDAOS Core.
+  It enables domain-specific extensions (Frontend, Backend, Mobile, Security, DevOps) 
+  to package Rules, Policies, Capabilities, Adapters, Evidence Schemas, and Learning Namespaces 
+  without mutating or coupling the Core Runtime.
+
+---
+
+# 1. Plugin Contract Schema Definition
+
+plugin_schema:
+  # -------------------------------------------------------------------
+  # Pillar 1: Plugin Identity & Compatibility
+  # -------------------------------------------------------------------
+  identity:
+    plugin_id: "frontend.web"
+    version: "1.0.0"
+    domain: "frontend" # frontend | backend | mobile | security | devops | data
+    author: "EDAOS Frontend Architecture Team"
+    
+    edaos_core_requirement:
+      min_core_version: ">=1.0.0"
+      max_core_version: "<2.0.0"
+
+  # -------------------------------------------------------------------
+  # Pillar 2: Plugin Manifest Inventory
+  # -------------------------------------------------------------------
+  manifest:
+    exported_rules:
+      - "frontend.performance.hero_render_optimization"
+      - "frontend.ui.accessibility_compliance"
+      - "frontend.architecture.prevent_prop_drilling"
+
+    exported_policies:
+      - "POL-FE-PERF-CORE-01"
+      - "POL-FE-A11Y-AA-01"
+
+    exported_capabilities:
+      - "ui.capture"
+      - "ui.visual_diff"
+      - "browser.performance"
+      - "accessibility.evaluate"
+
+    exported_evidence_types:
+      - "WebVitalEvidence"
+      - "BundleEvidence"
+      - "RenderEvidence"
+      - "AccessibilityEvidence"
+
+    exported_decision_patterns:
+      - "OPTIMIZE_RESOURCE_LOADING"
+      - "APPLY_MEMOIZATION_HOOK"
+      - "ENFORCE_ACCESSIBILITY_ARIA"
+
+  # -------------------------------------------------------------------
+  # Pillar 3: Plugin Boundary & Anti-Coupling Rules
+  # -------------------------------------------------------------------
+  boundary_rules:
+    allowed_extensions:
+      - "Extend BaseEvidence with domain metric fields"
+      - "Register new Capability definitions"
+      - "Register Provider Adapters"
+      - "Attach custom Guards to Resource State Machines"
+    
+    forbidden_mutations:
+      - "MUST NOT mutate Core Observation base model"
+      - "MUST NOT alter Core 9-Stage Processing Pipeline"
+      - "MUST NOT bypass Core Event Bus"
+      - "MUST NOT override Core Policy Evaluator logic"
+
+  # -------------------------------------------------------------------
+  # Pillar 4: Plugin Dependency Graph
+  # -------------------------------------------------------------------
+  dependencies:
+    required_plugins:
+      - plugin_id: "security.application"
+        min_version: ">=1.0.0"
+        optional: false
+
+    optional_plugins:
+      - plugin_id: "devops.ci_cd"
+        min_version: ">=1.0.0"
+        optional: true
+
+  # -------------------------------------------------------------------
+  # Pillar 5: Plugin Capability Export Contract
+  # -------------------------------------------------------------------
+  capability_exports:
+    - capability_id: "ui.capture"
+      maturity_level: 4
+      primary_provider_ref: "browser-runtime-provider"
+      produces_evidence_types: ["VisualEvidence"]
+
+    - capability_id: "browser.performance"
+      maturity_level: 4
+      primary_provider_ref: "chrome-devtools-provider"
+      produces_evidence_types: ["WebVitalEvidence", "RenderEvidence"]
+
+  # -------------------------------------------------------------------
+  # Pillar 6: Plugin Evidence Extension Schema
+  # -------------------------------------------------------------------
+  evidence_extensions:
+    WebVitalEvidence:
+      extends: "Evidence"
+      domain_category: "Performance"
+      extended_metrics:
+        - name: "LCP"
+          type: "number"
+          unit: "seconds"
+        - name: "CLS"
+          type: "number"
+          unit: "ratio"
+        - name: "INP"
+          type: "number"
+          unit: "milliseconds"
+        - name: "TTFB"
+          type: "number"
+          unit: "milliseconds"
+
+    BundleEvidence:
+      extends: "Evidence"
+      domain_category: "Performance"
+      extended_metrics:
+        - name: "TotalBundleJS"
+          type: "number"
+          unit: "KB"
+        - name: "VendorChunkSize"
+          type: "number"
+          unit: "KB"
+
+  # -------------------------------------------------------------------
+  # Pillar 7: Plugin Policy Bundle Integration
+  # -------------------------------------------------------------------
+  policy_bundles:
+    bundle_id: "BND-FE-WEB-DEFAULT"
+    name: "FrontendWebDefaultQualityBundle"
+    contains_policies:
+      - "POL-FE-PERF-CORE-01"
+      - "POL-FE-A11Y-AA-01"
+
+  # -------------------------------------------------------------------
+  # Pillar 8: Plugin Lifecycle State Machine
+  # -------------------------------------------------------------------
+  lifecycle:
+    current_state: "Active"
+    valid_states:
+      - "Created"
+      - "Registered"
+      - "Validated"
+      - "Installed"
+      - "Active"
+      - "Deprecated"
+      - "Removed"
+
+    state_transitions:
+      - from: Registered
+        to: Validated
+        trigger: "PluginManifestValidationPassed"
+      
+      - from: Validated
+        to: Installed
+        trigger: "DependenciesResolved"
+
+      - from: Installed
+        to: Active
+        trigger: "PluginLoadedIntoMicrokernel"
+
+  # -------------------------------------------------------------------
+  # Pillar 9: Plugin Learning Namespace (Memory Isolation)
+  # -------------------------------------------------------------------
+  learning_namespace:
+    namespace: "edaos.learning.frontend.web"
+    knowledge_isolation: true # Keeps frontend learnings isolated from backend/mobile memory
+    vector_store_collection: "fe_web_patterns"
+
+---
+
+# 2. Canonical Plugin Registry Example
+
+canonical_plugin_registry:
+  - plugin_id: "frontend.web"
+    version: "1.0.0"
+    status: "Active"
+    exported_capabilities_count: 4
+    exported_rules_count: 3
+
+  - plugin_id: "backend.service"
+    version: "1.0.0"
+    status: "Active"
+    exported_capabilities_count: 5
+    exported_rules_count: 4
+
+  - plugin_id: "security.application"
+    version: "1.0.0"
+    status: "Active"
+    exported_capabilities_count: 3
+    exported_rules_count: 2

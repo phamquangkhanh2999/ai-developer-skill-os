@@ -1,0 +1,36 @@
+# EDAOS Kernel: Distributed Runtime Specification
+# Path: .agents/kernel/distributed/28-distributed-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "DistributedRuntime"
+status: "APPROVED"
+
+description: >
+  Distributed Runtime decouples the EDAOS Control Plane from Worker Nodes, enabling multi-node 
+  task scheduling, load balancing, and distributed execution.
+
+---
+
+distributed_runtime_spec:
+  architecture: "ControlPlane_WorkerNode_Decoupled"
+
+  control_plane:
+    controller_id: "edaos-primary-controller-01"
+    ha_cluster: true
+    heartbeat_interval_seconds: 5
+
+  worker_nodes:
+    max_worker_agents: 64
+    agent_types:
+      - "frontend_worker"
+      - "backend_worker"
+      - "security_audit_worker"
+      - "performance_benchmark_worker"
+
+  queue_manager:
+    broker_engine: "DistributedMessageBroker"
+    task_distribution_policy: "LEAST_LOADED_WORKER"
+
+  fault_tolerance:
+    worker_crash_recovery: "REASSIGN_TASK_TO_IDLE_WORKER"
+    task_idempotency_enforced: true

@@ -1,0 +1,30 @@
+# Strategy Contract: LCP Optimization Strategy
+# Path: .agents/skills/qk-performance-tuner/strategies/lcp-optimization.strategy.yml
+
+strategy_id: "optimize_lcp_image_loading"
+domain: "frontend"
+category: "Performance"
+
+when:
+  finding_category: "render_blocking_resource"
+  target_metric: "LCP"
+
+preconditions:
+  - "image_resource_exists == true"
+  - "asset_is_above_fold == true"
+
+actions:
+  - id: "convert_to_webp"
+    description: "Convert source PNG/JPEG asset to WebP format"
+    estimated_size_reduction: "45%"
+
+  - id: "add_preload_hint"
+    description: "Inject <link rel='preload' as='image'> hint into HTML head"
+    estimated_latency_reduction_ms: 1300
+
+  - id: "set_explicit_dimensions"
+    description: "Set width and height attributes to eliminate layout shift"
+
+expected_outcome:
+  target_metric: "LCP"
+  improvement_target: "policy.performance.lcp"

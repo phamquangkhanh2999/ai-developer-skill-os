@@ -1,0 +1,25 @@
+# EDAOS Intelligence: Enterprise-Wide Learning Loop Specification
+# Path: .agents/intelligence/learning/67-enterprise-learning-loop.yml
+
+schema_version: "1.0.0"
+contract_type: "EnterpriseLearningLoop"
+status: "APPROVED"
+
+description: >
+  Enterprise Learning Loop propagates verified patterns, optimization insights, 
+  and incident post-mortems across all 100+ microservices in the enterprise.
+
+---
+
+enterprise_learning_spec:
+  learning_propagation_engine: "GlobalVectorKnowledgeMesh"
+
+  propagation_rules:
+    min_confidence_score: 0.90
+    auto_federate_across_tenants: false # Multi-tenant isolation preserved
+    federate_within_organization: true
+
+  learning_categories:
+    - "PERFORMANCE_OPTIMIZATION_PATTERNS"
+    - "SECURITY_VULNERABILITY_FIXES"
+    - "STABILITY_INCIDENT_POST_MORTEMS"

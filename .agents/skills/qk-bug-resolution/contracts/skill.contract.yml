@@ -1,0 +1,36 @@
+# Skill Contract: qk-bug-resolution
+# Path: .agents/skills/qk-bug-resolution/contracts/skill.contract.yml
+
+skill_id: "qk-bug-resolution"
+version: "2.0.0"
+type: "resolution_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "Finding"
+  - entity_type: "Decision"
+  - entity_type: "ActionPlan"
+  - entity_type: "EvidenceBundle"
+  - entity_type: "PolicyContext"
+
+forbidden_inputs:
+  - entity_type: "RawObservation"
+  - entity_type: "ToolLogs"
+  - entity_type: "StackTraceOnly"
+
+produces:
+  - entity_type: "ExecutionResult"
+  - entity_type: "Outcome"
+  - entity_type: "Learning"
+
+required_capabilities:
+  - capability_id: "code.ast"
+    min_maturity: 2
+  - capability_id: "code.references"
+    min_maturity: 2
+  - capability_id: "code.modify"
+    min_maturity: 3
+
+safety_guards:
+  require_compensating_action: true
+  risk_evaluator: "safety/mutation-policy.yml"

@@ -1,0 +1,47 @@
+# EDAOS Domain Plugin Manifest: Frontend Web
+# Path: .agents/plugins/frontend.web/plugin.yml
+
+plugin_id: "frontend.web"
+name: "EDAOS Frontend Web Domain Plugin"
+version: "1.0.0"
+domain: "frontend"
+description: "Reference Domain Plugin providing capabilities, policies, rules, adapters, and evidence schemas for modern Frontend Web engineering."
+
+edaos_core_requirement:
+  min_core_version: ">=1.0.0"
+
+manifest:
+  capabilities:
+    - "capabilities/ui.capture.yml"
+    - "capabilities/ui.visual-diff.yml"
+    - "capabilities/browser.performance.yml"
+    - "capabilities/accessibility.evaluate.yml"
+    - "capabilities/bundle.analyze.yml"
+    - "capabilities/code.react-analysis.yml"
+
+  evidence_schemas:
+    - "evidence/web-vital-evidence.yml"
+    - "evidence/visual-evidence.yml"
+    - "evidence/accessibility-evidence.yml"
+    - "evidence/bundle-evidence.yml"
+
+  policies:
+    - "policies/performance.policy.yml"
+    - "policies/accessibility.policy.yml"
+    - "policies/visual.policy.yml"
+    - "policies/bundle.policy.yml"
+
+  rules:
+    - "rules/optimize-lcp.rule.yml"
+    - "rules/prevent-layout-shift.rule.yml"
+    - "rules/reduce-bundle-size.rule.yml"
+    - "rules/accessibility-fix.rule.yml"
+
+  adapters:
+    - "adapters/playwright.adapter.yml"
+    - "adapters/lighthouse.adapter.yml"
+    - "adapters/axe.adapter.yml"
+    - "adapters/vite.adapter.yml"
+
+  learning:
+    - "learning/frontend-patterns.yml"

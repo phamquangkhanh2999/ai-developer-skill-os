@@ -1,0 +1,71 @@
+# EDAOS Deployment: Skill Promotion Manifest
+# Path: .agents/deployment/skill-promotion-manifest.yml
+
+version: "2.0.0"
+manifest_id: "PROM-FE-2026-002"
+
+source:
+  type: "workspace"
+  path: ".agents/skills"
+
+target:
+  type: "global-runtime"
+  path: "C:/Users/qkhanh/.gemini/config/skills"
+
+promoted_skills:
+  # Core SDLC Orchestrators (Wave 1)
+  - name: "qk-engineering-standard"
+    version: "2.0.0"
+    type: "governance_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-ui-audit"
+    version: "2.0.0"
+    type: "reasoning_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-performance-tuner"
+    version: "2.0.0"
+    type: "optimization_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-bug-resolution"
+    version: "2.0.0"
+    type: "resolution_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-feature-delivery"
+    version: "2.0.0"
+    type: "delivery_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-production-release"
+    version: "2.0.0"
+    type: "release_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-project-health"
+    version: "2.0.0"
+    type: "health_orchestrator"
+    status: "APPROVED"
+
+  # Platform Control Plane Skills (Wave 2)
+  - name: "qk-orchestrator"
+    version: "2.0.0"
+    type: "control_plane_orchestrator"
+    status: "APPROVED"
+
+  - name: "qk-context-loader"
+    version: "2.0.0"
+    type: "context_assembly_engine"
+    status: "APPROVED"
+
+  - name: "qk-validation-gate"
+    version: "2.0.0"
+    type: "conformance_enforcement_engine"
+    status: "APPROVED"
+
+  - name: "qk-system-evolution"
+    version: "2.0.0"
+    type: "evolution_governance_client"
+    status: "APPROVED"

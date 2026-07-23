@@ -1,0 +1,364 @@
+# EDAOS v15 — Skill-MCP Runtime Binding Layer
+# Capability Registry + Evidence-driven Routing
+# ─────────────────────────────────────────────────────────────────────────────
+# File này là "contract" giữa Skill Layer và MCP Execution Layer.
+# Mọi skill muốn gọi MCP PHẢI khai báo ở đây.
+# Router đọc file này trước khi cho phép bất kỳ MCP call nào.
+#
+# Invariant: No Evidence => No MCP Call => No Execution
+
+router:
+  version: "1.0.0"
+  spec_version: "EDAOS 11.0.0"
+  mode: evidence_driven          # strict | evidence_driven | permissive
+  journal_required: true         # mọi MCP execution phải có journal entry
+  unknown_skill_policy: BLOCK    # BLOCK | WARN | ALLOW
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SKILL CAPABILITY REGISTRY
+# ─────────────────────────────────────────────────────────────────────────────
+
+skills:
+
+  qk-ui-builder:
+    description: "Build, fix, audit UI from Figma/image/redesign"
+    evidence_required:
+      - type: source_artifact
+        description: "Design spec, screenshot, or existing UI files"
+        providers: [filesystem.read, browser.screenshot]
+      - type: api_contract
+        description: "API endpoints the UI will consume"
+        optional: true
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - browser.navigate
+      - browser.screenshot
+    execution:
+      provider: mcp
+      timeout_ms: 30000
+      max_retries: 2
+    journal:
+      required: true
+      level: L3
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-bug-resolution:
+    description: "Fix bugs via closed-loop Evidence-Driven cycle"
+    evidence_required:
+      - type: error_trace
+        description: "Stack trace, error log, or reproduction steps"
+        providers: [filesystem.read, terminal.run]
+      - type: failing_test
+        description: "Test that demonstrates the bug"
+        optional: true
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - terminal.run
+      - git.diff
+      - git.log
+    execution:
+      provider: mcp
+      timeout_ms: 60000
+      max_retries: 3
+    journal:
+      required: true
+      level: L4
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-api-lifecycle:
+    description: "Design, implement API endpoints with Zero-Trust"
+    evidence_required:
+      - type: api_contract
+        description: "OpenAPI spec or endpoint definition"
+        providers: [filesystem.read]
+      - type: schema_artifact
+        description: "Database schema or data model"
+        optional: true
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - terminal.run
+      - database.inspect
+    execution:
+      provider: mcp
+      timeout_ms: 45000
+      max_retries: 2
+    journal:
+      required: true
+      level: L3
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-fe-api-integration:
+    description: "Consume Backend API, manage State, bind to UI"
+    evidence_required:
+      - type: api_contract
+        description: "Backend API schema or OpenAPI spec"
+        providers: [filesystem.read, network.fetch]
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - network.fetch
+      - browser.navigate
+    execution:
+      provider: mcp
+      timeout_ms: 30000
+      max_retries: 2
+    journal:
+      required: true
+      level: L2
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-db-optimizer:
+    description: "Optimize Database via EXPLAIN → index/join"
+    evidence_required:
+      - type: query_plan
+        description: "EXPLAIN output or slow query log"
+        providers: [database.explain, filesystem.read]
+    capabilities:
+      - database.explain
+      - database.query
+      - filesystem.read
+      - filesystem.write
+    execution:
+      provider: mcp
+      timeout_ms: 120000
+      max_retries: 1
+    journal:
+      required: true
+      level: L4
+    rollback:
+      supported: false          # DB schema changes need manual rollback plan
+      warning: "Schema changes require explicit rollback plan before execution"
+
+  qk-docs:
+    description: "Write and maintain accurate documentation"
+    evidence_required:
+      - type: source_artifact
+        description: "Source code or API to document"
+        providers: [filesystem.read, git.inspect]
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - git.inspect
+    execution:
+      provider: mcp
+      timeout_ms: 20000
+      max_retries: 2
+    journal:
+      required: true
+      level: L1
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-engineering-standard:
+    description: "Enforce SOLID, DRY, Clean Code governance"
+    evidence_required:
+      - type: code_artifact
+        description: "Source files to audit"
+        providers: [filesystem.read]
+      - type: lint_report
+        description: "Current lint/type errors"
+        providers: [terminal.run]
+        optional: true
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - terminal.run
+    execution:
+      provider: mcp
+      timeout_ms: 30000
+      max_retries: 2
+    journal:
+      required: true
+      level: L2
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-performance-tuner:
+    description: "Optimize Frontend performance (LCP, CLS, INP, Bundle)"
+    evidence_required:
+      - type: performance_report
+        description: "Lighthouse or WebVitals measurement"
+        providers: [browser.lighthouse, filesystem.read]
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - browser.lighthouse
+      - terminal.run
+    execution:
+      provider: mcp
+      timeout_ms: 60000
+      max_retries: 2
+    journal:
+      required: true
+      level: L3
+    rollback:
+      supported: true
+      strategy: git_restore
+
+  qk-context-loader:
+    description: "Load context and build dependency graph"
+    evidence_required: []          # context-loader gathers evidence — không require trước
+    capabilities:
+      - filesystem.read
+      - git.inspect
+      - git.log
+    execution:
+      provider: local             # context-loader chạy local, không qua MCP
+      timeout_ms: 15000
+    journal:
+      required: false
+    rollback:
+      supported: false
+
+  qk-project-bootstrap:
+    description: "Initialize new project with standard structure"
+    evidence_required:
+      - type: project_spec
+        description: "Project requirements or tech stack specification"
+        providers: [user_input]
+    capabilities:
+      - filesystem.write
+      - filesystem.read
+      - terminal.run
+      - git.init
+    execution:
+      provider: mcp
+      timeout_ms: 60000
+      max_retries: 1
+    journal:
+      required: true
+      level: L3
+    rollback:
+      supported: false
+      warning: "New project creation — rollback by deleting directory"
+
+  qk-data-lifecycle:
+    description: "Manage Schema, Migrations safely"
+    evidence_required:
+      - type: schema_artifact
+        description: "Current schema state"
+        providers: [database.inspect, filesystem.read]
+      - type: migration_plan
+        description: "Proposed migration script"
+        providers: [filesystem.read]
+    capabilities:
+      - database.inspect
+      - database.migrate
+      - filesystem.read
+      - filesystem.write
+    execution:
+      provider: mcp
+      timeout_ms: 120000
+      max_retries: 1
+    journal:
+      required: true
+      level: L4
+    rollback:
+      supported: true
+      strategy: migration_down
+
+  qk-ai-builder:
+    description: "Design AI logic, Prompts, RAG pipelines"
+    evidence_required:
+      - type: requirement_spec
+        description: "AI task specification or prompt requirement"
+        providers: [filesystem.read, user_input]
+    capabilities:
+      - filesystem.read
+      - filesystem.write
+      - network.fetch
+    execution:
+      provider: mcp
+      timeout_ms: 45000
+      max_retries: 2
+    journal:
+      required: true
+      level: L2
+    rollback:
+      supported: true
+      strategy: git_restore
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MCP PROVIDER REGISTRY
+# ─────────────────────────────────────────────────────────────────────────────
+
+mcp_providers:
+
+  filesystem:
+    tools: [read, write, list, delete, move]
+    requires_approval: [write, delete, move]
+    journal_level: L1
+
+  git:
+    tools: [inspect, log, diff, commit, restore, init]
+    requires_approval: [commit]
+    journal_level: L2
+
+  terminal:
+    tools: [run]
+    requires_approval: [run]          # every terminal command needs approval
+    journal_level: L3
+
+  browser:
+    tools: [navigate, screenshot, lighthouse]
+    requires_approval: []
+    journal_level: L1
+
+  database:
+    tools: [inspect, query, explain, migrate]
+    requires_approval: [query, migrate]
+    journal_level: L4
+
+  network:
+    tools: [fetch]
+    requires_approval: []
+    journal_level: L1
+
+  user_input:
+    tools: [prompt]
+    requires_approval: []
+    journal_level: L1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GOVERNANCE GATES
+# ─────────────────────────────────────────────────────────────────────────────
+
+governance:
+
+  # Minimum evidence score before routing to MCP
+  min_evidence_confidence: 0.8
+
+  # Skills that require human approval before ANY MCP write call
+  human_gate_required:
+    - qk-db-optimizer          # database mutations
+    - qk-data-lifecycle        # schema changes
+    - qk-production-release    # production deployment
+
+  # Constitutional constraint — always enforced
+  invariant: "No Evidence => No MCP Call => No Execution"
+
+  # All MCP executions must produce a journal entry
+  execution_journal:
+    enabled: true
+    path: ".execution/journal.jsonl"
+    format: jsonl
+    retention_days: 90
+
+  # Decision records for provenance
+  decision_records:
+    enabled: true
+    path: ".execution/decisions/"
+    format: yaml

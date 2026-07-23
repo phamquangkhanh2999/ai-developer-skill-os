@@ -1,0 +1,40 @@
+# Skill Workflow: Audit Flow
+# Path: .agents/skills/qk-ui-audit/workflows/audit-flow.yml
+
+workflow_id: "qk-ui-audit-workflow"
+version: "2.0.0"
+
+trigger:
+  type: "ui_audit_request"
+
+steps:
+  - name: collect_runtime_observations
+    requires_capabilities:
+      - "browser.performance"
+      - "ui.capture"
+      - "accessibility.evaluate"
+
+  - name: evaluate_policy_compliance
+    consumes: "Observation"
+    produces: "Evidence"
+    policy_bundle: "BND-FE-WEB-DEFAULT"
+
+  - name: correlate_root_cause
+    consumes: "Evidence"
+    produces: "Finding"
+
+  - name: apply_reasoning_rules
+    consumes: "Finding"
+    produces: "Decision"
+
+  - name: generate_action_plan
+    consumes: "Decision"
+    produces: "ActionPlan"
+
+  - name: verify_outcome
+    consumes: "ActionPlan"
+    produces: "Outcome"
+
+  - name: store_learning
+    consumes: "Outcome"
+    produces: "Learning"

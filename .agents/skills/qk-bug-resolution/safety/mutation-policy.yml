@@ -1,0 +1,28 @@
+# Safety Policy: Mutation Risk Classification
+# Path: .agents/skills/qk-bug-resolution/safety/mutation-policy.yml
+
+risk_classification:
+  LOW:
+    actions:
+      - "variable_rename"
+      - "add_null_guard"
+      - "add_type_annotation"
+    human_gate_required: false
+
+  MEDIUM:
+    actions:
+      - "component_state_refactor"
+      - "api_contract_mapping"
+    human_gate_required: false # Triggered if confidence < 0.85
+
+  HIGH:
+    actions:
+      - "database_schema_migration"
+      - "auth_flow_modification"
+    human_gate_required: true
+
+  CRITICAL:
+    actions:
+      - "production_hotfix"
+      - "security_patch"
+    human_gate_required: true

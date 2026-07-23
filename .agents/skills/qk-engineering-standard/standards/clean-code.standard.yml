@@ -1,0 +1,19 @@
+# Standard Contract: Clean Code Standard
+# Path: .agents/skills/qk-engineering-standard/standards/clean-code.standard.yml
+
+standard_id: "clean_code_dry"
+domain: "engineering"
+category: "Maintainability"
+
+rules:
+  - id: "dry_principle"
+    name: "Don't Repeat Yourself"
+    threshold_duplication_percentage: 5.0
+
+  - id: "cognitive_complexity"
+    name: "Cognitive Complexity Threshold"
+    threshold_max_complexity_per_function: 15
+
+  - id: "small_functions"
+    name: "Function Line Count Limit"
+    threshold_max_lines_per_function: 40

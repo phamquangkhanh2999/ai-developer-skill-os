@@ -1,0 +1,34 @@
+# Skill Workflow: Health Assessment Flow
+# Path: .agents/skills/qk-project-health/workflows/health-assessment-flow.yml
+
+workflow_id: "project.health.assessment"
+version: "2.0.0"
+
+trigger:
+  type: "health_audit_request"
+
+steps:
+  - id: consume_ecosystem_evidence
+    consumes: ["EvidenceBundle", "GovernanceDecision", "ValidationReport", "ReleaseDecision"]
+
+  - id: calculate_6d_health_score
+    metrics_catalog: "metrics/"
+    produces: "ProjectHealthScore"
+
+  - id: detect_decay_trends
+    produces: "HealthTrendAnalysis"
+
+  - id: prioritize_tech_debt
+    decision_pattern: "decision-patterns/technical-debt-priority.yml"
+    produces: "TechnicalDebtRoadmap"
+
+  - id: formulate_health_decision
+    consumes: ["ProjectHealthScore", "TechnicalDebtRoadmap"]
+    produces: "HealthDecision"
+
+  - id: generate_actionable_roadmap
+    produces: "ProjectHealthReport"
+
+  - id: store_system_health_history
+    consumes: "ProjectHealthReport"
+    produces: "Learning"

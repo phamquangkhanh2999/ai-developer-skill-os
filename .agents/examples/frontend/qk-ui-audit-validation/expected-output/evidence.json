@@ -1,0 +1,21 @@
+{
+  "evidence_id": "EVI-2026-PERF-LCP-01",
+  "category": "Performance",
+  "kind": "WebVitalEvidence",
+  "observation_ref": "OBS-2026-FE-001",
+  "policy_ref": "POL-FE-PERF-CORE-01",
+  "status": "FAIL",
+  "severity": "HIGH",
+  "metrics": {
+    "LCP": 3800,
+    "target": 2500,
+    "unit": "ms"
+  },
+  "confidence_breakdown": {
+    "measurement_confidence": 0.98,
+    "interpretation_confidence": 0.95,
+    "correlation_confidence": 0.90,
+    "composite_confidence": 0.838
+  },
+  "timestamp": "2026-07-22T10:13:00Z"
+}

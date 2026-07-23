@@ -1,0 +1,27 @@
+# EDAOS Contract: CI/CD Provider Contract
+# Path: .agents/contracts/35-ci-cd-provider-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "CICDProviderContract"
+status: "APPROVED"
+
+description: >
+  Defines integration interfaces between EDAOS Control Plane and external CI/CD pipelines 
+  (GitHub Actions, GitLab CI, Jenkins, ArgoCD, Kubernetes Operators).
+
+---
+
+cicd_contract_spec:
+  supported_providers:
+    - name: "github_actions"
+      event_hooks: ["pull_request", "push", "workflow_dispatch"]
+
+    - name: "gitlab_ci"
+      event_hooks: ["merge_request_event", "pipeline"]
+
+    - name: "argocd_operator"
+      event_hooks: ["sync_status_change", "health_degraded"]
+
+  execution_boundary:
+    edaos_cli_trigger: "edaos audit && edaos release"
+    block_pipeline_on_gate_fail: true

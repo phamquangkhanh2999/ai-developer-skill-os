@@ -1,0 +1,21 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-DOC-96792
+skill:         qk-docs
+intent:        "intent"
+approved_by:   AUTO
+timestamp:     2026-07-22T09:13:16.792768+00:00
+
+hashes:
+  evidence_hash: b21506350f25b8f50b45408c77d87a6c83f7f7d2539ed7bc1944c5cef54384bc
+  decision_hash: 37f6bc3207687bb86ae8525882e66d85ee201eb91858b6163fd290d17a9c00d4
+
+evidence_ids:
+  - EV-QK-DOC-96792
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - git.inspect
+
+alternatives_rejected:
+  []

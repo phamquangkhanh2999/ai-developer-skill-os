@@ -1,0 +1,17 @@
+# Planning Strategy: Feature Breakdown Strategy
+# Path: .agents/skills/qk-feature-delivery/planning/feature-breakdown.strategy.yml
+
+strategy_id: "feature_component_breakdown"
+domain: "frontend"
+category: "planning"
+
+breakdown_principles:
+  - "Single Responsibility Principle (SRP) per UI component"
+  - "Decouple Presentational Components from Container/Data Hooks"
+  - "Keep state local unless required by sibling components"
+
+deliverables_template:
+  ui_components: []
+  custom_hooks: []
+  api_services: []
+  type_definitions: []

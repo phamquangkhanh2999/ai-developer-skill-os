@@ -1,0 +1,19 @@
+# Release Risk Policy
+# Path: .agents/skills/qk-production-release/policies/release-risk-policy.yml
+
+risk_levels:
+  LOW:
+    criteria: "UI typo, CSS tweak, documentation, feature flag toggle"
+    approval: "AUTOMATIC"
+
+  MEDIUM:
+    criteria: "New non-critical UI component or non-breaking API addition"
+    approval: "AUTOMATIC_IF_GATES_PASS"
+
+  HIGH:
+    criteria: "Database schema migration or core state architecture refactor"
+    approval: "HUMAN_GATE_REQUIRED"
+
+  CRITICAL:
+    criteria: "Authentication, RBAC, payment logic, core security patch"
+    approval: "HUMAN_GATE_REQUIRED"

@@ -1,0 +1,38 @@
+edaos:
+  version: 1.0.0
+
+  architecture:
+    frozen:
+      - capability_contract
+      - evidence_schema
+      - decision_contract
+      - certification_pipeline
+
+  governance:
+    certification_authority:
+      version: 1.0.0
+    invariants:
+      evidence_integrity:
+        enforced: true
+      permission_boundary:
+        enforced: true
+      decision_conflict:
+        enforced: true
+      execution_boundary:
+        enforced: true
+
+  certified_capabilities:
+    - id: market-research-last30days
+      version: 1.0.0
+      certification:
+        status: certified
+
+    - id: understand-anything
+      version: 1.0.0
+      certification:
+        status: certified
+
+    - id: gstack
+      version: 1.0.0
+      certification:
+        status: certified

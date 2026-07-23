@@ -1,0 +1,98 @@
+schema_version: 0.1
+name: Capability Schema (The Constitution)
+description: Strict definition for any Capability Provider entering the EDAOS Ecosystem.
+
+properties:
+  capability:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique identifier for the capability.
+      version:
+        type: string
+      domain:
+        type: string
+        enum: [research, engineering, design, documentation, evaluation, creative]
+      
+      # 1. Identity Block
+      owner:
+        type: string
+        enum: [internal, external, community]
+      created_by:
+        type: string
+        description: The system or entity that created this capability instance.
+      lifecycle:
+        type: string
+        enum: [experimental, approved, deprecated]
+
+      # 2. Purpose & Evidence
+      purpose:
+        type: object
+        properties:
+          produces:
+            type: array
+            items: { type: string }
+      input:
+        type: object
+        properties:
+          required:
+            type: array
+            items: { type: string }
+      evidence:
+        type: object
+        description: Strict contract of the evidence this capability is allowed to generate.
+        properties:
+          output_type:
+            type: array
+            items: { type: string }
+          provenance:
+            type: object
+            properties:
+              required:
+                type: array
+                items:
+                  type: string
+                  enum: [source, timestamp, extraction_method, evidence_hash, parent_observation_id]
+
+      # 3. Decision Contract (Renamed from decision_binding)
+      decision_contract:
+        type: object
+        properties:
+          allowed:
+            type: array
+            items: { type: string }
+
+      # 4. Execution Guards
+      execution:
+        type: object
+        properties:
+          forbidden:
+            type: array
+            items: { type: string }
+
+      # 5. Trust Lifecycle
+      trust:
+        type: object
+        properties:
+          level:
+            type: object
+            properties:
+              default: { type: string }
+          promotion:
+            type: object
+            properties:
+              requires:
+                type: array
+                items: { type: string }
+
+required:
+  - id
+  - version
+  - domain
+  - owner
+  - lifecycle
+  - evidence
+  - decision_contract
+  - execution
+  - trust

@@ -1,0 +1,40 @@
+# Skill Workflow: Engineering Review Flow
+# Path: .agents/skills/qk-engineering-standard/workflows/engineering-review-flow.yml
+
+workflow_id: "engineering.governance.review"
+version: "2.0.0"
+
+trigger:
+  type: "code_review_request"
+  input_entities: ["ChangedFiles"]
+
+steps:
+  - id: consume_code_context
+    consumes: "ChangedFiles"
+
+  - id: measure_metrics
+    requires_capabilities:
+      - "code.ast"
+      - "code.references"
+    produces: "EngineeringEvidence"
+
+  - id: evaluate_standards
+    standards_catalog: "standards/"
+    produces: "StandardEvaluationResult"
+
+  - id: classify_violation
+    hierarchy_priority: true
+    produces: "EngineeringFinding"
+
+  - id: formulate_governance_decision
+    consumes: "EngineeringFinding"
+    produces: "GovernanceDecision"
+
+  - id: delegate_refactoring
+    condition: "decision == REFACTOR_REQUIRED"
+    target_skills:
+      - "qk-bug-resolution"
+
+  - id: store_learning
+    consumes: "GovernanceDecision"
+    produces: "Learning"

@@ -1,0 +1,13 @@
+# Safety Policy: Refactoring Risk Policy
+# Path: .agents/skills/qk-engineering-standard/safety/refactoring-risk-policy.yml
+
+refactoring_risk_rules:
+  - rule: "Anti-Big-Bang Rule"
+    description: "Refactoring MUST NOT rewrite more than 3 files simultaneously in a single Action Plan"
+
+  - rule: "Regression Test Requirement"
+    description: "Refactoring MUST be verified against original test suite + Policy checks"
+
+  - rule: "Human Gate Trigger"
+    condition: "Refactoring affects > 500 lines of code OR boundary integrity violations"
+    action: "TRIGGER_HUMAN_GATE_APPROVAL"

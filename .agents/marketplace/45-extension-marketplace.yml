@@ -1,0 +1,30 @@
+# EDAOS Marketplace: Extension & Plugin Marketplace Specification
+# Path: .agents/marketplace/45-extension-marketplace.yml
+
+schema_version: "1.0.0"
+contract_type: "ExtensionMarketplaceSpecification"
+status: "APPROVED"
+
+description: >
+  Defines publishing standards, SemVer security verification, and distribution policies 
+  for third-party Domain Plugins and Capability Adapters in the EDAOS Ecosystem.
+
+---
+
+marketplace_spec:
+  registry_url: "https://registry.edaos.dev"
+  signing_authority: "EDAOS Plugin Signing Certificate"
+
+  publishing_workflow:
+    1_plugin_package: "Bundle plugin.yml, capabilities, evidence schemas, policies, and rules"
+    2_abi_validation: "Verify edaos_core_requirement and SemVer ABI compatibility"
+    3_security_scan: "Scan for malicious mutations, network leaks, and privilege escalations"
+    4_publish_to_registry: "Publish signed tarball to registry"
+
+  official_extensions:
+    - plugin_id: "frontend.web"
+      publisher: "EDAOS Core Team"
+    - plugin_id: "backend.golang"
+      publisher: "EDAOS Core Team"
+    - plugin_id: "database.postgresql"
+      publisher: "EDAOS Core Team"

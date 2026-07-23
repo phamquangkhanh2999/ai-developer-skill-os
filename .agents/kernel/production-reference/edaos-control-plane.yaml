@@ -1,0 +1,38 @@
+# Kubernetes Deployment Manifest: EDAOS Production Control Plane
+# Path: .agents/kernel/production-reference/edaos-control-plane.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edaos-control-plane
+  namespace: edaos-system
+  labels:
+    app: edaos-control-plane
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: edaos-control-plane
+  template:
+    metadata:
+      labels:
+        app: edaos-control-plane
+    spec:
+      containers:
+        - name: edaos-kernel
+          image: edaos/kernel-runtime:v3.2.0
+          ports:
+            - containerPort: 8080 # gRPC API
+            - containerPort: 9090 # Prometheus Metrics
+          env:
+            - name: EDAOS_LOG_LEVEL
+              value: "INFO"
+            - name: EDAOS_STORAGE_ENGINE
+              value: "POSTGRESQL_WAL"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"

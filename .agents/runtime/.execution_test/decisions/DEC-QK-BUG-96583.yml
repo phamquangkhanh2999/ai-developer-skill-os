@@ -1,0 +1,22 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-BUG-96583
+skill:         qk-bug-resolution
+intent:        "fix"
+approved_by:   AUTO
+timestamp:     2026-07-22T09:13:16.583184+00:00
+
+hashes:
+  evidence_hash: 5b84f43a42c3ed527238a2dfb0c54a627081fb2b65dbb37c1d9c1084053f25c8
+  decision_hash: 07dcde5d937c92479d5f52080062831b262a2588e88d9140755a8125ed121216
+
+evidence_ids:
+  - EV-QK-BUG-96583
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - terminal.run
+  - git.diff
+
+alternatives_rejected:
+  []

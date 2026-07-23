@@ -1,0 +1,28 @@
+# EDAOS Compliance: Regulatory & Compliance Framework Specification
+# Path: .agents/compliance/37-compliance-framework.yml
+
+schema_version: "1.0.0"
+contract_type: "RegulatoryComplianceFramework"
+status: "APPROVED"
+
+description: >
+  Maps EDAOS immutable journals, evidence traces, and human-in-the-loop gates 
+  to international regulatory standards (SOC2 Type II, ISO 27001, EU AI Act, GDPR).
+
+---
+
+compliance_mapping:
+  soc2_type_ii:
+    CC6.1_access_control: "Enforced via 27-security-runtime.yml Capability RBAC"
+    CC6.8_change_management: "Enforced via 13-execution-journal-contract.yml and 30-evolution-board.yml"
+
+  iso_27001:
+    A.12.1.2_change_management: "100% Saga Reversible mutation journals with git rollback"
+    A.14.2.2_system_change_control: "8-Gate Release Quality Checklist (qk-production-release)"
+
+  eu_ai_act:
+    Article_14_human_oversight: "Mandatory Human Gate Protocol on High/Critical Risk actions"
+    Article_15_accuracy_robustness: "5 Invariant Conformance Suite (conformance_test_suite.py)"
+
+  gdpr:
+    privacy_by_design: "Log masking & secret isolation in 27-security-runtime.yml"

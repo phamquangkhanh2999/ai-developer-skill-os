@@ -1,0 +1,149 @@
+# EDAOS Contracts: Rule Contract Specification
+# Path: .agents/contracts/09-rule-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "RuleContract"
+status: "APPROVED"
+
+description: >
+  Rule Contract defines the declarative reasoning contract for translating 
+  Findings, Evidences, Policies, and Capabilities into strategic Decisions.
+  Rules are tool-blind, provider-blind, and code-blind: they evaluate domain logic ONLY.
+
+---
+
+# 1. Rule Contract Schema Definition
+
+rule_schema:
+  # -------------------------------------------------------------------
+  # Pillar 1: Rule Identity
+  # -------------------------------------------------------------------
+  identity:
+    rule_id: "frontend.performance.hero_render_optimization"
+    version: "1.0.0"
+    domain: "frontend" # frontend | backend | security | devops | mobile
+    category: "performance" # performance | accessibility | security | architecture
+
+  # -------------------------------------------------------------------
+  # Pillar 2: Rule Intent
+  # -------------------------------------------------------------------
+  intent:
+    description: "Formulates an optimization strategy when hero asset render-blocking is detected"
+    objective: "Reduce Largest Contentful Paint (LCP) breach caused by unoptimized asset loading"
+
+  # -------------------------------------------------------------------
+  # Pillar 3: Trigger Contract (Input Constraints)
+  # -------------------------------------------------------------------
+  trigger:
+    consumes:
+      - entity_type: "Finding"
+        condition: "finding.type == 'render_blocking_asset'"
+      - entity_type: "Evidence"
+        condition: "evidence.category == 'Performance' AND evidence.status == 'FAIL'"
+
+  # -------------------------------------------------------------------
+  # Pillar 4: Required Capabilities (Tool-Blind Contract)
+  # -------------------------------------------------------------------
+  requires_capabilities:
+    - capability_id: "ui.inspect_dom"
+      min_maturity: 2
+    - capability_id: "browser.performance"
+      min_maturity: 3
+
+  # -------------------------------------------------------------------
+  # Pillar 5: Policy Binding (No Hardcoded Numbers)
+  # -------------------------------------------------------------------
+  policy_binding:
+    primary_policy_ref: "POL-FE-PERF-CORE-01"
+    evaluated_threshold: "LCP"
+    enforce_policy_compliance: true
+
+  # -------------------------------------------------------------------
+  # Pillar 6: Decision Contract (Output Specification)
+  # -------------------------------------------------------------------
+  produces:
+    decision:
+      decision_type: "OPTIMIZE_RESOURCE_LOADING"
+      strategy_summary: "Preload and convert target hero asset to modern format"
+      target_scope_ref: "finding.related_context.target_file"
+      
+      confidence_formula: >
+        DecisionConfidence = FindingConfidence * PolicyWeight * CapabilityMaturityFactor
+
+  # -------------------------------------------------------------------
+  # Pillar 7: Explainability Contract (Mandatory Audit Chain)
+  # -------------------------------------------------------------------
+  explainability:
+    mandatory_chain:
+      require_evidence_chain: true
+      require_finding_ref: true
+    
+    rationale_template: >
+      Target asset '{{target_asset}}' breached LCP target threshold ({{actual_lcp}}s vs {{target_lcp}}s) 
+      with confidence {{confidence}}. Recommending {{strategy_summary}}.
+
+  # -------------------------------------------------------------------
+  # Pillar 8: Risk Classification & Human Gate Trigger
+  # -------------------------------------------------------------------
+  risk:
+    risk_level: "MEDIUM" # LOW | MEDIUM | HIGH | CRITICAL
+    human_gate_required: false # Set true for HIGH/CRITICAL or when confidence < 0.65
+    
+    risk_matrix:
+      LOW: "Additive changes (memoization, preloading, non-breaking styles)"
+      MEDIUM: "Structural refactoring within single component boundary"
+      HIGH: "Cross-component state changes, database migrations, package updates"
+      CRITICAL: "Authentication, RBAC, payment logic, core data mutation"
+
+  # -------------------------------------------------------------------
+  # Pillar 9: Conflict Resolution & Hierarchy Priority
+  # -------------------------------------------------------------------
+  conflict_resolution:
+    priority_score: 70 # Security=100, Correctness=90, Performance=70, Style=30
+    hierarchy_category: "Performance"
+    
+    override_behavior:
+      subordinate_to: ["Security", "Correctness"]
+      superordinate_to: ["CodeStyle", "Documentation"]
+
+  # -------------------------------------------------------------------
+  # Pillar 10: Rule Lifecycle State Machine
+  # -------------------------------------------------------------------
+  lifecycle:
+    current_state: "Active" # Draft | Validated | Active | Deprecated | Retired
+    valid_states: ["Draft", "Validated", "Active", "Deprecated", "Retired"]
+
+  # -------------------------------------------------------------------
+  # Pillar 11: Rule Composition & Reasoning Graph
+  # -------------------------------------------------------------------
+  composition:
+    is_composite: false
+    requires_sub_rules:
+      - "frontend.performance.large_asset_detection"
+      - "frontend.performance.above_fold_check"
+
+---
+
+# 2. Canonical Rule Contract Examples
+
+canonical_rules:
+  - id: "security.sanitize_user_input"
+    priority: 100
+    risk_level: "HIGH"
+    human_gate_required: true
+    requires_capabilities: ["code.ast"]
+    produces_decision: "ENFORCE_INPUT_SANITIZATION"
+
+  - id: "frontend.performance.prevent_unnecessary_render"
+    priority: 70
+    risk_level: "LOW"
+    human_gate_required: false
+    requires_capabilities: ["code.references", "browser.performance"]
+    produces_decision: "APPLY_MEMOIZATION_HOOK"
+
+  - id: "architecture.enforce_layer_boundary"
+    priority: 90
+    risk_level: "MEDIUM"
+    human_gate_required: false
+    requires_capabilities: ["code.ast"]
+    produces_decision: "REFACTOR_CIRCULAR_DEPENDENCY"

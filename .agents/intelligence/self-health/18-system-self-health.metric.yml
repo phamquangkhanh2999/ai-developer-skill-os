@@ -1,0 +1,48 @@
+# EDAOS Intelligence: System Self-Health Metric Specification
+# Path: .agents/intelligence/self-health/18-system-self-health.metric.yml
+
+schema_version: "1.0.0"
+contract_type: "SystemSelfHealthMetric"
+status: "APPROVED"
+
+description: >
+  System Self-Health Metric measures the operational efficiency, decision accuracy, and reliability 
+  of EDAOS ITSELF. It provides real-time self-diagnostic feedback for the AI OS.
+
+---
+
+self_health_matrix:
+  target_score: 95 # Out of 100
+
+  metrics:
+    - name: "DecisionAccuracy"
+      target_min: 0.90
+      current_value: 0.94
+      weight: 0.25
+
+    - name: "FalsePositiveRate"
+      target_max: 0.05
+      current_value: 0.03
+      weight: 0.20
+
+    - name: "RuleSuccessRate"
+      target_min: 0.90
+      current_value: 0.92
+      weight: 0.20
+
+    - name: "ProviderReliability"
+      target_min: 0.95
+      current_value: 0.98
+      weight: 0.15
+
+    - name: "MemoryQualitySignalRatio"
+      target_min: 0.90
+      current_value: 0.95
+      weight: 0.10
+
+    - name: "HumanGateApprovalRate"
+      target_min: 0.85
+      current_value: 0.91
+      weight: 0.10
+
+  self_diagnostic_status: "OPTIMAL" # OPTIMAL | DEGRADED | ATTENTION_REQUIRED

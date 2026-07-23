@@ -1,0 +1,18 @@
+# Standard Contract: Architecture Boundary Standard
+# Path: .agents/skills/qk-engineering-standard/standards/architecture-boundary.standard.yml
+
+standard_id: "architecture_boundary_integrity"
+domain: "engineering"
+category: "Architecture"
+
+priority_score: 100 # Highest priority (Architecture Integrity = 100)
+
+boundary_rules:
+  - id: "no_circular_dependencies"
+    description: "Forbidden circular imports across modules or components"
+
+  - id: "ui_domain_separation"
+    description: "UI components MUST NOT directly access database, raw HTTP sockets, or native IO"
+
+  - id: "dependency_direction"
+    description: "UI -> Container Hook -> Service Layer -> Data DTO (One-way direction only)"

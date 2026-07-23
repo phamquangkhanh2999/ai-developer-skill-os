@@ -1,0 +1,34 @@
+# EDAOS Security: Risk-Based Governance Approval Matrix
+# Path: .agents/security/56-governance-approval-matrix.yml
+
+schema_version: "1.0.0"
+contract_type: "GovernanceApprovalMatrix"
+status: "APPROVED"
+
+description: >
+  Eliminates human governance bottlenecks by mapping Risk Classifications to automated, 
+  asynchronous, or mandatory human approval gates.
+
+---
+
+approval_matrix_spec:
+  risk_based_routing:
+    LOW_RISK:
+      criteria: "UI typo, CSS tweak, documentation, formatting, minor unit test update"
+      approval_policy: "AUTO_EXECUTE_IF_GATES_PASS"
+      human_notification: "ASYNC_SUMMARY_NOTIFICATION"
+
+    MEDIUM_RISK:
+      criteria: "Non-breaking API addition, custom hook refactor, new UI component"
+      approval_policy: "ASYNC_TECH_LEAD_REVIEW"
+      execution_delay_minutes: 15
+
+    HIGH_RISK:
+      criteria: "Database schema migration, core architecture dependency change"
+      approval_policy: "MANDATORY_HUMAN_GATE"
+      approver_role: "Architecture_Board"
+
+    CRITICAL_RISK:
+      criteria: "Authentication, RBAC, payment logic, core security patch"
+      approval_policy: "MANDATORY_DUAL_HUMAN_GATE"
+      approver_role: ["Security_Officer", "CTO"]

@@ -1,0 +1,32 @@
+# EDAOS Kernel: Subagent Testing & Mocking Framework Specification
+# Path: .agents/kernel/testing/46-agent-testing-framework.yml
+
+schema_version: "1.0.0"
+runtime_component: "AgentTestingFramework"
+status: "APPROVED"
+
+description: >
+  Agent Testing Framework enables unit and integration testing of custom EDAOS Skills 
+  and Domain Plugins using Mock Providers and Deterministic Event Replay.
+
+---
+
+agent_testing_spec:
+  test_runner: "edaos-test-runner"
+
+  mock_capabilities:
+    - mock_id: "mock.browser.performance"
+      preset: "LCP_FAILURE_3800MS"
+      returns_observation:
+        metric: "LCP"
+        value: 3800
+        unit: "ms"
+
+  assertion_helpers:
+    - assert_evidence_status: "PASS | FAIL | WARNING"
+    - assert_decision_risk: "LOW | MEDIUM | HIGH | CRITICAL"
+    - assert_saga_action_defined: true
+
+  deterministic_replay:
+    enabled: true
+    replay_journal_path: ".agents/runtime/execution-journal/EXEC-20260722-00412.json"

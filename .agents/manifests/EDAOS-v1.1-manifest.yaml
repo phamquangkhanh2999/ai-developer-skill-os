@@ -1,0 +1,50 @@
+edaos:
+  version: 1.1.0
+
+  architecture:
+    frozen:
+      - capability_contract
+      - evidence_schema
+      - decision_contract
+      - certification_pipeline
+
+  capability_model:
+    classes:
+      evidence_producer:
+        description: "Produces verified evidence without execution authority"
+      decision_advisor:
+        description: "Transforms evidence into governed recommendations"
+      execution_advisor:
+        description: "Creates execution proposals without mutation authority"
+      executor:
+        description: "Performs approved external actions through adapters"
+    
+    rules:
+      - "Capability class determines required governance guarantees."
+
+  governance:
+    certification_authority:
+      version: 1.0.0
+    invariants:
+      evidence_integrity:
+        enforced: true
+      permission_boundary:
+        enforced: true
+      decision_conflict:
+        enforced: true
+      execution_boundary:
+        enforced: true
+
+  certified_capabilities:
+    - id: market-research-last30days
+      version: 1.0.0
+      certification:
+        status: certified
+    - id: understand-anything
+      version: 1.0.0
+      certification:
+        status: certified
+    - id: gstack
+      version: 1.0.0
+      certification:
+        status: certified

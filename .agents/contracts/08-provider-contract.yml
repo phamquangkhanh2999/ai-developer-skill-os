@@ -1,0 +1,150 @@
+# EDAOS Contracts: Provider Contract Specification
+# Path: .agents/contracts/08-provider-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "ProviderContract"
+status: "APPROVED"
+
+description: >
+  Provider Contract defines the quality commitments, capability bindings, adapter boundaries, 
+  and reliability profiles of external tool providers (MCPs, CLI tools, SDKs, and internal services).
+  It enables Capability Router ranking and transparent fallback management.
+
+---
+
+# 1. Provider Contract Schema Definition
+
+provider_schema:
+  # -------------------------------------------------------------------
+  # Pillar 1: Provider Identity & Implementation Decoupling
+  # -------------------------------------------------------------------
+  identity:
+    provider_id: "browser-runtime-provider"
+    version: "1.0.0"
+    type: "external_adapter" # external_adapter | internal_service | native_plugin
+    domain: "browser" # browser | filesystem | security | database
+
+    implementation:
+      type: "mcp" # mcp | cli | sdk | rest_api
+      name: "playwright"
+      version_constraint: ">=1.40.0"
+
+  # -------------------------------------------------------------------
+  # Pillar 2: Capability Binding Matrix
+  # -------------------------------------------------------------------
+  provides:
+    - capability_id: "ui.capture"
+      quality_confidence: 0.95
+      supported_maturity_levels: [1, 2, 3]
+
+    - capability_id: "browser.performance"
+      quality_confidence: 0.92
+      supported_maturity_levels: [1, 2, 3, 4]
+
+  # -------------------------------------------------------------------
+  # Pillar 3: Adapter Boundary (Data Normalization Contract)
+  # -------------------------------------------------------------------
+  adapter_boundary:
+    input_mapping:
+      capability_input: "viewport"
+      tool_parameter: "viewportSize"
+
+    output_mapping:
+      tool_raw_output: "playwright_trace.zip"
+      edaos_normalized_output: "Observation"
+      edaos_artifact_type: "artifact.trace"
+
+    normalizer_ref: "normalizers/playwright-trace-normalizer.js"
+
+  # -------------------------------------------------------------------
+  # Pillar 4: Reliability Profile & SLA
+  # -------------------------------------------------------------------
+  reliability:
+    default_confidence: 0.95
+    availability_tier: "TIER_A" # TIER_A (99.9% SLA) | TIER_B (Best effort) | TIER_C (Experimental)
+    
+    latency:
+      expected_p95_ms: 3000
+      max_timeout_ms: 15000
+
+    rate_limits:
+      max_requests_per_minute: 60
+
+  # -------------------------------------------------------------------
+  # Pillar 5: Failure Contract
+  # -------------------------------------------------------------------
+  failure_contract:
+    on_timeout:
+      action: "RETRY_WITH_EXPONENTIAL_BACKOFF"
+      max_retries: 2
+
+    on_provider_unavailable:
+      action: "ACTIVATE_FALLBACK_PROVIDER"
+      fallback_provider_id: "lighthouse-cli-provider"
+
+    on_invalid_output:
+      action: "QUARANTINE_PAYLOAD"
+      log_level: "WARNING"
+
+  # -------------------------------------------------------------------
+  # Pillar 6: Provider Lifecycle State Machine
+  # -------------------------------------------------------------------
+  lifecycle:
+    initial_state: "Registered"
+    valid_states:
+      - "Registered"
+      - "Verified"
+      - "Active"
+      - "Degraded"
+      - "Disabled"
+      - "Retired"
+
+    degradation_trigger:
+      consecutive_failures_threshold: 3
+      action: "TRANSITION_TO_DEGRADED_AND_NOTIFY_ROUTER"
+
+  # -------------------------------------------------------------------
+  # Pillar 7: Provider Ranking & Scoring Algorithm
+  # -------------------------------------------------------------------
+  ranking_algorithm:
+    weights:
+      reliability_weight: 0.4
+      confidence_weight: 0.3
+      latency_weight: 0.2
+      cost_weight: 0.1
+
+    formula: >
+      Score = (SLA_Score * 0.4) + (Quality_Confidence * 0.3) + 
+              ((1 - Normalized_Latency) * 0.2) + ((1 - Normalized_Cost) * 0.1)
+
+  # -------------------------------------------------------------------
+  # Pillar 8: Provider Attestation & Verification
+  # -------------------------------------------------------------------
+  attestation:
+    verified_by: "EDAOS Core Registry"
+    last_health_check: "2026-07-22T10:05:00Z"
+    compatibility:
+      core_version: ">=1.0.0"
+
+---
+
+# 2. Canonical Provider Registry Example
+
+provider_registry_example:
+  - provider_id: "chrome-devtools-provider"
+    provides_capability: "browser.performance"
+    quality_confidence: 0.95
+    latency_ms: 1200
+    computed_rank_score: 0.94
+
+  - provider_id: "lighthouse-cli-provider"
+    provides_capability: "browser.performance"
+    quality_confidence: 0.85
+    latency_ms: 4500
+    computed_rank_score: 0.78
+
+  - provider_id: "manual-report-provider"
+    provides_capability: "browser.performance"
+    quality_confidence: 0.40
+    latency_ms: 0
+    computed_rank_score: 0.42

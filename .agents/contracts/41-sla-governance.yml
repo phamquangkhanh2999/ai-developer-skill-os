@@ -1,0 +1,21 @@
+# EDAOS Contract: Service Level Agreement (SLA) Governance
+# Path: .agents/contracts/41-sla-governance.yml
+
+schema_version: "1.0.0"
+contract_type: "SLAGovernanceContract"
+status: "APPROVED"
+
+description: >
+  Defines legally binding Service Level Agreements (SLAs), Service Level Objectives (SLOs), 
+  and Service Level Indicators (SLIs) for EDAOS Enterprise operations.
+
+---
+
+sla_spec:
+  system_availability_slo: 99.95 # % uptime
+  decision_latency_slo: 1.5 # seconds p95
+  saga_rollback_success_slo: 100.0 # % rollback reliability
+
+  remediation_actions:
+    if_availability_degraded: "Trigger automated cluster auto-scaling and alert SRE Team"
+    if_latency_degraded: "Activate capability router latency preemption policy"

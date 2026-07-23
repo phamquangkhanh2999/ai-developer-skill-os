@@ -1,0 +1,19 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-BUG-27910
+skill:         qk-bug-resolution
+intent:        "Fix auth TypeError in production"
+approved_by:   AUTO
+timestamp:     2026-07-22T07:45:27.910956+00:00
+
+evidence_ids:
+  - EV-QK-BUG-27910
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - terminal.run
+  - git.diff
+
+alternatives_rejected:
+  - action: hotfix_patch
+    reason: Bypasses test gate — unacceptable risk

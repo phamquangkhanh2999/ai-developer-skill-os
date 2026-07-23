@@ -1,0 +1,160 @@
+# EDAOS Enterprise Case Study Schema
+# Version: 1.0.0 | Spec: EDAOS 11.0.0
+# ─────────────────────────────────────────────────────────────────────────────
+# Case Studies are EVIDENCE OBJECTS, not marketing documents.
+# Every field marked required: true MUST be backed by verifiable evidence.
+# Auditor signature is required before publication.
+#
+# Submit to: casestudies@edaos.org | GPG: keys.openpgp.org/edaos-cert
+# Registry:  registry.edaos.org/case-studies
+
+case_study_id: "CS-2026-001"        # Assigned by Foundation
+status: "VERIFIED"                  # DRAFT | UNDER_REVIEW | VERIFIED | PUBLISHED
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ORGANIZATION PROFILE
+# ─────────────────────────────────────────────────────────────────────────────
+
+organization:
+  name:         "Acme Corp"          # required: true
+  industry:     "Financial Services" # required: true
+  size_band:    "1000-5000 engineers"
+  anonymized:   false                # If true, name is redacted in public registry
+  edaos_cert_level: "L4"
+
+adoption:
+  runtime_version: "11.0.0"
+  sdk_language:    "Python"
+  onboarded_at:    "2026-04-22"
+  months_running:  3
+  repositories:    28
+  engineers_on_platform: 42
+  teams_adopted:   ["Frontend Platform", "SRE", "API Gateway"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BASELINE  (pre-EDAOS, required: true)
+# Evidence: must be verifiable from historical monitoring system.
+# ─────────────────────────────────────────────────────────────────────────────
+
+baseline:
+  measurement_period:  "2025-10-01 to 2026-01-31"   # 4-month window
+  data_source:         "PagerDuty + Datadog"
+  incidents_per_month: 16
+  mttr_hours:          4.2          # Mean Time to Resolve
+  defect_escape_rate:  0.084        # fraction (8.4%)
+  lcp_p75_ms:          3800
+  bundle_size_kb:      380
+  manual_review_hours_per_sprint: 14
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTCOME  (post-EDAOS)
+# Evidence: must reference verifiable trace IDs from EDAOS Execution Journal.
+# ─────────────────────────────────────────────────────────────────────────────
+
+outcome:
+  measurement_period:  "2026-05-01 to 2026-07-22"   # same 3-month window
+
+  engineering_metrics:
+    incidents_per_month:     5.3    # required: true
+    mttr_hours:              1.4    # required: true
+    defect_escape_rate:      0.008  # required: true
+    lcp_p75_ms:              1900
+    bundle_size_kb:          190
+    manual_review_hours_per_sprint: 3
+
+  edaos_runtime_signals:           # pulled from Execution Journal
+    total_decisions_verified:  14800
+    decisions_per_day_avg:     164
+    saga_rollback_count:       3
+    saga_rollback_success_pct: 100.0
+    human_veto_count:          2
+    human_veto_overridden:     0    # MUST be 0 for L4 compliance
+
+  evidence_trace_samples:          # 5 sample traces for auditor verification
+    - "TRACE-1001"
+    - "TRACE-1003"
+    - "TRACE-1004"
+    - "TRACE-2271"
+    - "TRACE-4892"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ECONOMIC VALUE  (optional but strongly recommended)
+# ─────────────────────────────────────────────────────────────────────────────
+
+economics:
+  engineering_rate_usd_per_hour: 100     # blended rate
+  token_cost_usd_per_month:      5.90
+  estimated_savings_per_month:   6720
+  roi_multiplier:                1138.2
+  payback_period_months:         0.1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPROVEMENT PERCENTAGES  (computed from baseline → outcome)
+# ─────────────────────────────────────────────────────────────────────────────
+
+improvements:
+  mttr_reduction_pct:         66.7
+  defect_escape_reduction_pct: 90.5
+  lcp_improvement_pct:        50.0
+  bundle_reduction_pct:       50.0
+  manual_review_hours_saved_pct: 78.6
+  incidents_reduction_pct:    66.9
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QUALITATIVE SIGNALS
+# ─────────────────────────────────────────────────────────────────────────────
+
+qualitative:
+  quotes:
+    - text: >
+        "Before EDAOS, every incident started with a 40-minute investigation
+        just to understand what changed and why. Now the evidence chain tells
+        us immediately — and half the time the system has already resolved it."
+      role:   "VP Engineering"
+      verified_by_auditor: true
+
+    - text: >
+        "The human veto was the thing that got legal and compliance comfortable.
+        The AI never acts without a trail, and we can stop it at any moment."
+      role:   "CISO"
+      verified_by_auditor: true
+
+  key_lessons:
+    - "Saga rollback needed tuning for stateful database mutations — 2-week effort."
+    - "L3 governance compliance required alignment with existing change management process."
+    - "Public Evidence Explorer became the de facto incident post-mortem tool."
+
+  what_did_not_work:
+    - "Initial policy thresholds were too aggressive — caused false positives in week 1."
+    - "Onboarding 3 legacy repos required custom evidence adapters."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INVARIANT COMPLIANCE STATEMENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+invariant_compliance:
+  no_execution_without_evidence:  VERIFIED   # required: true
+  human_veto_never_overridden:    VERIFIED   # required: true
+  saga_rollback_100_pct:          VERIFIED   # required: true
+  vendor_neutrality_maintained:   VERIFIED
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUDITOR SIGNATURES  (required for VERIFIED status)
+# Auditor must be an EDAOS Foundation approved independent auditor.
+# ─────────────────────────────────────────────────────────────────────────────
+
+audit:
+  auditor_org:       "Independent Engineering Audit LLC"
+  auditor_lead:      "Dr. Jane Smith, CISSP, EDAOS Certified Auditor"
+  audit_period:      "2026-07-15 to 2026-07-22"
+  evidence_sampled:  150         # number of trace IDs independently verified
+  findings:          "No material exceptions. Evidence chain intact."
+  limitations:       "Audit covers production environment only; staging excluded."
+  pgp_signature:     "a1b2c3d4e5f6789012345678abcdef01"
+  signed_at:         "2026-07-22T10:00:00Z"
+
+foundation_approval:
+  reviewed_by:  "EDAOS Certification Committee"
+  approved_at:  "2026-07-22T11:00:00Z"
+  published_at: "2026-07-22T11:30:00Z"
+  registry_url: "https://registry.edaos.org/case-studies/CS-2026-001"

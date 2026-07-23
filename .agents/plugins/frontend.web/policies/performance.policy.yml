@@ -1,0 +1,24 @@
+# Frontend Plugin Policy: Performance Core Vitals
+# Path: .agents/plugins/frontend.web/policies/performance.policy.yml
+
+policy_id: "POL-FE-PERF-CORE-01"
+version: "1.0.0"
+domain: "frontend"
+category: "Performance"
+enforcement_level: "STRICT"
+
+thresholds:
+  - metric: "LCP"
+    target: 2500 # ms
+    warning: 3500
+    critical: 5000
+
+  - metric: "CLS"
+    target: 0.10
+    warning: 0.25
+    critical: 0.50
+
+  - metric: "INP"
+    target: 200 # ms
+    warning: 500
+    critical: 1000

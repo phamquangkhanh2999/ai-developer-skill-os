@@ -1,0 +1,29 @@
+# EDAOS Security: Security Threat Model & AI Defense Specification
+# Path: .agents/security/38-security-threat-model.yml
+
+schema_version: "1.0.0"
+contract_type: "SecurityThreatModel"
+status: "APPROVED"
+
+description: >
+  Threat Modeling & AI Defense System protecting EDAOS against Prompt Injection, 
+  Data Poisoning, Model Inversion, and Supply Chain Tampering.
+
+---
+
+threat_mitigation_matrix:
+  - threat: "Prompt Injection Attack"
+    risk_level: "HIGH"
+    defense: "Strict input sanitization & Policy Evaluator boundary isolation"
+
+  - threat: "Data / Memory Poisoning"
+    risk_level: "HIGH"
+    defense: "5-Stage Knowledge Lifecycle (15-memory-governance) requiring >= 90% validation"
+
+  - threat: "Unauthorized Mutation"
+    risk_level: "CRITICAL"
+    defense: "Capability RBAC & HMAC-SHA256 Signed Execution Journals"
+
+  - threat: "Supply Chain Vulnerability"
+    risk_level: "CRITICAL"
+    defense: "Gate 3 Security Review (qk-production-release) zero-vulnerability audit"

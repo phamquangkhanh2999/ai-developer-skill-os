@@ -1,0 +1,91 @@
+{
+  "name": "edaos-sdk",
+  "version": "11.0.0",
+  "description": "Evidence-Driven Autonomous Engineering SDK — governance, policy, and provenance for AI-powered software engineering.",
+  "author": "EDAOS Foundation <maintainers@edaos.org>",
+  "license": "Apache-2.0",
+  "homepage": "https://edaos.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edaos-foundation/edaos-sdk-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edaos-foundation/edaos-sdk-js/issues"
+  },
+  "keywords": [
+    "edaos",
+    "ai-governance",
+    "evidence-driven",
+    "autonomous-engineering",
+    "policy-engine",
+    "saga",
+    "provenance",
+    "ai-engineering",
+    "devops",
+    "sre"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types":   "./dist/index.d.ts",
+      "import":  "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./evidence": {
+      "types":   "./dist/evidence.d.ts",
+      "import":  "./dist/evidence.js",
+      "require": "./dist/evidence.cjs"
+    },
+    "./policy": {
+      "types":   "./dist/policy.d.ts",
+      "import":  "./dist/policy.js",
+      "require": "./dist/policy.cjs"
+    },
+    "./provenance": {
+      "types":   "./dist/provenance.d.ts",
+      "import":  "./dist/provenance.js",
+      "require": "./dist/provenance.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "release": "npm run prepublishOnly && npm publish"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.0",
+    "@typescript-eslint/parser": "^7.14.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "eslint": "^8.57.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}

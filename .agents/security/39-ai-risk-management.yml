@@ -1,0 +1,25 @@
+# EDAOS Security: NIST AI Risk Management Framework (RMF) Specification
+# Path: .agents/security/39-ai-risk-management.yml
+
+schema_version: "1.0.0"
+contract_type: "AIRiskManagementFramework"
+status: "APPROVED"
+
+description: >
+  Implements the NIST AI RMF (Govern, Map, Measure, Manage) to systematically assess, 
+  mitigate, and audit AI reasoning risks in EDAOS.
+
+---
+
+nist_ai_rmf_alignment:
+  GOVERN:
+    mechanism: "Evolution Governance Board (30) & Human Gate Checkpoints"
+
+  MAP:
+    mechanism: "4 Risk Classifications (LOW, MEDIUM, HIGH, CRITICAL)"
+
+  MEASURE:
+    mechanism: "Monotonic Confidence Decay Formula & System Self-Health (18)"
+
+  MANAGE:
+    mechanism: "Saga Compensating Actions & Instant Canary Rollbacks"

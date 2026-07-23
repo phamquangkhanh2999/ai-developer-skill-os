@@ -1,0 +1,26 @@
+# EDAOS Intelligence: Decision Provenance Graph Specification
+# Path: .agents/intelligence/provenance/65-decision-provenance-graph.yml
+
+schema_version: "1.0.0"
+contract_type: "DecisionProvenanceGraph"
+status: "APPROVED"
+
+description: >
+  Decision Provenance Graph records the complete explainability lineage from raw Observation, 
+  to Level-2 Evidence, Agent Opinions, Tradeoff Arbitrations, and Final Consensus.
+
+---
+
+provenance_graph_schema:
+  provenance_id: "PROV-2026-00412"
+  trace_id: "X-EDAOS-Trace-901"
+
+  lineage_chain:
+    1_observation_node: "LCP = 3800ms (Captured by chrome-devtools-provider)"
+    2_evidence_node: "POL-FE-PERF-CORE-01 status FAIL (+1300ms)"
+    3_agent_opinions:
+      frontend_agent: "Preload Hero Image (Quality: 95)"
+      security_agent: "Verify CDN Asset Hash (Risk: LOW)"
+    4_tradeoff_arbitration: "Selected encrypted CDN preload strategy via 14-decision-arbitration-engine"
+    5_consensus_node: "ConsensusSigned by All Participating Agents"
+    6_outcome_node: "LCP Post-Fix = 1800ms (-52.6% improvement)"

@@ -1,0 +1,24 @@
+# Decision Pattern: Technical Debt Prioritization Formula
+# Path: .agents/skills/qk-project-health/decision-patterns/technical-debt-priority.yml
+
+pattern_id: "technical_debt_priority_matrix"
+
+formula: >
+  DebtPriorityScore = Impact * Frequency * Risk * FutureCost
+
+priority_classification:
+  CRITICAL:
+    min_priority_score: 90
+    recommendation: "Immediate Action Required. Hand-off to qk-engineering-standard"
+
+  HIGH:
+    min_priority_score: 75
+    recommendation: "High Priority. Hand-off to qk-performance-tuner"
+
+  MEDIUM:
+    min_priority_score: 50
+    recommendation: "Medium Priority. Hand-off to qk-bug-resolution"
+
+  LOW:
+    max_priority_score: 49
+    recommendation: "Low Priority. Log and defer"

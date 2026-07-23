@@ -1,0 +1,16 @@
+# Strategy Contract: Architecture Impact Analysis
+# Path: .agents/skills/qk-feature-delivery/planning/architecture-impact.strategy.yml
+
+strategy_id: "architecture_impact_analysis"
+domain: "frontend"
+category: "architecture"
+
+impact_scopes:
+  frontend_ui:
+    check: "Identifies new or modified React components"
+  api_layer:
+    check: "Identifies new REST/GraphQL endpoints or DTO changes"
+  state_management:
+    check: "Identifies global Context/Store additions"
+  database:
+    check: "Identifies schema migrations or new indexes"

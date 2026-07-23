@@ -1,0 +1,23 @@
+# Strategy Contract: Runtime Error Fix Strategy
+# Path: .agents/skills/qk-bug-resolution/strategies/runtime-error-fix.strategy.yml
+
+strategy_id: "runtime_null_reference_boundary_check"
+domain: "frontend"
+category: "bug_fix"
+
+trigger:
+  finding_category: "runtime_exception"
+  finding_type: "null_reference"
+
+requires_evidence:
+  - "execution_path"
+  - "target_component_ast"
+
+approach:
+  - "trace_data_flow_to_boundary"
+  - "add_defensive_null_coalescing_or_optional_chaining"
+  - "define_fallback_default_state"
+
+success_metrics:
+  - "runtime_exception_count == 0"
+  - "policy_compliance == PASS"

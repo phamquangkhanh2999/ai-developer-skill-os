@@ -1,0 +1,38 @@
+# Skill Workflow: Release Flow
+# Path: .agents/skills/qk-production-release/workflows/release-flow.yml
+
+workflow_id: "production.release.lifecycle"
+version: "2.0.0"
+
+trigger:
+  type: "release_request"
+  input_entities: ["ReleaseCandidate"]
+
+stages:
+  - id: receive_candidate
+    consumes: "ReleaseCandidate"
+
+  - id: evaluate_8_release_gates
+    gates_catalog: "gates/"
+    produces: "GateEvaluationSummary"
+
+  - id: assess_release_risk
+    policies: ["policies/release-risk-policy.yml"]
+    produces: "ReleaseRiskScore"
+
+  - id: formulate_release_decision
+    consumes: ["GateEvaluationSummary", "ReleaseRiskScore"]
+    produces: "ReleaseDecision"
+
+  - id: execute_deployment
+    condition: "decision == APPROVED || decision == APPROVED_WITH_RISK"
+    produces: "DeploymentLog"
+
+  - id: post_release_validation
+    requires_capabilities:
+      - "browser.performance"
+    produces: "Outcome"
+
+  - id: store_learning
+    consumes: "Outcome"
+    produces: "Learning"

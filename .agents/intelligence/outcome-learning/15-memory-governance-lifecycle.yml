@@ -1,0 +1,37 @@
+# EDAOS Intelligence: Memory Governance & Knowledge Lifecycle Specification
+# Path: .agents/intelligence/outcome-learning/15-memory-governance-lifecycle.yml
+
+schema_version: "1.0.0"
+contract_type: "MemoryGovernanceLifecycle"
+status: "APPROVED"
+
+description: >
+  Memory Governance Engine controls the lifecycle of persisted learnings in edaos.learning.*.
+  It prevents memory bloat, eliminates stale/conflicting patterns, and promotes verified insights.
+
+---
+
+knowledge_lifecycle_states:
+  - state: "RawLearning"
+    description: "Newly recorded pattern from a single successful Action-Outcome cycle"
+    confidence_weight: 0.50
+
+  - state: "ValidatedInsight"
+    description: "Pattern verified across >= 3 independent execution sessions with > 90% success"
+    confidence_weight: 0.85
+
+  - state: "ReusablePattern"
+    description: "Promoted system pattern integrated into default Rule & Strategy Catalogs"
+    confidence_weight: 0.98
+
+  - state: "DeprecatedKnowledge"
+    description: "Stale pattern replaced by newer framework or policy standards"
+    action: "EXCLUDE_FROM_REASONING_GRAPH"
+
+  - state: "PurgedMemory"
+    description: "Pruned pattern removed from vector store after 180 days of inactivity"
+
+retention_and_pruning_rules:
+  prune_conflicting_patterns: true
+  min_success_rate_for_promotion: 0.90
+  max_stale_days: 180

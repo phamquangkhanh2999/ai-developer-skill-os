@@ -1,0 +1,42 @@
+# Skill Workflow: Optimization Flow
+# Path: .agents/skills/qk-performance-tuner/workflows/optimization-flow.yml
+
+workflow_id: "qk-performance-tuner-workflow"
+version: "2.0.0"
+
+trigger:
+  type: "optimization_request"
+  input_entity: "Finding"
+
+steps:
+  - id: receive_finding
+    consumes: "Finding"
+
+  - id: classify_bottleneck
+    produces: "OptimizationCategory"
+
+  - id: select_strategy
+    strategy_catalog: "strategies/"
+    produces: "SelectedStrategy"
+
+  - id: formulate_decision
+    consumes: "SelectedStrategy"
+    produces: "Decision"
+
+  - id: create_action_plan
+    consumes: "Decision"
+    produces: "ActionPlan"
+
+  - id: delegate_execution
+    target_skills:
+      - "qk-feature-delivery"
+      - "qk-bug-resolution"
+
+  - id: verify_improvement
+    requires_capabilities:
+      - "browser.performance"
+    produces: "Outcome"
+
+  - id: learn
+    consumes: "Outcome"
+    produces: "Learning"

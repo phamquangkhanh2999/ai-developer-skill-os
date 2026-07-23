@@ -1,0 +1,39 @@
+# EDAOS Kernel: Security Runtime Specification
+# Path: .agents/kernel/security/27-security-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "SecurityRuntime"
+status: "APPROVED"
+
+description: >
+  Security Runtime enforces Capability Permissions, Plugin Sandboxing, Secret Isolation, 
+  and Execution Identity Authorization across EDAOS Kernel and Domain Plugins.
+
+---
+
+security_runtime_spec:
+  engine: "ZeroTrustSecurityController"
+
+  capability_permissions:
+    enforce_rbac: true
+    capability_access_matrix:
+      - capability: "code.modify"
+        allowed_roles: ["resolution_orchestrator", "delivery_orchestrator"]
+        disallowed_roles: ["health_orchestrator", "audit_orchestrator"]
+
+      - capability: "browser.performance"
+        allowed_roles: ["*"]
+
+  plugin_sandbox:
+    isolation_level: "CONTAINERIZED_PROCESS_ISOLATION"
+    filesystem_access: "SCOPED_TO_PLUGIN_WORKSPACE_ONLY"
+    network_egress: "RESTRICTED_TO_ALLOWLISTED_PROVIDERS"
+
+  secret_isolation:
+    secret_vault_ref: "ENV_SECRET_VAULT"
+    mask_secrets_in_logs: true
+    never_persist_raw_tokens: true
+
+  audit_authorization:
+    sign_every_execution_journal: true
+    signature_algorithm: "HMAC_SHA256"

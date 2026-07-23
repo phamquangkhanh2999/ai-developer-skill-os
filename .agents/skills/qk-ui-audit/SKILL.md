@@ -1,315 +1,99 @@
 ---
 name: qk-ui-audit
-category: qa
-version: 7.5.0
-description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
-
-cost: medium
-latency: medium
-risk: low
-side_effects: read_only
-produces: [report]
-consumes: [design-md, source-code]
-
-token_budget:
-  max_files_read: 5
-  max_lines_per_read: 150
-  max_shell_commands: 0
-  stop_early: true
-
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+description: Kiểm toán giao diện (UI), Performance, Accessibility và Visual Diff dựa trên Bằng chứng Thực nghiệm (Evidence-Driven EDAOS Architecture)
+version: 2.0.0
+domain: frontend.web
+type: reasoning_orchestrator
+edaos_core_requirement: ">=1.0.0"
+capabilities_required:
+  - ui.capture
+  - browser.performance
+  - ui.visual_diff
+  - accessibility.evaluate
 ---
 
-# qk-ui-audit — Anti-Slop UI Inspector
+# 🎨 qk-ui-audit (v2.0 Native EDAOS Orchestrator)
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> [!IMPORTANT]
+> **Nhiệm vụ cốt lõi**: Kiểm toán toàn diện chất lượng giao diện (Performance, Accessibility, Visual Diff, Layout Shift) dựa trên **Bằng chứng Thực nghiệm (Evidence-Driven)**. 
+> Skill này đóng vai trò là **Reasoning Orchestrator**: Tuyệt đối MÙ CÔNG CỤ (Tool-Blind), KHÔNG tự sửa code trực tiếp, và KHÔNG ĐƯỢC KẾT LUẬN nếu thiếu Bằng chứng được xác minh qua Policy Engine.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
-## Preconditions
-- [ ] `DESIGN.md` exists in project root
-- [ ] Target UI file(s) or component(s) are specified
+## 1. Hợp Đồng Năng Lực (Capability & Input Contract)
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "DESIGN.md not found. Run qk-project-bootstrap to create one, or provide design tokens manually."
-```
+### Capability Requirements
+Skill yêu cầu các Năng lực Trừu tượng sau từ Router:
+* `ui.capture`: Chụp ảnh giao diện và trích xuất DOM Snapshot
+* `browser.performance`: Đo đạc các chỉ số Core Web Vitals (LCP, CLS, INP, TTFB)
+* `ui.visual_diff`: So sánh ma trận pixel diff giữa 2 ảnh giao diện
+* `accessibility.evaluate`: Quét các vi phạm ARIA, độ tương phản màu và Focus Trapping
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+### Input Expectations
+* Target URL hoặc Local Preview Endpoint (ví dụ: `http://localhost:3000/dashboard`)
+* File component mục tiêu (ví dụ: `src/components/HeroBanner.tsx`)
+* Policy Suite áp dụng (Mặc định: `POL-FE-PERF-CORE-01`, `POL-FE-A11Y-AA-01`)
+
 ---
 
-## Scope
-- ✅ Score UI components against DESIGN.md tokens
-- ✅ Detect generic AI-slop aesthetics
-- ✅ Verify ARIA roles and contrast ratios
-- ✅ Validate responsive, interactive, and animation states
+## 2. Quy Trình Vận Hành EDAOS 9 Giai Đoạn
 
-## Non-Goals
-- ❌ Fix the UI — only audit and report (fixes go to qk-ui-builder)
-- ❌ Pixel-level screenshot comparison
-- ❌ Read entire CSS files — use targeted reads
+Skill thực thi nghiêm ngặt theo **EDAOS Processing Pipeline**:
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+```
+1. OBSERVE      ➔ Thu thập Observation thô từ Provider Router (DevTools, Playwright, Axe)
+2. NORMALIZE    ➔ Chuẩn hóa metrics về Canonical EDAOS JSON Schema
+3. INTERPRET    ➔ So sánh Observation với Policy để tạo Level-2 Evidence (PASS / FAIL)
+4. CORRELATE    ➔ Tổng hợp Evidences thành Level-3 Root-Cause Finding (Phát hiện culprit)
+5. EVALUATE     ➔ Áp dụng Rule Engine để đưa ra Strategic Decision
+6. PLAN         ➔ Tạo Action Plan chi tiết (Tối ưu WebP, preload, ARIA fix)
+7. VERIFY       ➔ Đo đạc lại post-verification (Xác minh không gây regression)
+8. LEARN        ➔ Lưu tri thức thành công vào edaos.learning.frontend.web
+```
+
 ---
 
-## Priority Order
+## 3. Quy Tắc Bất Biến & Hành Vi Cấm (Forbidden Behaviors)
 
-| Priority | Category | Points | Skip Threshold |
-|----------|----------|--------|----------------|
-| P1 | Accessibility (ARIA, contrast, keyboard) | 15pts | Never |
-| P2 | Layout & Spacing (tokens, grid, whitespace) | 15pts | Budget < 30% |
-| P3 | Typography & Colors (DESIGN.md compliance) | 15pts | Budget < 50% |
-| P4 | Interactions & Animations (hover, focus, transitions) | 15pts | Budget < 60% |
-| P5 | Anti-Slop Detection (generic templates, slop colors) | 15pts | Budget < 70% |
-| P6 | Performance & Best Practices | 10pts | Budget < 80% |
-| BONUS | Mobile & Cross-browser | 5pts extra | Always optional |
+### ✅ Quy Tắc Bắt Buộc
+1. Mọi kết luận đều phải có **Chuỗi Bằng Chứng (Evidence Chain)**: `Observation ➔ Evidence ➔ Policy Compliance ➔ Finding`.
+2. Mọi Decision đều phải kèm theo **Confidence Score** (Nếu $C < 0.65$, bắt buộc kích hoạt Human Gate).
+3. Đóng gói kết quả đầu ra thành **Action Plan (Bản kế hoạch thực thi)** cho các skill `qk-bug-resolution` hoặc `qk-feature-delivery` tiêu thụ.
 
-**Total: 85 base + 5 bonus = 90 possible. Pass threshold: ≥ 90/100**
+### ❌ Hành Vi Cấm (Strictly Forbidden)
+* 🚫 **CẤM ĐOÁN MÒ**: Cấm đưa ra nhận định "UI có vẻ chậm", "Component nặng" nếu thiếu số liệu metric thực nghiệm.
+* 🚫 **CẤM CÔNG CỤ**: Cấm gọi đích danh tên công cụ (Lighthouse, Playwright, Axe) trong kết luận hoặc instruction.
+* 🚫 **CẤM SỬA CODE TRỰC TIẾP**: `qk-ui-audit` chỉ lập chẩn đoán và ra Decision/Action Plan, không trực tiếp mutate codebase.
+* 🚫 **CẤM BỎ QUA POLICY**: Cấm hardcode các con số threshold trong code (phải đọc từ Policy file).
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
-## Workflow
+## 4. Định Dạng Báo Cáo EDAOS Audit Output
 
-### Phase 1 — Load Design Contract
+Sau khi hoàn tất, trả về báo cáo theo chuẩn EDAOS Audit Report:
 
-**Steps:**
-1. `grep_search` for DESIGN.md → read color tokens, spacing scale, typography
-2. Extract key tokens: primary colors (HSL), spacing unit, font families, border-radius, shadow levels
-
-**Exit When:**
-- Tokens extracted → go to Phase 2
-- DESIGN.md empty or incomplete → EXIT: BLOCKED
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 2 — Scan Target UI
-
-**Steps:**
-1. `view_file[targeted]` — read component file(s), focus on className, style, and JSX structure
-2. Check against each Priority category in order (P1 → P6)
-3. Log each finding with Evidence Format
-
-**Decision:**
-```
-IF score accumulates ≥ 90 after P1+P2+P3
-  → Can skip P4–P6 if token budget < 40%
-  → EXIT: PARTIAL (pass, but incomplete audit noted)
-
-IF CRITICAL violation found (e.g., hardcoded password in UI, broken ARIA)
-  → STOP audit, report immediately
-  → EXIT: FAILED
-```
-
-**Exit When:**
-- All categories checked → go to Phase 3
-- Token budget < 20% → go to Phase 3 with PARTIAL flag
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 3 — Score & Report
-
-**Steps:**
-1. Calculate total score per category
-2. Identify top 3 most impactful fixes
-3. Generate report with Evidence Format entries
-
-**Decision:**
-```
-IF total score ≥ 90
-  → EXIT: SUCCESS
-
-IF total score 70–89
-  → EXIT: PARTIAL — list required fixes
-
-IF total score < 70
-  → EXIT: FAILED — demand redesign, not patch
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Token clearly absent/present, ARIA attribute visible | Report directly |
-| MEDIUM | Inferred from surrounding code patterns | Note assumption |
-| LOW | Cannot verify without rendering (e.g., animation timing) | Mark as "unverifiable — manual check required" |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Severity
-
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Accessibility violation blocking disabled users | Missing alt text, contrast ratio < 3:1 |
-| HIGH | Design system contract broken | Hardcoded hex color not in DESIGN.md |
-| MEDIUM | UX degraded, workaround exists | Missing hover state, no loading indicator |
-| LOW | Minor inconsistency | Spacing off by 1 unit |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Evidence Format
-
-```
-[SEVERITY] path/to/Component.tsx:LINE
-Category:   [Accessibility|Layout|Typography|Interaction|Anti-Slop|Performance]
-Reason:     [specific violation description]
-Confidence: [HIGH|MEDIUM|LOW]
-Fix:        [one-line actionable suggestion]
-Points:     -N pts
-```
-
-**Example:**
-```
-[HIGH] src/components/Button.tsx:23
-Category:   Typography
-Reason:     font-size hardcoded as "16px" — should use DESIGN.md token `--font-size-base`
-Confidence: HIGH
-Fix:        Replace with `var(--font-size-base)`
-Points:     -3 pts
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Retry Policy
-```
-Audit is read-only — no retry needed.
-If file is inaccessible → note as PARTIAL and continue with other files.
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Escalation Rules
-
-```
-BLOCKED: DESIGN.md missing or unreadable
-Missing:
-  - DESIGN.md with color tokens, spacing scale, typography definition
-Questions:
-  1. Có file design system nào khác không? (tokens.css, theme.ts, etc.)
-  2. Bạn có thể cung cấp màu sắc / font / spacing chính của dự án không?
-Recommended Assumptions (if proceeding):
-  - Use industry-standard: 8px spacing unit, Inter font, neutral gray palette
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["target_component_path", "design_md_path"],
-  "optional_fields": ["specific_checklist_categories"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "qk-ui-builder (if fixes needed)",
-  "output_fields": ["audit_score", "violations_list", "top_3_fixes", "exit_code"]
-}
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Output Format
-
-```
-🎨 UI Audit Report
+```markdown
+🔧 qk-ui-audit Summary (EDAOS v2.0)
 ─────────────────────────────────────────────────
-Component:   [path/to/component]
-DESIGN.md:   [found | not found]
+Target Scope:    [URL / Component Target]
+Audit Status:    [PASS | FAIL | WARNING]
+Overall Confidence: [High (0.88) | Med | Low]
 
-Scores:
-  P1 Accessibility:  [X/15]
-  P2 Layout:         [X/15]
-  P3 Typography:     [X/15]
-  P4 Interactions:   [X/15]
-  P5 Anti-Slop:      [X/15]
-  P6 Performance:    [X/10]
-  ─────────────────
-  Total:             [X/85] → [PASS ≥ 90% | FAIL < 90%]
+📊 Evidence & Metrics:
+  - LCP: 3.8s vs Policy 2.5s (FAIL, Delta: +52%)
+  - CLS: 0.02 vs Policy 0.10 (PASS)
+  - Accessibility: 0 violations (PASS)
 
-Violations (top priority first):
-  [SEVERITY] file:LINE — reason — Fix: suggestion (-Xpts)
+🎯 Root-Cause Finding:
+  - Culprit: [Hero image 'hero-main.png' blocking render due to missing rel=preload]
+  - Exonerated: [ProductGrid.tsx, Header.tsx]
 
-Top 3 Required Fixes:
-  1. [Most impactful fix]
-  2. [Second fix]
-  3. [Third fix]
+💡 Strategic Decision:
+  - Decision Type: OPTIMIZE_RESOURCE_LOADING
+  - Rationale: Preloading WebP asset will reduce LCP by ~52% based on learning patterns.
 
-Verdict:     [PASS | FAIL — requires redesign]
-Exit Code:   [SUCCESS | PARTIAL | FAILED]
+📋 Generated Action Plan:
+  1. Add <link rel="preload" href="/hero-main.webp" as="image"> to head
+  2. Convert original PNG asset to modern WebP format
+  3. Hand off Action Plan to `./qk-bug-resolution` for execution.
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Score ≥ 90 — UI passes Anti-Slop | All checks done, no critical violations |
-| PARTIAL | Score 70–89 or incomplete audit | Some categories skipped due to token budget |
-| BLOCKED | DESIGN.md missing or target not specified | Cannot audit without design contract |
-| FAILED | Score < 70 or CRITICAL violation found | Generic slop detected, redesign required |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## References
-- Full 57-point checklist: `references/anti-slop-checklist.md`
-
----
-
-

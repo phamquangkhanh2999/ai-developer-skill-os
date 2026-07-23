@@ -1,0 +1,40 @@
+# EDAOS Helm Chart: Enterprise Multi-Region Helm Values Configuration
+# Path: .agents/kernel/enterprise-deployment/enterprise-helm-values.yaml
+
+global:
+  environment: "production"
+  clusterName: "edaos-enterprise-us-east-1"
+
+controlPlane:
+  replicaCount: 5
+  image:
+    repository: edaos/kernel-runtime
+    tag: v3.3.0
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+
+security:
+  rbac:
+    create: true
+  podSecurityPolicy:
+    enabled: true
+  vaultSecretInjection:
+    enabled: true
+
+persistence:
+  enabled: true
+  storageClass: "gp3-encrypted"
+  size: 500Gi
+  walReplication:
+    enabled: true
+
+observability:
+  prometheus:
+    enabled: true
+  telemetry:
+    otlpEndpoint: "otel-collector.monitoring.svc:4317"

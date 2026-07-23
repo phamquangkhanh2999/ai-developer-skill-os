@@ -1,0 +1,70 @@
+schema_version: 0.1
+name: Decision Conflict Schema
+description: Enforces the structure of a Decision Conflict Record when opposing Capabilities generate conflicting Evidence.
+
+properties:
+  decision_conflict:
+    type: object
+    properties:
+      id:
+        type: string
+      detected_at:
+        type: string
+
+      target:
+        type: object
+        properties:
+          entity:
+            type: string
+          decision_domain:
+            type: string
+        required: [entity, decision_domain]
+
+      conflicting_evidence:
+        type: array
+        minItems: 2
+        items:
+          type: object
+          properties:
+            source_capability:
+              type: string
+            evidence_hash:
+              type: string
+            observation_ids:
+              type: array
+              items: { type: string }
+            intent:
+              type: string
+              enum: [support, reject, defer]
+            confidence:
+              type: number
+          required: [source_capability, evidence_hash, observation_ids, intent, confidence]
+
+      conflict_type:
+        type: string
+        enum:
+          - opposing_intent
+          - incompatible_constraints
+          - insufficient_evidence
+
+      resolution_state:
+        type: string
+        enum:
+          - pending_human_review
+          - escalated_L4
+          - resolved
+
+      execution:
+        type: object
+        properties:
+          blocked:
+            type: boolean
+
+required:
+  - id
+  - detected_at
+  - target
+  - conflicting_evidence
+  - conflict_type
+  - resolution_state
+  - execution

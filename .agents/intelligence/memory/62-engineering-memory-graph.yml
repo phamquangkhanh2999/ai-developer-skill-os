@@ -1,0 +1,23 @@
+# EDAOS Intelligence: Organizational Engineering Memory Graph
+# Path: .agents/intelligence/memory/62-engineering-memory-graph.yml
+
+schema_version: "1.0.0"
+contract_type: "OrganizationalEngineeringMemoryGraph"
+status: "APPROVED"
+
+description: >
+  Organizational Memory Graph persists enterprise-wide engineering preferences, 
+  architectural standards, tech stack choices, and deployment blackout rules.
+
+---
+
+organizational_memory_spec:
+  graph_engine: "EnterpriseKnowledgeGraph"
+
+  stored_preference_domains:
+    architecture_style: "Event-Driven Microservices with Clean Architecture"
+    preferred_database: "PostgreSQL with Write-Ahead Logging"
+    blackout_rules:
+      - rule: "NO_FRIDAY_PRODUCTION_DEPLOYMENTS"
+        enforce_level: "STRICT_BLOCK"
+    code_review_culture: "Strict SOLID Principles & DRY Enforcement"

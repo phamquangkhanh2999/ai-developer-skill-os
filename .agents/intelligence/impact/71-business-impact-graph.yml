@@ -1,0 +1,28 @@
+# EDAOS Intelligence: Business Impact Graph Specification
+# Path: .agents/intelligence/impact/71-business-impact-graph.yml
+
+schema_version: "1.0.0"
+contract_type: "BusinessImpactGraph"
+status: "APPROVED"
+
+description: >
+  Business Impact Graph connects Level-1 Observation metrics to business outcomes, 
+  converting technical gains (LCP, bundle size, latency) into conversion rate and revenue impact.
+
+---
+
+impact_graph_spec:
+  conversion_formula:
+    lcp_improvement:
+      rule: "Every 100ms LCP reduction predicts +0.3% conversion rate increase"
+      business_impact_metric: "PredictedMonthlyRevenueUSD"
+
+    mttr_reduction:
+      rule: "Every 1 hour MTTR reduction predicts $10,000 incident cost savings"
+      business_impact_metric: "IncidentCostSavingsUSD"
+
+  lineage_chain:
+    1_technical_metric: "LCP reduced from 3800ms to 1800ms (-2000ms)"
+    2_user_experience: "Zero page load frustration & zero layout shift"
+    3_conversion_impact: "Predicted Conversion Increase: +6.0%"
+    4_revenue_outcome: "Estimated Monthly Revenue Impact: +$240,000"

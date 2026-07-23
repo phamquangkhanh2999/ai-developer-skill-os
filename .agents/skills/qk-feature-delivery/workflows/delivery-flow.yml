@@ -1,0 +1,47 @@
+# Skill Workflow: Feature Delivery Lifecycle
+# Path: .agents/skills/qk-feature-delivery/workflows/delivery-flow.yml
+
+workflow_id: "feature.delivery.lifecycle"
+version: "2.0.0"
+
+trigger:
+  type: "feature_delivery_request"
+  input_entities: ["FeatureRequest"]
+
+stages:
+  - id: understand_requirement
+    consumes: "FeatureRequest"
+    produces: "FeatureIntent"
+
+  - id: analyze_impact
+    consumes: ["FeatureIntent", "ExistingArchitecture"]
+    produces: "ImpactAssessment"
+
+  - id: create_solution_design
+    consumes: "ImpactAssessment"
+    produces: "ArchitectureDecision"
+
+  - id: generate_delivery_plan
+    consumes: "ArchitectureDecision"
+    produces: "ActionPlan"
+
+  - id: safety_validation
+    guards:
+      - "policy_compliance == TRUE"
+      - "dependency_integrity == TRUE"
+      - "compensating_action_defined == TRUE"
+
+  - id: execute_delivery
+    requires_capabilities:
+      - "code.modify"
+    produces: "ExecutionResult"
+
+  - id: acceptance_verification
+    requires_capabilities:
+      - "ui.capture"
+      - "browser.performance"
+    produces: "Outcome"
+
+  - id: learn
+    consumes: "Outcome"
+    produces: "Learning"

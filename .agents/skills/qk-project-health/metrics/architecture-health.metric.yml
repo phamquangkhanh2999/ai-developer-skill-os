@@ -1,0 +1,15 @@
+# Metric Contract: Architecture Health Metric
+# Path: .agents/skills/qk-project-health/metrics/architecture-health.metric.yml
+
+metric_id: "architecture_health"
+dimension_weight: 0.25 # 25% weight
+
+factors:
+  - name: "circular_dependencies_count"
+    penalty_per_occurrence: 15
+
+  - name: "layer_boundary_violations"
+    penalty_per_occurrence: 10
+
+  - name: "coupling_score"
+    target_max: 0.30

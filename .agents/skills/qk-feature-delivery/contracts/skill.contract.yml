@@ -1,0 +1,35 @@
+# Skill Contract: qk-feature-delivery
+# Path: .agents/skills/qk-feature-delivery/contracts/skill.contract.yml
+
+skill_id: "qk-feature-delivery"
+version: "2.0.0"
+type: "delivery_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "FeatureRequest"
+  - entity_type: "RequirementContext"
+  - entity_type: "ExistingArchitecture"
+  - entity_type: "PolicyConstraints"
+
+produces:
+  - entity_type: "FeatureIntent"
+  - entity_type: "ImpactAssessment"
+  - entity_type: "ActionPlan"
+  - entity_type: "Outcome"
+  - entity_type: "Learning"
+
+required_capabilities:
+  - capability_id: "code.ast"
+    min_maturity: 2
+  - capability_id: "code.references"
+    min_maturity: 2
+  - capability_id: "code.modify"
+    min_maturity: 3
+  - capability_id: "ui.capture"
+    min_maturity: 2
+
+safety_guards:
+  require_architecture_impact_analysis: true
+  require_compensating_action: true
+  risk_evaluator: "safety/change-boundary-policy.yml"

@@ -1,351 +1,101 @@
 ---
 name: qk-engineering-standard
-category: qa
-version: 7.5.0
-description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
-
-cost: medium
-latency: medium
-risk: low
-side_effects: read_only
-produces: [report]
-consumes: [source-code]
-
-token_budget:
-  max_files_read: 5
-  max_lines_per_read: 150
-  max_shell_commands: 1
-  stop_early: true
-
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+description: Ép buộc chuẩn SOLID, DRY, Clean Code và Kiến trúc với Tầng Quản trị Kỹ thuật (Governance Orchestrator EDAOS Architecture)
+version: 2.0.0
+domain: frontend.web
+type: governance_orchestrator
+edaos_core_requirement: ">=1.0.0"
+capabilities_required:
+  - code.ast
+  - code.references
 ---
 
-# qk-engineering-standard — Code Quality Enforcer
+# 🛡️ qk-engineering-standard (v2.0 Native EDAOS Governance Orchestrator)
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> [!IMPORTANT]
+> **Nhiệm vụ cốt lõi**: Quản trị chất lượng mã nguồn và bảo vệ tính toàn vẹn kiến trúc (Engineering & Architecture Governance).
+> Skill này đóng vai trò là **Governance Orchestrator**: Trả lời câu hỏi *"Thay đổi này có phù hợp với tiêu chuẩn kỹ thuật và kiến trúc dài hạn không?"*, đánh giá tuân thủ SOLID/DRY/Clean Code, và đưa ra quyết định chấp thuận hoặc từ chối mã nguồn trước khi release.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
-## Preconditions
-- [ ] Target file(s) or module(s) are specified
+## 1. Hợp Đồng Quản Trị & Ranh Giới Trách Nhiệm (Governance Boundary)
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Vui lòng chỉ định file hoặc module cần kiểm tra."
-```
+### Consumes (Đầu vào bắt buộc)
+Skill tiếp nhận thông tin từ quá trình phát triển/sửa đổi code:
+* `ChangedFiles`: Danh sách các file được thêm mới hoặc chỉnh sửa.
+* `CodeEvidence`: Bằng chứng đo đạc về độ phức tạp (Cognitive Complexity), trùng lặp (Duplication), và liên kết phụ thuộc (Coupling).
+* `ArchitectureContext`: Bức tranh phụ thuộc giữa các tầng hệ thống.
+* `EngineeringPolicies`: Tiêu chuẩn chất lượng code của dự án.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+### Produces (Đầu ra chuẩn hóa)
+* `EngineeringFinding`: Phát hiện vi phạm kiến trúc hoặc code smell.
+* `GovernanceDecision`: Đưa ra 1 trong 4 quyết định:
+  - `ACCEPT`: Chấp thuận 100% mã nguồn.
+  - `ACCEPT_WITH_WARNING`: Chấp thuận nhưng có cảnh báo nợ kỹ thuật.
+  - `REFACTOR_REQUIRED`: Từ chối release, yêu cầu refactor (chuyển giao cho `qk-bug-resolution`).
+  - `ARCHITECTURE_REVIEW_REQUIRED`: Kích hoạt Human Gate do vi phạm ranh giới kiến trúc nghiêm trọng.
+
 ---
 
-## Scope
-- ✅ Detect violations with exact file:line references
-- ✅ Classify by severity with concrete thresholds
-- ✅ Suggest minimal, targeted refactors
+## 2. Tháp Ưu Tiên Chuẩn Kỹ Thuật (Standard Hierarchy Matrix)
 
-## Non-Goals
-- ❌ Auto-fix code — report only (fixes go to qk-bug-resolution or qk-feature-delivery)
-- ❌ Rewrite architecture
-- ❌ Touch files outside the specified scope
+Mọi đánh giá đều tuân theo tháp ưu tiên trọng số nghiêm ngặt:
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ 1. Architecture Integrity (100) ➔ Cấm vi phạm ranh giới phụ thuộc      │
+│ 2. Security Compliance     (90)  ➔ Cấm hổng bảo mật & injection       │
+│ 3. Correctness & Logic     (85)  ➔ Cấm logic lỗi, memory leak         │
+│ 4. Maintainability         (70)  ➔ Đảm bảo SOLID, DRY, Complexity ok    │
+│ 5. Performance Efficiency  (60)  ➔ Đảm bảo render cost tối ưu         │
+│ 6. Style & Conventions     (30)  ➔ Format, naming, linting            │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+> [!CAUTION]
+> Một thay đổi làm code "đẹp hơn" (Style PASS) nhưng phá vỡ phụ thuộc kiến trúc (Architecture FAIL) sẽ **NGAY LẬP TỨC BỊ TỪ CHỐI (REJECT)**.
+
 ---
 
-## Concrete Thresholds (Non-Negotiable)
+## 3. Quy Trình Vận Hành EDAOS Governance Workflow
 
-```yaml
-function:
-  max_lines: 30              # Lines of code, excluding comments/blanks
-  max_cyclomatic_complexity: 10
-  max_parameters: 4
+Skill thực thi nghiêm ngặt theo **Engineering Review Workflow**:
 
-file:
-  max_lines: 300
-  max_public_methods_per_class: 10  # God Class threshold
-
-dry:
-  violation_threshold: 3    # Same logic duplicated in ≥ 3 places
-
-separation_of_concerns:
-  violation: "File mixes UI rendering + API calls + State management"
-
-naming:
-  min_variable_name_length: 2  # Single-letter vars (except i,j,k in loops)
-  max_abbreviation_ratio: 0.3  # > 30% abbreviations in identifiers = violation
-
-dependency:
-  max_imports_per_file: 15  # Beyond this: likely a God File
+```
+1. CONSUME CODE CONTEXT ➔ Nhận danh sách changed files & AST context
+2. MEASURE METRICS      ➔ Thu thập EngineeringEvidence (Complexity, Coupling, Duplication)
+3. EVALUATE STANDARDS   ➔ So sánh với Clean Code, SOLID và Architecture Policies
+4. CLASSIFY VIOLATION   ➔ Phân loại vi phạm theo Tháp Ưu Tiên (Architecture > Style)
+5. FORMULATE GOVERNANCE DECISION ➔ Đưa ra kết luận (ACCEPT | REFACTOR_REQUIRED)
+6. DELEGATE REFACTORING  ➔ Chuyển giao yêu cầu refactor cho ./qk-bug-resolution nếu FAIL
+7. STORE GOVERNANCE LEARNING ➔ Lưu bài học code smell vào edaos.learning.frontend.web
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
-## Priority Order
+## 4. Định Dạng Output Governance Report
 
-| Priority | Check | Severity | Skip Threshold |
-|----------|-------|----------|----------------|
-| P1 | Security violations (hardcoded secrets, SQL injection) | CRITICAL | Never |
-| P2 | God Functions > 30 lines / complexity > 10 | HIGH | Budget < 30% |
-| P3 | God Files > 300 lines / God Classes | HIGH | Budget < 40% |
-| P4 | DRY violations (3+ duplicates) | MEDIUM | Budget < 50% |
-| P5 | Mixed concerns in single file | MEDIUM | Budget < 60% |
-| P6 | Naming convention violations | LOW | Budget < 70% |
-| P7 | Excessive imports / coupling | LOW | Budget < 80% |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Workflow
-
-### Phase 1 — Scan for Critical & High Violations
-
-**Steps:**
-1. `grep_search` — search for: hardcoded secrets, `console.log`, `eval(`, `any` types
-2. `view_file[targeted]` — read function definitions to count lines and parameters
-3. Log each violation with Evidence Format
-
-**Decision:**
-```
-IF CRITICAL violation found (e.g., hardcoded API key)
-  → Report immediately, mark EXIT: FAILED
-  → Still continue scanning (don't stop at first critical)
-
-IF function line count > 30 OR complexity > 10
-  → Log as [HIGH]
-
-IF file line count > 300
-  → Log as [HIGH] — God File suspected
-```
-
-**Exit When:**
-- All P1+P2+P3 checks done → go to Phase 2
-- Token budget < 30% → go to Phase 3 directly with PARTIAL flag
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 2 — Scan for Medium & Low Violations
-
-**Steps:**
-1. `grep_search` — find duplicate logic patterns (copy-paste code)
-2. Check import counts per file
-3. Check naming conventions
-
-**Decision:**
-```
-IF same logic block appears ≥ 3 times
-  → Log as [MEDIUM] DRY violation
-
-IF file has > 15 imports
-  → Log as [LOW] — potential God File or tight coupling
-
-IF token budget < 50%
-  → Skip P6+P7, go to Phase 3
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 3 — Score & Report
-
-**Steps:**
-1. Count violations by severity
-2. Calculate health score: start at 100, deduct per violation
-3. Generate report
-
-**Deduction Scale:**
-```
-CRITICAL: -25 pts each
-HIGH:     -10 pts each
-MEDIUM:   -5 pts each
-LOW:      -2 pts each
-```
-
-**Decision:**
-```
-IF score ≥ 80 AND no CRITICAL violations
-  → EXIT: SUCCESS
-
-IF score 60–79 OR any HIGH violations
-  → EXIT: PARTIAL — list fixes needed
-
-IF score < 60 OR any CRITICAL violations
-  → EXIT: FAILED — requires immediate action
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Direct line count, exact pattern match | Report as violation |
-| MEDIUM | Inferred cyclomatic complexity without tool | Note estimate |
-| LOW | Architectural smell inferred from structure | Mark as "suspected — verify manually" |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Severity
-
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Security risk or data integrity | Hardcoded secret, SQL injection via string concat |
-| HIGH | Technical debt that blocks scaling | Function 80 lines, God Class 15+ methods |
-| MEDIUM | DRY or SoC violation, fixable in < 1 hour | Same validation logic in 3 components |
-| LOW | Style/naming issue, non-blocking | Single-letter variable `x` outside loop |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Evidence Format
-
-```
-[SEVERITY] path/to/file.ts:LINE
-Rule:       [FUNCTION_LENGTH | COMPLEXITY | DRY | SOC | NAMING | GOD_CLASS | SECRET]
-Reason:     [specific measurement vs threshold]
-Confidence: [HIGH|MEDIUM|LOW]
-Fix:        [one-line suggestion]
-Deduction:  -N pts
-```
-
-**Example:**
-```
-[HIGH] src/services/order.service.ts:45
-Rule:       FUNCTION_LENGTH
-Reason:     Function `processOrder` is 87 lines (threshold: 30)
-Confidence: HIGH
-Fix:        Extract payment logic to `processPayment()`, shipping to `scheduleShipment()`
-Deduction:  -10 pts
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Retry Policy
-```
-Audit is read-only — no retry needed.
-If file is inaccessible → skip and note in report as PARTIAL.
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Escalation Rules
-
-```
-BLOCKED: No target specified
-Missing:
-  - File path or module name to audit
-Questions:
-  1. Bạn muốn kiểm tra file nào hoặc toàn bộ module nào?
-  2. Có ngưỡng cụ thể nào bạn muốn thay đổi không? (mặc định: 30 lines/function)
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["target_files_or_module"],
-  "optional_fields": ["custom_thresholds"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["health_score", "violations_list", "severity_counts", "exit_code"]
-}
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Output Format
-
-```
-⚙️ Engineering Standard Audit
+```markdown
+🛡️ qk-engineering-standard Summary (EDAOS v2.0)
 ─────────────────────────────────────────────────
-Target:      [file or module]
+Reviewed Targets: [src/components/admin/UsersManager.tsx]
+Governance Status: [REFACTOR_REQUIRED]
+Review Confidence: [High (0.94)]
 
-Health Score: [X/100]
-  CRITICAL violations: [N] (-Npts)
-  HIGH violations:     [N] (-Npts)
-  MEDIUM violations:   [N] (-Npts)
-  LOW violations:      [N] (-Npts)
+📊 Engineering Metrics:
+  - Cognitive Complexity: 28 (Policy Target: <= 15) -> FAIL
+  - Duplication Ratio: 4.2% (Policy Target: <= 5%) -> PASS
+  - Dependency Boundary: Circular dependency between Domain & UI -> FAIL
 
-Violations (priority order):
-  [SEVERITY] file:LINE — Rule — reason — Fix — (-Xpts)
+🚨 Architectural & Code Findings:
+  - [CRITICAL] Component `UsersManager` contains direct database call logic (Boundary Breach).
+  - [HIGH] Method `handleUserFilter` has Cognitive Complexity of 28 (Violates Single Responsibility).
 
-Required Actions:
-  1. [Most critical fix]
-  2. [Second fix]
+💡 Governance Decision:
+  - Decision: REFACTOR_REQUIRED
+  - Recommended Delegate: `./qk-bug-resolution` (Strategy: `extract_custom_hook_and_service`)
 
-Exit Code:   [SUCCESS | PARTIAL | FAILED]
+📋 Mandatory Refactoring Plan:
+  1. Extract API fetch logic into `useUsersManager` custom hook.
+  2. Move data transformation to service layer (`userService.ts`).
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Score ≥ 80, no CRITICAL | Code meets V7.5 standards |
-| PARTIAL | Score 60–79 or incomplete scan | Some categories skipped |
-| BLOCKED | No target specified | Cannot audit without scope |
-| FAILED | Score < 60 or CRITICAL found | Immediate action required |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## References
-- Detailed thresholds with rationale: `references/thresholds.md`
-
----
-

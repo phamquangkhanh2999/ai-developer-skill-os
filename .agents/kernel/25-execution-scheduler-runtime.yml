@@ -1,0 +1,31 @@
+# EDAOS Kernel: Execution Scheduler Runtime Specification
+# Path: .agents/kernel/25-execution-scheduler-runtime.yml
+
+schema_version: "1.0.0"
+runtime_component: "ExecutionSchedulerRuntime"
+status: "APPROVED"
+
+description: >
+  Execution Scheduler Runtime manages worker threads, task queues, Human Gate checkpoints, 
+  and Saga Compensation execution loops.
+
+---
+
+execution_scheduler_spec:
+  scheduler_type: "PriorityTaskScheduler"
+  max_concurrent_tasks: 8
+
+  task_priority_queues:
+    CRITICAL_HOTFIX: 100
+    SECURITY_REMEDIATION: 90
+    OPTIMIZATION_ACTION: 70
+    ROUTINE_AUDIT: 30
+
+  saga_manager_integration:
+    auto_compensation_on_failure: true
+    journal_logging_path: ".agents/runtime/execution-journal/"
+
+  human_gate_checkpoint_manager:
+    pause_task_on_trigger: true
+    timeout_hours: 24
+    on_timeout_action: "ABORT_AND_REVERT_SAGA"

@@ -1,0 +1,41 @@
+# Skill Contract: qk-production-release
+# Path: .agents/skills/qk-production-release/contracts/skill.contract.yml
+
+skill_id: "qk-production-release"
+version: "2.0.0"
+type: "release_orchestrator"
+domain: "frontend.web"
+
+consumes:
+  - entity_type: "ReleaseCandidate"
+  - entity_type: "GovernanceDecision"
+  - entity_type: "ValidationReport"
+  - entity_type: "EvidenceBundle"
+
+produces:
+  - entity_type: "ReleaseDecision"
+  - entity_type: "DeploymentLog"
+  - entity_type: "Outcome"
+  - entity_type: "Learning"
+
+required_capabilities:
+  - capability_id: "ui.capture"
+    min_maturity: 2
+  - capability_id: "browser.performance"
+    min_maturity: 3
+  - capability_id: "code.ast"
+    min_maturity: 2
+
+release_gates:
+  - "gates/gate-01-engineering-quality.yml"
+  - "gates/gate-02-test-validation.yml"
+  - "gates/gate-03-security-review.yml"
+  - "gates/gate-04-performance-budget.yml"
+  - "gates/gate-05-accessibility-check.yml"
+  - "gates/gate-06-migration-safety.yml"
+  - "gates/gate-07-deployment-readiness.yml"
+  - "gates/gate-08-post-release-monitoring.yml"
+
+policies:
+  - "policies/release-risk-policy.yml"
+  - "policies/rollback-policy.yml"

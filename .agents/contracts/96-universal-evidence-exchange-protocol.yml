@@ -1,0 +1,30 @@
+# EDAOS Contracts: Universal Evidence Exchange Protocol Standard
+# Path: .agents/contracts/96-universal-evidence-exchange-protocol.yml
+
+schema_version: "1.0.0"
+contract_type: "UniversalEvidenceExchangeProtocol"
+status: "APPROVED"
+
+description: >
+  Defines an open, platform-agnostic Evidence Interchange Schema allowing 
+  third-party AI platforms (GitHub Copilot, Cursor, Devin, AWS Q) to exchange 
+  verifiable evidence graphs with the EDAOS Control Plane.
+
+---
+
+universal_evidence_schema:
+  schema_standard: "W3C_Verifiable_Evidence_v1.0"
+
+  interchange_format:
+    context: "https://schema.edaos.org/evidence/v1"
+    type: "VerifiableEngineeringEvidence"
+    issuer: "did:edaos:provider:chrome-devtools"
+    issuance_date: "2026-07-22T11:00:00Z"
+    evidence_subject:
+      metric_id: "LCP"
+      observed_value: 3800
+      unit: "ms"
+      confidence: 0.99
+    proof:
+      type: "Ed25519Signature2020"
+      signature_value: "z5A8kV...x99"

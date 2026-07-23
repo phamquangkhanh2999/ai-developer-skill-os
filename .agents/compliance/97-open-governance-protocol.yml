@@ -1,0 +1,22 @@
+# EDAOS Compliance: Open Governance & Decentralized Policy Mesh Protocol
+# Path: .agents/compliance/97-open-governance-protocol.yml
+
+schema_version: "1.0.0"
+contract_type: "OpenGovernanceProtocol"
+status: "APPROVED"
+
+description: >
+  Defines an open, decentralized governance protocol for distributing, synchronizing, 
+  and enforcing security policies across independent enterprise organizations.
+
+---
+
+open_governance_spec:
+  policy_mesh_topology: "Decentralized_P2P_Policy_Federation"
+
+  policy_synchronization:
+    consensus_mechanism: "Multi-Org Cryptographic Threshold Signature"
+    min_org_attestations: 3
+
+  policy_distribution_format:
+    format: "Open Policy Agent (OPA) Rego / EDAOS Policy YAML"

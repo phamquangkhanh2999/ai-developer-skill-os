@@ -1,0 +1,25 @@
+# EDAOS Kernel: Disaster Recovery Contract Specification
+# Path: .agents/kernel/recovery/40-disaster-recovery-contract.yml
+
+schema_version: "1.0.0"
+contract_type: "DisasterRecoveryContract"
+status: "APPROVED"
+
+description: >
+  Disaster Recovery Contract specifies RPO (Recovery Point Objective) and RTO (Recovery Time Objective) 
+  targets and multi-region failover protocols for EDAOS Control Plane.
+
+---
+
+disaster_recovery_spec:
+  rpo_target: "0 seconds (Zero data loss via Synchronous WAL Replication)"
+  rto_target: "< 5 minutes (Automated Multi-Region Cluster Failover)"
+
+  failover_triggers:
+    - condition: "Primary_Control_Plane_Heartbeat_Timeout > 15s"
+    - condition: "WAL_Replication_Lag > 30s"
+
+  multi_cloud_fallback:
+    primary_cloud: "AWS_us-east-1"
+    secondary_cloud: "GCP_us-central1"
+    failover_dns_routing: "Route53_Health_Check_Failover"

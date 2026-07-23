@@ -1,0 +1,84 @@
+{
+  "name": "@edaos/sdk",
+  "version": "11.0.0",
+  "description": "EDAOS SDK — Evidence-Driven Autonomous Engineering Standard (JavaScript/TypeScript)",
+  "license": "Apache-2.0",
+  "author": "EDAOS Foundation <maintainers@edaos.org>",
+  "homepage": "https://edaos.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edaos-foundation/edaos-sdk-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edaos-foundation/edaos-sdk-js/issues"
+  },
+  "keywords": [
+    "edaos", "ai-governance", "evidence-driven", "policy-engine",
+    "autonomous-engineering", "saga", "provenance", "conformance"
+  ],
+
+  "type": "module",
+  "main":    "./dist/index.cjs",
+  "module":  "./dist/index.js",
+  "types":   "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import":  "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types":   "./dist/index.d.ts"
+    },
+    "./conformance": {
+      "import":  "./dist/conformance/index.js",
+      "types":   "./dist/conformance/index.d.ts"
+    },
+    "./cli": {
+      "import":  "./dist/cli/index.js"
+    }
+  },
+
+  "bin": {
+    "edaos": "./dist/cli/index.js"
+  },
+
+  "scripts": {
+    "build":    "tsup src/index.ts --format esm,cjs --dts",
+    "test":     "vitest run --coverage",
+    "lint":     "eslint src --ext .ts",
+    "typecheck":"tsc --noEmit",
+    "conformance": "node dist/cli/index.js conform"
+  },
+
+  "dependencies": {
+    "zod":      "^3.23.0",
+    "undici":   "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript":    "^5.4.0",
+    "tsup":          "^8.0.0",
+    "vitest":        "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "eslint":        "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0"
+  },
+  "peerDependencies": {
+    "opentelemetry": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "opentelemetry": { "optional": true }
+  },
+
+  "engines": {
+    "node": ">=20.0.0"
+  },
+
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,11 @@
+adapter_permissions:
+  allowed:
+    - read_workspace_context
+    - create_observation
+    - submit_capability_request
+
+  forbidden:
+    - execute_shell
+    - modify_files_directly
+    - bypass_runtime
+    - inject_capability_contract

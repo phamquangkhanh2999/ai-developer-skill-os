@@ -1,0 +1,21 @@
+# EDAOS Decision Record
+decision_id:   DEC-QK-DOC-96528
+skill:         qk-docs
+intent:        "intent"
+approved_by:   AUTO
+timestamp:     2026-07-22T09:13:16.528482+00:00
+
+hashes:
+  evidence_hash: 1fe3173dc98a9a4c434575de1267634e43ed062f81206835a80f3d639724e474
+  decision_hash: 4ad313eafbeac9afccc7d0d4c76f61d0dbdb89b81ba94984dd18fd299eb845a8
+
+evidence_ids:
+  - EV-QK-DOC-96528
+
+mcp_calls_planned:
+  - filesystem.read
+  - filesystem.write
+  - git.inspect
+
+alternatives_rejected:
+  []

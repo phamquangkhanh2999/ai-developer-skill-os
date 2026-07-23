@@ -1,0 +1,27 @@
+certification_report:
+  capability:
+    id: gstack
+    version: 1.0.0
+  certification_id: 6e61e88b-1d40-4496-9c18-786fea27fd1c
+  evaluated_at: '2026-07-22T10:03:27.299106+00:00'
+  pipeline_version: '1.0'
+  certification:
+    capability_class: execution_adjacent
+  checks:
+    schema_validation: PASS
+    provenance_validation: PASS
+    permission_audit: PASS
+    golden_flow: PASS
+  boundary_tests:
+    proposal_generation:
+      status: PASS
+      evidence: Decision Record created. Execution Plan generated.
+    forbidden_execution:
+      status: PASS
+      evidence: CapabilityPermissionDenied raised on merge_pull_request.
+  guarantees:
+    execution_boundary:
+      enforced: true
+  final:
+    status: certified
+    confidence: 1.0

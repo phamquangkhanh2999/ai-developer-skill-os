@@ -1,199 +1,113 @@
 ---
 name: qk-project-health
-category: qa
-version: 7.5.0
-description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
-cost: high
-latency: slow
-risk: low
-side_effects: read_only
-produces: [report]
-consumes: [source-code]
-token_budget:
-  max_files_read: 5
-  max_lines_per_read: 100
-  max_shell_commands: 1
-  stop_early: true
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+description: Kiểm toán toàn diện Code Smells, Tech Debt, Architecture (Health Intelligence Orchestrator EDAOS Architecture): Health score 0–100 với actionable roadmap
+version: 2.0.0
+domain: frontend.web
+type: health_orchestrator
+edaos_core_requirement: ">=1.0.0"
+capabilities_required:
+  - code.ast
+  - code.references
+  - ui.capture
+  - browser.performance
 ---
 
-# qk-project-health — Complete Codebase Audit
+# 🩺 qk-project-health (v2.0 Native EDAOS Health Intelligence Orchestrator)
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> [!IMPORTANT]
+> **Nhiệm vụ cốt lõi**: Giám sát sức khỏe tổng thể, chẩn đoán suy thoái kiến trúc (Architecture Decay), xếp ưu tiên Nợ kỹ thuật (Technical Debt) và lập Roadmap cải thiện chiến lược cho hệ thống.
+> Skill này đóng vai trò là **Strategic Intelligence Layer**: Trả lời câu hỏi *"Hệ thống đang khỏe hay đang suy thoái? Nợ kỹ thuật nào cần xử lý trước?"*, tính toán **Health Score (0–100)** dựa trên 6 chiều dữ liệu thực nghiệm và điều hướng các skill kỹ thuật thực thi cải tiến liên tục.
 
 ---
 
-## Preconditions
-- [ ] Project root is accessible
+## 1. Hợp Đồng Giám Sát Chiến Lược (Strategic Intelligence Boundary)
+
+### Consumes (Đầu vào bắt buộc từ toàn bộ Hệ sinh thái EDAOS)
+* `EvidenceBundle` (Performance, Accessibility, Security, Visual Evidences từ `qk-ui-audit`).
+* `GovernanceDecision` (Báo cáo vi phạm kiến trúc từ `qk-engineering-standard`).
+* `ValidationReport` (Báo cáo kiểm thử từ `12-validation-framework.md`).
+* `DeploymentLog` & `ReleaseDecision` (Báo cáo độ ổn định release từ `qk-production-release`).
+* `LearningStore` (Ký ức các sự cố và bài học lịch sử).
+
+### Produces (Đầu ra chuẩn hóa)
+* `ProjectHealthReport`: Báo cáo sức khỏe tổng thể kèm **Health Score (0–100)** và Xếp loại Grade (A / B / C / D / F).
+* `HealthDecision`: Đưa ra trạng thái hệ thống (`HEALTHY`, `WARNING`, `DEGRADED`, `CRITICAL`).
+* `TechnicalDebtRoadmap`: Danh sách Nợ kỹ thuật được xếp ưu tiên theo công thức tác động.
 
 ---
 
-## Scope
-- ✅ Score 5 health dimensions (0–20 pts each = 100 total)
-- ✅ Identify deprecated packages and security vulnerabilities
-- ✅ Produce actionable refactoring roadmap
+## 2. Bộ Máy Tính Điểm Sức Khỏe 6 Chiều (The 6-Dimensional Health Score Engine)
 
-## Non-Goals
-- ❌ Fix issues — report only
-- ❌ Hide systemic architectural flaws
+Chỉ số Health Score tổng thể được tính toán bằng tổng trọng số 6 chiều dữ liệu:
 
----
+$$\text{Health Score} = (S_{\text{Arch}} \times 0.25) + (S_{\text{Quality}} \times 0.20) + (S_{\text{Sec}} \times 0.20) + (S_{\text{Perf}} \times 0.15) + (S_{\text{Delivery}} \times 0.10) + (S_{\text{Docs}} \times 0.10)$$
 
-## Health Scoring System
-
-| Dimension | Max Points | Key Checks |
-|-----------|-----------|------------|
-| Security | 20 | 0 critical CVEs, no hardcoded secrets, auth guards present |
-| Code Quality | 20 | Functions ≤ 30L, complexity ≤ 10, no God Files |
-| Architecture | 20 | Clean layers (UI/Logic/Data separated), no circular imports |
-| Dependencies | 20 | No deprecated packages, no unused deps, versions pinned |
-| Documentation | 20 | README complete, public APIs documented, DESIGN.md exists |
-
-**Total: 100 pts. Grades: A (90+) / B (75-89) / C (60-74) / D (<60)**
-
----
-
-## Priority Order
-| P | Dimension | Never Skip? |
-|---|-----------|-------------|
-| P1 | Security | Yes |
-| P2 | Code Quality | Yes |
-| P3 | Architecture | Budget < 30% |
-| P4 | Dependencies | Budget < 50% |
-| P5 | Documentation | Budget < 60% |
-
----
-
-## Workflow
-
-### Phase 1 — Quick Scan (P1+P2)
-1. `grep_search` for: hardcoded secrets, `eval(`, `any` types, `console.log`
-2. Sample 3 key files → check function lengths, file sizes
-3. Score Security (0–20) + Code Quality (0–20)
-
-### Phase 2 — Structure Scan (P3+P4)
-1. Read `package.json` — check outdated/deprecated packages
-2. Check import patterns for circular dependencies or layer violations
-3. Score Architecture (0–20) + Dependencies (0–20)
-
-### Phase 3 — Docs Scan (P5) + Report
-1. Check README, DESIGN.md, key function JSDoc
-2. Score Documentation (0–20)
-3. Generate full report + prioritized roadmap
-
----
-
-## Evidence Format
 ```
-[SEVERITY] Dimension: [SECURITY|QUALITY|ARCH|DEPS|DOCS]
-Finding:    [specific issue]
-Location:   [file:line OR package name]
-Confidence: HIGH
-Impact:     -N pts
-Fix:        [actionable suggestion]
+┌────────────────────────────────────────────────────────────────────────┐
+│               6-DIMENSIONAL HEALTH ENGINE WEIGHT MATRIX                │
+├───────────────────────────────────────┬────────────────────────────────┤
+│ 1. Architecture Health      (25%)     │ Coupling, Cohesion, Boundaries │
+│ 2. Code Quality & Complexity (20%)     │ Cognitive Complexity, DRY      │
+│ 3. Security Baseline        (20%)     │ CVEs, Secrets, Auth Boundaries │
+│ 4. Performance & Vitals     (15%)     │ LCP, CLS, Bundle Size          │
+│ 5. Delivery Reliability     (10%)     │ Release Pass Rate, Rollbacks   │
+│ 6. Documentation & Alignment(10%)     │ ADRs, Spec Match, Test Coverage│
+└───────────────────────────────────────┴────────────────────────────────┘
 ```
 
 ---
 
-## Output Format
+## 3. Công Thức Xếp Ưu Tiên Nợ Kỹ Thuật (Technical Debt Prioritization Formula)
+
+Không liệt kê tràn lan, EDAOS xếp hạng ưu tiên Nợ kỹ thuật theo công thức tác động:
+
+$$\text{Debt Priority Score} = \text{Impact} \times \text{Frequency} \times \text{Risk} \times \text{FutureCost}$$
+
+| Nợ Kỹ Thuật (Technical Debt Issue) | Impact | Risk | Priority Score | Hand-off Skill |
+| :--- | :--- | :--- | :--- | :--- |
+| **Circular Dependency giữa UI & Domain** | High (9) | High (9) | **95 (CRITICAL)** | `./qk-engineering-standard` |
+| **LCP Render Blocking Hero Image** | High (8) | Med (6) | **78 (HIGH)** | `./qk-performance-tuner` |
+| **Cognitive Complexity > 20 ở UsersManager**| Med (6) | Med (5) | **55 (MEDIUM)** | `./qk-bug-resolution` |
+| **Unused CSS Class / Minor Naming** | Low (2) | Low (2) | **12 (LOW)** | Idle / Refactor later |
+
+---
+
+## 4. Quy Trình Vận Hành EDAOS Health Assessment Workflow
+
 ```
-🏥 Project Health Report
+1. CONSUME ECOSYSTEM EVIDENCE ➔ Thu thập toàn bộ Evidence & Reports từ 6 Skills tiền nhiệm
+2. CALCULATE 6D HEALTH SCORE  ➔ Chạy 6-Dimensional Engine tính điểm tổng thể (0–100)
+3. DETECT DECAY TRENDS        ➔ Phân tích xu hướng suy thoái (Worsening vs Improving)
+4. PRIORITIZE TECH DEBT       ➔ Tính điểm Debt Priority Score cho các vấn đề tồn đọng
+5. FORMULATE HEALTH DECISION  ➔ Đưa ra kết luận HEALTHY / WARNING / DEGRADED / CRITICAL
+6. GENERATE ACTIONABLE ROADMAP➔ Phân phối công việc cụ thể cho các skill chuyên trách
+7. STORE SYSTEM HEALTH HISTORY➔ Lưu nhật ký sức khỏe vào edaos.learning.frontend.web
+```
+
+---
+
+## 5. Định Dạng Output Health Report
+
+```markdown
+🩺 qk-project-health Summary (EDAOS v2.0)
 ─────────────────────────────────────────────────
-Grade: [A|B|C|D] ([Score]/100)
+Project Scope:    [VTV AdWatch Admin Dashboard]
+Health Score:     [84 / 100 - Grade B+]
+System Status:    [WARNING - Architecture Decay Trend Detected]
 
-Scores:
-  Security:      [N/20]
-  Code Quality:  [N/20]
-  Architecture:  [N/20]
-  Dependencies:  [N/20]
-  Documentation: [N/20]
+📊 6-Dimensional Health Breakdown:
+  - 🏛️ Architecture Health (25%): 75 / 100 (WARNING - 2 Circular Dependencies)
+  - 🧹 Code Quality        (20%): 82 / 100 (GOOD - Duplication 4.2%)
+  - 🛡️ Security Baseline   (20%): 95 / 100 (EXCELLENT - 0 Secrets, 0 CVEs)
+  - ⚡ Performance         (15%): 88 / 100 (GOOD - LCP 1.8s, Bundle 412KB)
+  - 🚀 Delivery Reliability(10%): 90 / 100 (EXCELLENT - 100% Release Pass Rate)
+  - 📚 Documentation       (10%): 70 / 100 (SATISFACTORY)
 
-Critical Issues (fix immediately):
-  [list CRITICAL findings]
-
-Refactoring Roadmap (priority order):
-  1. [Most impactful — estimated effort]
-  2. [Second — estimated effort]
-  3. [Third]
-
-Exit Code: [SUCCESS (A/B) | PARTIAL (C) | FAILED (D)]
+🚨 Technical Debt Prioritization Roadmap:
+  1. [PRIORITY 95 - CRITICAL] Resolve Circular Dependency in UI <-> Service layer
+     ➔ Target Delegate: `./qk-engineering-standard`
+  2. [PRIORITY 78 - HIGH] Add Preload Hint to Hero Image Banner
+     ➔ Target Delegate: `./qk-performance-tuner`
+  3. [PRIORITY 55 - MEDIUM] Reduce Cognitive Complexity in UsersManager.tsx (28 -> 15)
+     ➔ Target Delegate: `./qk-bug-resolution`
 ```
-
----
-
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Audit completed and report generated with scores | Normal completion |
-| PARTIAL | Audit completed but some directories skipped (token limit) | Large project |
-| BLOCKED | Project is empty or completely unreadable | Missing project |
-| FAILED | Cannot calculate score due to tool failure | Linter crashed |
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Analyzed via AST, linters, or exhaustive search | Include in report as fact |
-| MEDIUM | Sampled a few files, assumed pattern holds | Note as "Project trend" |
-| LOW | Did not check | Do NOT include in report |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Security flaw or completely broken architecture | API keys committed, cyclical dependency |
-| HIGH | Major tech debt slowing down development | God objects, missing tests on core logic |
-| MEDIUM | Inconsistent patterns | Mixing fetch/axios, tabs/spaces |
-| LOW | Minor code smell | Magic numbers in UI |
-
----
-
-## Retry Policy
-```
-Audit fails
-  └─ Token limit hit (project too large)
-       ├─ Ask user to narrow scope (e.g., audit only src/api/)
-       └─ Do NOT auto-retry full project scan
-```
-
----
-
-## Escalation Rules
-```
-BLOCKED: Project unreadable or empty
-Missing:
-  - Source code
-Questions:
-  1. Thư mục mã nguồn chính nằm ở đâu? (ví dụ: src/, lib/)
-Recommended Assumptions:
-  - Scan typical directories (src, app, lib, test)
-```
-
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": [],
-  "optional_fields": ["target_directory"]
-}
-```
-### Produces
-```json
-{
-  "to": "user or qk-system-evolution",
-  "output_fields": ["health_score", "critical_issues", "refactoring_roadmap", "exit_code"]
-}
-```
-
----
-
