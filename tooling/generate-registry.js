@@ -42,6 +42,8 @@ function parseFrontmatter(content) {
     intent: extract('intent', true),
     workflow: extract('workflow'),
     related_skills: extract('related_skills', true),
+    verification: yaml.includes('verification:'),
+    selection: yaml.includes('selection:')
   };
 }
 
@@ -67,6 +69,14 @@ function generate() {
     // Default legacy if not marked stable
     if (!meta.status && meta.version && meta.version.startsWith('8.')) {
         meta.status = 'stable';
+    }
+
+    // Schema Validation Enforcement
+    if (meta.status === 'stable' && meta.version.startsWith('8.')) {
+      if (!meta.intent || !meta.workflow || !meta.verification || !meta.selection) {
+        console.warn(`[WARN] Rejecting ${meta.name} (v8): Missing required schema fields (intent, workflow, verification, selection)`);
+        continue;
+      }
     }
 
     skills.push(meta);
