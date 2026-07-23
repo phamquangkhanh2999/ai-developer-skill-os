@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.1.7] — 2026-07 — README Sync
+
+### Changed
+- **README Sync**: Synced `.agents/README.md` with root `README.md` so the installed documentation is fully up-to-date with V8.1 architecture.
+- Bumped version to `8.1.7`.
+
+---
+
 ## [8.1.6] — 2026-07 — Design Intelligence Content & Sync
 
 ### Added
