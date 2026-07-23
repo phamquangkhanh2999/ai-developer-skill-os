@@ -1,0 +1,72 @@
+name: security-audit
+description: "Workflow kiểm toán an toàn mã nguồn và chống xâm nhập (Security Audit)."
+version: 1.0.0
+
+steps:
+  - id: observe
+    name: "Observe System"
+    purpose: "Thu thập metadata về cấu trúc và các thành phần"
+    required: true
+    inputs: [source_code]
+    outputs: [system_context]
+    actions:
+      - "Xác định tech stack, boundaries và các third-party libs"
+
+  - id: dependency_scan
+    name: "Dependency Scan"
+    purpose: "Kiểm tra rủi ro từ package bên ngoài"
+    required: true
+    inputs: [system_context, package_files]
+    outputs: [dependency_vulnerabilities]
+    actions:
+      - "Kiểm tra version cũ, thư viện có CVE"
+
+  - id: secret_scan
+    name: "Secret Scan"
+    purpose: "Tìm kiếm thông tin nhạy cảm bị rò rỉ"
+    required: true
+    inputs: [source_code]
+    outputs: [leaked_secrets]
+    actions:
+      - "Quét hardcoded API keys, tokens, passwords trong code"
+
+  - id: permission_review
+    name: "Permission Review"
+    purpose: "Rà soát mô hình phân quyền và RBAC"
+    required: true
+    inputs: [system_context, access_control_code]
+    outputs: [permission_flaws]
+    actions:
+      - "Kiểm tra nguyên tắc least privilege"
+      - "Tìm lỗ hổng authentication/authorization bypass"
+
+  - id: risk_classification
+    name: "Risk Classification"
+    purpose: "Đánh giá mức độ nghiêm trọng"
+    required: true
+    inputs: [dependency_vulnerabilities, leaked_secrets, permission_flaws]
+    outputs: [classified_risks]
+    actions:
+      - "Phân loại LOW/MEDIUM/HIGH/CRITICAL"
+
+  - id: recommendation
+    name: "Recommendation"
+    purpose: "Đề xuất giải pháp khắc phục"
+    required: true
+    inputs: [classified_risks]
+    outputs: [security_report]
+    actions:
+      - "Tạo báo cáo chi tiết kèm actionable steps"
+
+  - id: verify
+    name: "Verify Fixes"
+    purpose: "Đảm bảo lỗ hổng đã được vá"
+    required: false
+    inputs: [source_code, security_report]
+    outputs: [final_audit_status]
+    actions:
+      - "Check lại các vị trí đã report"
+
+escalation:
+  max_retries: 0
+  on_failure: "Báo động đỏ (CRITICAL) nếu phát hiện secret leak"

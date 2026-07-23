@@ -23,7 +23,13 @@
 | qk-production-release | 8.0.0 | stable | internal |
 | qk-project-bootstrap | 8.0.0 | stable | feature-delivery |
 | qk-ai-builder | 8.0.0 | stable | feature-delivery |
-| qk-help | 8.0.0 | stable | internal |
+| qk-help | 8.0.0 | deprecated | internal |
+| qk-frontend-architecture | 8.1.0 | experimental | feature-delivery |
+| qk-design-system-engineering | 8.1.0 | experimental | feature-delivery |
+| qk-web-quality-gate | 8.1.0 | experimental | feature-delivery |
+| qk-test-engineering | 8.1.0 | experimental | feature-delivery |
+| qk-security-audit | 8.1.0 | experimental | security-audit |
+| qk-product-specification | 8.1.0 | experimental | spec-driven-development |
 
 Progress:
-22/22 migrated
+22/22 stable, 6 experimental, 1 deprecated

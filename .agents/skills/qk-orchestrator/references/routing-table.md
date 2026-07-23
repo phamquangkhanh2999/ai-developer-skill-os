@@ -24,9 +24,9 @@
 | design system, token, CSS variable, design tokens | `qk-ui-system-builder` | DESIGN.md check |
 | project audit, health, tech debt, kiểm toán dự án | `qk-project-health` | direct |
 | new project, bootstrap, init, khởi tạo dự án | `qk-project-bootstrap` | direct |
+| help, list skills, danh sách, trợ giúp | `qk-orchestrator` | direct |
 | memory, context, recall, lưu ngữ cảnh | `qk-project-memory` | direct |
 | security, policy, authorization, bảo mật | `qk-policy-engine` | → redirect to `qk-access-policy` |
-| help, danh sách, list skills, hướng dẫn | `qk-help` | direct |
 | consume API, tích hợp API backend, gọi API từ FE | `qk-fe-api-integration` | `qk-context-loader` first |
 | UI audit, kiểm tra giao diện, anti-slop check | `qk-ui-audit` | DESIGN.md check |
 

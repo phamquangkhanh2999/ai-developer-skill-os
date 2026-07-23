@@ -1,0 +1,65 @@
+name: skill-evolution
+description: "Workflow vòng lặp tiến hóa và tối ưu hóa skill (Skill Evolution)."
+version: 1.0.0
+
+steps:
+  - id: observe_usage
+    name: "Observe Usage"
+    purpose: "Theo dõi cách skill được sử dụng"
+    required: true
+    inputs: [skill_logs]
+    outputs: [usage_metrics]
+    actions:
+      - "Thống kê trigger rate và token usage"
+
+  - id: measure_success
+    name: "Measure Success"
+    purpose: "Đánh giá tỷ lệ thành công"
+    required: true
+    inputs: [usage_metrics, execution_results]
+    outputs: [success_rate]
+    actions:
+      - "Xác định các lần exit SUCCESS vs FAILED/PARTIAL"
+
+  - id: detect_failure
+    name: "Detect Failure Patterns"
+    purpose: "Phát hiện lý do thất bại"
+    required: true
+    inputs: [execution_results]
+    outputs: [failure_patterns]
+    actions:
+      - "Phân tích log lỗi, hallucination, out of budget"
+
+  - id: improve_skill
+    name: "Improve Skill"
+    purpose: "Đề xuất tối ưu skill"
+    required: true
+    inputs: [failure_patterns, skill_body]
+    outputs: [improved_skill_proposal]
+    actions:
+      - "Giảm noise trong instruction"
+      - "Cập nhật examples và learnings"
+      - "Tinh chỉnh token budget"
+
+  - id: validate_improvement
+    name: "Validate Improvement"
+    purpose: "Xác thực bản nâng cấp"
+    required: true
+    inputs: [improved_skill_proposal]
+    outputs: [validation_result]
+    actions:
+      - "Chạy qua validate-skills.js"
+      - "Kiểm tra schema compliance"
+
+  - id: promote
+    name: "Promote Skill"
+    purpose: "Đưa bản cải tiến vào sử dụng"
+    required: true
+    inputs: [validation_result]
+    outputs: [stable_skill]
+    actions:
+      - "Chuyển status thành stable"
+
+escalation:
+  max_retries: 1
+  on_failure: "Hủy bỏ bản cải tiến nếu validation thất bại"

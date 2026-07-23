@@ -28,6 +28,9 @@ triggers:
   - "route this"
   - "help me choose"
   - "what skill for"
+  - "help"
+  - "list skills"
+  - "what can you do"
 
 selection:
   priority: high

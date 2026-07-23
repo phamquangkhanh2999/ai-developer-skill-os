@@ -1,0 +1,57 @@
+name: spec-driven-development
+description: "Workflow phát triển dựa trên đặc tả (Specification-Driven Development)."
+version: 1.0.0
+
+steps:
+  - id: clarify_requirement
+    name: "Clarify Requirements"
+    purpose: "Làm rõ yêu cầu từ ý tưởng ban đầu"
+    required: true
+    inputs: [user_idea]
+    outputs: [clarified_requirement]
+    actions:
+      - "Hỏi các câu hỏi làm rõ scope và constraints"
+      - "Xác định rõ outcome mong muốn"
+
+  - id: create_spec
+    name: "Create Specification"
+    purpose: "Viết tài liệu đặc tả kỹ thuật"
+    required: true
+    inputs: [clarified_requirement]
+    outputs: [technical_spec]
+    actions:
+      - "Thiết kế API contracts, data models"
+      - "Xác định UI/UX heuristics"
+      - "Xác định edge cases"
+
+  - id: create_plan
+    name: "Create Plan"
+    purpose: "Lên kế hoạch triển khai"
+    required: true
+    inputs: [technical_spec]
+    outputs: [implementation_plan]
+    actions:
+      - "Chia nhỏ spec thành các task cụ thể"
+      - "Đánh giá rủi ro và thứ tự ưu tiên"
+
+  - id: implement
+    name: "Implement"
+    purpose: "Triển khai mã nguồn"
+    required: true
+    inputs: [implementation_plan, technical_spec]
+    outputs: [source_code]
+    actions:
+      - "Code theo đúng spec"
+
+  - id: verify
+    name: "Verify Implementation"
+    purpose: "Kiểm tra mã nguồn với đặc tả"
+    required: true
+    inputs: [source_code, technical_spec]
+    outputs: [verification_result]
+    actions:
+      - "Đối chiếu kết quả code với acceptance criteria"
+
+escalation:
+  max_retries: 2
+  on_failure: "Báo cáo lệch spec và xin chỉ thị"

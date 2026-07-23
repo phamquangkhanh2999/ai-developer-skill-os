@@ -2,7 +2,7 @@
 # ── Identity ───────────────────────────────────────────────
 name: qk-help
 version: 8.0.0
-status: stable
+status: deprecated
 description: "Hiển thị danh sách skills V8 và hướng dẫn dùng lệnh ./qk-[skill-name]."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
