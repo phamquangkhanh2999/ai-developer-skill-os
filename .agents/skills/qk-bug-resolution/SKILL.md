@@ -1,11 +1,68 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-bug-resolution
-category: maintenance
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - bug-fixing
+  - debugging
+  - error-resolution
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "2-5"
+    has_behavior_change: true
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "fix bug"
+  - "sửa lỗi"
+  - "crash"
+  - "error"
+  - "not working"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: bug-resolution
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-context-loader
+  - qk-validation-gate
+
+knowledge_scope:
+  owns:
+    - bug-diagnosis
+    - fix-strategies
+    - root-cause-analysis
+  references:
+    - testing
+    - language-specific-features
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: bug-fix
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: medium
@@ -20,9 +77,6 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-bug-resolution — Diagnose & Repair

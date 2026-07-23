@@ -1,11 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-validation-gate
-category: qa
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng mọi mã nguồn lỗi."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - quality-assurance
+  - verification
+  - code-review
+
+complexity:
+  level: low
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "verify"
+  - "kiểm tra"
+  - "lint"
+  - "test"
+  - "run checks"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: code-review
+
+rules:
+  - global
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-engineering-standard
+
+knowledge_scope:
+  owns:
+    - verification
+    - quality-gates
+    - test-execution
+  references:
+    - coding
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: low
@@ -20,19 +75,12 @@ token_budget:
   stop_early: false  # Must run all checks — cannot skip for token budget
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-validation-gate — Quality Gate
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Preconditions
 - [ ] Project has `package.json` with lint/test scripts (or equivalent for other runtimes)

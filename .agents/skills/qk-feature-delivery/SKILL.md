@@ -1,11 +1,69 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-feature-delivery
-category: fullstack
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - feature-building
+  - end-to-end-development
+  - implementation
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "5+"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "add feature"
+  - "build new"
+  - "implement"
+  - "phát triển tính năng"
+  - "tạo mới"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+  - safety
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-context-loader
+  - qk-validation-gate
+
+knowledge_scope:
+  owns:
+    - feature-implementation
+    - requirement-analysis
+  references:
+    - testing
+    - security-rules
+    - design-system
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: high
 latency: slow
 risk: medium
@@ -20,9 +78,6 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-feature-delivery — End-to-End Feature Builder

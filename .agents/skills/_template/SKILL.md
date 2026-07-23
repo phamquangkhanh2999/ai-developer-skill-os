@@ -2,6 +2,7 @@
 # ── Identity ───────────────────────────────────────────────
 name: qk-[skill-name]
 version: 8.0.0
+status: stable
 description: "[One sentence — what this skill does and for whom]"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 

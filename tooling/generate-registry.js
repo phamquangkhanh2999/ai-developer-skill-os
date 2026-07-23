@@ -35,6 +35,8 @@ function parseFrontmatter(content) {
   return {
     name: extract('name'),
     description: extract('description'),
+    version: extract('version') || '7.5.0',
+    status: extract('status') || 'legacy',
     complexity_level: yaml.match(/^\s+level:\s*(.+)/m)?.[1]?.trim() || extract('complexity'),
     triggers: extract('triggers', true),
     intent: extract('intent', true),
@@ -61,6 +63,11 @@ function generate() {
     const content = fs.readFileSync(skillFile, 'utf8');
     const meta = parseFrontmatter(content);
     if (!meta || !meta.name) continue;
+
+    // Default legacy if not marked stable
+    if (!meta.status && meta.version && meta.version.startsWith('8.')) {
+        meta.status = 'stable';
+    }
 
     skills.push(meta);
   }
@@ -89,6 +96,8 @@ skills:\n`;
 
   for (const skill of skills) {
     yaml += `  - name: ${skill.name}\n`;
+    yaml += `    version: "${skill.version}"\n`;
+    yaml += `    status: ${skill.status}\n`;
     yaml += `    description: "${skill.description || ''}"\n`;
     yaml += `    complexity: ${skill.complexity_level || 'medium'}\n`;
     yaml += `    workflow: ${skill.workflow || 'null'}\n`;

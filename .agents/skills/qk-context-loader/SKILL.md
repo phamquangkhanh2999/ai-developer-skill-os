@@ -1,11 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-context-loader
-category: utilities
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - context-loading
+  - project-understanding
+  - repository-analysis
+
+complexity:
+  level: low
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "load context"
+  - "understand project"
+  - "analyze architecture"
+  - "vẽ dependency graph"
+  - "build context"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: research
+
+rules:
+  - global
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-feature-delivery
+  - qk-orchestrator
+
+knowledge_scope:
+  owns:
+    - project-context
+    - architecture-discovery
+  references:
+    - coding
+    - repository-structure
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: low
 latency: fast
 risk: low
@@ -20,19 +75,12 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-context-loader — Dependency Graph Builder
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Preconditions
 - [ ] Entry point file or module name is specified

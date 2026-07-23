@@ -16,6 +16,10 @@ required:
     type: semver
     example: "8.0.0"
 
+  status:
+    type: enum
+    values: [stable, migrating, legacy]
+
   description:
     type: string
     maxLength: 120

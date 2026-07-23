@@ -4,72 +4,110 @@
 # Regenerate: node tooling/generate-registry.js
 #
 version: 8.0.0
-generated_at: "2026-07-23T03:56:50.481Z"
+generated_at: "2026-07-23T04:00:16.514Z"
 total_skills: 23
 
 # ── Skills catalog ────────────────────────────────────────
 skills:
   - name: qk-access-policy
+    version: "7.5.0"
+    status: legacy
     description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
     complexity: medium
     workflow: null
 
   - name: qk-ai-builder
+    version: "7.5.0"
+    status: legacy
     description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
     complexity: medium
     workflow: null
 
   - name: qk-api-lifecycle
+    version: "7.5.0"
+    status: legacy
     description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
     complexity: medium
     workflow: null
 
   - name: qk-bug-resolution
+    version: "8.0.0"
+    status: stable
     description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
     complexity: medium
-    workflow: null
+    workflow: bug-resolution
+    triggers:
+      - "fix bug"
+    intent:
+      - bug-fixing
 
   - name: qk-context-loader
+    version: "8.0.0"
+    status: stable
     description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
-    complexity: medium
-    workflow: null
+    complexity: low
+    workflow: research
+    triggers:
+      - "load context"
+    intent:
+      - context-loading
 
   - name: qk-data-lifecycle
+    version: "7.5.0"
+    status: legacy
     description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
     complexity: medium
     workflow: null
 
   - name: qk-db-optimizer
+    version: "7.5.0"
+    status: legacy
     description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
     complexity: medium
     workflow: null
 
   - name: qk-docs
+    version: "7.5.0"
+    status: legacy
     description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
     complexity: medium
     workflow: null
 
   - name: qk-engineering-standard
+    version: "7.5.0"
+    status: legacy
     description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
     complexity: medium
     workflow: null
 
   - name: qk-fe-api-integration
+    version: "7.5.0"
+    status: legacy
     description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
     complexity: medium
     workflow: null
 
   - name: qk-feature-delivery
+    version: "8.0.0"
+    status: stable
     description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "add feature"
+    intent:
+      - feature-building
 
   - name: qk-help
+    version: "7.5.0"
+    status: legacy
     description: "Hiển thị danh sách skills V7.5 và hướng dẫn dùng lệnh ./qk-[skill-name]."
     complexity: medium
     workflow: null
 
   - name: qk-orchestrator
+    version: "8.0.0"
+    status: stable
     description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
     complexity: low
     workflow: research                  # Uses research workflow to understand request
@@ -79,51 +117,75 @@ skills:
       - task-routing
 
   - name: qk-production-release
+    version: "7.5.0"
+    status: legacy
     description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
     complexity: medium
     workflow: null
 
   - name: qk-project-bootstrap
+    version: "7.5.0"
+    status: legacy
     description: "Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ thiếu foundation."
     complexity: medium
     workflow: null
 
   - name: qk-project-health
+    version: "7.5.0"
+    status: legacy
     description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
     complexity: medium
     workflow: null
 
   - name: qk-project-memory
+    version: "7.5.0"
+    status: legacy
     description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
     complexity: medium
     workflow: null
 
   - name: qk-system-evolution
+    version: "7.5.0"
+    status: legacy
     description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
     complexity: medium
     workflow: null
 
   - name: qk-ui-audit
+    version: "7.5.0"
+    status: legacy
     description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
     complexity: medium
     workflow: null
 
   - name: qk-ui-builder
+    version: "7.5.0"
+    status: legacy
     description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
     complexity: medium
     workflow: null
 
   - name: qk-ui-system-builder
+    version: "7.5.0"
+    status: legacy
     description: "Xây dựng Design System và token library từ DESIGN.md — không tự đặt ra token ngoài contract."
     complexity: medium
     workflow: null
 
   - name: qk-validation-gate
+    version: "8.0.0"
+    status: stable
     description: "Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng mọi mã nguồn lỗi."
-    complexity: medium
-    workflow: null
+    complexity: low
+    workflow: code-review
+    triggers:
+      - "verify"
+    intent:
+      - quality-assurance
 
   - name: qk-[skill-name]
+    version: "8.0.0"
+    status: stable
     description: "[One sentence — what this skill does and for whom]"
     complexity: medium                    # low | medium | high | critical
     workflow: [workflow-name]          # → workflows/[workflow-name].yml
