@@ -48,6 +48,19 @@ knowledge_scope:
   references:
     - design-system
 
+decision_boundary:
+  owns:
+    - tokens
+    - ui-system
+  does_not_own:
+    - page implementation
+    - visual direction
+  conflicts_with:
+    - qk-design-system-engineering
+
+knowledge_dependencies:
+  - design-intelligence
+
 # ── V8: Verification ───────────────────────────────────────
 verification:
   required: true
