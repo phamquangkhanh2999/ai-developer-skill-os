@@ -5,6 +5,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.1.6] — 2026-07 — Design Intelligence Content & Sync
+
+### Added
+- **Design Intelligence Populated**: Sourced core market-standard knowledge (Tailwind, Radix, Apple, Vercel-like principles) into `.agents/knowledge/design-intelligence/` covering components, patterns, industries, themes, and references.
+- **Animation Knowledge**: Added `visual-language/animation.md` for micro-interactions and transition durations.
+- **Dependency Wiring**: Linked `qk-ui-system-builder` to `design-intelligence` so it utilizes the newly generated design constraints.
+- **Changelog Sync**: Synced `.agents/CHANGELOG.md` with root `CHANGELOG.md` so the installed copy reflects the true V8 evolution.
+
+### Changed
+- All skill descriptions properly translated to Vietnamese for ecosystem consistency.
+- Bumped version to `8.1.6` for final, truly complete Design Intelligence NPM Release.
+
+---
+
 ## [8.1.4] — 2026-07 — Design Intelligence Pack
 
 ### Added
