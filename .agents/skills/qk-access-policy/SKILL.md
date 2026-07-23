@@ -1,9 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-access-policy
-category: security
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - access-control
+  - security-policy
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "cấu hình rbac"
+  - "phân quyền"
+  - "bảo mật api"
+  - "auth middleware"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-api-lifecycle
+
+knowledge_scope:
+  owns:
+    - security-policy
+    - role-matrix
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+selection:
+  priority: high
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: medium
 latency: medium
@@ -11,15 +68,14 @@ risk: high
 side_effects: edit_files
 produces: [code, report]
 consumes: [user-description]
+
 token_budget:
   max_files_read: 3
   max_lines_per_read: 100
   max_shell_commands: 0
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-access-policy — Access Control Designer

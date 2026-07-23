@@ -1,9 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-data-lifecycle
-category: backend
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - schema-management
+  - database-migration
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "sửa schema"
+  - "cập nhật database"
+  - "tạo migration"
+  - "đổi model"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-db-optimizer
+
+knowledge_scope:
+  owns:
+    - schema
+    - migrations
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: migration-safety
+
+selection:
+  priority: high
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: high
 latency: slow
@@ -11,15 +68,14 @@ risk: high
 side_effects: edit_files
 produces: [code, schema]
 consumes: [context-graph, user-description]
+
 token_budget:
   max_files_read: 4
   max_lines_per_read: 100
   max_shell_commands: 1
   stop_early: false
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-data-lifecycle — Database Schema & Repository Manager

@@ -76,7 +76,7 @@ required:
   verification:
     type: object
     required_fields: [required, strategy]
-    strategies: [bug-fix, refactor, feature, documentation, review, none]
+    strategies: [bug-fix, refactor, feature, documentation, review, api-change, migration-safety, performance-regression, none]
 
   execution_mode:
     type: enum

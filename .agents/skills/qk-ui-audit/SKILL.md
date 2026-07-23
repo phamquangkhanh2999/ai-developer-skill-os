@@ -1,11 +1,68 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-ui-audit
-category: qa
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - ui-audit
+  - codebase-health
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: false
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "audit ui"
+  - "check ui"
+  - "kiểm tra giao diện"
+  - "ui slop"
+  - "review ui"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: code-review
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-ui-builder
+
+knowledge_scope:
+  owns:
+    - ui-standards
+    - anti-slop
+  references:
+    - design-system
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: review
+
+selection:
+  priority: medium
+  confidence_threshold: 0.80
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: low
@@ -20,9 +77,6 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-ui-audit — Anti-Slop UI Inspector

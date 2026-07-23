@@ -1,9 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-db-optimizer
-category: backend
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: utility
+
+intent:
+  - database-optimization
+  - performance-tuning
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "tối ưu query"
+  - "query chậm"
+  - "optimize db"
+  - "thêm index"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: refactor
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-data-lifecycle
+
+knowledge_scope:
+  owns:
+    - database-performance
+    - query-optimization
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: performance-regression
+
+selection:
+  priority: medium
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: medium
 latency: medium
@@ -11,15 +68,14 @@ risk: medium
 side_effects: edit_files
 produces: [code, report]
 consumes: [query-log, source-code]
+
 token_budget:
   max_files_read: 3
   max_lines_per_read: 100
   max_shell_commands: 2
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-db-optimizer — Database Performance Tuner

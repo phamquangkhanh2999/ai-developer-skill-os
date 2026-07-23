@@ -1,9 +1,66 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-ui-system-builder
-category: frontend
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Xây dựng Design System và token library từ DESIGN.md — không tự đặt ra token ngoài contract."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - ui-system-design
+  - frontend-development
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: false
+    has_breaking_change: false
+
+triggers:
+  - "tạo design system"
+  - "build token"
+  - "ui system"
+  - "setup css"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-ui-builder
+
+knowledge_scope:
+  owns:
+    - design-tokens
+    - ui-system
+  references:
+    - design-system
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+selection:
+  priority: medium
+  confidence_threshold: 0.80
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
 execution_mode: deterministic
 cost: medium
 latency: medium
@@ -11,15 +68,14 @@ risk: low
 side_effects: edit_files
 produces: [code, tokens]
 consumes: [design-md]
+
 token_budget:
   max_files_read: 2
   max_lines_per_read: 100
   max_shell_commands: 0
   stop_early: true
+
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-ui-system-builder — Design System Constructor

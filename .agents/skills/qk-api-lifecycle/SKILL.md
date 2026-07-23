@@ -1,11 +1,67 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-api-lifecycle
-category: fullstack
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - api-design
+  - backend-development
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "viết api"
+  - "tạo endpoint"
+  - "build api"
+  - "thiết kế api"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-data-lifecycle
+
+knowledge_scope:
+  owns:
+    - api-contracts
+    - endpoints
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: api-change
+
+selection:
+  priority: high
+  confidence_threshold: 0.85
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: medium
@@ -20,9 +76,6 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-api-lifecycle — API Design & Implementation

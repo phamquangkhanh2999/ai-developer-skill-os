@@ -1,11 +1,68 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-fe-api-integration
-category: frontend
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - api-integration
+  - frontend-development
+
+complexity:
+  level: medium
+  criteria:
+    files_affected: "1-5"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "tích hợp api"
+  - "gọi api"
+  - "fetch data"
+  - "consume api"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-api-lifecycle
+  - qk-ui-builder
+
+knowledge_scope:
+  owns:
+    - api-integration
+    - state-management
+  references:
+    - architecture
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+selection:
+  priority: medium
+  confidence_threshold: 0.80
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: medium
 latency: medium
 risk: low
@@ -20,9 +77,6 @@ token_budget:
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-fe-api-integration — Frontend API Consumer

@@ -4,17 +4,21 @@
 # Regenerate: node tooling/generate-registry.js
 #
 version: 8.0.0
-generated_at: "2026-07-23T04:13:46.522Z"
+generated_at: "2026-07-23T04:17:38.474Z"
 total_skills: 22
 
 # ── Skills catalog ────────────────────────────────────────
 skills:
   - name: qk-access-policy
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "cấu hình rbac"
+    intent:
+      - access-control
 
   - name: qk-ai-builder
     version: "7.5.0"
@@ -24,11 +28,15 @@ skills:
     workflow: null
 
   - name: qk-api-lifecycle
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
     complexity: medium
-    workflow: null
+    workflow: feature-delivery
+    triggers:
+      - "viết api"
+    intent:
+      - api-design
 
   - name: qk-bug-resolution
     version: "8.0.0"
@@ -53,18 +61,26 @@ skills:
       - context-loading
 
   - name: qk-data-lifecycle
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "sửa schema"
+    intent:
+      - schema-management
 
   - name: qk-db-optimizer
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: refactor
+    triggers:
+      - "tối ưu query"
+    intent:
+      - database-optimization
 
   - name: qk-docs
     version: "8.0.0"
@@ -89,11 +105,15 @@ skills:
       - code-quality
 
   - name: qk-fe-api-integration
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
     complexity: medium
-    workflow: null
+    workflow: feature-delivery
+    triggers:
+      - "tích hợp api"
+    intent:
+      - api-integration
 
   - name: qk-feature-delivery
     version: "8.0.0"
@@ -172,25 +192,37 @@ skills:
       - framework-upgrade
 
   - name: qk-ui-audit
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
     complexity: medium
-    workflow: null
+    workflow: code-review
+    triggers:
+      - "audit ui"
+    intent:
+      - ui-audit
 
   - name: qk-ui-builder
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
-    complexity: medium
-    workflow: null
+    complexity: high
+    workflow: feature-delivery
+    triggers:
+      - "build ui"
+    intent:
+      - ui-development
 
   - name: qk-ui-system-builder
-    version: "7.5.0"
-    status: legacy
+    version: "8.0.0"
+    status: stable
     description: "Xây dựng Design System và token library từ DESIGN.md — không tự đặt ra token ngoài contract."
     complexity: medium
-    workflow: null
+    workflow: feature-delivery
+    triggers:
+      - "tạo design system"
+    intent:
+      - ui-system-design
 
   - name: qk-validation-gate
     version: "8.0.0"

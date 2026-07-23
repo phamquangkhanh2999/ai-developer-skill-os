@@ -1,11 +1,68 @@
 ---
+# ── Identity ───────────────────────────────────────────────
 name: qk-ui-builder
-category: frontend
-version: 7.5.0
+version: 8.0.0
+status: stable
 description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
 
+# ── V8: Classification ─────────────────────────────────────
+type: capability
+
+intent:
+  - ui-development
+  - frontend-design
+
+complexity:
+  level: high
+  criteria:
+    files_affected: "1-10"
+    has_behavior_change: true
+    has_external_dependency: true
+    has_breaking_change: false
+
+triggers:
+  - "build ui"
+  - "làm giao diện"
+  - "design ui"
+  - "css"
+  - "giao diện"
+
+# ── V8: References ─────────────────────────────────────────
+workflow: feature-delivery
+
+rules:
+  - global
+  - coding
+
+tools:
+  - filesystem
+  - terminal
+
+related_skills:
+  - qk-ui-system-builder
+
+knowledge_scope:
+  owns:
+    - ui-components
+    - styling
+  references:
+    - design-system
+
+# ── V8: Verification ───────────────────────────────────────
+verification:
+  required: true
+  strategy: feature
+
+selection:
+  priority: medium
+  confidence_threshold: 0.80
+
+examples: []
+learnings: []
+
+# ── V7 Runtime ─────────────────────────────────────────────
+execution_mode: deterministic
 cost: high
 latency: slow
 risk: low
@@ -20,9 +77,6 @@ token_budget:
   stop_early: false
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
 ---
 
 # qk-ui-builder — UI Builder & Auditor
