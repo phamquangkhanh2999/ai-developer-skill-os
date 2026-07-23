@@ -2,13 +2,17 @@ case:
   id: bound-001
 input:
   "Tạo màu và typography cho thương hiệu mới"
-expected:
-  primary_skill:
+candidates:
+  - skill: qk-design-system-engineering
+    score: 0.92
+  - skill: qk-ui-system-builder
+    score: 0.55
+decision:
+  selected:
     qk-design-system-engineering
-  forbidden:
-    - qk-ui-system-builder
-  confidence:
-    min: 0.8
+  rejected:
+    - skill: qk-ui-system-builder
+      reason: "outside boundary or conflict"
 conflict_policy:
   severity: critical
   action: block

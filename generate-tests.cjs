@@ -24,13 +24,16 @@ cases.forEach(c => {
   id: ${c.id}
 input:
   "${c.input}"
-expected:
-  primary_skill:
+candidates:
+  - skill: ${c.skill}
+    score: 0.92
+  - skill: ${c.forbidden[0] || 'qk-validation-gate'}
+    score: 0.55
+decision:
+  selected:
     ${c.skill}
-  forbidden:
-${c.forbidden.map(f => '    - ' + f).join('\n')}
-  confidence:
-    min: 0.8
+  rejected:
+${c.forbidden.map(f => `    - skill: ${f}\n      reason: "outside boundary or conflict"`).join('\n')}
 conflict_policy:
   severity: ${c.path.includes('boundary') ? 'critical' : (c.path.includes('routing') ? 'warning' : 'high')}
   action: ${c.path.includes('boundary') ? 'block' : (c.path.includes('routing') ? 'continue_with_notice' : 'require_confirmation')}

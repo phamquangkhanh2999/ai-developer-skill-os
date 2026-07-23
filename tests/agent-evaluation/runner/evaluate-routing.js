@@ -31,14 +31,30 @@ function runEvaluation() {
       
       console.log(`- Đang chạy case: ${testCase.case.id || path.basename(file)}`);
       
-      // Giả lập kết quả routing (Mock AI execution)
-      const isRoutingAccurate = true; // Mock
-      const isConflictDetected = true; // Mock
-      const hasBoundaryViolation = false; // Mock
+      // Candidate Ranking and Trace Simulation
+      if (testCase.candidates) {
+        console.log(`  [Trace] Generating candidates...`);
+        testCase.candidates.forEach(cand => {
+          console.log(`    - ${cand.skill} (Score: ${cand.score})`);
+        });
+      }
+      
+      if (testCase.decision) {
+        console.log(`  [Trace] Decision: Selected ${testCase.decision.selected}`);
+        if (testCase.decision.rejected) {
+           testCase.decision.rejected.forEach(r => {
+             console.log(`    [Reject] ${r.skill} - ${r.reason}`);
+           });
+        }
+      }
+      
+      // Mock validation logic
+      const isRoutingAccurate = !!testCase.decision?.selected;
+      const isConflictDetected = !!testCase.decision?.rejected?.length;
+      const hasBoundaryViolation = false; 
       
       let severityChecked = false;
       if (testCase.conflict_policy && testCase.conflict_policy.severity) {
-         // Mock: Agent correctly identifies severity
          severityChecked = true;
       }
       

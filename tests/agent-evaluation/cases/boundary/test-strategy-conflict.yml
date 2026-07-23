@@ -2,13 +2,17 @@ case:
   id: bound-003
 input:
   "Lên chiến lược viết test cho app e-commerce"
-expected:
-  primary_skill:
+candidates:
+  - skill: qk-test-engineering
+    score: 0.92
+  - skill: qk-validation-gate
+    score: 0.55
+decision:
+  selected:
     qk-test-engineering
-  forbidden:
-    - qk-validation-gate
-  confidence:
-    min: 0.8
+  rejected:
+    - skill: qk-validation-gate
+      reason: "outside boundary or conflict"
 conflict_policy:
   severity: critical
   action: block

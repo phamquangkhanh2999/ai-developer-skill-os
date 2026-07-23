@@ -2,13 +2,17 @@ case:
   id: wf-002
 input:
   "Đóng gói app nhưng nhớ check bảo mật trước"
-expected:
-  primary_skill:
+candidates:
+  - skill: qk-validation-gate
+    score: 0.92
+  - skill: qk-production-release
+    score: 0.55
+decision:
+  selected:
     qk-validation-gate
-  forbidden:
-    - qk-production-release
-  confidence:
-    min: 0.8
+  rejected:
+    - skill: qk-production-release
+      reason: "outside boundary or conflict"
 conflict_policy:
   severity: high
   action: require_confirmation

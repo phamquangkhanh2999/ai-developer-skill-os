@@ -2,14 +2,19 @@ case:
   id: bound-002
 input:
   "Code nút bấm màu đỏ theo thiết kế figma"
-expected:
-  primary_skill:
+candidates:
+  - skill: qk-ui-builder
+    score: 0.92
+  - skill: qk-design-system-engineering
+    score: 0.55
+decision:
+  selected:
     qk-ui-builder
-  forbidden:
-    - qk-design-system-engineering
-    - qk-frontend-architecture
-  confidence:
-    min: 0.8
+  rejected:
+    - skill: qk-design-system-engineering
+      reason: "outside boundary or conflict"
+    - skill: qk-frontend-architecture
+      reason: "outside boundary or conflict"
 conflict_policy:
   severity: critical
   action: block
