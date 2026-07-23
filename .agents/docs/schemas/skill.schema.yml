@@ -168,6 +168,21 @@ optional:
     fields:
       promotion_gate:
         type: object
+        fields:
+          requirements:
+            type: object
+            fields:
+              tests:
+                type: object
+              usage:
+                type: object
+              conflicts:
+                type: object
+              evidence:
+                type: object
+                fields:
+                  required:
+                    type: array
       demotion_gate:
         type: object
 

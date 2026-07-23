@@ -79,12 +79,18 @@ verification:
 
 lifecycle:
   promotion_gate:
-    tests:
-      minimum_pass_rate: 0.9
-    usage:
-      minimum_runs: 20
-    conflicts:
-      zero_boundary_violation: true
+    requirements:
+      tests:
+        minimum_pass_rate: 0.95
+      usage:
+        minimum_runs: 20
+      conflicts:
+        zero_boundary_violation: true
+      evidence:
+        required:
+          - evaluation_report
+          - usage_history
+          - boundary_audit
   demotion_gate:
     triggers:
       - repeated_failure
