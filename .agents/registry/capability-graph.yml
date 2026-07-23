@@ -1,7 +1,7 @@
 # registry/capability-graph.yml
 # GENERATED FILE — DO NOT EDIT MANUALLY
-version: 8.1.2
-generated_at: '2026-07-23T04:58:01.572Z'
+version: 8.1.3
+generated_at: '2026-07-23T06:25:44.563Z'
 nodes:
   qk-access-policy:
     type: capability
@@ -10,6 +10,22 @@ nodes:
     does_not_own: []
     conflicts: []
     workflow: feature-delivery
+  qk-agent-observability:
+    type: capability
+    maturity: experimental
+    owns:
+      - agent_decision_trace
+      - routing_accuracy_metrics
+      - skill_success_rate
+      - failure_pattern_detection
+      - feedback_loop
+    does_not_own:
+      - application_monitoring
+      - infrastructure_monitoring
+      - log_aggregation
+      - uptime_monitoring
+    conflicts: []
+    workflow: skill-evolution
   qk-ai-builder:
     type: capability
     maturity: stable
@@ -254,6 +270,9 @@ edges:
   - from: qk-access-policy
     to: qk-api-lifecycle
     relation: feeds
+  - from: qk-agent-observability
+    to: skill-evolution
+    relation: depends_on
   - from: qk-ai-builder
     to: feature-delivery
     relation: depends_on
@@ -359,9 +378,15 @@ edges:
   - from: qk-frontend-architecture
     to: qk-ui-builder
     relation: delegates_to
+  - from: qk-ui-builder
+    to: qk-frontend-architecture
+    relation: implemented_by
   - from: qk-frontend-architecture
     to: qk-ui-system-builder
     relation: delegates_to
+  - from: qk-ui-system-builder
+    to: qk-frontend-architecture
+    relation: implemented_by
   - from: qk-frontend-architecture
     to: qk-design-system-engineering
     relation: feeds
@@ -386,6 +411,9 @@ edges:
   - from: qk-product-specification
     to: qk-feature-delivery
     relation: delegates_to
+  - from: qk-feature-delivery
+    to: qk-product-specification
+    relation: implemented_by
   - from: qk-product-specification
     to: qk-feature-delivery
     relation: feeds
@@ -419,6 +447,9 @@ edges:
   - from: qk-security-audit
     to: qk-validation-gate
     relation: delegates_to
+  - from: qk-validation-gate
+    to: qk-security-audit
+    relation: implemented_by
   - from: qk-security-audit
     to: qk-access-policy
     relation: feeds

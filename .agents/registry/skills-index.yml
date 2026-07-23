@@ -1,8 +1,8 @@
 # registry/skills-index.yml
 # GENERATED FILE — DO NOT EDIT MANUALLY
 version: 8.1.1
-generated_at: '2026-07-23T04:58:01.563Z'
-total_skills: 29
+generated_at: '2026-07-23T06:25:44.553Z'
+total_skills: 30
 skills:
   - name: qk-access-policy
     version: 8.0.0
@@ -20,6 +20,22 @@ skills:
     intent:
       - access-control
       - security-policy
+  - name: qk-agent-observability
+    version: 8.1.3
+    status: experimental
+    description: >-
+      Agent Observability layer for tracking decisions, routing metrics, and
+      failure patterns.
+    complexity: medium
+    workflow: skill-evolution
+    triggers:
+      - agent observability
+      - routing logs
+      - skill failure
+    intent:
+      - observability
+      - agent-metrics
+      - decision-trace
   - name: qk-ai-builder
     version: 8.0.0
     status: stable

@@ -122,6 +122,12 @@ function generate() {
           to: delegate,
           relation: 'delegates_to'
         });
+        // Derive reverse relation 'implemented_by'
+        edges.push({
+          from: delegate,
+          to: s.name,
+          relation: 'implemented_by'
+        });
       }
     }
     
@@ -137,7 +143,7 @@ function generate() {
   }
 
   const graphData = {
-    version: "8.1.2",
+    version: "8.1.3",
     generated_at: new Date().toISOString(),
     nodes,
     edges
