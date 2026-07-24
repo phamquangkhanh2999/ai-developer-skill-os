@@ -71,7 +71,7 @@ function runInstall(ideChoice, scopeChoice) {
   if (isGlobal) {
     const homeDir = os.homedir();
     if (ide === 'antigravity') {
-      targetDir = path.join(homeDir, '.gemini', 'config', '.agents');
+      targetDir = path.join(homeDir, '.gemini', 'config');
     } else {
       targetDir = path.join(homeDir, '.ai-developer-skill-os', '.agents');
     }
@@ -87,6 +87,44 @@ function runInstall(ideChoice, scopeChoice) {
     if (fs.existsSync(sourceDir)) {
       copyRecursiveSync(sourceDir, targetDir);
       console.log(`✅ Đã copy toàn bộ kiến trúc .agents vào: ${targetDir}`);
+      
+      if (isGlobal && ide === 'antigravity') {
+        const targetDirPosix = targetDir.replace(/\\/g, '/');
+        
+        function walkAndReplace(dir) {
+          const files = fs.readdirSync(dir);
+          for (const file of files) {
+            const fullPath = path.join(dir, file);
+            if (fs.statSync(fullPath).isDirectory()) {
+              walkAndReplace(fullPath);
+            } else if (fullPath.endsWith('.md') || fullPath.endsWith('.yml') || fullPath.endsWith('.yaml') || fullPath.endsWith('.json')) {
+              let content = fs.readFileSync(fullPath, 'utf8');
+              let modified = false;
+              
+              const dirsToRewrite = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'examples', 'docs'];
+              for (const d of dirsToRewrite) {
+                const regex = new RegExp(`\\.agents/${d}`, 'g');
+                if (regex.test(content)) {
+                  content = content.replace(regex, `${targetDirPosix}/${d}`);
+                  modified = true;
+                }
+              }
+              
+              if (content.includes('.agents/skills.json')) {
+                content = content.replace(/\.agents\/skills\.json/g, `${targetDirPosix}/skills.json`);
+                modified = true;
+              }
+      
+              if (modified) {
+                fs.writeFileSync(fullPath, content, 'utf8');
+              }
+            }
+          }
+        }
+        
+        walkAndReplace(targetDir);
+        console.log(`✅ Đã cập nhật đường dẫn tuyệt đối cho cấu hình Global Antigravity`);
+      }
     } else {
       console.error(`❌ Lỗi: Không tìm thấy thư mục nguồn ${sourceDir}`);
       return;
