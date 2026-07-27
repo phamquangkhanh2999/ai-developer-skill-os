@@ -71,3 +71,14 @@ selection:
 
 # Agent Observability Capability
 This skill enables tracking and observing the AI agent's own behavior, decisions, and accuracy metrics without interfering with application or infrastructure observability systems.
+
+---
+
+## Scope
+- ✅ Monitor agent decision boundaries and token budgets during execution
+- ✅ Record execution traces and accuracy metrics into `evals/traces/` for quantitative verification
+- ✅ Detect failure patterns or repetitive tool calling loops to trigger safe demotion/stopping
+
+## Non-Goals
+- ❌ Monitor infrastructure servers, Kubernetes pods, or external application metrics
+- ❌ Alter runtime execution paths outside of established boundary validation rules

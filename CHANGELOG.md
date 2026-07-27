@@ -5,6 +5,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.2.0] — 2026-07 — EDAOS v8.2: Governed Capability Metadata & Eval Platform
+
+### Added
+- **Manifest-First Architecture & Registry Engine**: Created `tooling/build-registry.js` (`npm run build:registry`) generating lightweight lookup index `.agents/registry/index.yaml` and O(1) runtime adjacency graph `.agents/registry/graph.json` with cycle/orphan detection.
+- **V8.2 Blueprint Plugins**: Introduced customizable project scaffolding templates under `.agents/blueprints/` (`rag`, `coding`, `workflow`) featuring multi-profile environments (`development`, `production`, `testing`) and feature flags.
+- **Governed Capability Manifests**: Created minimalist `.agents/skills/_template/capability.yaml` (`schema_version: 1`) to decouple execution metadata from natural language instructions.
+- **Eval Pipeline Platform**: Added quantitative verification frameworks via inheritance-ready `.agents/skills/_template/evals/scorecard.yaml` (`extends: default`), linking ground-truth execution traces with automated score rubrics.
+- **Domain Patterns Reference Architecture**: Added reference blueprint for Enterprise Domain AI at `.agents/knowledge/domain-patterns/construction/ddc-construction-ai-blueprint.md` (Construction AI, DDC 192 domain skills, QTO IFC bóc tách, n8n automation workflows) showcasing zero interference with core developer capabilities.
+
+### Changed
+- **`qk-project-bootstrap` Evolution (v8.2.0)**: Upgraded to support One-Click Blueprint selection, automated `project.yaml` generation, and the Universal 4-Folder RAG Architecture (`prompts/`, `data/`, `agents/`, `evals/`).
+- **`qk-validation-gate` Evolution (v8.2.0)**: Integrated automated Eval Pipeline validation, reading `scorecard.yaml` rubrics, verifying trace logs in `evals/traces/`, and enforcing quantitative pass thresholds.
+- **`qk-ai-builder` Evolution (v8.2.0)**: Upgraded to Manifest-first capability packaging and strict 4-folder data discipline (immutable `data/raw/` vs cleaned `data/processed/`).
+- Updated system core description in `package.json` to reflect the EDAOS v8.2 paradigm shift.
+- Synced `.agents/CHANGELOG.md` and `.agents/README.md` with root documentation.
+
+---
+
 ## [8.1.7] — 2026-07 — README Sync
 
 ### Changed

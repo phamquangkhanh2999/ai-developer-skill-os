@@ -6,33 +6,25 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-describe('Install Script Logic', () => {
-  it('systemPrompt should contain required keywords', () => {
+describe('V8 Install Script Logic', () => {
+  it('should support copyRecursiveSync for .agents architecture', () => {
     const scriptPath = path.join(rootDir, 'bin', 'install.js');
     const content = fs.readFileSync(scriptPath, 'utf8');
-    expect(content).toContain('[Role]');
-    expect(content).toContain('[Trigger Mechanism]');
-    expect(content).toContain('[Command Arguments]');
-    expect(content).toContain('qk-[tên-skill]');
+    expect(content).toContain('copyRecursiveSync(sourceDir, targetDir)');
+    expect(content).toContain('Đã copy toàn bộ kiến trúc .agents');
   });
 
-  it('should handle multi-IDE mode', () => {
+  it('should support Antigravity global installation & path conversion', () => {
     const scriptPath = path.join(rootDir, 'bin', 'install.js');
     const content = fs.readFileSync(scriptPath, 'utf8');
-    expect(content).toContain("case '7'");
-    expect(content).toContain('CLAUDE.md');
+    expect(content).toContain(".gemini', 'config'");
+    expect(content).toContain('walkAndReplace(targetDir)');
   });
 
-  it('should support Kilo config generation', () => {
+  it('should handle multiple IDE selections in runInstall', () => {
     const scriptPath = path.join(rootDir, 'bin', 'install.js');
     const content = fs.readFileSync(scriptPath, 'utf8');
-    expect(content).toContain('ensureKiloConfig');
-    expect(content).toContain('kiloJsonPath');
-  });
-
-  it('should clean old skills before installation', () => {
-    const scriptPath = path.join(rootDir, 'bin', 'install.js');
-    const content = fs.readFileSync(scriptPath, 'utf8');
-    expect(content).toContain('cleanOldSkills');
+    expect(content).toContain("'4': 'antigravity'");
+    expect(content).toContain("'1': 'cursor'");
   });
 });

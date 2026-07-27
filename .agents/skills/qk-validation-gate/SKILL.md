@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-validation-gate
-version: 8.0.0
+version: 8.2.0
 status: stable
-description: "Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng mọi mã nguồn lỗi."
+description: "Cổng kiểm tra chất lượng & Eval Pipeline bắt buộc — chạy linters, tests, và đánh giá scorecard.yaml định lượng cho AI Agent."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
@@ -101,15 +101,17 @@ runtime_version: 1
 schema_version: 2
 ---
 
-## Scope
-- ✅ Run lint, type-check, tests, security audit in sequence
-- ✅ Enforce pass/fail with concrete thresholds
-- ✅ Report results with structured Evidence Format
+## Scope & V8.2 Eval Pipeline
+- ✅ Run lint, type-check, tests, and security audit in sequence
+- ✅ **Execute V8.2 Eval Pipeline:** Read `scorecard.yaml` (or inherited schemas) and compute quantitative scores for AI/Agent outputs.
+- ✅ Enforce pass/fail with concrete thresholds (Code coverage >= 80%, Eval scorecard >= passing threshold, typically 80/100).
+- ✅ Validate Trace execution logs in `evals/traces/` to ensure zero hallucination and ground-truth compliance.
+- ✅ Report results with structured Evidence Format.
 
 ## Non-Goals
 - ❌ Fix failing tests or lint errors (fixes go to qk-bug-resolution)
-- ❌ Skip any gate check unless user explicitly allows
-- ❌ Override failing thresholds with "ignore" flags
+- ❌ Skip any gate check or eval scorecard unless user explicitly allows
+- ❌ Override failing thresholds with "ignore" flags or fabricated LLM scores without trace evidence
 
 skill_version: 7.5.0
 runtime_version: 1
@@ -140,6 +142,11 @@ build:
   must_succeed: true
   max_warnings: 5
   bundle_size_limit: 500KB    # Gzipped (if applicable)
+
+eval_scorecard:
+  default_passing_threshold: 80 # minimum weighted evaluation score
+  trace_verification_required: true # must log tool executions in evals/traces
+  zero_tolerance_hallucination: true
 ```
 
 skill_version: 7.5.0

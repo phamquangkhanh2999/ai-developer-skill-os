@@ -1,0 +1,20 @@
+# capability.yaml — Machine-readable Capability Manifest
+# Schema Version 1 — EDAOS v8.2 Governed Capability Platform
+schema_version: 1
+
+id: qk-template-capability
+version: "8.2.0"
+description: "Brief 1-line objective description of this capability for sub-second registry indexing."
+
+dependencies:
+  - qk-validation-gate
+
+tools:
+  - view_file
+  - replace_file_content
+
+knowledge:
+  - engineering-standard
+
+eval:
+  scorecard: evals/scorecard.yaml

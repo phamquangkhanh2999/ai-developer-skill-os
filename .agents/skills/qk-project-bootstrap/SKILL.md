@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-bootstrap
-version: 8.0.0
+version: 8.2.0
 status: stable
-description: "Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ thiếu foundation."
+description: "Khởi tạo dự án mới theo chuẩn V8.2 Blueprint Plugin Generator (project.yaml, 4-folder AI RAG hoặc Coding) với cấu trúc kiên cường."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
@@ -100,77 +100,81 @@ On missing precondition:
 
 ---
 
-## Scope
-- ✅ Initialize project with standard tooling
-- ✅ Generate `DESIGN.md` (mandatory for any UI project)
-- ✅ Configure: ESLint, Prettier, TypeScript strict mode
-- ✅ Create standard directory structure
+## Scope & V8.2 Blueprint Generator
+- ✅ **One-Click Blueprint Selection:** Choose from Blueprint Plugins (`coding`, `rag`, `workflow`, `enterprise`).
+- ✅ **Generate `project.yaml`:** Copy appropriate manifest from `.agents/blueprints/<type>/project.yaml.tpl` to workspace root.
+- ✅ **Initialize Project Scaffolding:** Create standard directory structure (including the **4-Folder RAG Architecture** for AI projects).
+- ✅ **Configure Tooling:** Linter, Prettier, TypeScript strict mode, or Python environment depending on stack.
+- ✅ **Generate `DESIGN.md`:** Mandatory brand & token contract for any UI project.
 
 ## Non-Goals
+- ❌ Skip `project.yaml` workspace manifest initialization
 - ❌ Skip DESIGN.md for UI projects
 - ❌ Hardcode outdated dependency versions
-- ❌ Skip README
+- ❌ Skip README or documentation
 
 ---
 
-## Standard Directory Structures
+## V8.2 Blueprint Plugins & Directory Structures
 
-### Next.js / React
-```
-src/
-├── app/              # Pages (App Router) or pages/
-├── components/       # Shared UI components
-│   ├── ui/           # Design system primitives
-│   └── [feature]/    # Feature-specific components
-├── hooks/            # Custom React hooks
-├── lib/              # Utilities, helpers
-├── services/         # API service functions
-├── types/            # TypeScript type definitions
-└── styles/           # Global CSS + DESIGN.md tokens
-DESIGN.md             # Brand & Design Contract
-```
-
-### NestJS / Express API
-```
-src/
-├── modules/
-│   └── [feature]/
-│       ├── [feature].controller.ts
-│       ├── [feature].service.ts
-│       ├── [feature].repository.ts
-│       └── dto/
-├── common/           # Shared utilities, guards, interceptors
-├── config/           # Environment configuration
-└── main.ts
+### 1. RAG & AI Agents (The 4-Folder Architecture Blueprint)
+*Activated when building AI agents, RAG engines, or domain automation.*
+```text
+project.yaml              # ⭐ V8.2 Workspace Manifest (Profiles & Capabilities)
+prompts/                  # Prompt instructions managed as code
+├── system/
+├── tasks/
+└── tools/
+data/                     # Strict data discipline
+├── raw/                  # IMMUTABLE original files (PDFs, Excel, Revit/CAD)
+└── processed/            # Cleaned, standardized chunks for AI ingestion
+agents/                   # Agent configurations and domain micro-skills
+├── skills/
+└── tools/
+evals/                    # Quantitative validation evidence
+├── tests/
+├── traces/               # Audit execution traces
+└── scorecards/           # scorecard.yaml eval rubrics
 ```
 
-### Vite + React
-```
+### 2. Standard Coding Workspaces (Next.js / React / Node)
+*Activated when developing software applications or UI components.*
+```text
+project.yaml              # ⭐ V8.2 Workspace Manifest
 src/
-├── assets/
-├── components/
-├── pages/
-├── router/
-├── services/
-├── stores/           # State management
-└── types/
+├── app/                  # Pages or App Router
+├── components/           # Shared UI components & Design system primitives
+├── hooks/
+├── lib/
+├── services/             # API integration & State stores
+├── types/
+└── styles/
+DESIGN.md                 # Brand & Design Contract
+```
+
+### 3. Automation Workflows (n8n & Data ETL)
+```text
+project.yaml              # ⭐ V8.2 Workspace Manifest
+workflows/                # Automation graphs & JSON blueprints
+connectors/               # API & Database integrations
+pipelines/                # Transformation scripts
+evals/                    # Traceability logs
 ```
 
 ---
 
 ## Required Files Checklist
 ```
-[ ] package.json — with lint + test + build scripts
-[ ] tsconfig.json — strict: true enabled
-[ ] .eslintrc / eslint.config.js — project standard
-[ ] .prettierrc — formatting config
+[ ] project.yaml — V8.2 Machine-readable Workspace Manifest
+[ ] package.json / pyproject.toml — dependencies and scripts
+[ ] tsconfig.json — strict mode enabled (if TypeScript)
+[ ] .eslintrc / .prettierrc — project standard linting and formatting
 [ ] .gitignore — standard entries
 [ ] README.md — project description + setup instructions
 [ ] DESIGN.md — (UI projects) brand contract with color/font/spacing tokens
-[ ] .env.example — all env vars listed (no actual values)
+[ ] evals/scorecard.yaml — (AI/RAG/Workflow projects) eval standard
 ```
-
----
+-----
 
 ## DESIGN.md Minimum Template
 ```markdown

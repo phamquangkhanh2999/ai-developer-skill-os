@@ -1,27 +1,31 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.1.7
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.2.0
 
-> **v8.1.7 "Agent Engineering OS + Design Intelligence"**
+> **v8.2.0 "EDAOS v8.2 — Governed Capability Metadata & Eval Platform"**
 
-Hệ sinh thái AI Developer Skill OS đã lột xác hoàn toàn. Từ một bộ "công cụ phân tán" (Toolbox) ở V7, phiên bản V8.1.7 được thiết kế như một **Hệ điều hành khép kín (Agent Engineering OS)**, sở hữu năng lực giám sát, bảo vệ ranh giới quyết định (Decision Boundaries) và được trang bị thêm tầng **Design Intelligence**.
-
----
-
-## 🏗️ Triết Lý Hoạt Động Cốt Lõi (V8 Kernel)
-
-### 1. Decision Boundary (Ranh giới Thẩm quyền)
-Không còn tình trạng một Skill ôm đồm mọi việc. Mọi Skill (Kỹ năng) hiện tại bị quản lý bởi các trường `owns`, `does_not_own`, `conflicts_with`, `delegates_to`. Thợ code UI (`qk-ui-builder`) không được phép tự ra quyết định kiến trúc, và ngược lại.
-
-### 2. Design Intelligence Layer
-Khắc phục điểm yếu "mù thẩm mỹ" của AI. Agent giờ đây không chỉ biết code mà còn có Gu Thẩm Mỹ (Design Taste). Dựa trên yêu cầu của bạn, hệ thống tự động tra cứu **Knowledge Graph** để chọn đúng Theme (Fintech, Healthcare, SaaS...), Typography và Visual Patterns trước khi giao việc cho UI Builder.
-
-### 3. Khế Ước Đi Đầu (Contract-First & Zero-Trust)
-- **Frontend / UI**: Mọi sửa đổi phải tuân thủ Design System (được `qk-design-system-engineering` kiểm duyệt).
-- **Backend / API**: Phải viết OpenAPI/Swagger contract trước (`qk-api-lifecycle`).
-- **Data**: Cấm AI tự đoán cấu trúc DB, mọi truy vấn phải có Schema (`qk-data-lifecycle`).
+Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V8.2.0 (EDAOS v8.2)** với kiến trúc **Manifest-First & Eval Platform**, giúp giảm tối đa chi phí nhận thức (cognitive load) cho các AI Agent thế hệ mới (như Antigravity) nhờ chỉ định ranh giới định lượng, đồ thị phụ thuộc O(1), và các Blueprint Plugins quy chuẩn cho từng ngành nghề kỹ thuật.
 
 ---
 
-## 🧩 Danh sách 30 Master Skills
+## 🏗️ 4 Trụ Cột Kiến Trúc Cốt Lõi (EDAOS v8.2 Architecture)
+
+### 1. Manifest-First & O(1) Registry Engine
+Không còn phụ thuộc vào việc đọc/scan toàn bộ markdown mệt mỏi. AI Agent tra cứu siêu dữ liệu từ `.agents/registry/index.yaml` và kiểm duyệt chu trình không lặp (acyclic validation) thông qua O(1) graph JSON (`.agents/registry/graph.json`). Tốc độ hiểu và phân công năng lực đạt ngưỡng sub-second!
+
+### 2. V8.2 Blueprint Plugins & Universal 4-Folder Architecture
+Khởi tạo dự án (chỉ đạo qua `qk-project-bootstrap`) hỗ trợ sinh file `project.yaml` gốc từ thư viện Blueprint Plugins:
+- **RAG / AI Agents:** Cấu trúc 4 thư mục chuẩn thực chiến: `prompts/`, `data/` (bảo vệ `data/raw` bất biến), `agents/`, và `evals/`.
+- **Standard Software Coding:** Kiến trúc module sạch vững chắc với `DESIGN.md` và rào cản kiểm duyệt tự động.
+- **Automation Workflows:** Các luồng tích hợp n8n và dữ liệu lớn.
+
+### 3. Eval Pipeline Platform (Khép Kín Kiểm Định)
+Chấm dứt việc tin tưởng AI blindly. Mọi Capability đều có thẻ điểm định lượng (`scorecard.yaml`), kết nối log thực thi thực tế từ thư mục `evals/traces/` qua cổng thẩm định sắt đá `qk-validation-gate`. Trách nhiệm định lượng 0–100 với sai số 0% (zero tolerance for fabrication).
+
+### 4. Domain Patterns Separation (Bảo Vệ Kernel)
+Các hệ thống AI chuyên sâu (như **Xây dựng DDC 192 skills**, bóc tách BIM/IFC, ERP) được tải lập trình viên cấu hình dạng Module dưới `knowledge/domain-patterns/` thay vì phơi bày trực tiếp vào 30 Core Developer Skills, giữ cho đồ thị cốt lõi luôn nhanh bén mượt mà!
+
+---
+
+## 🧩 Danh sách 30 Master Skills (Core Developer Capabilities)
 
 Các kỹ năng được quản lý bằng **Capability Graph** và được đánh giá liên tục thông qua Evaluation Suite. Bao gồm 7 lĩnh vực:
 1. **Core & Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-project-memory`, `qk-help`

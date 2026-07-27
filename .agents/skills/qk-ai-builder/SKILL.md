@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ai-builder
-version: 8.0.0
+version: 8.2.0
 status: stable
-description: "Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection — structured output bắt buộc."
+description: "Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng capability.yaml, data discipline 4-folder và Eval Pipeline."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
@@ -91,16 +91,19 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 ---
 
-## Scope
-- ✅ Design strict, deterministic system prompts
-- ✅ Sanitize user inputs before LLM (Anti-Injection)
-- ✅ Validate LLM output before using in business logic
-- ✅ Structured output (JSON schema) over raw text
+## Scope & V8.2 Governed Capability Design
+- ✅ **Capability Packaging:** Design modular AI capabilities paired with machine-readable `capability.yaml` and `scorecard.yaml` eval rubrics.
+- ✅ **Universal 4-Folder Discipline:** Enforce clean separation of Prompt Engineering (`prompts/`), Immutable Raw Data vs Clean Processed Chunks (`data/`), Modular Micro-skills (`agents/`), and Empirical Evals (`evals/`).
+- ✅ **Eval-Driven Pipeline:** Move from static `Prompt -> Output` to the closed-loop V8.2 workflow:
+  `Prompt -> Execution -> Trace Log -> Evaluation (scorecard) -> Quality Gate -> Release Report`
+- ✅ Design strict, deterministic system prompts with structured JSON outputs.
+- ✅ Sanitize user inputs before LLM ingestion (Anti-Injection).
 
 ## Non-Goals
-- ❌ Open-ended chat prompts without system boundaries
-- ❌ Trust LLM output for critical logic without validation
-- ❌ Use raw user input directly in prompts
+- ❌ Modify or override files located in `data/raw/` (must remain immutable ground-truth)
+- ❌ Create unguided AI chat loops without structured eval criteria or trace records
+- ❌ Trust LLM output for critical logic without quantitative verification via `qk-validation-gate`
+- ❌ Use raw user input directly in prompts without sanitization
 
 ---
 

@@ -6,7 +6,7 @@ import YAML from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
-const skillsDir = path.join(rootDir, 'skills');
+const skillsDir = fs.existsSync(path.join(rootDir, '.agents', 'skills')) ? path.join(rootDir, '.agents', 'skills') : path.join(rootDir, 'skills');
 
 function getActiveSkillDirs() {
   if (!fs.existsSync(skillsDir)) return [];
@@ -23,7 +23,8 @@ function parseBSF(skillPath) {
   if (!fmMatch) return null;
   const frontmatter = YAML.load(fmMatch[1]);
   let type = 'legacy';
-  if (frontmatter.version && frontmatter.version.startsWith('7.')) type = 'v7';
+  if (frontmatter.version && frontmatter.version.startsWith('8.')) type = 'v8';
+  else if (frontmatter.version && frontmatter.version.startsWith('7.')) type = 'v7';
   else if (frontmatter.version && frontmatter.version.startsWith('6.')) type = 'v6';
   
   const bsf = { type, frontmatter };
@@ -50,8 +51,14 @@ function parseBSF(skillPath) {
       ask: parsedBlocks.ask || []
     };
 
-    if (!content.includes('## Scope')) {
-      bsf.error = 'Missing Scope section';
+    const hasScope = content.includes('## Scope') || 
+                     content.includes('# Scope') || 
+                     content.includes('Scope &') || 
+                     (frontmatter.knowledge_scope !== undefined) ||
+                     (frontmatter.decision_boundary !== undefined);
+
+    if (!hasScope) {
+      bsf.error = 'Missing Scope section or knowledge_scope metadata';
     }
   } catch (e) {
     bsf.error = 'Invalid YAML inside markdown blocks';
@@ -72,11 +79,15 @@ describe('Behavior Validation Framework', () => {
         if (!fs.existsSync(skillPath)) return;
         const bsf = parseBSF(skillPath);
         
-        if (bsf && bsf.type === 'v7') {
+        if (bsf && (bsf.type === 'v7' || bsf.type === 'v8')) {
           modernSkills.push(dir);
           expect(bsf.error, `Parser error in ${path.basename(dir)}: ${bsf.error}`).toBeUndefined();
-          expect(bsf.frontmatter.category, `Missing category metadata in ${path.basename(dir)}`).toBeDefined();
-          expect(bsf.constraints, `Missing Constraints in ${path.basename(dir)}`).toBeDefined();
+          if (bsf.type === 'v7') {
+            expect(bsf.frontmatter.category, `Missing category metadata in ${path.basename(dir)}`).toBeDefined();
+            expect(bsf.constraints, `Missing Constraints in ${path.basename(dir)}`).toBeDefined();
+          } else {
+            expect(bsf.frontmatter.type, `Missing type metadata in V8 skill ${path.basename(dir)}`).toBeDefined();
+          }
         }
       });
 
@@ -93,7 +104,7 @@ describe('Behavior Validation Framework', () => {
         if (!fs.existsSync(skillPath)) return;
         const bsf = parseBSF(skillPath);
         
-        if (bsf && bsf.type === 'v7' && !bsf.error) {
+        if (bsf && (bsf.type === 'v7' || bsf.type === 'v8') && !bsf.error) {
           const must = bsf.constraints.must || [];
           const must_not = bsf.constraints.must_not || [];
           

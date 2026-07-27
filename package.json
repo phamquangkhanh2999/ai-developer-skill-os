@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "8.1.10",
-  "description": "Agent Engineering OS: A deterministic capability graph, governance rules, and dynamic knowledge base for AI coding agents.",
+  "version": "8.2.0",
+  "description": "EDAOS v8.2 — Governed Capability Metadata & Eval Platform: Blueprints organize, manifests govern, registries accelerate.",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -20,9 +20,10 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "build:registry": "node tooling/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:registry": "vitest run --config vitest.config.js",
+    "test:registry": "vitest run && node tooling/build-registry.js",
     "test:graph": "node tooling/validate-graph.js",
     "lint": "node bin/lint.js",
     "test:agent": "node tests/agent-evaluation/runner/evaluate-routing.js",
@@ -49,7 +50,11 @@
     "developer",
     "agent",
     "prompts",
-    "framework"
+    "framework",
+    "edaos",
+    "manifest",
+    "registry",
+    "eval"
   ],
   "author": "Quang Khánh",
   "license": "MIT",
