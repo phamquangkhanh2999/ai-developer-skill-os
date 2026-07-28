@@ -1,8 +1,8 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.2.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.2.1
 
-> **v8.2.0 "EDAOS v8.2 — Governed Capability Metadata & Eval Platform"**
+> **v8.2.1 "EDAOS v8.2 — Governed Capability Metadata & Eval Platform"**
 
-Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V8.2.0 (EDAOS v8.2)** với kiến trúc **Manifest-First & Eval Platform**, giúp giảm tối đa chi phí nhận thức (cognitive load) cho các AI Agent thế hệ mới (như Antigravity) nhờ chỉ định ranh giới định lượng, đồ thị phụ thuộc O(1), và các Blueprint Plugins quy chuẩn cho từng ngành nghề kỹ thuật.
+Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **v8.2.1 (EDAOS v8.2)** với kiến trúc **Manifest-First & Eval Platform**, giúp giảm tối đa chi phí nhận thức (cognitive load) cho các AI Agent thế hệ mới (như Antigravity) nhờ chỉ định ranh giới định lượng, đồ thị phụ thuộc O(1), và các Blueprint Plugins quy chuẩn cho từng ngành nghề kỹ thuật.
 
 ---
 
