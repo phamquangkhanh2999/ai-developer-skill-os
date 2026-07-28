@@ -90,8 +90,9 @@ function runInstall(ideChoice, scopeChoice) {
       
       if (isGlobal && ide === 'antigravity') {
         const targetDirPosix = targetDir.replace(/\\/g, '/');
-        
-        function walkAndReplace(dir) {
+
+        // Use const arrow function (not function declaration) to avoid block-scoping issues in ESM
+        const walkAndReplace = (dir) => {
           const files = fs.readdirSync(dir);
           for (const file of files) {
             const fullPath = path.join(dir, file);
@@ -100,8 +101,9 @@ function runInstall(ideChoice, scopeChoice) {
             } else if (fullPath.endsWith('.md') || fullPath.endsWith('.yml') || fullPath.endsWith('.yaml') || fullPath.endsWith('.json')) {
               let content = fs.readFileSync(fullPath, 'utf8');
               let modified = false;
-              
-              const dirsToRewrite = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'examples', 'docs'];
+
+              // Keep in sync with actual .agents/ subdirectory structure
+              const dirsToRewrite = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'docs', 'blueprints'];
               for (const d of dirsToRewrite) {
                 const regex = new RegExp(`\\.agents/${d}`, 'g');
                 if (regex.test(content)) {
@@ -109,19 +111,19 @@ function runInstall(ideChoice, scopeChoice) {
                   modified = true;
                 }
               }
-              
+
               if (content.includes('.agents/skills.json')) {
                 content = content.replace(/\.agents\/skills\.json/g, `${targetDirPosix}/skills.json`);
                 modified = true;
               }
-      
+
               if (modified) {
                 fs.writeFileSync(fullPath, content, 'utf8');
               }
             }
           }
-        }
-        
+        };
+
         walkAndReplace(targetDir);
         console.log(`✅ Đã cập nhật đường dẫn tuyệt đối cho cấu hình Global Antigravity`);
       }
