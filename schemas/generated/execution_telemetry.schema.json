@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity-kernel/schemas/generated/execution_telemetry.schema.json",
+  "title": "ExecutionTelemetry Schema Validator",
+  "description": "DO NOT EDIT MANUALLY. Generated strictly from Canonical Semantic Model and Hiến pháp ABI. Any direct edits violate Phase 0 Contract Governance.",
+  "type": "object",
+  "required": [
+    "telemetry_id",
+    "target_execution_id",
+    "tool_invocations_count",
+    "reasoning_units_burned",
+    "elapsed_duration_ms",
+    "escalation_event_count",
+    "contract_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "telemetry_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable identity coordinate for this telemetry observational block."
+    },
+    "target_execution_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference pointing to active ExecutionContext session monitored."
+    },
+    "tool_invocations_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Cumulative tally of discrete third-party tool execution calls performed."
+    },
+    "reasoning_units_burned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Cumulative reasoning computational expenditure or token consumption."
+    },
+    "elapsed_duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Real-time elapsed wall-clock milliseconds since coroutine activation."
+    },
+    "escalation_event_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Tally of formal boundary escalation requests triggered."
+    },
+    "cache_utilization_ratio": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Normalized efficiency metric of runtime prompt cache or memory reuse."
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "description": "Active Kernel ABI semantic contract version."
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity-kernel/schemas/generated/execution_plan.schema.json",
+  "title": "ExecutionPlan Schema Validator",
+  "description": "DO NOT EDIT MANUALLY. Generated strictly from Canonical Semantic Model and Hiến pháp ABI. Any direct edits violate Phase 0 Contract Governance.",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "parent_intent_id",
+    "governing_policy_id",
+    "execution_steps",
+    "driver_query_criteria",
+    "contract_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable identity coordinate for causality lineage tracking."
+    },
+    "parent_intent_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Causality pointer referencing originating IntentRecord."
+    },
+    "governing_policy_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Causality pointer referencing authorizing PolicyEnvelope."
+    },
+    "execution_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["step_sequence_number", "step_objective", "target_resource_bounds", "expected_output_type"],
+        "properties": {
+          "step_sequence_number": { "type": "integer", "minimum": 1 },
+          "step_objective": { "type": "string", "minLength": 1 },
+          "target_resource_bounds": { "type": "array", "items": { "type": "string" } },
+          "expected_output_type": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "description": "Ordered operational sequence steps."
+    },
+    "driver_query_criteria": {
+      "type": "object",
+      "required": ["required_scope", "minimum_trust_tier"],
+      "properties": {
+        "required_scope": { "type": "string" },
+        "minimum_trust_tier": { "type": "string", "enum": ["experimental", "sandbox", "verified", "core"] },
+        "abi_version_requirement": { "type": "string" }
+      },
+      "additionalProperties": true,
+      "description": "Structural matching criteria evaluated strictly against published Capability Manifests."
+    },
+    "fallback_strategy": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional contingency instructions if capability negotiation fails."
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "description": "Active Kernel ABI semantic contract version."
+    }
+  }
+}

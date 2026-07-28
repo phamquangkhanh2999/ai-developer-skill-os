@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity-kernel/schemas/generated/capability_result.schema.json",
+  "title": "CapabilityResult Schema Validator",
+  "description": "DO NOT EDIT MANUALLY. Generated strictly from Canonical Semantic Model and Hiến pháp ABI. Any direct edits violate Phase 0 Contract Governance.",
+  "type": "object",
+  "required": [
+    "result_id",
+    "executed_plan_id",
+    "originating_driver_id",
+    "completion_status",
+    "output_payload",
+    "side_effects",
+    "contract_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "result_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable identity coordinate for causality lineage tracing."
+    },
+    "executed_plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Causality pointer referencing authorizing ExecutionPlan."
+    },
+    "originating_driver_id": {
+      "type": "string",
+      "description": "Namespaced coordinate identifying executing driver."
+    },
+    "completion_status": {
+      "type": "string",
+      "enum": ["SUCCESS", "PARTIAL_COMPLETION", "ABORTED", "POLICY_BLOCKED"],
+      "description": "Final operational task status."
+    },
+    "output_payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Abstract diagnostic responses, proposed code diffs, or analytical syntheses."
+    },
+    "side_effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource_target", "mutation_type", "integrity_digest"],
+        "properties": {
+          "resource_target": { "type": "string" },
+          "mutation_type": { "type": "string", "enum": ["CREATE", "MODIFY", "DELETE", "STATE_UPDATE"] },
+          "integrity_digest": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "description": "Explicit enumeration of physical filesystem or environmental mutations applied."
+    },
+    "verification_reference_ids": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "description": "Optional UUID links pointing to external CI automated testing or verification runs."
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "description": "Active Kernel ABI semantic contract version."
+    }
+  }
+}

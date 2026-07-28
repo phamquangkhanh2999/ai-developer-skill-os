@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity-kernel/schemas/generated/runtime_profile.schema.json",
+  "title": "RuntimeProfile Schema Validator",
+  "description": "DO NOT EDIT MANUALLY. Generated strictly from Canonical Semantic Model and Hiến pháp ABI. Any direct edits violate Phase 0 Contract Governance.",
+  "type": "object",
+  "required": [
+    "profile_id",
+    "source_telemetry_id",
+    "governing_policy_id",
+    "resource_burn_efficiency",
+    "reasoning_to_action_ratio",
+    "latency_distribution",
+    "contract_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable identity coordinate for post-run empirical benchmark artifact."
+    },
+    "source_telemetry_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Causality pointer linking to real-time ExecutionTelemetry observational data."
+    },
+    "governing_policy_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference pointing to evaluated PolicyEnvelope allowances."
+    },
+    "resource_burn_efficiency": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Normalized resource consumption evaluation against authorized budget ceilings."
+    },
+    "reasoning_to_action_ratio": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Empirical calculation comparing reasoning processing expenditure against physical side-effects."
+    },
+    "latency_distribution": {
+      "type": "object",
+      "required": ["planning_ms", "negotiation_ms", "execution_ms"],
+      "properties": {
+        "planning_ms": { "type": "integer", "minimum": 0 },
+        "negotiation_ms": { "type": "integer", "minimum": 0 },
+        "execution_ms": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false,
+      "description": "Categorization of operational latency expenditures."
+    },
+    "divergence_analytics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional documented empirical variance observed between plan expectations and outputs."
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+      "description": "Active Kernel ABI semantic contract version."
+    }
+  }
+}

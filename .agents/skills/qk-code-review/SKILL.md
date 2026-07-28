@@ -81,7 +81,7 @@ token_budget:
   max_files_read: 10
   max_lines_per_read: 300
   max_shell_commands: 2
-  stop_early: false
+  stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
@@ -108,15 +108,12 @@ Report: "Missing: Vui lòng cung cấp ngữ cảnh hoặc chỉ định rõ fil
 
 ## Dynamic Context Loading (Tải Ngữ Cảnh Động)
 
-> **BẮT BUỘC:** Trước khi bắt đầu review, Agent phải sử dụng tool `view_file` để nạp các bí kíp tương ứng từ thư mục `references/` nhằm đảm bảo chất lượng review sâu sát nhất.
+> **CHỈ ĐỌC KHI CẦN (on-demand):** Chỉ mở file references/ nếu có vấn đề cụ thể cần xác minh. Đừng đọc trước khi chưa thấy vấn đề.
 
-- **Nếu review AI Config (Skin, Rule, Workflow):**
-  - Mở đọc: `references/ai/v8-schema-validation.md` và `references/ai/ai-anti-patterns.md`.
-- **Nếu review Code Phần mềm (VD: React, Java, Go, v.v.):**
-  - Nhận diện ngôn ngữ/framework.
-  - Mở đọc file tương ứng: `references/languages/[tên-ngôn-ngữ].md` (VD: `react.md`, `java.md`).
-- **Nếu review ở mức tổng quát hoặc PR lớn (Cross-cutting):**
-  - Đọc thêm: `references/cross-cutting/architecture-review-guide.md`, hoặc các file về security/performance nếu phù hợp.
+- **Nếu review AI Config** và phát hiện vấn đề schema/anti-pattern → đọc `references/ai/v8-schema-validation.md` HOẶC `references/ai/ai-anti-patterns.md` (không cần đọc cả 2 nếu không liên quan).
+- **Nếu review Code** và gặp vấn đề ngôn ngữ cụ thể → đọc `references/languages/[tên-ngôn-ngữ].md`.
+- **Nếu review cross-cutting** và cần xác minh architecture → đọc `references/cross-cutting/architecture-review-guide.md`.
+- **Default (80% trường hợp):** Dùng kiến thức có sẵn, không đọc references.
 
 ---
 

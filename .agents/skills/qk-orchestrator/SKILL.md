@@ -96,10 +96,6 @@ On missing precondition:
   Message: "Vui lòng mô tả yêu cầu của bạn."
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Scope
 - ✅ Analyze user intent and route to the correct skill
@@ -112,10 +108,6 @@ schema_version: 2
 - ❌ Allow UI work without `DESIGN.md` verified
 - ❌ Allow logic work without context graph from `qk-context-loader`
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Priority Order
 
@@ -126,10 +118,6 @@ schema_version: 2
 | P3 | Check pipeline dependencies (e.g., context-loader first) | Never for logic tasks |
 | P4 | Estimate cost/latency for user info | Budget < 70% |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Workflow
 
@@ -157,10 +145,6 @@ ELSE IF no match
 - Skill identified → go to Phase 2
 - No matching skill → EXIT: BLOCKED
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 2 — Precondition Check
 
@@ -181,10 +165,6 @@ ELSE
   → EXIT: BLOCKED
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 3 — Pipeline Enforcement
 
@@ -208,10 +188,6 @@ Release tasks:
   [qk-validation-gate] → [qk-production-release]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Routing Table (Quick Reference)
 Full table: see `references/routing-table.md`
@@ -236,10 +212,6 @@ Full table: see `references/routing-table.md`
 | new project, bootstrap, init | `qk-project-bootstrap` | direct |
 | memory, context, recall, lưu | `qk-project-memory` | direct |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Confidence Model
 
@@ -249,10 +221,6 @@ schema_version: 2
 | MEDIUM | Multiple possible skills | Route to most likely, note ambiguity |
 | LOW | Request is too vague | Ask clarifying question |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Escalation Rules
 
@@ -266,10 +234,6 @@ Questions:
 Recommended Assumptions: none — routing requires clear intent
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -290,10 +254,6 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Output Format
 
@@ -312,10 +272,6 @@ Preconditions:
 Exit Code:   SUCCESS
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Exit Codes
 

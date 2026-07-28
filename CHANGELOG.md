@@ -5,6 +5,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.2.1] — 2026-07 — Token Optimization Patch
+
+### Fixed
+- **`stop_early: false` → `true` in 13 skills**: `qk-code-review`, `qk-data-lifecycle`, `qk-design-system-engineering`, `qk-devops-platform`, `qk-feature-delivery`, `qk-frontend-architecture`, `qk-production-release`, `qk-product-specification`, `qk-project-bootstrap`, `qk-security-audit`, `qk-system-evolution`, `qk-test-engineering`, `qk-ui-builder`, `qk-web-quality-gate` — skills now self-terminate when token budget is exhausted instead of running indefinitely.
+- **Removed 20 duplicate metadata blocks**: Stripped repeated `skill_version/runtime_version/schema_version` YAML blocks from `qk-orchestrator` (11×) and `qk-context-loader` (9×) — saves ~1320 chars per context load.
+- **`qk-code-review` Dynamic Context Loading: mandatory → on-demand**: References are now only read when a specific issue is found, not before every review. Eliminates 2 forced `view_file` calls per review session.
+- **`qk-feature-delivery` FAST PATH**: Simple tasks (≤1 file, no new API, no DB migration) now bypass `qk-context-loader` and Phase 1 clarification — saves 2–3 turns per simple fix.
+
+---
+
 ## [8.2.0] — 2026-07 — EDAOS v8.2: Governed Capability Metadata & Eval Platform
 
 ### Added

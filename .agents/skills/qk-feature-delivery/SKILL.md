@@ -79,7 +79,7 @@ token_budget:
   max_files_read: 5
   max_lines_per_read: 150
   max_shell_commands: 2
-  stop_early: false
+  stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
@@ -131,6 +131,26 @@ On missing precondition:
 | P6 | Documentation + comments | Budget < 70% |
 
 ---
+
+## ⚡ FAST PATH (Đọc trước — quyết định ngay)
+
+```
+FAST PATH: Áp dụng nếu task đơn giản (sửa ≤ 1 file, không API mới, không migration DB)
+  → BỎ QUA qk-context-loader
+  → BỎ QUA Phase 1 clarification nếu requirement đã rõ
+  → ĐI THẲNG vào Phase 3 — Implementation
+  → Tiết kiệm 2-3 turn hỏi đáp không cần thiết
+
+VÍ DỤ FAST PATH:
+  ✅ "Sửa label trên button này thành X"
+  ✅ "Thêm validation email vào form"
+  ✅ "Fix bug: hàm này trả về null"
+
+KHÔNG DÙNG FAST PATH:
+  ❌ Tính năng mới span nhiều file (≥ 3 files)
+  ❌ Thay đổi API contract
+  ❌ Migration database
+```
 
 ## Workflow
 

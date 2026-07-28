@@ -96,10 +96,6 @@ On missing precondition:
   Message: "Vui lòng chỉ định entry point (file hoặc module cần map)."
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Scope
 - ✅ Trace imports/exports from entry point
@@ -112,10 +108,6 @@ schema_version: 2
 - ❌ Guess file names — only follow explicit imports
 - ❌ Load entire repo (max 5 files)
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Priority Order
 
@@ -126,10 +118,6 @@ schema_version: 2
 | P3 | Identify shared/risky modules | Budget < 60% |
 | P4 | Annotate with risk levels | Budget < 70% |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Workflow
 
@@ -149,10 +137,6 @@ ELSE IF entry file not found
   → EXIT: BLOCKED — ask for correct path
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 2 — Graph Traversal (Max Depth 3)
 
@@ -171,10 +155,6 @@ IF circular dependency detected
   → Continue building rest of graph
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 3 — Risk Assessment & Output
 
@@ -183,10 +163,6 @@ schema_version: 2
 2. Identify: entry points with many dependents = CRITICAL to change carefully
 3. Generate graph in standard JSON + Markdown format
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Output Format (Mandatory Schema)
 
@@ -214,10 +190,6 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Evidence Format
 
@@ -228,10 +200,6 @@ Imported by: [N files]
 Exports:    [key exports]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -252,10 +220,6 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Exit Codes
 

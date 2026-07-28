@@ -114,7 +114,7 @@ token_budget:
   max_files_read: 10
   max_lines_per_read: 150
   max_shell_commands: 2
-  stop_early: false
+  stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---

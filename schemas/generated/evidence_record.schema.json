@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity-kernel/schemas/generated/evidence_record.schema.json",
+  "title": "EvidenceRecord Schema Validator",
+  "description": "DO NOT EDIT MANUALLY. Generated strictly from Canonical Semantic Model and Hiến pháp ABI. Any direct edits violate Phase 0 Contract Governance.",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "sequence_number",
+    "timestamp",
+    "event_category",
+    "causality_lineage",
+    "contract_reference"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable unique identity coordinate for discrete audit stream event node."
+    },
+    "sequence_number": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonically increasing sequence index guaranteeing continuous stream ordering."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Absolute UTC epoch timestamp capturing moment of event commitment."
+    },
+    "event_category": {
+      "type": "string",
+      "enum": ["POLICY_AUTHORIZATION", "CAPABILITY_INVOCATION", "ESCALATION_TRIGGER", "EXECUTION_COMPLETION"],
+      "description": "Categorization of runtime event type."
+    },
+    "causality_lineage": {
+      "type": "object",
+      "required": ["parent_intent_id", "applied_policy_id"],
+      "properties": {
+        "parent_intent_id": { "type": "string", "format": "uuid" },
+        "applied_policy_id": { "type": "string", "format": "uuid" },
+        "executed_plan_id": { "type": "string", "format": "uuid" },
+        "produced_result_id": { "type": "string", "format": "uuid" }
+      },
+      "additionalProperties": false,
+      "description": "Mandatory causality lineage linking Intent, Policy, Plan, and Result."
+    },
+    "contract_reference": {
+      "type": "object",
+      "required": ["kernel_abi_version", "capability_contract_version"],
+      "properties": {
+        "kernel_abi_version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        },
+        "capability_contract_version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Exact historical contract version numbers active at operational epoch."
+    },
+    "telemetry_reference_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional UUID link pointing to quantitative observational data in ExecutionTelemetry."
+    },
+    "profile_reference_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional UUID link pointing to post-run empirical analytics in RuntimeProfile."
+    },
+    "artifact_digests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      },
+      "description": "Cryptographic SHA-256 hash digests proving generated artifact integrity without raw blob inclusion."
+    }
+  }
+}
