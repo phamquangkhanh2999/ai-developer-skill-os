@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.
 schema_version: 1
 manifest_version: '8.2'
-generated_at: '2026-07-29T04:03:48.865Z'
+generated_at: '2026-07-29T10:13:41.162Z'
 capabilities:
   qk-access-policy:
     path: .agents/skills/qk-access-policy
@@ -10,72 +10,63 @@ capabilities:
     tags:
       - access
       - policy
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-agent-observability:
     path: .agents/skills/qk-agent-observability
     version: 8.1.3
     tags:
       - agent
       - observability
-    dependencies:
-      - skill-evolution
+    dependencies: []
   qk-ai-builder:
     path: .agents/skills/qk-ai-builder
     version: 8.2.0
     tags:
       - ai
       - builder
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-api-lifecycle:
     path: .agents/skills/qk-api-lifecycle
     version: 8.0.0
     tags:
       - api
       - lifecycle
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-bug-resolution:
     path: .agents/skills/qk-bug-resolution
     version: 8.0.0
     tags:
       - bug
       - resolution
-    dependencies:
-      - bug-resolution
+    dependencies: []
   qk-code-review:
     path: .agents/skills/qk-code-review
     version: 8.0.0
     tags:
       - code
       - review
-    dependencies:
-      - code-review
+    dependencies: []
   qk-context-loader:
     path: .agents/skills/qk-context-loader
     version: 8.0.0
     tags:
       - context
       - loader
-    dependencies:
-      - research
+    dependencies: []
   qk-data-lifecycle:
     path: .agents/skills/qk-data-lifecycle
     version: 8.0.0
     tags:
       - data
       - lifecycle
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-db-optimizer:
     path: .agents/skills/qk-db-optimizer
     version: 8.0.0
     tags:
       - db
       - optimizer
-    dependencies:
-      - refactor
+    dependencies: []
   qk-design-system-engineering:
     path: .agents/skills/qk-design-system-engineering
     version: 8.1.0
@@ -83,31 +74,27 @@ capabilities:
       - design
       - system
       - engineering
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-devops-platform:
     path: .agents/skills/qk-devops-platform
     version: 8.1.1
     tags:
       - devops
       - platform
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-docs:
     path: .agents/skills/qk-docs
     version: 8.0.0
     tags:
       - docs
-    dependencies:
-      - documentation
+    dependencies: []
   qk-engineering-standard:
     path: .agents/skills/qk-engineering-standard
     version: 8.0.0
     tags:
       - engineering
       - standard
-    dependencies:
-      - code-review
+    dependencies: []
   qk-fe-api-integration:
     path: .agents/skills/qk-fe-api-integration
     version: 8.0.0
@@ -115,121 +102,111 @@ capabilities:
       - fe
       - api
       - integration
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-feature-delivery:
     path: .agents/skills/qk-feature-delivery
     version: 8.0.0
     tags:
       - feature
       - delivery
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-frontend-architecture:
     path: .agents/skills/qk-frontend-architecture
     version: 8.1.0
     tags:
       - frontend
       - architecture
-    dependencies:
-      - feature-delivery
-      - qk-ui-builder
-      - qk-ui-system-builder
+    dependencies: []
   qk-help:
     path: .agents/skills/qk-help
     version: 8.0.0
     tags:
       - help
-    dependencies:
-      - internal
+    dependencies: []
   qk-orchestrator:
     path: .agents/skills/qk-orchestrator
     version: 8.0.0
     tags:
       - orchestrator
-    dependencies:
-      - research
+    dependencies: []
   qk-product-specification:
     path: .agents/skills/qk-product-specification
     version: 8.1.0
     tags:
       - product
       - specification
-    dependencies:
-      - spec-driven-development
-      - qk-feature-delivery
+    dependencies: []
   qk-production-release:
     path: .agents/skills/qk-production-release
     version: 8.0.0
     tags:
       - production
       - release
-    dependencies:
-      - internal
+    dependencies: []
   qk-project-bootstrap:
     path: .agents/skills/qk-project-bootstrap
     version: 8.2.0
     tags:
       - project
       - bootstrap
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-project-health:
     path: .agents/skills/qk-project-health
     version: 8.0.0
     tags:
       - project
       - health
-    dependencies:
-      - code-review
+    dependencies: []
   qk-project-memory:
     path: .agents/skills/qk-project-memory
     version: 8.0.0
     tags:
       - project
       - memory
+    dependencies: []
+  qk-refactor:
+    path: .agents/skills/qk-refactor
+    version: 8.0.0
+    tags:
+      - refactor
     dependencies:
-      - documentation
+      - refactor
   qk-security-audit:
     path: .agents/skills/qk-security-audit
     version: 8.1.0
     tags:
       - security
       - audit
-    dependencies:
-      - security-audit
-      - qk-validation-gate
+    dependencies: []
   qk-system-evolution:
     path: .agents/skills/qk-system-evolution
     version: 8.0.0
     tags:
       - system
       - evolution
-    dependencies:
-      - refactor
+    dependencies: []
   qk-test-engineering:
     path: .agents/skills/qk-test-engineering
     version: 8.1.0
     tags:
       - test
       - engineering
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-ui-audit:
     path: .agents/skills/qk-ui-audit
     version: 8.0.0
     tags:
       - ui
       - audit
-    dependencies:
-      - code-review
+    dependencies: []
   qk-ui-builder:
     path: .agents/skills/qk-ui-builder
     version: 8.2.0
     tags:
       - ui
       - builder
-    dependencies: []
+    dependencies:
+      - feature-delivery
   qk-ui-system-builder:
     path: .agents/skills/qk-ui-system-builder
     version: 8.0.0
@@ -237,16 +214,14 @@ capabilities:
       - ui
       - system
       - builder
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-validation-gate:
     path: .agents/skills/qk-validation-gate
     version: 8.2.0
     tags:
       - validation
       - gate
-    dependencies:
-      - code-review
+    dependencies: []
   qk-web-quality-gate:
     path: .agents/skills/qk-web-quality-gate
     version: 8.1.0
@@ -254,5 +229,4 @@ capabilities:
       - web
       - quality
       - gate
-    dependencies:
-      - feature-delivery
+    dependencies: []

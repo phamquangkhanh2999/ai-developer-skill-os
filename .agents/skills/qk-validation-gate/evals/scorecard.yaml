@@ -1,0 +1,26 @@
+name: qk-validation-gate-eval
+description: Đánh giá Cổng kiểm tra Chất lượng V8.2
+version: 1.0.0
+threshold: 100 # Phải đạt 100 điểm tuyệt đối vì đây là lưới rà soát cuối cùng trước khi Release
+
+metrics:
+  - id: threshold_enforcement
+    name: Thi hành Threshold nghiêm ngặt
+    description: Agent có bỏ qua lỗi Lint, Type check hoặc Test coverage không?
+    weight: 40
+    criteria:
+      - Chặn đứng (FAILED) ngay lập tức nếu Lint error > 0, Type error > 0, hoặc Coverage < 80% (40đ)
+
+  - id: quantitative_eval_execution
+    name: Đánh giá định lượng AI (Eval Pipeline)
+    description: Có đọc và áp dụng scorecard.yaml để chấm điểm AI agent output không?
+    weight: 35
+    criteria:
+      - Áp dụng rubric để chấm điểm và từ chối kết quả nếu tổng điểm < Threshold (35đ)
+
+  - id: trace_verification
+    name: Xác minh Trace (Zero Hallucination)
+    description: Có đối chiếu kết quả với file log traces thực tế không?
+    weight: 25
+    criteria:
+      - Bắt buộc kiểm tra dấu vết (traces) thực thi để đảm bảo AI không tự bịa ra kết quả test (25đ)

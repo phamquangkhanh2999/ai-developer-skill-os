@@ -1,0 +1,36 @@
+name: qk-access-policy-eval
+description: Đánh giá chất lượng thực thi của kỹ năng qk-access-policy
+version: 1.0.0
+threshold: 100 # Cần đạt điểm tuyệt đối với Access Policy vì tính chất bảo mật
+
+metrics:
+  - id: matrix_defined
+    name: Định nghĩa Role-Permission Matrix
+    description: Agent có tạo bảng phân quyền rõ ràng trước khi code không?
+    weight: 30
+    criteria:
+      - Bảng ma trận đầy đủ resource và roles (15đ)
+      - Không có xung đột (contradiction) trong ma trận (15đ)
+
+  - id: middleware_implemented
+    name: Cài đặt Middleware/Guard
+    description: Agent có tạo middleware/guard để kiểm tra quyền ở phía Backend không?
+    weight: 30
+    criteria:
+      - Áp dụng đúng R-SEC-04, phân quyền bằng middleware, không tin tưởng JWT Claims thô (15đ)
+      - Routes được gắn guard theo đúng Role-Permission Matrix (15đ)
+
+  - id: deny_by_default
+    name: Áp dụng Deny-by-default
+    description: Các endpoint không được khai báo có bị chặn mặc định không?
+    weight: 20
+    criteria:
+      - Implement cơ chế deny-by-default cho các non-public routes (20đ)
+
+  - id: no_anti_patterns
+    name: Không vi phạm Anti-patterns
+    description: Không cấp quyền wildcard và không hardcode role trong business logic
+    weight: 20
+    criteria:
+      - Không có quyền wildcard (*) được cấp (10đ)
+      - Không có câu lệnh kiểm tra role (vd: if role === 'admin') nằm rải rác trong Service/Business layer (10đ)

@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-data-lifecycle"
+version: "8.0.0"
+description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "schema"
+    - "migrations"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-data-lifecycle"
+  does_not_own: []
+  conflicts_with: []

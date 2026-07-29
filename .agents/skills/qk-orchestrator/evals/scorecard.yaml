@@ -1,0 +1,27 @@
+name: qk-orchestrator-eval
+description: Đánh giá khả năng điều phối và định tuyến tác vụ (Task Routing)
+version: 1.0.0
+threshold: 85 # Đóng vai trò kiểm soát luồng, yêu cầu độ chính xác cao
+
+metrics:
+  - id: intent_classification
+    name: Phân loại Intent chính xác
+    description: Agent có hiểu đúng yêu cầu và route đến đúng skill tương ứng không?
+    weight: 35
+    criteria:
+      - Phân tích và map đúng ý định người dùng với Routing Table (20đ)
+      - Đặt câu hỏi làm rõ nếu yêu cầu quá mờ nhạt thay vì đoán mò (15đ)
+
+  - id: precondition_enforcement
+    name: Kỷ luật kiểm tra Tiền điều kiện (Preconditions)
+    description: Cố tình route tác vụ khi thiếu thông tin hay chặn lại để yêu cầu cung cấp thêm?
+    weight: 35
+    criteria:
+      - Bắt buộc kiểm tra Preconditions của skill đích TRƯỚC KHI thực sự gọi skill đó (35đ)
+
+  - id: pipeline_execution
+    name: Thực thi Pipeline tuần tự
+    description: Có đảm bảo tuân thủ chuỗi phụ thuộc (e.g., context-loader -> feature-delivery) không?
+    weight: 30
+    criteria:
+      - Bắt buộc gọi các kỹ năng bổ trợ (như qk-context-loader cho Logic) trước khi bắt đầu công việc chính (30đ)

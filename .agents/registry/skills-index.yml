@@ -1,8 +1,8 @@
 # registry/skills-index.yml
-# GENERATED FILE — DO NOT EDIT MANUALLY
+# GENERATED FILE - DO NOT EDIT MANUALLY.
 version: 8.1.1
-generated_at: '2026-07-23T06:25:44.553Z'
-total_skills: 30
+generated_at: '2026-07-29T07:30:07.984Z'
+total_skills: 31
 skills:
   - name: qk-access-policy
     version: 8.0.0
@@ -24,8 +24,8 @@ skills:
     version: 8.1.3
     status: experimental
     description: >-
-      Agent Observability layer for tracking decisions, routing metrics, and
-      failure patterns.
+      Lớp theo dõi (Observability) cho phép giám sát quyết định, luân chuyển và
+      các mô hình lỗi.
     complexity: medium
     workflow: skill-evolution
     triggers:
@@ -37,11 +37,11 @@ skills:
       - agent-metrics
       - decision-trace
   - name: qk-ai-builder
-    version: 8.0.0
+    version: 8.2.0
     status: stable
     description: >-
-      Thiết kế AI logic, Prompts, RAG pipelines với bảo mật chống Injection —
-      structured output bắt buộc.
+      Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng
+      capability.yaml, data discipline 4-folder và Eval Pipeline.
     complexity: high
     workflow: feature-delivery
     triggers:
@@ -87,6 +87,27 @@ skills:
       - bug-fixing
       - debugging
       - error-resolution
+  - name: qk-code-review
+    version: 8.0.0
+    status: stable
+    description: >-
+      Elite AI/Code Review System: Kiểm toán, Review code và cấu hình AI với tư
+      duy Architect, áp dụng 4-Phase Review.
+    complexity: high
+    workflow: code-review
+    triggers:
+      - review code
+      - code review
+      - kiểm tra code
+      - đánh giá code
+      - review skin
+      - review rule
+      - review ai
+    intent:
+      - code-review
+      - quality-assurance
+      - architecture-review
+      - ai-config-audit
   - name: qk-context-loader
     version: 8.0.0
     status: stable
@@ -141,8 +162,8 @@ skills:
     version: 8.1.0
     status: experimental
     description: >-
-      Governance cho Design System (Định nghĩa system rules, tokens, component
-      variants).
+      Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến
+      thể component).
     complexity: medium
     workflow: feature-delivery
     triggers:
@@ -159,8 +180,8 @@ skills:
     version: 8.1.1
     status: experimental
     description: >-
-      Platform engineering: CI/CD strategy, deployment architecture, environment
-      management, and rollback strategy.
+      Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường
+      và chiến lược rollback.
     complexity: high
     workflow: feature-delivery
     triggers:
@@ -246,8 +267,8 @@ skills:
     version: 8.1.0
     status: experimental
     description: >-
-      Frontend architecture decision engine (Component strategy, state
-      management, routing).
+      Công cụ quyết định kiến trúc Frontend (Chiến lược component, quản lý
+      state, định tuyến).
     complexity: high
     workflow: feature-delivery
     triggers:
@@ -264,7 +285,7 @@ skills:
     status: deprecated
     description: Hiển thị danh sách skills V8 và hướng dẫn dùng lệnh ./qk-[skill-name].
     complexity: low
-    workflow: internal
+    workflow: documentation
     triggers:
       - help
       - có những skill nào
@@ -320,7 +341,7 @@ skills:
       Chuẩn bị release production với 8-gate checklist bắt buộc — không pass
       gate = không deploy.
     complexity: high
-    workflow: internal
+    workflow: production-release
     triggers:
       - release production
       - deploy production
@@ -330,11 +351,11 @@ skills:
       - release-management
       - production-deployment
   - name: qk-project-bootstrap
-    version: 8.0.0
+    version: 8.2.0
     status: stable
     description: >-
-      Khởi tạo dự án mới với cấu trúc chuẩn, linters, DESIGN.md — không bao giờ
-      thiếu foundation.
+      Khởi tạo dự án mới theo chuẩn V8.2 Blueprint Plugin Generator
+      (project.yaml, 4-folder AI RAG hoặc Coding) với cấu trúc kiên cường.
     complexity: high
     workflow: feature-delivery
     triggers:
@@ -380,6 +401,25 @@ skills:
     intent:
       - context-management
       - knowledge-retrieval
+  - name: qk-refactor
+    version: 8.0.0
+    status: stable
+    description: >-
+      Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi
+      logic hoạt động bên ngoài.
+    complexity: medium
+    workflow: refactor
+    triggers:
+      - refactor
+      - tái cấu trúc
+      - clean up this code
+      - simplify
+      - reduce complexity
+      - dẫn cấu trúc code
+    intent:
+      - refactoring
+      - code-cleanup
+      - complexity-reduction
   - name: qk-security-audit
     version: 8.1.0
     status: experimental
@@ -419,8 +459,8 @@ skills:
     version: 8.1.0
     status: experimental
     description: >-
-      Testing strategy decision engine (Unit, Integration, E2E, Coverage,
-      Regression, Mock strategy).
+      Công cụ quyết định chiến lược kiểm thử (Unit, Integration, E2E, Coverage,
+      Regression, Mock).
     complexity: high
     workflow: feature-delivery
     triggers:
@@ -430,17 +470,17 @@ skills:
       - test coverage
     intent:
       - testing-strategy
-      - unit-test
-      - integration-test
-      - e2e-test
+      - unit-test-strategy
+      - integration-test-strategy
+      - e2e-test-strategy
       - mock-strategy
-      - test-coverage
+      - test-coverage-planning
   - name: qk-ui-audit
     version: 8.0.0
     status: stable
     description: >-
-      Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score
-      < 90/100.
+      Kiểm toán giao diện (UI) với 57-check Anti-Slop checklist — fail nếu score
+      < 76/85 base.
     complexity: medium
     workflow: code-review
     triggers:
@@ -452,23 +492,6 @@ skills:
     intent:
       - ui-audit
       - codebase-health
-  - name: qk-ui-builder
-    version: 8.0.0
-    status: stable
-    description: >-
-      Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến
-      redesign cấu trúc.
-    complexity: high
-    workflow: feature-delivery
-    triggers:
-      - build ui
-      - làm giao diện
-      - design ui
-      - css
-      - giao diện
-    intent:
-      - ui-development
-      - frontend-design
   - name: qk-ui-system-builder
     version: 8.0.0
     status: stable
@@ -486,11 +509,11 @@ skills:
       - ui-system-design
       - frontend-development
   - name: qk-validation-gate
-    version: 8.0.0
+    version: 8.2.0
     status: stable
     description: >-
-      Cổng kiểm tra chất lượng bắt buộc với ngưỡng pass/fail cụ thể — chặn đứng
-      mọi mã nguồn lỗi.
+      Cổng kiểm tra chất lượng & Eval Pipeline bắt buộc — chạy linters, tests,
+      và đánh giá scorecard.yaml định lượng cho AI Agent.
     complexity: low
     workflow: code-review
     triggers:

@@ -1,0 +1,76 @@
+{
+  "project": "ai-developer-skill-os",
+  "version": "8.3.0",
+  "schema_version": 1,
+  "ide": {
+    "default": "kilo-code",
+    "supported": ["antigravity", "claude-code", "cursor", "windsurf", "kilo-code"]
+  },
+  "paths": {
+    "skills": ".agents/skills",
+    "rules": ".agents/rules",
+    "workflows": ".agents/workflows",
+    "registry": ".agents/registry",
+    "docs": ".agents/docs",
+    "blueprints": ".agents/blueprints",
+    "knowledge": ".agents/knowledge",
+    "bin": "bin",
+    "tooling": "tooling",
+    "tests": "tests"
+  },
+  "commands": {
+    "init": {
+      "description": "Initialize the skill OS for an IDE",
+      "bin": "bin/install.js",
+      "args": ["--ide=kilo", "--scope=2"]
+    },
+    "lint": {
+      "description": "Validate skills, rules, and workflows",
+      "bin": "bin/lint.js"
+    },
+    "test": {
+      "description": "Run the full test suite",
+      "bin": "npx",
+      "args": ["vitest", "run"]
+    },
+    "test:watch": {
+      "description": "Run tests in watch mode",
+      "bin": "npx",
+      "args": ["vitest"]
+    },
+    "test:registry": {
+      "description": "Run registry validation tests",
+      "bin": "npx",
+      "args": ["vitest", "run"]
+    },
+    "test:graph": {
+      "description": "Validate the capability dependency graph",
+      "bin": "node",
+      "args": ["tooling/validate-graph.js"]
+    },
+    "build:registry": {
+      "description": "Rebuild the skills registry from source",
+      "bin": "node",
+      "args": ["tooling/build-registry.js"]
+    }
+  },
+  "agents": {
+    "default_model": "kilo-auto/free",
+    "allowed_models": ["kilo-auto/free"]
+  },
+  "rules": {
+    "always_include": ["global", "command-safety"],
+    "conditional": {
+      "edits": ["coding", "safety"],
+      "security": ["security", "skill-quality"],
+      "docs": ["global"]
+    }
+  },
+  "skin": {
+    "design_md": "DESIGN.md",
+    "token_file": "src/styles/tokens.css",
+    "theme_support": ["light", "dark"],
+    "token_naming": "--color-[role]-[shade]",
+    "css_framework": "native CSS custom properties"
+  }
+}

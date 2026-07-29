@@ -1,0 +1,24 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-system-evolution"
+version: "8.0.0"
+description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "upgrade-strategy"
+    - "rollback-plan"
+  references:
+    - "testing"
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-system-evolution"
+  does_not_own: []
+  conflicts_with: []

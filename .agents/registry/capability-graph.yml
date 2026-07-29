@@ -1,7 +1,7 @@
 # registry/capability-graph.yml
-# GENERATED FILE — DO NOT EDIT MANUALLY
+# GENERATED FILE - DO NOT EDIT MANUALLY.
 version: 8.1.3
-generated_at: '2026-07-23T06:25:44.563Z'
+generated_at: '2026-07-29T07:30:08.002Z'
 nodes:
   qk-access-policy:
     type: capability
@@ -24,6 +24,7 @@ nodes:
       - infrastructure_monitoring
       - log_aggregation
       - uptime_monitoring
+      - pass_fail_enforcement
     conflicts: []
     workflow: skill-evolution
   qk-ai-builder:
@@ -47,6 +48,13 @@ nodes:
     does_not_own: []
     conflicts: []
     workflow: bug-resolution
+  qk-code-review:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
   qk-context-loader:
     type: utility
     maturity: stable
@@ -142,7 +150,7 @@ nodes:
     owns: []
     does_not_own: []
     conflicts: []
-    workflow: internal
+    workflow: documentation
   qk-orchestrator:
     type: orchestrator
     maturity: stable
@@ -165,10 +173,15 @@ nodes:
   qk-production-release:
     type: capability
     maturity: stable
-    owns: []
-    does_not_own: []
-    conflicts: []
-    workflow: internal
+    owns:
+      - release-gate-checklist
+      - deployment-readiness-verdict
+    does_not_own:
+      - ci-cd-pipeline-design
+      - infrastructure-provisioning
+    conflicts:
+      - qk-devops-platform
+    workflow: production-release
   qk-project-bootstrap:
     type: capability
     maturity: stable
@@ -190,6 +203,13 @@ nodes:
     does_not_own: []
     conflicts: []
     workflow: documentation
+  qk-refactor:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: refactor
   qk-security-audit:
     type: capability
     maturity: experimental
@@ -230,19 +250,17 @@ nodes:
     does_not_own: []
     conflicts: []
     workflow: code-review
-  qk-ui-builder:
-    type: capability
-    maturity: stable
-    owns: []
-    does_not_own: []
-    conflicts: []
-    workflow: feature-delivery
   qk-ui-system-builder:
     type: capability
     maturity: stable
-    owns: []
-    does_not_own: []
-    conflicts: []
+    owns:
+      - tokens
+      - ui-system
+    does_not_own:
+      - page implementation
+      - visual direction
+    conflicts:
+      - qk-design-system-engineering
     workflow: feature-delivery
   qk-validation-gate:
     type: utility
@@ -273,6 +291,9 @@ edges:
   - from: qk-agent-observability
     to: skill-evolution
     relation: depends_on
+  - from: qk-agent-observability
+    to: qk-validation-gate
+    relation: feeds
   - from: qk-ai-builder
     to: feature-delivery
     relation: depends_on
@@ -293,6 +314,18 @@ edges:
     relation: feeds
   - from: qk-bug-resolution
     to: qk-validation-gate
+    relation: feeds
+  - from: qk-code-review
+    to: code-review
+    relation: depends_on
+  - from: qk-code-review
+    to: qk-validation-gate
+    relation: feeds
+  - from: qk-code-review
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-code-review
+    to: qk-project-health
     relation: feeds
   - from: qk-context-loader
     to: research
@@ -394,7 +427,7 @@ edges:
     to: qk-web-quality-gate
     relation: feeds
   - from: qk-help
-    to: internal
+    to: documentation
     relation: depends_on
   - from: qk-help
     to: qk-orchestrator
@@ -418,8 +451,11 @@ edges:
     to: qk-feature-delivery
     relation: feeds
   - from: qk-production-release
-    to: internal
+    to: production-release
     relation: depends_on
+  - from: qk-production-release
+    to: qk-devops-platform
+    relation: conflicts_with
   - from: qk-production-release
     to: qk-validation-gate
     relation: feeds
@@ -440,6 +476,15 @@ edges:
     relation: depends_on
   - from: qk-project-memory
     to: qk-engineering-standard
+    relation: feeds
+  - from: qk-refactor
+    to: refactor
+    relation: depends_on
+  - from: qk-refactor
+    to: qk-engineering-standard
+    relation: feeds
+  - from: qk-refactor
+    to: qk-project-health
     relation: feeds
   - from: qk-security-audit
     to: security-audit
@@ -474,15 +519,12 @@ edges:
   - from: qk-ui-audit
     to: qk-ui-builder
     relation: feeds
-  - from: qk-ui-builder
-    to: feature-delivery
-    relation: depends_on
-  - from: qk-ui-builder
-    to: qk-ui-system-builder
-    relation: feeds
   - from: qk-ui-system-builder
     to: feature-delivery
     relation: depends_on
+  - from: qk-ui-system-builder
+    to: qk-design-system-engineering
+    relation: conflicts_with
   - from: qk-ui-system-builder
     to: qk-ui-builder
     relation: feeds

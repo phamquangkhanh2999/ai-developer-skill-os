@@ -1,0 +1,21 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-fe-api-integration"
+version: "8.0.0"
+description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "api-integration"
+    - "state-management"
+  references:
+    - "architecture"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-fe-api-integration"
+  does_not_own: []
+  conflicts_with: []

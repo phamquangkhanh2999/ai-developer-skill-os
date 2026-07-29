@@ -1,0 +1,25 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-bug-resolution"
+version: "8.0.0"
+description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "bug-diagnosis"
+    - "fix-strategies"
+    - "root-cause-analysis"
+  references:
+    - "testing"
+    - "language-specific-features"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-bug-resolution"
+  does_not_own: []
+  conflicts_with: []

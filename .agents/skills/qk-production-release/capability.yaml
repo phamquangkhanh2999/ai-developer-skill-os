@@ -1,0 +1,27 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-production-release"
+version: "8.0.0"
+description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "release-checklist"
+    - "deployment-gate"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "release-gate-checklist"
+    - "deployment-readiness-verdict"
+  does_not_own:
+    - "ci-cd-pipeline-design"
+    - "infrastructure-provisioning"
+  conflicts_with:
+    - "qk-devops-platform"

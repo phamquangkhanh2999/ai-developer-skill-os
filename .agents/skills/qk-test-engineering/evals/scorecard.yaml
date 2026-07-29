@@ -1,0 +1,26 @@
+name: qk-test-engineering-eval
+description: Đánh giá tư duy Chiến lược Kiểm thử (Test Strategy)
+version: 1.0.0
+threshold: 85 # Đảm bảo tư vấn chiến lược rõ ràng và bao quát rủi ro
+
+metrics:
+  - id: pyramid_strategy
+    name: Chiến lược Test Pyramid
+    description: Chiến lược có phân bổ hợp lý giữa Unit, Integration và E2E không?
+    weight: 35
+    criteria:
+      - Phân tách rõ ràng loại test nào dùng cho logic nào thay vì bắt viết E2E cho mọi thứ (35đ)
+
+  - id: boundary_testing_r_sec_04
+    name: Negative & Boundary Testing (R-SEC-04)
+    description: Có bao phủ các test cases ranh giới để ngăn chặn tấn công/lỗi dữ liệu không?
+    weight: 35
+    criteria:
+      - Bắt buộc đưa ra các test case biên (Boundary) và trường hợp lỗi (Negative tests) (35đ)
+
+  - id: mocking_strategy
+    name: Chiến lược Mock/Stub
+    description: Có tư vấn rõ ràng khi nào nên Mock và khi nào dùng Database thật không?
+    weight: 30
+    criteria:
+      - Phân biệt rõ việc Mock API bên thứ ba vs Integration DB nội bộ (30đ)

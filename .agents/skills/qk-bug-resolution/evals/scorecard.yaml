@@ -1,0 +1,30 @@
+name: qk-bug-resolution-eval
+description: Đánh giá chất lượng quy trình sửa lỗi (Bug Resolution)
+version: 1.0.0
+threshold: 85 # Quy trình sửa lỗi cần bằng chứng rõ ràng và sửa đúng trọng tâm
+
+metrics:
+  - id: evidence_based_diagnosis
+    name: Chẩn đoán dựa trên bằng chứng
+    description: Agent có tìm ra chính xác dòng code gây lỗi trước khi sửa không?
+    weight: 40
+    criteria:
+      - Xác định được chính xác file và dòng gây lỗi (file:line) dựa vào stack trace/log thay vì đoán mò (20đ)
+      - Phân tích đúng Root Cause (nguyên nhân gốc rễ) trước khi đưa ra giải pháp (20đ)
+
+  - id: minimal_targeted_patch
+    name: Sửa lỗi tối giản và đúng trọng tâm
+    description: Bản vá lỗi có gọn gàng và không ảnh hưởng đến logic khác không?
+    weight: 35
+    criteria:
+      - Sửa trực tiếp vào source code, thay đổi mã nguồn ít nhất có thể (minimal diff) (15đ)
+      - Không refactor lan man ra ngoài phạm vi gây lỗi (10đ)
+      - Giải quyết triệt để nguyên nhân, không dùng mẹo che giấu lỗi (vd: không lạm dụng `?` hoặc `!` chỉ để ép kiểu) (10đ)
+
+  - id: verification_and_safety
+    name: Kiểm chứng và an toàn
+    description: Agent có kiểm tra lại sau khi sửa và tuân thủ ranh giới không?
+    weight: 25
+    criteria:
+      - Re-read (đọc lại) code sau khi sửa để xác nhận logic đã chuẩn xác (Static Verification) (15đ)
+      - Không phá vỡ ranh giới bảo mật (Zero-Trust) chỉ để code chạy được (10đ)

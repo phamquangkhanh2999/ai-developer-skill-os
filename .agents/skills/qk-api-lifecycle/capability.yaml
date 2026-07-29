@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-api-lifecycle"
+version: "8.0.0"
+description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "api-contracts"
+    - "endpoints"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-api-lifecycle"
+  does_not_own: []
+  conflicts_with: []

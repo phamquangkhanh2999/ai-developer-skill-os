@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-access-policy"
+version: "8.0.0"
+description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "security-policy"
+    - "role-matrix"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-access-policy"
+  does_not_own: []
+  conflicts_with: []

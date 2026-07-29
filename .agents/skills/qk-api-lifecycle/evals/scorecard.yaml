@@ -1,0 +1,29 @@
+name: qk-api-lifecycle-eval
+description: Đánh giá chất lượng thiết kế và triển khai API
+version: 1.0.0
+threshold: 90 # Tiêu chuẩn cao vì liên quan đến hợp đồng dữ liệu và bảo mật cổng vào
+
+metrics:
+  - id: contract_first_design
+    name: Thiết kế theo hợp đồng (Contract-first)
+    description: Agent có định nghĩa Types/Interfaces rõ ràng trước khi code logic không?
+    weight: 30
+    criteria:
+      - Định nghĩa rõ ràng Request & Response structure bằng TypeScript interface / DTO (15đ)
+      - Khai báo đầy đủ HTTP method, route path và các HTTP status codes có thể trả về (15đ)
+
+  - id: zero_trust_validation
+    name: Tuân thủ Zero-Trust (R-SEC-04)
+    description: Mọi API Endpoint có được bảo vệ và validate dữ liệu ở cổng vào không?
+    weight: 40
+    criteria:
+      - Áp dụng thư viện validation (zod/yup/class-validator) cho toàn bộ input payload (20đ)
+      - Không rò rỉ dữ liệu nhạy cảm ở response cổng ra (sanitize/mask data) (20đ)
+
+  - id: error_handling_and_compat
+    name: Xử lý lỗi và Tương thích ngược
+    description: API có xử lý mượt mà các tình huống lỗi và giữ tính backward compatibility không?
+    weight: 30
+    criteria:
+      - Trả về đúng HTTP status code (400, 401, 403, 404, 422, 500) thay vì trả 500 cho mọi lỗi (15đ)
+      - Không làm hỏng (breaking changes) các trường dữ liệu của contract cũ mà không tăng version (15đ)

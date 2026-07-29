@@ -1,0 +1,29 @@
+name: qk-fe-api-integration-eval
+description: Đánh giá chất lượng tích hợp API vào giao diện Frontend
+version: 1.0.0
+threshold: 85 # Đảm bảo tính toàn vẹn của DTO, UI State và ranh giới bảo mật
+
+metrics:
+  - id: type_and_validation
+    name: Khởi tạo Types và Validation (Zod)
+    description: Agent có gen ra Types và Zod schema từ JSON payload mẫu không?
+    weight: 30
+    criteria:
+      - Khởi tạo chính xác Zod Schema và xuất TypeScript interfaces (15đ)
+      - Phân biệt rõ ràng các trường bắt buộc và tùy chọn (.optional(), .nullable()) (15đ)
+
+  - id: architecture_compliance
+    name: Tuân thủ Kiến trúc dự án (Base Architecture)
+    description: Agent có tái sử dụng API Client có sẵn không?
+    weight: 30
+    criteria:
+      - Ưu tiên dùng wrapper có sẵn (Axios/TanStack Query) thay vì viết raw fetch tràn lan (15đ)
+      - Tuyệt đối không hardcode Base URL vào trong component (15đ)
+
+  - id: ui_state_handling
+    name: Xử lý State giao diện toàn diện
+    description: Có bao phủ đủ 3 trạng thái Loading, Success, Error không?
+    weight: 40
+    criteria:
+      - Xử lý mượt mà trạng thái Loading và Success (20đ)
+      - Có cơ chế bắt lỗi HTTP bài bản (401, 404, 500, Network Error) và map với Error state của giao diện (20đ)

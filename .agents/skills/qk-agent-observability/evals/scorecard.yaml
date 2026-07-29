@@ -1,0 +1,29 @@
+name: qk-agent-observability-eval
+description: Đánh giá khả năng thu thập dữ liệu (trace) và phát hiện lỗi của agent
+version: 1.0.0
+threshold: 85 # Không yêu cầu tuyệt đối, nhưng cần đảm bảo observability hoạt động tốt
+
+metrics:
+  - id: write_trace_file
+    name: Ghi file trace JSON hợp lệ
+    description: Agent có tạo file JSON đúng chuẩn vào thư mục evals/traces/ không?
+    weight: 40
+    criteria:
+      - File trace được tạo trong evals/traces/ với định dạng {yyyy-mm-dd}_{task-slug}.json (20đ)
+      - File JSON có cấu trúc chuẩn, final_score = null (20đ)
+
+  - id: collect_signals
+    name: Thu thập đầy đủ tín hiệu (Signals)
+    description: File trace có chứa đầy đủ các thông tin cần thiết không?
+    weight: 40
+    criteria:
+      - Có đủ thông tin Routing (skill_used, clarification, switched) (15đ)
+      - Có đủ thông tin Boundary & Token Budget (15đ)
+      - Có đủ thông tin Zero-trust và Exit Code thực tế (10đ)
+
+  - id: detect_failure_patterns
+    name: Phát hiện pattern lỗi lặp lại
+    description: Agent có khả năng cảnh báo khi một skill thất bại liên tục không?
+    weight: 20
+    criteria:
+      - Nhận diện đúng khi có >= 3 trace gần nhất bị fail hoặc vi phạm boundary (20đ)

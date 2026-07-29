@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-code-review"
+version: "8.0.0"
+description: "Elite AI/Code Review System: Kiểm toán, Review code và cấu hình AI với tư duy Architect, áp dụng 4-Phase Review."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "code-review-standards"
+    - "ai-configuration-review"
+    - "feedback-delivery"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-code-review"
+  does_not_own: []
+  conflicts_with: []

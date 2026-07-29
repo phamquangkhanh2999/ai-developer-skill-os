@@ -1,0 +1,28 @@
+name: qk-context-loader-eval
+description: Đánh giá khả năng phân tích kiến trúc và tải context
+version: 1.0.0
+threshold: 85 # Tính chính xác của context là cốt lõi để tránh hallucination
+
+metrics:
+  - id: accurate_graph_traversal
+    name: Phân tích Graph chính xác và giới hạn
+    description: Agent có tuân thủ giới hạn chiều sâu và không quét thừa file không?
+    weight: 35
+    criteria:
+      - Quét đúng dependency graph từ entry point (15đ)
+      - Tuân thủ giới hạn max depth 3 và max_files_read, không bị tràn (infinite loop) (20đ)
+
+  - id: risk_assessment
+    name: Đánh giá mức độ rủi ro (Risk Assessment)
+    description: Agent có nhận diện đúng các module dùng chung (shared) hoặc vi phạm ranh giới không?
+    weight: 35
+    criteria:
+      - Đánh dấu chính xác các file được import nhiều lần là HIGH/CRITICAL risk (20đ)
+      - Phát hiện được các file vi phạm cấu trúc (vd: trộn lẫn Server Logic và Client UI) (15đ)
+
+  - id: strict_json_output
+    name: Định dạng Output JSON chuẩn mực
+    description: Agent có xuất ra được JSON Schema như yêu cầu để các agent khác đọc không?
+    weight: 30
+    criteria:
+      - Định dạng JSON trả về chứa đầy đủ nodes, imports, exports và risks theo đúng schema (30đ)

@@ -1,0 +1,27 @@
+name: qk-product-specification-eval
+description: Đánh giá Tư duy Sản phẩm và Phân tích Yêu cầu
+version: 1.0.0
+threshold: 85 # Đảm bảo Spec rõ ràng và chứa đầy đủ tiêu chí bảo mật
+
+metrics:
+  - id: requirement_clarification
+    name: Làm rõ Yêu cầu (Requirement Analysis)
+    description: Agent có phân tích sâu ý tưởng để xác định ranh giới tính năng không?
+    weight: 35
+    criteria:
+      - Từ một Idea mơ hồ, bóc tách thành các gạch đầu dòng rõ ràng về scope (những gì làm và KHÔNG làm) (35đ)
+
+  - id: acceptance_criteria_quality
+    name: Chất lượng Acceptance Criteria (AC)
+    description: Các tiêu chí nghiệm thu có định lượng và bao phủ các trường hợp không?
+    weight: 35
+    criteria:
+      - Liệt kê các AC mạch lạc, testable (kiểm thử được) (15đ)
+      - BẮT BUỘC phải có tiêu chí bảo mật (Security AC) theo chuẩn R-SEC-04 (Zero Trust) (20đ)
+
+  - id: technical_readiness
+    name: Mức độ sẵn sàng cho Kỹ thuật (Technical Spec)
+    description: Spec viết ra có đủ độ chi tiết để delegate cho qk-feature-delivery chưa?
+    weight: 30
+    criteria:
+      - Tài liệu đầu ra được cấu trúc chặt chẽ (Technical Ready) không để lập trình viên phải đoán mò (30đ)

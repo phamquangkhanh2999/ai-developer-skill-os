@@ -1,0 +1,27 @@
+name: qk-refactor-eval
+description: Đánh giá an toàn và hiệu quả của tiến trình Refactor
+version: 1.0.0
+threshold: 90 # Yêu cầu an toàn rất cao, refactor không được làm hỏng tính năng
+
+metrics:
+  - id: behavior_preservation
+    name: Bảo toàn Logic (Behavior Preservation)
+    description: Tái cấu trúc có làm thay đổi logic hoạt động hoặc API public không?
+    weight: 40
+    criteria:
+      - Tuyệt đối không thêm tính năng mới trong quá trình refactor (20đ)
+      - Không thay đổi chữ ký (signature) của các public API (20đ)
+
+  - id: test_coverage_precondition
+    name: Tiền điều kiện Kiểm thử (Tests)
+    description: Agent có từ chối refactor nếu không có Tests bảo vệ không?
+    weight: 35
+    criteria:
+      - Chặn (BLOCKED) và yêu cầu viết test nếu code chưa có coverage (35đ)
+
+  - id: complexity_reduction
+    name: Giảm Độ phức tạp (Complexity Reduction)
+    description: Kết quả refactor có thực sự làm code sạch và dễ bảo trì hơn không?
+    weight: 25
+    criteria:
+      - Tách hàm, loại bỏ code chết, giảm cyclomatic complexity rõ rệt (25đ)

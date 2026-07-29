@@ -1,0 +1,28 @@
+name: qk-devops-platform-eval
+description: Đánh giá chất lượng cấu trúc DevOps và CI/CD
+version: 1.0.0
+threshold: 85 # Đảm bảo an toàn hạ tầng và khả năng chịu lỗi (Rollback)
+
+metrics:
+  - id: secure_secrets_management
+    name: Quản lý Secrets an toàn (R-SEC-04)
+    description: Cấu hình CI/CD có vô tình làm lộ credentials không?
+    weight: 40
+    criteria:
+      - Tuyệt đối không hardcode API keys, mật khẩu hoặc tokens vào file cấu hình (20đ)
+      - Sử dụng cơ chế inject biến môi trường an toàn (Github Secrets, Vault) (20đ)
+
+  - id: robust_pipeline_design
+    name: Thiết kế Pipeline và Môi trường
+    description: Luồng CI/CD có phân tách rõ ràng và tự động hóa tốt không?
+    weight: 35
+    criteria:
+      - Phân tách rõ ràng cấu hình cho các môi trường (Dev, Staging, Prod) (15đ)
+      - Có quy trình containerization (Docker, K8s) hoặc chiến lược deployment hợp lý (20đ)
+
+  - id: rollback_strategy
+    name: Chiến lược Rollback
+    description: Có kịch bản dự phòng khi deploy thất bại không?
+    weight: 25
+    criteria:
+      - Có cơ chế hoặc hướng dẫn rõ ràng để rollback hệ thống về trạng thái ổn định trước đó (25đ)

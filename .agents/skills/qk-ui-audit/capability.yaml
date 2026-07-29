@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-ui-audit"
+version: "8.0.0"
+description: "Kiểm toán giao diện (UI) với 57-check Anti-Slop checklist — fail nếu score < 76/85 base."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "ui-standards"
+    - "anti-slop"
+  references:
+    - "design-system"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-ui-audit"
+  does_not_own: []
+  conflicts_with: []

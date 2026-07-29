@@ -1,0 +1,30 @@
+name: qk-ai-builder-eval
+description: Đánh giá chất lượng thiết kế Agent & RAG Pipeline
+version: 1.0.0
+threshold: 90 # Yêu cầu rất cao vì liên quan đến an ninh (injection) và cấu trúc V8
+
+metrics:
+  - id: prompt_design
+    name: Thiết kế System Prompt
+    description: Prompt có tuân thủ đúng cấu trúc chuẩn và giới hạn an toàn không?
+    weight: 30
+    criteria:
+      - Có cấu trúc rõ ràng (ROLE, TASK, CONSTRAINTS) (10đ)
+      - Có định dạng đầu ra (OUTPUT FORMAT) bằng JSON Schema chuẩn (10đ)
+      - Có Examples (few-shot) để hướng dẫn LLM (10đ)
+
+  - id: security_anti_injection
+    name: Bảo mật Anti-Injection (R-SEC-04)
+    description: Các biện pháp phòng ngừa Prompt Injection có được áp dụng không?
+    weight: 40
+    criteria:
+      - Input của user được bọc trong thẻ XML `<user_input>...</user_input>` (20đ)
+      - Output có chứa trường `confidence` để fallback/human review nếu kết quả có vấn đề (20đ)
+
+  - id: v8_packaging
+    name: Đóng gói chuẩn V8.2
+    description: Kiến trúc 4-folder và file định nghĩa có đầy đủ không?
+    weight: 30
+    criteria:
+      - Khởi tạo đúng cấu trúc 4 thư mục: prompts/, data/, agents/, evals/ (15đ)
+      - Tự động sinh ra `capability.yaml` và `scorecard.yaml` cho skill mới (15đ)

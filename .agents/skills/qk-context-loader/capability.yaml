@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-context-loader"
+version: "8.0.0"
+description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "project-context"
+    - "architecture-discovery"
+  references:
+    - "coding"
+    - "repository-structure"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-context-loader"
+  does_not_own: []
+  conflicts_with: []

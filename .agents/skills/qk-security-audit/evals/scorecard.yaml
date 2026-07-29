@@ -1,0 +1,27 @@
+name: qk-security-audit-eval
+description: Đánh giá chất lượng Kiểm toán Bảo mật
+version: 1.0.0
+threshold: 95 # Threshold gần như tuyệt đối vì đây là lưới lọc bảo mật cuối cùng
+
+metrics:
+  - id: secret_leak_detection
+    name: Nhận diện rò rỉ Secret (Secret Leak)
+    description: Agent có phát hiện được API keys/Passwords bị hardcode không?
+    weight: 40
+    criteria:
+      - Rà quét và chỉ điểm chính xác file/line chứa secret bị hardcode (40đ)
+
+  - id: r_sec_04_enforcement
+    name: Rà soát Zero-Trust & Phân quyền
+    description: Có kiểm tra các lỗ hổng RBAC/ABAC và Prompt Injection không?
+    weight: 35
+    criteria:
+      - Đánh giá mô hình quyền hạn xem có lỗ hổng BOLA hoặc Broken Auth không (15đ)
+      - Quét nguy cơ Prompt Injection (nếu có LLM integration) theo chuẩn R-SEC-04 (20đ)
+
+  - id: owasp_and_dependencies
+    name: Lỗ hổng OWASP & Dependencies
+    description: Có kiểm tra các thư viện lỗi thời hoặc lỗ hổng phổ biến không?
+    weight: 25
+    criteria:
+      - Đưa ra danh sách cảnh báo dựa trên OWASP Top 10 và Dependency Tree (25đ)

@@ -1,0 +1,28 @@
+name: qk-frontend-architecture-eval
+description: Đánh giá năng lực thiết kế Kiến trúc Frontend
+version: 1.0.0
+threshold: 85 # Đảm bảo các quyết định kiến trúc đúng đắn và không bị lấn sân
+
+metrics:
+  - id: tech_stack_selection
+    name: Lựa chọn Tech Stack & State Management
+    description: Các lựa chọn công nghệ có tuân theo quy chuẩn dự án không?
+    weight: 40
+    criteria:
+      - Ưu tiên TanStack Query cho Server State và Zustand/Context cho Client State (20đ)
+      - Lựa chọn đúng cơ chế Routing (Next.js App Router hoặc TanStack Router) (20đ)
+
+  - id: component_breakdown
+    name: Chiến lược phân tách Component
+    description: Cấu trúc component có hợp lý và dễ bảo trì không?
+    weight: 30
+    criteria:
+      - Phân chia component rõ ràng (Smart vs Dumb components) (15đ)
+      - Ngăn chặn triệt để các Anti-patterns trong luồng dữ liệu (R-C-09) (15đ)
+
+  - id: boundary_respect
+    name: Tôn trọng ranh giới Kiến trúc
+    description: Agent có tập trung vào kiến trúc thay vì viết UI trực tiếp không?
+    weight: 30
+    criteria:
+      - Giữ vai trò Kiến trúc sư (Architect), không lấn sân sang việc viết pixel styling hay implement chi tiết UI (nhường cho qk-ui-builder) (30đ)

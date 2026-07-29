@@ -45,7 +45,7 @@ knowledge_scope:
     - evaluation-metrics
   references:
     - architecture
-    - scorecard          # bổ sung: file scorecard.yaml giờ nằm trong references/ của skill này
+    - scorecard          # bổ sung: file scorecard.yaml giờ nằm trong evals/ của skill này
 
 decision_boundary:
   owns:
@@ -124,7 +124,7 @@ This skill enables tracking and observing the AI agent's own behavior, decisions
 ## Preconditions
 
 - [ ] Task vừa hoàn tất (bất kỳ `exit_code` nào — kể cả `FAILED`/`BLOCKED` cũng phải ghi trace, vì thất bại cũng là dữ liệu quan sát quan trọng).
-- [ ] `references/scorecard.yaml` tồn tại và định nghĩa được metric cần ghi nhận.
+- [ ] `evals/scorecard.yaml` tồn tại và định nghĩa được metric cần ghi nhận.
 
 ```
 On missing scorecard.yaml:

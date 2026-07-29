@@ -1,0 +1,29 @@
+schema_version: 1
+id: "qk-ui-builder"
+version: "8.2.0"
+description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
+dependencies:
+  - "feature-delivery"
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "ui-implementation"
+    - "component-patterns"
+    - "design-system-integration"
+  references:
+    - "design-system"
+    - "architecture"
+    - "accessibility"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "ui-component-implementation"
+    - "design-token-application"
+  does_not_own:
+    - "visual-direction"
+    - "brand-identity"
+  conflicts_with: []
+  delegates_to: []

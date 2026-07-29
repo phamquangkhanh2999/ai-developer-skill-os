@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-project-health"
+version: "8.0.0"
+description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "tech-debt"
+    - "codebase-health"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-project-health"
+  does_not_own: []
+  conflicts_with: []

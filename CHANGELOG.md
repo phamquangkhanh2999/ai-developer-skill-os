@@ -5,6 +5,33 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [8.3.1] — 2026-07 — EDAOS v8.3.1: Eval Pipeline & Agentic Governance
+
+### Added
+- **evals/runner.js**: Automated evaluation pipeline script to parse `scorecard.yaml`, run linting, verify agent traces, and calculate total scores against thresholds.
+- **Eval Scripts**: Added `npm run eval` and `npm run eval:all` in `package.json` for running automated validations.
+- **Scorecards**: Created comprehensive, quantitative AI-eval `evals/scorecard.yaml` for all 31 standard skills.
+- **.agents/rules/anti-patterns.md (R-C-09)**: Strict global rule prohibiting AI-slop, God Files, Circular Dependencies, and poor code quality practices.
+
+## [8.3.0] — 2026-07 — EDAOS v8.3: Design System, IDE Config & Infrastructure Fixes
+
+### Added
+- **DESIGN.md**: Design system contract with HSL color tokens, spacing scale, typography, border radius, shadows, animation tokens, dark mode support, and z-index layers
+- **vite.config.js**: Vitest configuration with coverage (v8 provider), reporter setup, and test isolation
+- **bin/lint.js**: Lint script for validating SKILL.md spec compliance, workflow structure, and rule files
+- **.kilo/kilo.json**: Kilo IDE configuration with project paths, commands, agent model settings, and skin design token reference
+- **.kilo/command/ and .kilo/agent/ directories**: Standardized Kilo command and agent configuration directories
+- **qk-context-loader/references/**: Loading patterns document for context dependency graph construction
+
+### Fixed
+- **.agentsignore**: Removed `schemas/` from rogue artifacts list; legitimate schema files at `.agents/docs/schemas/` are now accessible to AI agents
+- **ADR-008 renamed to ADR-005**: Corrected decision sequence to remove gap between ADR-004 and ADR-005
+- **qk-design-system-engineering status**: Changed from `experimental` to `stable` to reflect full V8.2 review compliance
+- **Source .agentsignore**: Fixed same `schemas/` issue in root `.agentsignore` (not just worktree copy)
+
+### Removed
+- **Legacy agent-skills dirs**: Removed obsolete `khanhmcp-server/agent-skills-eval/` and `khanhmcp-server/agent-skills-tool/` directories (pre-V8 artifacts)
+
 ## [8.2.1] — 2026-07 — Token Optimization Patch
 
 ### Fixed

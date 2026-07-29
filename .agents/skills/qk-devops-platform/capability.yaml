@@ -1,0 +1,29 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-devops-platform"
+version: "8.1.1"
+description: "Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường và chiến lược rollback."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "qk-devops-platform"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "CI/CD strategy"
+    - "deployment architecture"
+    - "environment management"
+    - "rollback strategy"
+  does_not_own:
+    - "application code"
+    - "cloud billing"
+    - "releasing features"
+  conflicts_with:
+    - "qk-production-release"

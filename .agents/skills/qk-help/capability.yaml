@@ -1,0 +1,20 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-help"
+version: "8.0.0"
+description: "Hiển thị danh sách skills V8 và hướng dẫn dùng lệnh ./qk-[skill-name]."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "skill-directory"
+  references:
+    - "registry"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-help"
+  does_not_own: []
+  conflicts_with: []

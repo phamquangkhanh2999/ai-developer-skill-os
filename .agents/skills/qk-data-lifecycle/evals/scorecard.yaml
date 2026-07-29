@@ -1,0 +1,29 @@
+name: qk-data-lifecycle-eval
+description: Đánh giá chất lượng quản lý Schema và an toàn Migration
+version: 1.0.0
+threshold: 90 # Tiêu chuẩn rất cao vì rủi ro mất mát dữ liệu (Data loss) là CRITICAL
+
+metrics:
+  - id: backward_compatible_migration
+    name: Migration tương thích ngược và an toàn
+    description: Agent có tạo migration an toàn, tránh phá vỡ dữ liệu đang chạy không?
+    weight: 40
+    criteria:
+      - Không sử dụng các lệnh destructive (DROP COLUMN, RENAME TABLE) một cách trực tiếp mà không qua chiến lược 3-phase (20đ)
+      - Các cột mới (add column) phải nullable hoặc có default value (10đ)
+      - Luôn định nghĩa hàm rollback `down()` (10đ)
+
+  - id: pii_and_security
+    name: Bảo mật dữ liệu PII (R-SEC-04)
+    description: Dữ liệu nhạy cảm có được mã hóa theo yêu cầu không?
+    weight: 30
+    criteria:
+      - Tự động nhận diện và áp dụng cơ chế hashing/encryption cho các cột chứa dữ liệu PII (Personal Identifiable Information) (30đ)
+
+  - id: layer_separation
+    name: Tách biệt Logic và Schema
+    description: Schema và truy vấn có được tách biệt khỏi Business Logic không?
+    weight: 30
+    criteria:
+      - Khai báo Schema (Model/Entity) rõ ràng trước khi viết truy vấn (15đ)
+      - Repository chỉ chứa truy vấn Database, không chứa Business Logic phức tạp (15đ)

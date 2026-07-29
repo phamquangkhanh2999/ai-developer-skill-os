@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-project-bootstrap"
+version: "8.2.0"
+description: "Khởi tạo dự án mới theo chuẩn V8.2 Blueprint Plugin Generator (project.yaml, 4-folder AI RAG hoặc Coding) với cấu trúc kiên cường."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "project-structure"
+    - "initial-setup"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-project-bootstrap"
+  does_not_own: []
+  conflicts_with: []

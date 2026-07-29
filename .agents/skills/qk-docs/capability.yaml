@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-docs"
+version: "8.0.0"
+description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "code-documentation"
+    - "architecture-docs"
+  references:
+    - "source-code"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-docs"
+  does_not_own: []
+  conflicts_with: []

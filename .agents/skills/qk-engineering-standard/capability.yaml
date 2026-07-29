@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-engineering-standard"
+version: "8.0.0"
+description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "coding-standards"
+    - "best-practices"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-engineering-standard"
+  does_not_own: []
+  conflicts_with: []

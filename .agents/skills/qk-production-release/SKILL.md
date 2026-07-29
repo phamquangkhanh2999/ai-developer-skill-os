@@ -28,7 +28,7 @@ triggers:
   - "kiểm tra release"
 
 # ── V8: References ─────────────────────────────────────────
-workflow: internal
+workflow: production-release
 
 rules:
   - global

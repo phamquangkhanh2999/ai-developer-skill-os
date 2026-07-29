@@ -1,0 +1,28 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-frontend-architecture"
+version: "8.1.0"
+description: "Công cụ quyết định kiến trúc Frontend (Chiến lược component, quản lý state, định tuyến)."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "qk-frontend-architecture"
+  references:
+    - "architecture"
+    - "coding"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "architecture decisions"
+    - "state strategy"
+  does_not_own:
+    - "component implementation"
+    - "pixel styling"
+  conflicts_with:
+    - "qk-ui-builder"
+  delegates_to:
+    - "qk-ui-builder"
+    - "qk-ui-system-builder"

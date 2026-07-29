@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-validation-gate"
+version: "8.2.0"
+description: "Cổng kiểm tra chất lượng & Eval Pipeline bắt buộc — chạy linters, tests, và đánh giá scorecard.yaml định lượng cho AI Agent."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "verification"
+    - "quality-gates"
+    - "test-execution"
+  references:
+    - "coding"
+    - "architecture"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-validation-gate"
+  does_not_own: []
+  conflicts_with: []

@@ -1,0 +1,29 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-agent-observability"
+version: "8.1.3"
+description: "Lớp theo dõi (Observability) cho phép giám sát quyết định, luân chuyển và các mô hình lỗi."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "qk-agent-observability"
+  references:
+    - "architecture"
+    - "scorecard"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "agent_decision_trace"
+    - "routing_accuracy_metrics"
+    - "skill_success_rate"
+    - "failure_pattern_detection"
+    - "feedback_loop"
+  does_not_own:
+    - "application_monitoring"
+    - "infrastructure_monitoring"
+    - "log_aggregation"
+    - "uptime_monitoring"
+    - "pass_fail_enforcement"
+  conflicts_with: []

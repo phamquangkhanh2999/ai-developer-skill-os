@@ -1,0 +1,22 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-orchestrator"
+version: "8.0.0"
+description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "task-routing"
+    - "skill-selection"
+    - "precondition-validation"
+  references:
+    - "all-skills"
+    - "architecture"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-orchestrator"
+  does_not_own: []
+  conflicts_with: []

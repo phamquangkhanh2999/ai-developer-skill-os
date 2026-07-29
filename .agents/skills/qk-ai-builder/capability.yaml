@@ -1,0 +1,23 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-ai-builder"
+version: "8.2.0"
+description: "Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng capability.yaml, data discipline 4-folder và Eval Pipeline."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "agent-architecture"
+    - "skill-generation"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-ai-builder"
+  does_not_own: []
+  conflicts_with: []

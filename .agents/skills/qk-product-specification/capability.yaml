@@ -1,0 +1,27 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-product-specification"
+version: "8.1.0"
+description: "Product thinking (Idea → Requirement → Acceptance criteria → Technical spec)."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "qk-product-specification"
+  references:
+    - "architecture"
+    - "security"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "technical-ready specification"
+    - "acceptance criteria"
+  does_not_own:
+    - "market research"
+    - "pricing"
+    - "roadmap"
+  conflicts_with: []
+  delegates_to:
+    - "qk-feature-delivery"

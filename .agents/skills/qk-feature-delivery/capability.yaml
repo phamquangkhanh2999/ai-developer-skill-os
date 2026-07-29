@@ -1,0 +1,24 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-feature-delivery"
+version: "8.0.0"
+description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "feature-implementation"
+    - "requirement-analysis"
+  references:
+    - "testing"
+    - "security"
+    - "anti-patterns"
+    - "design-system"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-feature-delivery"
+  does_not_own: []
+  conflicts_with: []

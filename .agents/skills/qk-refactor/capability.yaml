@@ -1,0 +1,26 @@
+schema_version: 1
+id: "qk-refactor"
+version: "8.0.0"
+description: "Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài."
+dependencies:
+  - "refactor"
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "refactoring-patterns"
+    - "code-smells"
+  references:
+    - "architecture"
+    - "coding-standards"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "refactoring-patterns"
+  does_not_own:
+    - "new-functionality"
+    - "api-changes"
+  conflicts_with: []
+  delegates_to: []

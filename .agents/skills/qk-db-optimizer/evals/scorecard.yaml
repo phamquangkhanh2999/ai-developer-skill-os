@@ -1,0 +1,28 @@
+name: qk-db-optimizer-eval
+description: Đánh giá chất lượng tối ưu hóa Database
+version: 1.0.0
+threshold: 85 # Yêu cầu dựa trên bằng chứng, không đoán mò
+
+metrics:
+  - id: evidence_based_analysis
+    name: Phân tích dựa trên bằng chứng (EXPLAIN)
+    description: Agent có chạy EXPLAIN/Analyze trước khi thêm Index/Sửa query không?
+    weight: 40
+    criteria:
+      - Bắt buộc phải có thông tin Slow query log hoặc chạy EXPLAIN trước khi hành động (20đ)
+      - Phân tích đúng nguyên nhân từ Plan (vd: Seq Scan, Nested Loop, N+1) (20đ)
+
+  - id: optimal_solution
+    name: Đưa ra giải pháp tối ưu
+    description: Giải pháp đưa ra có giải quyết triệt để và an toàn không?
+    weight: 35
+    criteria:
+      - Không tạo các index dư thừa (overlapping) (15đ)
+      - Xử lý triệt để bài toán N+1 bằng JOIN hoặc DataLoader theo đúng chuẩn dự án (20đ)
+
+  - id: verification
+    name: Kiểm chứng cải thiện (Verification)
+    description: Agent có cố gắng đo lường lại sau khi sửa không?
+    weight: 25
+    criteria:
+      - Đối chiếu/ước lượng mức độ cải thiện sau khi áp dụng giải pháp (25đ)

@@ -1,0 +1,27 @@
+name: qk-project-health-eval
+description: Đánh giá năng lực Kiểm toán toàn diện sức khỏe Codebase
+version: 1.0.0
+threshold: 85 # Đảm bảo chấm điểm công tâm và vạch ra Roadmap cải thiện rõ ràng
+
+metrics:
+  - id: five_dimensions_scoring
+    name: Chấm điểm 5 Phương diện (5 Dimensions)
+    description: Đánh giá toàn diện 5 yếu tố cốt lõi của codebase chưa?
+    weight: 40
+    criteria:
+      - Quét và tính điểm đầy đủ 5 phương diện: Security, Code Quality, Architecture, Dependencies, Documentation (20đ)
+      - Có bằng chứng (Evidence) cho các vi phạm bị trừ điểm (20đ)
+
+  - id: security_and_antipatterns
+    name: Quét Bảo mật (R-SEC-04) và Anti-patterns (R-C-09)
+    description: Agent có tìm ra các lỗ hổng bảo mật hoặc rác mã nghiêm trọng không?
+    weight: 30
+    criteria:
+      - Tìm thấy hardcoded secrets, eval(), hoặc vi phạm kiến trúc (God files, circular deps) nếu có (30đ)
+
+  - id: actionable_roadmap
+    name: Roadmap Tái cấu trúc thực tiễn
+    description: Báo cáo có vạch ra con đường sửa chữa rõ ràng không?
+    weight: 30
+    criteria:
+      - Output không chỉ chê bai mà còn sắp xếp các vấn đề theo độ ưu tiên (CRITICAL sửa trước) để team fix (30đ)

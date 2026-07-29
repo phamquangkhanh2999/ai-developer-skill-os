@@ -1,0 +1,27 @@
+name: qk-docs-eval
+description: Đánh giá chất lượng tài liệu và kỹ năng viết Docs
+version: 1.0.0
+threshold: 85 # Đảm bảo tài liệu phản ánh chính xác 100% logic code thực tế
+
+metrics:
+  - id: accurate_documentation
+    name: Phản ánh chính xác Code (Không bịa đặt)
+    description: Tài liệu viết ra có khớp hoàn toàn với parameters/returns trong code không?
+    weight: 40
+    criteria:
+      - Đọc code trước khi viết, không tự bịa (hallucinate) các params/lỗi không tồn tại trong code (20đ)
+      - Sử dụng đúng format chuẩn (JSDoc/TSDoc) cho hàm/class (20đ)
+
+  - id: documentation_depth
+    name: Giải thích Nguyên nhân (WHY, not WHAT)
+    description: Comments có giải thích tại sao đoạn code tồn tại thay vì diễn giải lại code không?
+    weight: 35
+    criteria:
+      - Comment tập trung giải thích lý do (WHY) thay vì viết những dòng vô nghĩa (WHAT) như `// gets the user` (35đ)
+
+  - id: verify_accuracy
+    name: Kiểm chứng độ chính xác
+    description: Agent có đọc lại tài liệu sau khi viết để đối chiếu với code không?
+    weight: 25
+    criteria:
+      - Re-read để spot check lại từng param/type nhằm đảm bảo độ chính xác tuyệt đối (25đ)

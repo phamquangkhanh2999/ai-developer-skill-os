@@ -50,8 +50,6 @@ Thumbs.db
 # These directories should NEVER be loaded as agent context
 abi/
 model/
-schemas/
-manifest/
 docs/architecture/
 src/runtime/
 src/planning/

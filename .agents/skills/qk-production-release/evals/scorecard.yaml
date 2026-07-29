@@ -1,0 +1,28 @@
+name: qk-production-release-eval
+description: Đánh giá quá trình kiểm duyệt phát hành (Release Gate)
+version: 1.0.0
+threshold: 100 # Phải đạt 100 điểm vì lỗi ở Gate này có thể gây sập Production
+
+metrics:
+  - id: strict_gate_enforcement
+    name: Kỷ luật thi hành Checklist 8-Gate
+    description: Agent có nghiêm túc chặn việc release nếu phát hiện lỗi Hard-block không?
+    weight: 40
+    criteria:
+      - BẮT BUỘC chặn đứng (EXIT: FAILED) nếu các cổng P1–P5 hoặc P7 (CRITICAL security) thất bại (40đ)
+
+  - id: pre_flight_checks
+    name: Kiểm tra rác mã và Cấu hình (Pre-flight)
+    description: Agent có phát hiện được log rác và nhầm lẫn file môi trường không?
+    weight: 30
+    criteria:
+      - Rà soát thành công các tàn dư debug (console.log, debugger) trong mã nguồn (15đ)
+      - Xác minh chắc chắn biến môi trường đang trỏ về Production (.env.production) (15đ)
+
+  - id: build_and_security
+    name: Kiểm thử Build và Bảo mật
+    description: Phân tích Build Bundle và Dependency Audit có được chạy không?
+    weight: 30
+    criteria:
+      - Chạy lệnh build để đảm bảo source code không bị gãy (15đ)
+      - Chạy npm audit/yarn audit để chặn mã độc/vulnerabilities lên server (15đ)

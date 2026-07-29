@@ -1,0 +1,29 @@
+name: qk-code-review-eval
+description: Đánh giá chất lượng thực thi quy trình Code/AI Review
+version: 1.0.0
+threshold: 85 # Đánh giá tư duy Architect và ngôn ngữ phản hồi
+
+metrics:
+  - id: structured_review_process
+    name: Tuân thủ 4-Phase Review Process
+    description: Agent có thực hiện tuần tự và đầy đủ 4 giai đoạn phân tích không?
+    weight: 35
+    criteria:
+      - Tải ngữ cảnh động (Dynamic Context Loading) hợp lý, không tải dư thừa (15đ)
+      - Có Review High-level (Kiến trúc, SOLID, R-SEC-04) và Deep-dive (Logic chuyên sâu, Hallucination) (20đ)
+
+  - id: collaborative_and_tagged_feedback
+    name: Ngôn ngữ Hợp tác & Đánh nhãn Severity
+    description: Feedback có tính xây dựng và được phân loại đúng mức độ không?
+    weight: 40
+    criteria:
+      - Sử dụng câu hỏi gợi mở, ngôn từ hợp tác thay vì ra lệnh (15đ)
+      - Phân loại rõ ràng bằng nhãn `[blocking]`, `[important]`, `[nit]`, `[suggestion]`, `[praise]` (25đ)
+
+  - id: safe_execution
+    name: Không tự ý sửa mã
+    description: Agent chỉ review và đưa ra suggestion chứ không tự động thay đổi code?
+    weight: 25
+    criteria:
+      - Đưa ra code diff (Suggested Fixes) để user tham khảo (15đ)
+      - Tuyệt đối không tự sửa file (sử dụng replace_file_content) nếu user không yêu cầu (10đ)

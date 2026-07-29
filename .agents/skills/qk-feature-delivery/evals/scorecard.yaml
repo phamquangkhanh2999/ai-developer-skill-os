@@ -1,0 +1,28 @@
+name: qk-feature-delivery-eval
+description: Đánh giá quy trình phát triển tính năng mới (End-to-End)
+version: 1.0.0
+threshold: 85 # Tính năng mới phải đáp ứng các tiêu chuẩn khắt khe trước khi hoàn thành
+
+metrics:
+  - id: requirement_and_context
+    name: Phân tích Yêu cầu và Ngữ cảnh
+    description: Agent có đọc kỹ requirements và context graph trước khi code không?
+    weight: 30
+    criteria:
+      - Đọc spec và DESIGN.md (nếu có UI) trước khi bắt đầu (15đ)
+      - Kiểm tra dependency graph qua qk-context-loader (15đ)
+
+  - id: implementation_standards
+    name: Tuân thủ Tiêu chuẩn Lập trình (R-C-09 & R-SEC-04)
+    description: Code sinh ra có sạch sẽ và an toàn không?
+    weight: 40
+    criteria:
+      - Tuân thủ Zero Slop (hàm < 30 dòng, không có God Files) (20đ)
+      - Tuân thủ Zero Trust (validate đầu vào chặt chẽ) (20đ)
+
+  - id: self_audit_and_testing
+    name: Kiểm thử và Tự kiểm toán (Self-Audit)
+    description: Agent có tự kiểm tra lại code thông qua Validation Gate không?
+    weight: 30
+    criteria:
+      - Bắt buộc gọi qk-validation-gate hoặc chạy linter/tests trước khi kết thúc (30đ)

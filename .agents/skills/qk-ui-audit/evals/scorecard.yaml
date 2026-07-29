@@ -1,0 +1,26 @@
+name: qk-ui-audit-eval
+description: Đánh giá khả năng rà soát UI Anti-Slop
+version: 1.0.0
+threshold: 90 # Đóng vai trò chốt chặn UI chất lượng cao, không khoan nhượng với Slop
+
+metrics:
+  - id: design_contract_compliance
+    name: Tuân thủ Hợp đồng Thiết kế (DESIGN.md)
+    description: Có bắt lỗi chính xác các giá trị hardcode không nằm trong Design Tokens không?
+    weight: 40
+    criteria:
+      - Tìm và đánh dấu các mã màu hex, px hardcode vi phạm token của DESIGN.md (40đ)
+
+  - id: anti_slop_detection
+    name: Nhận diện AI-Slop (Generic aesthetics)
+    description: Có phát hiện được các thiết kế chung chung, xám xịt, viền nhạt nhòa không?
+    weight: 30
+    criteria:
+      - Trừ điểm nặng các thẻ card thiếu chiều sâu, text quá nhỏ, hoặc thiếu hover state (30đ)
+
+  - id: accessibility_check
+    name: Kiểm tra Trải nghiệm Tiếp cận (A11y)
+    description: Có rà soát các thẻ ARIA, độ tương phản và Semantic HTML không?
+    weight: 30
+    criteria:
+      - Cảnh báo các element tương tác (button, link) thiếu roles, alt text hoặc độ tương phản < 4.5:1 (30đ)

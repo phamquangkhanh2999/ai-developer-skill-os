@@ -29,7 +29,7 @@ triggers:
   - "qk-help"
 
 # ── V8: References ─────────────────────────────────────────
-workflow: internal
+workflow: documentation
 
 rules:
   - global

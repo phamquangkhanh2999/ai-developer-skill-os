@@ -1,0 +1,173 @@
+name: production-release
+version: 8.0.0
+description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
+
+owner:
+  type: engineering
+  maintained_by: qk-team
+
+verification_profile: release-safety
+
+triggers:
+  - "release production"
+  - "deploy production"
+  - "chuẩn bị release"
+  - "kiểm tra release"
+
+ide_binding:
+  slash_command: "/release"
+  aliases: ["/deploy", "/prod-release"]
+
+steps:
+  - id: gate_1_validation
+    name: "Gate 1: Validation Gate"
+    purpose: "Đảm bảo qk-validation-gate đã pass trước khi release"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - validation_result
+    actions:
+      - "Chạy npm run test:registry"
+      - "Chạy npm run lint"
+      - "Chạy npm run test:agent"
+      - "Chạy npm run test:graph"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "any validation gate fails"
+      message: "Validation gate thất bại. Fix trước khi tiếp tục."
+
+  - id: gate_2_capability
+    name: "Gate 2: Capability Integrity"
+    purpose: "Kiểm tra tất cả capability.yaml hợp lệ và không trùng lặp"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - capability_check
+    actions:
+      - "Validate tất cả capability.yaml files có schema_version: 1"
+      - "Kiểm tra không có capability.yaml trùng id"
+      - "Verify mỗi skill có SKILL.md tương ứng"
+      - "Verify mỗi SKILL.md có capability.yaml tương ứng"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "capability.yaml missing or invalid"
+      message: "Một số capability.yaml bị thiếu hoặc không hợp lệ."
+
+  - id: gate_3_registry
+    name: "Gate 3: Registry Consistency"
+    purpose: "Kiểm tra registry files nhất quán với filesystem"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - registry_check
+    actions:
+      - "Chạy node tooling/build-registry.js"
+      - "So sánh index.yaml với filesystem实际"
+      - "Kiểm tra graph.json không có cycles"
+      - "Kiểm tra không có orphan nodes"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "registry inconsistency detected"
+      message: "Registry không nhất quán với filesystem."
+
+  - id: gate_4_workflows
+    name: "Gate 4: Workflow Validation"
+    purpose: "Kiểm tra tất cả workflow files hợp lệ"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - workflow_check
+    actions:
+      - "Validate tất cả workflow YAML files có schema hợp lệ"
+      - "Kiểm tra mỗi workflow có steps, triggers, exit_codes"
+      - "Verify mỗi skill reference workflow tồn tại"
+      - "Kiểm tra không có workflow reference đến internal"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "workflow validation fails"
+      message: "Một hoặc nhiều workflow không hợp lệ."
+
+  - id: gate_5_security
+    name: "Gate 5: Security Scan"
+    purpose: "Quét bảo mật trước khi release"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - security_report
+    actions:
+      - "Chạy npm audit --production"
+      - "grep_search cho secrets, tokens, API keys trong code"
+      - "Kiểm tra không có hardcoded credentials"
+      - "Verify .env files không bị commit"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "critical or high security issues found"
+      message: "Có vấn đề bảo mật nghiêm trọng. Cần fix trước khi release."
+
+  - id: gate_6_size
+    name: "Gate 6: Bundle & Size Check"
+    purpose: "Kiểm tra kích thước bundle và dependencies"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - size_report
+    actions:
+      - "Chạy npm run build (production mode)"
+      - "Kiểm tra bundle size trong giới hạn"
+      - "Kiểm tra không có devDependencies trong production"
+      - "Verify tree-shaking hoạt động đúng"
+    exit_on_fail: FAILED
+    human_checkpoint:
+      condition: "bundle size exceeds limit"
+      message: "Bundle size vượt hạn chế. Cần tối ưu trước khi deploy."
+
+  - id: gate_7_changelog
+    name: "Gate 7: Changelog & Documentation"
+    purpose: "Kiểm tra CHANGELOG.md và documentation đã cập nhật"
+    required: true
+    skip_if: null
+    inputs: []
+    outputs:
+      - docs_check
+    actions:
+      - "Kiểm tra CHANGELOG.md có entry cho version này"
+      - "Verify README.md phản ánh đúng capabilities hiện tại"
+      - "Kiểm tra SKILL.md descriptions không bị encoding issues"
+      - "Verify capability.yaml descriptions chính xác"
+    exit_on_fail: PARTIAL
+    human_checkpoint:
+      condition: "changelog missing or docs outdated"
+      message: "CHANGELOG hoặc documentation chưa cập nhật. Cần fix trước khi release."
+
+  - id: gate_8_report
+    name: "Gate 8: Release Report"
+    purpose: "Tạo báo cáo release có signed kết quả tất cả gates"
+    required: true
+    skip_if: null
+    inputs:
+      - validation_result
+      - capability_check
+      - registry_check
+      - workflow_check
+      - security_report
+      - size_report
+      - docs_check
+    outputs:
+      - release_report
+    actions:
+      - "Tổng hợp tất cả gate results"
+      - "Generate structured release report"
+      - "Include evidence format cho mỗi gate"
+      - "Record exit code và timestamp"
+      - "Sign report với qk-team key"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 1
+  on_failure: "Report which gates failed and exact fix required. Do NOT deploy."

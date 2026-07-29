@@ -1,0 +1,26 @@
+name: qk-ui-system-builder-eval
+description: Đánh giá việc khởi tạo Design System Tokens
+version: 1.0.0
+threshold: 85 # Đảm bảo tokens sinh ra ánh xạ 1:1 với contract
+
+metrics:
+  - id: strict_token_mapping
+    name: Ánh xạ chuẩn xác từ Contract
+    description: Các token được tạo ra có khớp 1:1 với DESIGN.md không?
+    weight: 45
+    criteria:
+      - Tuyệt đối không tự bịa (hallucinate) các token màu sắc/kích thước ngoài hợp đồng (45đ)
+
+  - id: naming_conventions
+    name: Kỷ luật Đặt tên (Naming Convention)
+    description: Cấu trúc biến CSS có đúng chuẩn và dễ mở rộng không?
+    weight: 30
+    criteria:
+      - Sử dụng đúng cấu trúc `--color-role-shade` thay vì tên ngẫu nhiên (30đ)
+
+  - id: dark_mode_support
+    name: Hỗ trợ Giao diện Tối (Dark Mode)
+    description: Có xử lý cấu trúc biến để hỗ trợ Data-theme/Dark-mode không?
+    weight: 25
+    criteria:
+      - Thiết lập base variables có khả năng scale cho các theme khác nhau (25đ)

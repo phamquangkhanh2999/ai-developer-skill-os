@@ -1,0 +1,25 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-design-system-engineering"
+version: "8.1.0"
+description: "Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component)."
+tools:
+  - "filesystem"
+knowledge:
+  owns:
+    - "qk-design-system-engineering"
+  references:
+    - "architecture"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "tokens"
+    - "components rules"
+    - "design governance"
+  does_not_own:
+    - "page implementation"
+    - "business logic"
+  conflicts_with:
+    - "qk-ui-system-builder"

@@ -1,0 +1,28 @@
+name: qk-project-bootstrap-eval
+description: Đánh giá chất lượng khởi tạo dự án V8.2 Blueprint
+version: 1.0.0
+threshold: 85 # Đảm bảo cấu trúc kiến trúc được thiết lập chuẩn xác ngay từ đầu
+
+metrics:
+  - id: blueprint_selection
+    name: Lựa chọn Blueprint phù hợp
+    description: Chọn đúng Blueprint và Manifest project.yaml tương ứng chưa?
+    weight: 35
+    criteria:
+      - Nhận diện đúng loại hình dự án (Coding, RAG/AI, Workflow) và áp dụng Blueprint cấu trúc thư mục phù hợp (15đ)
+      - Tạo ra file project.yaml chứa manifest của workspace (20đ)
+
+  - id: mandatory_files_scaffolding
+    name: Cấu trúc thư mục và File bắt buộc
+    description: Cây thư mục có thiếu các file quản lý chất lượng lõi không?
+    weight: 40
+    criteria:
+      - Sinh đúng kiến trúc (Ví dụ: 4-folder architecture cho AI RAG) (20đ)
+      - Đảm bảo đầy đủ các files chống thoái hóa: DESIGN.md, security.md, anti-patterns.md, scorecard.yaml (20đ)
+
+  - id: tooling_configuration
+    name: Cấu hình Công cụ (Tooling)
+    description: Môi trường có được thiết lập strict type và linter chưa?
+    weight: 25
+    criteria:
+      - Các cấu hình (tsconfig, eslint, prettier) được thiết lập chặt chẽ, không dễ dãi (25đ)

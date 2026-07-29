@@ -1,0 +1,22 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-db-optimizer"
+version: "8.0.0"
+description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "database-performance"
+    - "query-optimization"
+  references:
+    - "architecture"
+    - "anti-patterns"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "qk-db-optimizer"
+  does_not_own: []
+  conflicts_with: []

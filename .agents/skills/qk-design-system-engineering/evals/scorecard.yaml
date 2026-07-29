@@ -1,0 +1,27 @@
+name: qk-design-system-engineering-eval
+description: Đánh giá chất lượng quản trị hệ thống thiết kế (Design System)
+version: 1.0.0
+threshold: 85 # Đảm bảo sự nhất quán và ngăn chặn UI Slop từ gốc
+
+metrics:
+  - id: token_and_rules_definition
+    name: Định nghĩa Token và Quy tắc
+    description: Agent có thiết lập hệ thống token rõ ràng và nhất quán không?
+    weight: 40
+    criteria:
+      - Định nghĩa đầy đủ các quy tắc cho spacing, colors, typography (20đ)
+      - Ngăn chặn triệt để UI Slop bằng cách không cung cấp các token sai chuẩn (vd: độ tương phản quá thấp, font quá bé) (20đ)
+
+  - id: a11y_compliance
+    name: Tuân thủ Accessibility (A11y)
+    description: Các quy chuẩn có tính đến khả năng truy cập không?
+    weight: 30
+    criteria:
+      - Thiết lập quy tắc A11y ngay từ cấp độ Token (30đ)
+
+  - id: boundary_respect
+    name: Tôn trọng ranh giới (Decision Boundary)
+    description: Agent có giữ đúng vai trò Governance mà không lấn sân sang Implementation không?
+    weight: 30
+    criteria:
+      - Chỉ tập trung định nghĩa (Governance), KHÔNG thay thế việc viết UI code trực tiếp (nhường lại cho qk-ui-system-builder) (30đ)

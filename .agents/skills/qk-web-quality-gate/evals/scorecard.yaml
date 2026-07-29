@@ -1,0 +1,26 @@
+name: qk-web-quality-gate-eval
+description: Đánh giá chất lượng tổng thể của Web (Performance, SEO, A11y, UX)
+version: 1.0.0
+threshold: 85 # Đảm bảo đo lường đầy đủ 4 trục chất lượng của ứng dụng Web
+
+metrics:
+  - id: core_web_vitals_focus
+    name: Phân tích Core Web Vitals
+    description: Có đánh giá đúng các chỉ số ảnh hưởng đến trải nghiệm (LCP, CLS, INP) không?
+    weight: 40
+    criteria:
+      - Báo cáo rõ ràng về kích thước Bundle, chiến lược Lazy loading và tối ưu hình ảnh (40đ)
+
+  - id: seo_and_accessibility
+    name: Kiểm tra SEO & A11y
+    description: Web có thân thiện với bot tìm kiếm và người khuyết tật không?
+    weight: 35
+    criteria:
+      - Quét Semantic HTML, Meta tags, và các rào cản truy cập ARIA (35đ)
+
+  - id: actionable_recommendations
+    name: Khuyến nghị thực tiễn (Actionable)
+    description: Các đề xuất tối ưu có khả thi để lập trình viên thực hiện ngay không?
+    weight: 25
+    criteria:
+      - Không chỉ ra lỗi chung chung mà chỉ định rõ cách fix (vd: "Thêm loading='lazy' vào thẻ img dòng 15") (25đ)

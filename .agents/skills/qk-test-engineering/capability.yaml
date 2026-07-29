@@ -1,0 +1,28 @@
+# Auto-generated from SKILL.md frontmatter
+schema_version: 1
+id: "qk-test-engineering"
+version: "8.1.0"
+description: "Công cụ quyết định chiến lược kiểm thử (Unit, Integration, E2E, Coverage, Regression, Mock)."
+tools:
+  - "filesystem"
+  - "terminal"
+knowledge:
+  owns:
+    - "qk-test-engineering"
+  references:
+    - "architecture"
+    - "anti-patterns"
+    - "playwright"
+    - "vitest"
+    - "storybook-testing"
+eval:
+  scorecard: "evals/scorecard.yaml"
+decision_boundary:
+  owns:
+    - "test pyramid"
+    - "coverage strategy"
+    - "regression planning"
+  does_not_own:
+    - "business logic implementation"
+    - "writing tests"
+  conflicts_with: []

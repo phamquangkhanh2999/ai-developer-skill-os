@@ -1,0 +1,13 @@
+name: qk-help-eval
+description: Đánh giá khả năng cung cấp thông tin hướng dẫn
+version: 1.0.0
+threshold: 100 # Kỹ năng đơn giản, yêu cầu độ chính xác cao khi cung cấp thông tin
+
+metrics:
+  - id: provide_accurate_info
+    name: Cung cấp thông tin chính xác
+    description: Agent có in ra đúng các lệnh và kiến trúc V8.3 không?
+    weight: 100
+    criteria:
+      - Hướng dẫn cú pháp ./qk-[skill-name] rõ ràng (50đ)
+      - Liệt kê chính xác danh sách các Quality Gates của hệ thống (50đ)
