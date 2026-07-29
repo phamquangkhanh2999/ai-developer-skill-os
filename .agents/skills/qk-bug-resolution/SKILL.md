@@ -56,6 +56,8 @@ knowledge_scope:
   references:
     - testing
     - language-specific-features
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -109,6 +111,7 @@ On missing precondition:
 
 ## Non-Goals
 - ❌ Refactor code outside the buggy area
+- ❌ Bypass ranh giới bảo mật Zero-Trust (R-SEC-04) chỉ để "làm cho chạy được".
 - ❌ Create Node.js/Python/shell scripts to apply patches — edit source files directly
 - ❌ Read entire files > 150 lines — use `grep_search` or targeted `view_file[StartLine:EndLine]`
 - ❌ Run shell commands > 2 times per cycle
@@ -342,24 +345,3 @@ Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
 
 ---
 
-Diagnose and fix a specific bug with minimal, targeted changes while preserving all existing behavior.
-This skill is triggered when a user reports a specific defect with a stack trace, error message, or reproduction steps. It requires concrete evidence before any code modification.
-- Symptom description (error message, wrong behavior, crash)
-- Stack trace or reproduction steps
-- Affected file or feature area (if known)
-- Context graph (for blast radius assessment)
-1. **Observe:** Read error output, stack trace, and affected code section
-2. **Hypothesize:** Identify potential root causes based on evidence
-3. **Verify:** Confirm root cause with direct file:line evidence
-4. **Fix:** Apply minimal patch using direct edit only
-5. **Verify:** Re-read fixed code and confirm correctness
-- MUST have exact file:line before proceeding to fix
-- MUST NOT guess root cause without direct evidence
-- MUST keep changes minimal — smallest diff that resolves the issue
-- MUST NOT exceed token_budget (max 3 files, 150 lines each, 2 shell commands)
-- MUST verify fix before marking done
-- Zero-Trust: No fix without HIGH confidence (direct evidence)
-- Minimal Change: Fix only the bug, no refactoring
-- Backward Compat: Preserve all existing public API behavior
-- Evidence First: Every finding must use Evidence Format with file:line
----

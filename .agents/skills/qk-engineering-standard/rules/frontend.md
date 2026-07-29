@@ -4,7 +4,7 @@
 
 ---
 
-## 🔄 [Merged from qk-frontend-architecture]
+## Referenced by: qk-frontend-architecture (file-placement subset)
 
 # Frontend Architecture
 

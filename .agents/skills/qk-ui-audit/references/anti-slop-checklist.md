@@ -1,4 +1,4 @@
-# Anti-Slop Checklist — 57 Points
+# Anti-Slop Checklist — 57 Checks (99 pts max)
 > Referenced by: `qk-ui-audit/SKILL.md`
 > Purpose: Full inspection checklist for detecting generic AI-generated UI
 
@@ -132,5 +132,5 @@
 | Extended (49–57) | +9 |
 | **Maximum Possible** | **99** |
 
-**Pass threshold: ≥ 76 / 85 base (90%) — PASS**
+**Pass threshold: ≥ 76/85 base (90%)**
 **Fail: < 76 / 85 — requires redesign, not patch**

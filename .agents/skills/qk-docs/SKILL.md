@@ -47,6 +47,8 @@ knowledge_scope:
     - architecture-docs
   references:
     - source-code
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -202,7 +204,7 @@ Fix:        [specific correction]
 ## Severity
 | Level | Definition | Example |
 |-------|-----------|---------|
-| CRITICAL | Docs instruct user to do something dangerous | Documenting destructive API without warnings |
+| CRITICAL | Docs instruct user to do something dangerous, bypass auth, or expose secrets | Documenting destructive API without warnings, or writing guides to call internal APIs unauthenticated |
 | HIGH | API params documented incorrectly | Says string instead of object |
 | MEDIUM | Missing docs for edge cases | Doesn't explain error throws |
 | LOW | Typo or poor formatting | Misaligned markdown table |

@@ -54,6 +54,7 @@ knowledge_scope:
   references:
     - coding
     - repository-structure
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -85,7 +86,6 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-
 ## Preconditions
 - [ ] Entry point file or module name is specified
 - [ ] Repository is accessible
@@ -95,7 +95,6 @@ On missing precondition:
   EXIT: BLOCKED
   Message: "Vui lòng chỉ định entry point (file hoặc module cần map)."
 ```
-
 
 ## Scope
 - ✅ Trace imports/exports from entry point
@@ -108,7 +107,6 @@ On missing precondition:
 - ❌ Guess file names — only follow explicit imports
 - ❌ Load entire repo (max 5 files)
 
-
 ## Priority Order
 
 | Priority | Task | Skip Threshold |
@@ -117,7 +115,6 @@ On missing precondition:
 | P2 | Trace 2nd-level dependencies | Budget < 40% |
 | P3 | Identify shared/risky modules | Budget < 60% |
 | P4 | Annotate with risk levels | Budget < 70% |
-
 
 ## Workflow
 
@@ -137,7 +134,6 @@ ELSE IF entry file not found
   → EXIT: BLOCKED — ask for correct path
 ```
 
-
 ### Phase 2 — Graph Traversal (Max Depth 3)
 
 **Steps:**
@@ -155,14 +151,13 @@ IF circular dependency detected
   → Continue building rest of graph
 ```
 
-
 ### Phase 3 — Risk Assessment & Output
 
 **Steps:**
 1. Identify: shared modules (imported by 3+ files) = HIGH risk to change
 2. Identify: entry points with many dependents = CRITICAL to change carefully
-3. Generate graph in standard JSON + Markdown format
-
+3. **Identify: file trộn lẫn Server Logic và Client UI, hoặc vi phạm ranh giới bảo mật R-SEC-04 = Bắt buộc flag [HIGH RISK].**
+4. Generate graph in standard JSON + Markdown format
 
 ## Output Format (Mandatory Schema)
 
@@ -190,7 +185,6 @@ IF circular dependency detected
 }
 ```
 
-
 ## Evidence Format
 
 ```
@@ -199,7 +193,6 @@ Reason:     [why this file is risky to change]
 Imported by: [N files]
 Exports:    [key exports]
 ```
-
 
 ## Handoff Contract
 
@@ -219,7 +212,6 @@ Exports:    [key exports]
   "output_fields": ["dependency_graph_json", "risk_summary", "exit_code"]
 }
 ```
-
 
 ## Exit Codes
 

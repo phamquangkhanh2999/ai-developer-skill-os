@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_version": "8.2",
-  "generated_at": "2026-07-27T02:25:53.340Z",
+  "generated_at": "2026-07-29T04:03:48.864Z",
   "nodes": {
     "qk-access-policy": {
       "path": ".agents/skills/qk-access-policy",
@@ -361,14 +361,12 @@
     },
     "qk-ui-builder": {
       "path": ".agents/skills/qk-ui-builder",
-      "version": "8.0.0",
+      "version": "8.2.0",
       "tags": [
         "ui",
         "builder"
       ],
-      "dependencies": [
-        "feature-delivery"
-      ],
+      "dependencies": [],
       "dependents": [
         "qk-frontend-architecture"
       ],
@@ -506,9 +504,7 @@
     "qk-ui-audit": [
       "code-review"
     ],
-    "qk-ui-builder": [
-      "feature-delivery"
-    ],
+    "qk-ui-builder": [],
     "qk-ui-system-builder": [
       "feature-delivery"
     ],

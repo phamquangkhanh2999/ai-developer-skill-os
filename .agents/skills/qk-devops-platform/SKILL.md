@@ -58,6 +58,8 @@ knowledge_scope:
     - rollback-strategy
   references:
     - architecture
+    - security
+    - anti-patterns
 
 decision_boundary:
   owns:
@@ -114,4 +116,126 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 - Xây dựng kiến trúc deployment, quản lý các container (Docker, Kubernetes).
 - Đưa ra chiến lược Rollback an toàn khi có sự cố.
 - Quản lý và phân tách các môi trường (Dev, Staging, Prod).
+- **Bắt buộc tuân thủ R-SEC-04: Mọi secrets/credentials trong CI/CD phải được inject qua biến môi trường an toàn (Github Secrets/Vault), KHÔNG BAO GIỜ hardcode.**
 - KHÔNG thay thế `qk-production-release` (đóng gói và release app), skill này quản lý *hạ tầng và quy trình* bên dưới việc release đó.
+
+## Non-Goals
+- ❌ Provide implementation outside of DevOps & CI/CD scope
+- ❌ Override explicit user directives without explanation
+- ❌ Guess ambiguous requirements without asking
+
+## Priority Order
+
+| Priority | Task | Skip Threshold |
+|----------|------|----------------|
+| P1 | Core DevOps & CI/CD analysis and decision making | Never |
+| P2 | Validation of existing patterns | Budget < 30% |
+| P3 | Detailed documentation generation | Budget < 50% |
+| P4 | Edge case exploration | Budget < 70% |
+
+## Workflow
+
+### Phase 1 — Context Loading
+**Steps:**
+1. Read existing configuration and requirements related to DevOps & CI/CD.
+2. Check for missing preconditions.
+
+**Decision:**
+```
+IF context is clear
+  → Confidence: HIGH → go to Phase 2
+ELSE
+  → EXIT: BLOCKED — ask user
+```
+
+### Phase 2 — Analysis & Strategy
+**Steps:**
+1. Analyze the current state against DevOps & CI/CD best practices.
+2. Formulate strategy or audit report based on findings.
+
+**Decision:**
+```
+IF strategy/audit is complete
+  → Confidence: HIGH → go to Phase 3
+ELSE IF minor gaps exist
+  → Confidence: MEDIUM → proceed with assumptions noted
+```
+
+### Phase 3 — Finalization
+**Steps:**
+1. Generate final report or configuration.
+2. Prepare handoff data for subsequent skills.
+
+## Confidence Model
+
+| Level | Condition | Action |
+|-------|-----------|--------|
+| HIGH | All preconditions met, context fully understood | Proceed directly |
+| MEDIUM | Some context missing but safe defaults exist | Proceed and note assumptions |
+| LOW | Core requirements missing | EXIT: BLOCKED |
+
+## Severity (for findings)
+
+| Level | Definition |
+|-------|-----------|
+| CRITICAL | Severe violation of DevOps & CI/CD principles |
+| HIGH | Significant risk or technical debt |
+| MEDIUM | Suboptimal pattern but functional |
+| LOW | Minor style or documentation issue |
+
+## Evidence Format
+
+```
+[SEVERITY] Context/File
+Issue:      [what was found]
+Confidence: HIGH
+Recommendation: [actionable advice]
+```
+
+## Retry Policy
+```
+Task fails due to missing context
+  └─ Ask user for clarification
+       ├─ Provided → Retry Phase 1
+       └─ Not provided → EXIT: BLOCKED
+```
+
+## Escalation Rules
+
+```
+BLOCKED: Missing critical context for DevOps & CI/CD
+Missing:
+  - [Specific requirement]
+Questions:
+  1. Bạn có thể cung cấp thêm thông tin về yêu cầu này không?
+  2. Mục tiêu chính của bạn là gì?
+Recommended Assumptions: none
+```
+
+## Handoff Contract
+
+### Consumes
+```json
+{
+  "from": "user or qk-orchestrator",
+  "required_fields": ["context"],
+  "optional_fields": ["existing_config"]
+}
+```
+
+### Produces
+```json
+{
+  "to": "user or downstream skill",
+  "output_fields": ["strategy_report", "exit_code"]
+}
+```
+
+## Exit Codes
+
+| Code | Meaning | When |
+|------|---------|------|
+| SUCCESS | DevOps & CI/CD task completed successfully | Strategy/audit generated |
+| PARTIAL | Task completed with assumptions | Medium confidence |
+| BLOCKED | Missing context | Cannot proceed |
+| FAILED | Critical conflict or error | Unresolvable constraint |

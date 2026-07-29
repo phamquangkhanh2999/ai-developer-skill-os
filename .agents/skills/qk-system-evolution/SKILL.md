@@ -50,6 +50,8 @@ knowledge_scope:
   references:
     - testing
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -96,11 +98,6 @@ On missing precondition:
   Message: "Rollback plan required before any major upgrade. Specify: target version + rollback method."
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Scope
 - ✅ Read official Changelog/Migration Guide for breaking changes
 - ✅ Apply incremental upgrades (not big-bang)
@@ -111,11 +108,6 @@ schema_version: 2
 - ❌ Blindly run `npm update` — only targeted upgrades
 - ❌ Skip reading Changelog for major version bumps
 - ❌ Upgrade multiple major versions at once (one at a time)
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Priority Order
 
@@ -128,19 +120,15 @@ schema_version: 2
 | P5 | Fix breaking changes if minor (< 3 files affected) | Budget < 40% |
 | P6 | Update documentation/README | Budget < 70% |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Workflow
 
 ### Phase 1 — Breaking Change Analysis
 
 **Steps:**
-1. `view_file` or `read_url` — read official Changelog for target version
+1. `view_file` or `read_url` — read official Changelog for target version. **Đồng thời kiểm tra Security Advisory (CVEs) của version cũ.**
 2. List all `BREAKING CHANGE` entries
 3. Map each breaking change to affected files in current codebase (`grep_search`)
+4. *Lưu ý:* Nếu đây là bản vá bảo mật khẩn cấp (Security Patch), phải ưu tiên nâng cấp ngay cả khi có minor breaking changes, nhưng vẫn tuân thủ rollback plan.
 
 **Decision:**
 ```
@@ -155,11 +143,6 @@ IF > 3 breaking changes OR affects core files
   → Recommend: plan as a dedicated migration project
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 2 — Rollback Snapshot
 
 **Steps:**
@@ -172,11 +155,6 @@ schema_version: 2
    ```
 
 **Exit When:** Rollback procedure documented → go to Phase 3
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 3 — Incremental Upgrade
 
@@ -193,11 +171,6 @@ IF install succeeds
 IF install fails (peer dep conflict)
   → EXIT: PARTIAL — report conflict, suggest resolution
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 4 — Verification
 
@@ -219,11 +192,6 @@ IF > 3 tests fail OR core tests fail
   → Provide exact rollback command
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Confidence Model
 
 | Level | Condition | Action |
@@ -231,11 +199,6 @@ schema_version: 2
 | HIGH | Changelog read, breaking changes mapped, tests pass | Proceed |
 | MEDIUM | Changelog read, some uncertainties remain | Proceed with caution, note risks |
 | LOW | Cannot access Changelog or no tests available | EXIT: BLOCKED |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Severity
 
@@ -245,11 +208,6 @@ schema_version: 2
 | HIGH | ORM, framework, or router upgrade |
 | MEDIUM | Utility library, build tool upgrade |
 | LOW | Dev dependency, formatter upgrade |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Evidence Format
 
@@ -261,11 +219,6 @@ Confidence:       [HIGH|MEDIUM|LOW]
 Rollback:         git checkout [tag] OR npm install [name]@[old-version]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Rollback Procedure (Required Output)
 
 Every upgrade must document:
@@ -276,11 +229,6 @@ Method 1 (Git):  git checkout [tag-name]
 Method 2 (npm):  npm install [package]@[previous-version]
 Snapshot tag:    [pre-upgrade-[package]-[date]]
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -301,22 +249,25 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-
 ---
 
 ## Escalation Rules
-
-
+```
+BLOCKED: Missing rollback plan
+Questions:
+  1. Bạn muốn rollback bằng git tag hay snapshot?
+  2. Có test suite nào để chạy sau khi upgrade không?
+Recommended Assumptions: none
+```
 ---
 
 ## Retry Policy
-
-
+```
+Install fails due to peer conflict
+  └─ run with --legacy-peer-deps
+       ├─ PASS → log as PARTIAL
+       └─ FAIL → DO NOT retry again
+```
 ---
 ## Exit Codes
 
@@ -328,5 +279,4 @@ schema_version: 2
 | FAILED | Tests fail after upgrade, rollback recommended | Provide rollback command |
 
 ---
-
 

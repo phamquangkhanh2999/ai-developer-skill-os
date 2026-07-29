@@ -1,14 +1,34 @@
 name: security-audit
+version: 8.0.0
 description: "Workflow kiểm toán an toàn mã nguồn và chống xâm nhập (Security Audit)."
-version: 1.0.0
+
+owner:
+  type: security
+  maintained_by: qk-team
+
+verification_profile: security-audit
+
+triggers:
+  - "security audit"
+  - "kiểm toán bảo mật"
+  - "check for vulnerabilities"
+  - "scan for secrets"
+  - "is this secure"
+  - "audit an toàn"
+
+ide_binding:
+  slash_command: "/security-audit"
+  aliases: ["/audit", "/sec-scan"]
 
 steps:
   - id: observe
     name: "Observe System"
     purpose: "Thu thập metadata về cấu trúc và các thành phần"
     required: true
-    inputs: [source_code]
-    outputs: [system_context]
+    inputs:
+      - source_code
+    outputs:
+      - system_context
     actions:
       - "Xác định tech stack, boundaries và các third-party libs"
 
@@ -16,8 +36,11 @@ steps:
     name: "Dependency Scan"
     purpose: "Kiểm tra rủi ro từ package bên ngoài"
     required: true
-    inputs: [system_context, package_files]
-    outputs: [dependency_vulnerabilities]
+    inputs:
+      - system_context
+      - package_files
+    outputs:
+      - dependency_vulnerabilities
     actions:
       - "Kiểm tra version cũ, thư viện có CVE"
 
@@ -25,8 +48,10 @@ steps:
     name: "Secret Scan"
     purpose: "Tìm kiếm thông tin nhạy cảm bị rò rỉ"
     required: true
-    inputs: [source_code]
-    outputs: [leaked_secrets]
+    inputs:
+      - source_code
+    outputs:
+      - leaked_secrets
     actions:
       - "Quét hardcoded API keys, tokens, passwords trong code"
 
@@ -34,8 +59,11 @@ steps:
     name: "Permission Review"
     purpose: "Rà soát mô hình phân quyền và RBAC"
     required: true
-    inputs: [system_context, access_control_code]
-    outputs: [permission_flaws]
+    inputs:
+      - system_context
+      - access_control_code
+    outputs:
+      - permission_flaws
     actions:
       - "Kiểm tra nguyên tắc least privilege"
       - "Tìm lỗ hổng authentication/authorization bypass"
@@ -44,8 +72,12 @@ steps:
     name: "Risk Classification"
     purpose: "Đánh giá mức độ nghiêm trọng"
     required: true
-    inputs: [dependency_vulnerabilities, leaked_secrets, permission_flaws]
-    outputs: [classified_risks]
+    inputs:
+      - dependency_vulnerabilities
+      - leaked_secrets
+      - permission_flaws
+    outputs:
+      - classified_risks
     actions:
       - "Phân loại LOW/MEDIUM/HIGH/CRITICAL"
 
@@ -53,19 +85,30 @@ steps:
     name: "Recommendation"
     purpose: "Đề xuất giải pháp khắc phục"
     required: true
-    inputs: [classified_risks]
-    outputs: [security_report]
+    inputs:
+      - classified_risks
+    outputs:
+      - security_report
     actions:
       - "Tạo báo cáo chi tiết kèm actionable steps"
-
+      - "Đề xuất giải pháp phải enforce R-SEC-04"
+    human_checkpoint:
+      condition: "classified_risks chứa bất kỳ mục nào ở mức CRITICAL"
+      message: "Phát hiện lỗ hổng CRITICAL. Xác nhận trước khi tiến hành áp dụng fix."
   - id: verify
     name: "Verify Fixes"
     purpose: "Đảm bảo lỗ hổng đã được vá"
-    required: false
-    inputs: [source_code, security_report]
-    outputs: [final_audit_status]
+    required: true
+    skip_if: "Không có remediation nào được apply trong phiên làm việc này"
+    inputs:
+      - source_code
+      - security_report
+    outputs:
+      - final_audit_status
     actions:
       - "Check lại các vị trí đã report"
+      - "Ghi log execution trace vào evals/traces/"
+    exit_on_fail: PARTIAL
 
 escalation:
   max_retries: 0

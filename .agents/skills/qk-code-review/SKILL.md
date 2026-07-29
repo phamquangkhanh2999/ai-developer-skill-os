@@ -57,7 +57,8 @@ knowledge_scope:
     - feedback-delivery
   references:
     - architecture
-    - security-best-practices
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -127,7 +128,7 @@ Là một AI Architect, quá trình review phải tuân thủ nghiêm ngặt 4 g
 
 ### Phase 2: High-Level Review (Kiến trúc & Chuẩn mực)
 - **Đối với AI Config:** Kiểm tra cấu trúc V8 (Identity, Intent, Complexity, Triggers). 
-- **Đối với Code Phần mềm:** Kiểm tra SOLID, Coupling/Cohesion, Performance, Security (Tham chiếu theo `cross-cutting` guides).
+- **Đối với Code Phần mềm:** Kiểm tra SOLID, Coupling/Cohesion, Performance, Security. **BẮT BUỘC đối chiếu với luật chống rác mã (R-C-09) và ranh giới Zero-Trust (R-SEC-04). Vi phạm sẽ bị đánh tag `[blocking]`.**
 
 ### Phase 3: Deep-dive & Logic Review (Phân tích chi tiết)
 - **Đối với AI Config:** Kiểm tra rủi ro "ảo giác" (hallucination), token abuse, side-effects, stop_early.
@@ -184,3 +185,4 @@ Là một AI Architect, quá trình review phải tuân thủ nghiêm ngặt 4 g
 - [ ] Changes Requested (Cần sửa các mục `[blocking]`)
 - [ ] Comment (Chỉ là gợi ý, quyền quyết định ở user)
 ```
+

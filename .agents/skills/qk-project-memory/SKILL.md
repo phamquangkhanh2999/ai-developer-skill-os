@@ -48,6 +48,8 @@ knowledge_scope:
     - verified-context
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -98,7 +100,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ## Non-Goals
 - ❌ Store assumptions or unverified hypotheses
 - ❌ Overwrite architectural rules without explicit user consent
-- ❌ Store sensitive data (env vars, secrets)
+- ❌ Store sensitive data (env vars, secrets). **Tuyệt đối cấm lưu trữ PII, API Keys, raw JWTs, hoặc các bad practices vi phạm R-C-09 vào bộ nhớ dài hạn.**
 
 ---
 

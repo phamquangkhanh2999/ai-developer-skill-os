@@ -49,6 +49,8 @@ knowledge_scope:
     - best-practices
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -93,11 +95,6 @@ On missing precondition:
   Message: "Vui lòng chỉ định file hoặc module cần kiểm tra."
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Scope
 - ✅ Detect violations with exact file:line references
 - ✅ Classify by severity with concrete thresholds
@@ -108,12 +105,8 @@ schema_version: 2
 - ❌ Rewrite architecture
 - ❌ Touch files outside the specified scope
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Concrete Thresholds (Non-Negotiable)
+**Các giới hạn dưới đây được dùng để định lượng vi phạm rác mã (R-C-09) và bảo mật (R-SEC-04):**
 
 ```yaml
 function:
@@ -139,11 +132,6 @@ dependency:
   max_imports_per_file: 15  # Beyond this: likely a God File
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Priority Order
 
 | Priority | Check | Severity | Skip Threshold |
@@ -155,11 +143,6 @@ schema_version: 2
 | P5 | Mixed concerns in single file | MEDIUM | Budget < 60% |
 | P6 | Naming convention violations | LOW | Budget < 70% |
 | P7 | Excessive imports / coupling | LOW | Budget < 80% |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Workflow
 
@@ -187,11 +170,6 @@ IF file line count > 300
 - All P1+P2+P3 checks done → go to Phase 2
 - Token budget < 30% → go to Phase 3 directly with PARTIAL flag
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 2 — Scan for Medium & Low Violations
 
 **Steps:**
@@ -210,11 +188,6 @@ IF file has > 15 imports
 IF token budget < 50%
   → Skip P6+P7, go to Phase 3
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 3 — Score & Report
 
@@ -243,11 +216,6 @@ IF score < 60 OR any CRITICAL violations
   → EXIT: FAILED — requires immediate action
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Confidence Model
 
 | Level | Condition | Action |
@@ -255,11 +223,6 @@ schema_version: 2
 | HIGH | Direct line count, exact pattern match | Report as violation |
 | MEDIUM | Inferred cyclomatic complexity without tool | Note estimate |
 | LOW | Architectural smell inferred from structure | Mark as "suspected — verify manually" |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Severity
 
@@ -269,11 +232,6 @@ schema_version: 2
 | HIGH | Technical debt that blocks scaling | Function 80 lines, God Class 15+ methods |
 | MEDIUM | DRY or SoC violation, fixable in < 1 hour | Same validation logic in 3 components |
 | LOW | Style/naming issue, non-blocking | Single-letter variable `x` outside loop |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Evidence Format
 
@@ -296,21 +254,11 @@ Fix:        Extract payment logic to `processPayment()`, shipping to `scheduleSh
 Deduction:  -10 pts
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Retry Policy
 ```
 Audit is read-only — no retry needed.
 If file is inaccessible → skip and note in report as PARTIAL.
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Escalation Rules
 
@@ -322,11 +270,6 @@ Questions:
   1. Bạn muốn kiểm tra file nào hoặc toàn bộ module nào?
   2. Có ngưỡng cụ thể nào bạn muốn thay đổi không? (mặc định: 30 lines/function)
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -346,11 +289,6 @@ schema_version: 2
   "output_fields": ["health_score", "violations_list", "severity_counts", "exit_code"]
 }
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Output Format
 
@@ -375,11 +313,6 @@ Required Actions:
 Exit Code:   [SUCCESS | PARTIAL | FAILED]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Exit Codes
 
 | Code | Meaning | When |
@@ -389,13 +322,9 @@ schema_version: 2
 | BLOCKED | No target specified | Cannot audit without scope |
 | FAILED | Score < 60 or CRITICAL found | Immediate action required |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## References
 - Detailed thresholds with rationale: `references/thresholds.md`
+- Anti-Patterns Blacklist: `references/anti-patterns.md`
 
 ---
 

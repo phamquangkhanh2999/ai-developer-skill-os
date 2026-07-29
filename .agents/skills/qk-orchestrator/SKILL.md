@@ -55,6 +55,7 @@ knowledge_scope:
     - precondition-validation
   references:
     - all-skills                    # References registry to make decisions
+    - architecture
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -86,7 +87,6 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-
 ## Preconditions
 - [ ] User request is provided (any language)
 
@@ -95,7 +95,6 @@ On missing precondition:
   EXIT: BLOCKED
   Message: "Vui lòng mô tả yêu cầu của bạn."
 ```
-
 
 ## Scope
 - ✅ Analyze user intent and route to the correct skill
@@ -108,7 +107,6 @@ On missing precondition:
 - ❌ Allow UI work without `DESIGN.md` verified
 - ❌ Allow logic work without context graph from `qk-context-loader`
 
-
 ## Priority Order
 
 | Priority | Check | Skip Threshold |
@@ -117,7 +115,6 @@ On missing precondition:
 | P2 | Verify target skill preconditions | Never |
 | P3 | Check pipeline dependencies (e.g., context-loader first) | Never for logic tasks |
 | P4 | Estimate cost/latency for user info | Budget < 70% |
-
 
 ## Workflow
 
@@ -145,7 +142,6 @@ ELSE IF no match
 - Skill identified → go to Phase 2
 - No matching skill → EXIT: BLOCKED
 
-
 ### Phase 2 — Precondition Check
 
 **Steps:**
@@ -164,7 +160,6 @@ ELSE IF missing precondition is resolvable
 ELSE
   → EXIT: BLOCKED
 ```
-
 
 ### Phase 3 — Pipeline Enforcement
 
@@ -188,30 +183,8 @@ Release tasks:
   [qk-validation-gate] → [qk-production-release]
 ```
 
-
 ## Routing Table (Quick Reference)
-Full table: see `references/routing-table.md`
-
-| Intent Keywords | Primary Skill | Pipeline |
-|----------------|---------------|----------|
-| bug, lỗi, error, broken, crash, fix, sửa | `qk-bug-resolution` | direct |
-| tính năng, feature, thêm, mới, add, implement | `qk-feature-delivery` | context-loader first |
-| UI, giao diện, design, component, layout, màn hình | `qk-ui-builder` | DESIGN.md check |
-| slow, query, index, N+1, performance DB | `qk-db-optimizer` | context-loader first |
-| deploy, release, production, CI/CD, build | `qk-production-release` | validation-gate first |
-| schema, migration, database, table, model | `qk-data-lifecycle` | context-loader first |
-| refactor, clean, SOLID, DRY, code quality | `qk-engineering-standard` | direct |
-| test, lint, validate, check quality | `qk-validation-gate` | direct |
-| upgrade, update thư viện, migrate library | `qk-system-evolution` | direct |
-| docs, documentation, README, comment | `qk-docs` | direct |
-| API, endpoint, route, contract | `qk-api-lifecycle` | context-loader first |
-| access, role, permission, RBAC, auth | `qk-access-policy` | direct |
-| AI, prompt, RAG, LLM, embedding | `qk-ai-builder` | direct |
-| design system, token, CSS variable | `qk-ui-system-builder` | DESIGN.md check |
-| project audit, health, tech debt | `qk-project-health` | direct |
-| new project, bootstrap, init | `qk-project-bootstrap` | direct |
-| memory, context, recall, lưu | `qk-project-memory` | direct |
-
+Single source of truth: `references/routing-table.md` — do not duplicate here. Read that file before routing.
 
 ## Confidence Model
 
@@ -220,7 +193,6 @@ Full table: see `references/routing-table.md`
 | HIGH | Single clear keyword match | Route directly |
 | MEDIUM | Multiple possible skills | Route to most likely, note ambiguity |
 | LOW | Request is too vague | Ask clarifying question |
-
 
 ## Escalation Rules
 
@@ -233,7 +205,6 @@ Questions:
   2. File hoặc module nào bị ảnh hưởng?
 Recommended Assumptions: none — routing requires clear intent
 ```
-
 
 ## Handoff Contract
 
@@ -254,7 +225,6 @@ Recommended Assumptions: none — routing requires clear intent
 }
 ```
 
-
 ## Output Format
 
 ```
@@ -272,7 +242,6 @@ Preconditions:
 Exit Code:   SUCCESS
 ```
 
-
 ## Exit Codes
 
 | Code | Meaning | When |
@@ -283,5 +252,4 @@ Exit Code:   SUCCESS
 | FAILED | No skill matches and cannot escalate | Unknown domain request |
 
 ---
-
 

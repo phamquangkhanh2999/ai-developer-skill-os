@@ -8,6 +8,18 @@ owner:
 
 verification_profile: feature
 
+triggers:
+  - "add feature"
+  - "thêm tính năng"
+  - "implement feature"
+  - "build a new"
+  - "new component"
+  - "làm tính năng mới"
+
+ide_binding:
+  slash_command: "/feature"
+  aliases: ["/build", "/implement"]
+
 steps:
   - id: requirement
     name: "Phân tích yêu cầu"
@@ -62,7 +74,9 @@ steps:
       - "Outline: files to create, files to modify"
       - "Define data structures và types"
       - "Xác định API contract nếu cần"
-
+    human_checkpoint:
+      condition: "affected_areas thuộc complexity level 'high' hoặc 'critical' (5+ files, có external dependency hoặc breaking change)"
+      message: "Feature này có độ phức tạp cao. Xác nhận implementation_plan trước khi bắt đầu code."
   - id: implement
     name: "Implement"
     purpose: "Viết code theo design đã approved"
@@ -78,6 +92,8 @@ steps:
     actions:
       - "Implement theo thứ tự: types → logic → UI → tests"
       - "Follow existing patterns và conventions"
+      - "Code phải tuân thủ nghiêm ngặt R-C-09 (Zero-Slop)"
+      - "Phải validate input/output theo R-SEC-04"
       - "Không refactor ngoài scope"
 
   - id: verify
@@ -96,6 +112,7 @@ steps:
       - "Đối chiếu từng acceptance criterion"
       - "Re-read key implementation sections"
       - "Run tests nếu có"
+      - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: PARTIAL
 
 escalation:

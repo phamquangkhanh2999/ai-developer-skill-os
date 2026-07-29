@@ -52,6 +52,8 @@ knowledge_scope:
     - routing-strategy
   references:
     - architecture
+    - coding
+    - anti-patterns
 
 decision_boundary:
   owns:
@@ -129,6 +131,128 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ## Scope
 - Đánh giá kiến trúc hiện tại của dự án Frontend.
 - Đưa ra quyết định chia nhỏ (breakdown) components.
-- Lựa chọn mô hình quản lý state (Global vs Local, Client vs Server).
-- Thiết kế hệ thống routing.
+- Lựa chọn mô hình quản lý state (Global vs Local, Client vs Server). **BẮT BUỘC: Ưu tiên TanStack Query cho Server State; Zustand/Context cho Client State. Tránh Redux trừ khi legacy project bắt buộc.**
+- Thiết kế hệ thống routing. **BẮT BUỘC: Sử dụng Next.js App Router (nếu framework là Next.js) hoặc TanStack Router (cho SPA).**
 - KHÔNG thay thế việc viết UI code (`qk-ui-builder`). Chỉ giới hạn ở quyết định kiến trúc.
+- BẮT BUỘC tuân thủ `anti-patterns.md` (đặc biệt R-C-09) khi thiết kế luồng dữ liệu.
+
+## Non-Goals
+- ❌ Provide implementation outside of Frontend Macro Architecture scope
+- ❌ Override explicit user directives without explanation
+- ❌ Guess ambiguous requirements without asking
+
+## Priority Order
+
+| Priority | Task | Skip Threshold |
+|----------|------|----------------|
+| P1 | Core Frontend Macro Architecture analysis and decision making | Never |
+| P2 | Validation of existing patterns | Budget < 30% |
+| P3 | Detailed documentation generation | Budget < 50% |
+| P4 | Edge case exploration | Budget < 70% |
+
+## Workflow
+
+### Phase 1 — Context Loading
+**Steps:**
+1. Read existing configuration and requirements related to Frontend Macro Architecture.
+2. Check for missing preconditions.
+
+**Decision:**
+```
+IF context is clear
+  → Confidence: HIGH → go to Phase 2
+ELSE
+  → EXIT: BLOCKED — ask user
+```
+
+### Phase 2 — Analysis & Strategy
+**Steps:**
+1. Analyze the current state against Frontend Macro Architecture best practices.
+2. Formulate strategy or audit report based on findings.
+
+**Decision:**
+```
+IF strategy/audit is complete
+  → Confidence: HIGH → go to Phase 3
+ELSE IF minor gaps exist
+  → Confidence: MEDIUM → proceed with assumptions noted
+```
+
+### Phase 3 — Finalization
+**Steps:**
+1. Generate final report or configuration.
+2. Prepare handoff data for subsequent skills.
+
+## Confidence Model
+
+| Level | Condition | Action |
+|-------|-----------|--------|
+| HIGH | All preconditions met, context fully understood | Proceed directly |
+| MEDIUM | Some context missing but safe defaults exist | Proceed and note assumptions |
+| LOW | Core requirements missing | EXIT: BLOCKED |
+
+## Severity (for findings)
+
+| Level | Definition |
+|-------|-----------|
+| CRITICAL | Severe violation of Frontend Macro Architecture principles |
+| HIGH | Significant risk or technical debt |
+| MEDIUM | Suboptimal pattern but functional |
+| LOW | Minor style or documentation issue |
+
+## Evidence Format
+
+```
+[SEVERITY] Context/File
+Issue:      [what was found]
+Confidence: HIGH
+Recommendation: [actionable advice]
+```
+
+## Retry Policy
+```
+Task fails due to missing context
+  └─ Ask user for clarification
+       ├─ Provided → Retry Phase 1
+       └─ Not provided → EXIT: BLOCKED
+```
+
+## Escalation Rules
+
+```
+BLOCKED: Missing critical context for Frontend Macro Architecture
+Missing:
+  - [Specific requirement]
+Questions:
+  1. Bạn có thể cung cấp thêm thông tin về yêu cầu này không?
+  2. Mục tiêu chính của bạn là gì?
+Recommended Assumptions: none
+```
+
+## Handoff Contract
+
+### Consumes
+```json
+{
+  "from": "user or qk-orchestrator",
+  "required_fields": ["context"],
+  "optional_fields": ["existing_config"]
+}
+```
+
+### Produces
+```json
+{
+  "to": "user or downstream skill",
+  "output_fields": ["strategy_report", "exit_code"]
+}
+```
+
+## Exit Codes
+
+| Code | Meaning | When |
+|------|---------|------|
+| SUCCESS | Frontend Macro Architecture task completed successfully | Strategy/audit generated |
+| PARTIAL | Task completed with assumptions | Medium confidence |
+| BLOCKED | Missing context | Cannot proceed |
+| FAILED | Critical conflict or error | Unresolvable constraint |

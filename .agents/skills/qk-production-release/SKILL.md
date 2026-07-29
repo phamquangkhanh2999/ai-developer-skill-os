@@ -47,6 +47,18 @@ knowledge_scope:
     - deployment-gate
   references:
     - architecture
+    - security
+    - anti-patterns
+
+decision_boundary:
+  owns:
+    - release-gate-checklist
+    - deployment-readiness-verdict
+  does_not_own:
+    - ci-cd-pipeline-design
+    - infrastructure-provisioning
+  conflicts_with:
+    - qk-devops-platform
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -80,12 +92,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-production-release — Release Gate
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ## Preconditions
 - [ ] `qk-validation-gate` has been run and returned SUCCESS or PARTIAL
@@ -98,11 +105,6 @@ On missing precondition:
   Message: "qk-validation-gate must pass before release. Run it first."
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Scope
 - ✅ Run 8-gate release checklist
 - ✅ Verify no dev artifacts in production build
@@ -112,11 +114,6 @@ schema_version: 2
 - ❌ Fix bugs — that's `qk-bug-resolution`
 - ❌ Deploy to infrastructure — that's DevOps/CI system
 - ❌ Skip any gate unless user explicitly overrides
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Priority Order
 
@@ -128,13 +125,8 @@ schema_version: 2
 | P4 | .env.production exists (not .env.development) | YES — hard block |
 | P5 | Build succeeds in production mode | YES — hard block |
 | P6 | Bundle size within limit (< 500KB gzipped) | WARN only |
-| P7 | No dev dependencies in production build | YES — hard block |
+| P7 | No dev dependencies in production build. Check vulnerabilities (`npm audit`) | YES — hard block (Nếu có CRITICAL, báo gọi `qk-security-audit`) |
 | P8 | CHANGELOG.md updated with release notes | WARN only |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Release Checklist (Mandatory)
 
@@ -148,11 +140,6 @@ schema_version: 2
 [ ] P7: npm audit --production → 0 critical/high
 [ ] P8: CHANGELOG.md has entry for this release
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Workflow
 
@@ -173,11 +160,6 @@ IF all P1–P4 pass
   → go to Phase 2
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 2 — Build & Size Gate (P5–P7)
 
 **Steps:**
@@ -197,11 +179,6 @@ IF production audit has critical/high
   → EXIT: FAILED
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 3 — Release Report
 
 Generate signed release report with all gate results.
@@ -218,11 +195,6 @@ IF any hard-block gate failed
   → EXIT: FAILED — do NOT deploy
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Evidence Format
 
 ```
@@ -234,11 +206,6 @@ Actual:     [what was found]
 Fix:        [what must be done before release]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Escalation Rules
 
 ```
@@ -249,11 +216,6 @@ Questions:
   1. Validation gate đã chạy chưa?
   2. Có bug nào HIGH/CRITICAL chưa fix không?
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -273,11 +235,6 @@ schema_version: 2
   "output_fields": ["release_checklist_result", "gates_passed", "gates_failed", "exit_code"]
 }
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Output Format
 
@@ -301,28 +258,37 @@ Verdict:    [✅ SAFE TO DEPLOY | ❌ DO NOT DEPLOY — fix: list]
 Exit Code:  [SUCCESS | PARTIAL | BLOCKED | FAILED]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-
 ---
 
 ## Confidence Model
 
+| Level | Condition | Action |
+|-------|-----------|--------|
+| HIGH | validation-gate result confirmed + all 8 gates checked directly | Deploy approved |
+| MEDIUM | some gates inferred from partial CI output | Deploy with caution |
+| LOW | validation-gate not run / gate results stale | EXIT: BLOCKED |
 
 ---
 
 ## Severity
 
+| Level | Definition |
+|-------|-----------|
+| CRITICAL | deploying with unresolved P1–P5 hard-block gate failure |
+| HIGH | P6/P7 warning ignored without user override |
+| MEDIUM | CHANGELOG missing |
+| LOW | minor formatting in release report |
 
 ---
 
 ## Retry Policy
 
-
----
+```
+Build fails during Phase 2
+  └─ check syntax vs. environment error
+       ├─ fix and retry once
+       └─ do not retry more than 1 time (risk of masking a real failure)
+```
 ## Exit Codes
 
 | Code | Meaning | When |
@@ -333,5 +299,4 @@ schema_version: 2
 | FAILED | Any hard gate failed | Do NOT deploy |
 
 ---
-
 

@@ -49,6 +49,8 @@ knowledge_scope:
     - initial-setup
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -67,9 +69,7 @@ execution_mode: deterministic
 cost: high
 latency: slow
 risk: low
-side_effects: 
-  - create_files
-  - create_structure
+side_effects: edit_files
 produces: [code, schema, plan]
 consumes: [user-description]
 
@@ -84,7 +84,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-project-bootstrap — Project Foundation Builder
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -173,6 +173,8 @@ evals/                    # Traceability logs
 [ ] README.md — project description + setup instructions
 [ ] DESIGN.md — (UI projects) brand contract with color/font/spacing tokens
 [ ] evals/scorecard.yaml — (AI/RAG/Workflow projects) eval standard
+[ ] .agents/rules/anti-patterns.md — Bắt buộc phải có (chuẩn V8.3 R-C-09)
+[ ] .agents/rules/security.md — Bắt buộc phải có (chuẩn V8.3 R-SEC-04)
 ```
 -----
 
@@ -204,21 +206,72 @@ evals/                    # Traceability logs
 
 ---
 
-
 ---
 
 ## Workflow
 
+### Phase 1 — Blueprint Selection
+**Steps:**
+1. Assess Preconditions to determine framework/purpose.
+2. Select appropriate blueprint (coding, rag, workflow, enterprise).
+
+**Decision:**
+```
+IF framework/purpose is clear
+  → Confidence: HIGH → go to Phase 2
+ELSE
+  → EXIT: BLOCKED — ask user
+```
+
+### Phase 2 — Scaffold Generation
+**Steps:**
+1. Generate `project.yaml` manifest.
+2. Create directory tree structure based on blueprint.
+3. Configure tooling and generate `DESIGN.md` if UI project.
+
+**Decision:**
+```
+IF directories and files are generated
+  → Confidence: HIGH → go to Phase 3
+ELSE
+  → EXIT: FAILED
+```
+
+### Phase 3 — Verification
+**Steps:**
+1. Check Required Files Checklist against what was actually created.
+2. Ensure no mandatory files are missing.
+
+**Decision:**
+```
+IF all required files exist
+  → EXIT: SUCCESS
+ELSE
+  → EXIT: PARTIAL
+```
 
 ---
 
 ## Evidence Format
 
+```
+[SEVERITY] path/to/expected-file
+Issue:      [MISSING_MANIFEST | MISSING_DESIGN_MD | WRONG_STRUCTURE]
+Confidence: HIGH
+Fix:        [specific file to create]
+```
 
 ---
 
 ## Priority Order
 
+| Priority | Task | Skip Threshold |
+|----------|------|----------------|
+| P1 | project.yaml manifest created | Never |
+| P2 | Core scaffolding per blueprint type | Never |
+| P3 | Tooling config | Budget < 40% |
+| P4 | DESIGN.md for UI projects | Never for UI |
+| P5 | README | Budget < 60% |
 
 ---
 ## Exit Codes
@@ -294,6 +347,4 @@ Recommended Assumptions (if proceeding):
 ```
 
 ---
-
-
 

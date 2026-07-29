@@ -47,6 +47,8 @@ knowledge_scope:
     - endpoints
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -80,7 +82,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-api-lifecycle — API Design & Implementation
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -136,7 +138,7 @@ ELSE → EXIT: BLOCKED — define contract first
 
 ### Phase 2 — Implementation
 1. Build route handler strictly matching contract
-2. Add input validation (zod/yup/class-validator)
+2. Add input validation (zod/yup/class-validator). **BẮT BUỘC tuân thủ R-SEC-04 (Zero-Trust Boundary): Mọi endpoint phải validate payload ở cổng vào, và sanitize/mask response ở cổng ra.**
 3. Handle all error cases with correct HTTP status
 
 ### Phase 3 — Verification

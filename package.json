@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "8.2.1",
-  "description": "EDAOS v8.2 — Governed Capability Metadata & Eval Platform: Blueprints organize, manifests govern, registries accelerate.",
+  "version": "8.3.0",
+  "description": "EDAOS v8.3 — Governed Capability Metadata & Eval Platform: Blueprints organize, manifests govern, registries accelerate.",
   "main": "bin/install.js",
   "files": [
     "bin",

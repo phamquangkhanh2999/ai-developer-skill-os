@@ -2,7 +2,7 @@
 # DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.
 schema_version: 1
 manifest_version: '8.2'
-generated_at: '2026-07-27T02:25:53.341Z'
+generated_at: '2026-07-29T04:03:48.865Z'
 capabilities:
   qk-access-policy:
     path: .agents/skills/qk-access-policy
@@ -225,12 +225,11 @@ capabilities:
       - code-review
   qk-ui-builder:
     path: .agents/skills/qk-ui-builder
-    version: 8.0.0
+    version: 8.2.0
     tags:
       - ui
       - builder
-    dependencies:
-      - feature-delivery
+    dependencies: []
   qk-ui-system-builder:
     path: .agents/skills/qk-ui-system-builder
     version: 8.0.0

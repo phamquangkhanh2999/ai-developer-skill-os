@@ -47,6 +47,8 @@ knowledge_scope:
     - role-matrix
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -80,7 +82,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-access-policy — Access Control Designer
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -100,6 +102,7 @@ On missing precondition:
 - ✅ Define explicit Role-Permission Matrix before coding
 - ✅ Implement middleware/guards based strictly on the matrix
 - ✅ Separate auth (who are you?) from authz (what can you do?)
+- ✅ **Bắt buộc tuân thủ R-SEC-04: Mọi kiểm tra phân quyền phải thực hiện ở Backend (Server-side) qua Middleware. Tuyệt đối không tin tưởng JWT Claims thô chưa xác thực từ Client.**
 
 ## Non-Goals
 - ❌ Grant wildcard (*) permissions

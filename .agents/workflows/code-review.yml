@@ -8,6 +8,18 @@ owner:
 
 verification_profile: review
 
+triggers:
+  - "review code"
+  - "review this"
+  - "đánh giá code"
+  - "kiểm tra chất lượng code"
+  - "check this PR"
+  - "pull request review"
+
+ide_binding:
+  slash_command: "/review"
+  aliases: ["/code-review", "/pr-review"]
+
 steps:
   - id: scope
     name: "Xác định phạm vi review"
@@ -32,6 +44,7 @@ steps:
     outputs:
       - findings         # Each: severity + file + line + quote + reason + suggestion
     min_confidence: HIGH
+    context_budget: 150
     actions:
       - "Đọc từng file theo budget (max 150 lines per read)"
       - "Flag SOLID violations với ngưỡng cụ thể"
@@ -70,6 +83,9 @@ steps:
     actions:
       - "Group findings theo file"
       - "Mỗi finding: file:line + code quote + explanation + suggestion"
+      - "Đánh giá mức độ tuân thủ R-C-09 (Zero-Slop)"
+      - "Đánh giá rủi ro R-SEC-04"
+      - "Ghi log execution trace vào evals/traces/"
       - "Tính health score: 100 - (critical×20 + high×10 + medium×3 + low×1)"
 
 escalation:

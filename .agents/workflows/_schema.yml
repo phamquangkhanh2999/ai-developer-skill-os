@@ -1,8 +1,8 @@
 # Workflow Schema — V8 Standard
 # Every workflow YAML file MUST conform to this schema.
-# Version: 8.0.0
+# Version: 8.3.0
 
-schema_version: 8.0.0
+schema_version: 8.3.0
 
 # ── Required top-level fields ──────────────────────────────
 required:
@@ -12,6 +12,17 @@ required:
   - owner         # object: {type, maintained_by} — who owns this workflow
   - steps         # array: minimum 2 steps
   - escalation    # object: retry + on_failure
+
+# ── Optional top-level fields ───────────────────────────────
+optional:
+  - verification_profile   # string: key into verification_profiles table below
+  - triggers               # array: keywords to auto-select workflow
+  - ide_binding            # object: {slash_command, aliases} — maps workflow to an IDE command
+
+# ── IDE binding field structure ─────────────────────────────
+ide_binding_fields:
+  slash_command:  # string: e.g. "/fix-bug" — primary command to invoke this workflow
+  aliases:        # array: alternate strings that also trigger it
 
 # ── Owner field structure ───────────────────────────────────
 owner_fields:
@@ -33,6 +44,13 @@ step_optional:
   - exit_on_fail  # enum: BLOCKED | PARTIAL | FAILED
   - min_confidence # enum: HIGH | MEDIUM (default: HIGH)
   - actions       # array: hints for HOW to achieve the purpose
+  - human_checkpoint  # object: {condition, message} — pause and wait for human approval before proceeding past this step
+  - context_budget    # int: max lines of code that should be read in this step (prevent token overflow)
+
+# ── Human checkpoint field structure ────────────────────────
+human_checkpoint_fields:
+  condition:  # string: when this checkpoint triggers, e.g. "any CRITICAL finding present"
+  message:    # string: what to show the human when asking for approval
 
 # ── Complexity definitions ──────────────────────────────────
 complexity_levels:
@@ -71,18 +89,22 @@ verification_profiles:
     - root_cause_fixed    # Is the real cause addressed (not patched)?
     - lint_clean          # No lint errors introduced
     - test_if_available   # Run related tests if they exist
+    - security_boundary_check # Ensure R-SEC-04 is respected
 
   refactor:
     - behavior_unchanged  # External behavior identical before/after
     - test_pass           # All existing tests still pass
     - lint_clean
     - no_new_complexity   # Cyclomatic complexity not increased
+    - anti_slop_compliance # Meets R-C-09 zero-slop standard
 
   feature:
     - acceptance_criteria # Does it meet the stated requirements?
     - test_coverage       # New logic has tests
     - integration_check   # Works with existing system
     - lint_clean
+    - anti_slop_compliance # Meets R-C-09 zero-slop standard
+    - security_boundary_check # Enforces R-SEC-04
 
   documentation:
     - accuracy            # Content matches actual code behavior
@@ -93,6 +115,21 @@ verification_profiles:
     - findings_have_evidence   # Each finding has file+line+quote
     - severity_justified       # Severity level is appropriate
     - actionable_suggestions   # Each finding has a fix suggestion
+
+  security-audit:
+    - no_unverified_critical   # No CRITICAL risk left without a recommendation
+    - secret_scan_complete     # Secret scan actually ran, not skipped
+    - fix_confirmed            # Reported vulnerabilities re-checked after remediation
+
+  skill-evolution:
+    - improvement_schema_valid # Proposal passes validate-skills.js
+    - regression_free          # Success rate not lower than baseline
+    - change_justified         # Each change traces to a failure_pattern
+
+  spec-driven:
+    - spec_matches_code        # Implementation matches technical_spec
+    - edge_cases_covered       # Edge cases from spec are handled
+    - acceptance_criteria      # Verify step confirms criteria met
 
 # ── Escalation schema ────────────────────────────────────────
 escalation_required: true

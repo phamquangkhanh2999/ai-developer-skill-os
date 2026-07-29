@@ -8,6 +8,18 @@ owner:
 
 verification_profile: review
 
+triggers:
+  - "how does this work"
+  - "tìm hiểu codebase"
+  - "explore this repo"
+  - "nghiên cứu"
+  - "explain the architecture"
+  - "trace dependency"
+
+ide_binding:
+  slash_command: "/research"
+  aliases: ["/explore", "/explain"]
+
 steps:
   - id: define_scope
     name: "Xác định phạm vi nghiên cứu"
@@ -33,6 +45,7 @@ steps:
       - findings           # Answers to research questions
       - dependency_map     # How components relate
       - relevant_files     # Files most relevant to the task
+    context_budget: 100
     actions:
       - "Dùng grep_search để tìm patterns, không đọc toàn bộ repo"
       - "Đọc targeted sections (≤ 100 lines per read)"
@@ -53,6 +66,8 @@ steps:
     actions:
       - "Viết summary ngắn gọn (không cần exhaustive)"
       - "Flag các pattern cũ/deprecated nếu thấy"
+      - "Báo cáo mọi pattern vi phạm R-SEC-04 nếu thấy"
+      - "Ghi log execution trace vào evals/traces/"
       - "Liệt kê relevant files để task tiếp theo load"
 
 escalation:

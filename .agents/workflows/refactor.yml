@@ -8,6 +8,18 @@ owner:
 
 verification_profile: refactor
 
+triggers:
+  - "refactor"
+  - "tái cấu trúc"
+  - "clean up this code"
+  - "simplify"
+  - "reduce complexity"
+  - "dọn dẹp code"
+
+ide_binding:
+  slash_command: "/refactor"
+  aliases: ["/cleanup", "/simplify"]
+
 steps:
   - id: baseline
     name: "Thiết lập baseline"
@@ -21,6 +33,7 @@ steps:
       - current_behavior_summary   # What the code does now
       - pain_points                # Specific issues to address
       - test_coverage_status       # Có tests không?
+    context_budget: 200
     actions:
       - "Đọc toàn bộ target section"
       - "Mô tả behavior hiện tại"
@@ -43,7 +56,9 @@ steps:
     actions:
       - "Outline từng bước thay đổi"
       - "Xác định gì có thể break"
-
+    human_checkpoint:
+      condition: "risk_assessment cho thấy có thể breaking change hoặc thiếu test coverage"
+      message: "Refactor rủi ro cao. Vui lòng duyệt qua refactor_steps và risk_assessment."
   - id: execute
     name: "Thực hiện refactor"
     purpose: "Apply changes theo plan, step by step"
@@ -57,6 +72,8 @@ steps:
     actions:
       - "Làm từng bước nhỏ, verify sau mỗi bước"
       - "Không refactor ngoài scope đã định"
+      - "Chỉ refactor, KHÔNG add behavior mới"
+      - "Đảm bảo code sau refactor pass R-C-09"
       - "Không add functionality mới trong khi refactor"
 
   - id: verify
@@ -74,6 +91,7 @@ steps:
       - "Re-read modified sections"
       - "So sánh với current_behavior_summary"
       - "Chạy tests nếu có"
+      - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: FAILED
 
 escalation:

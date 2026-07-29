@@ -3,7 +3,7 @@
 name: qk-ui-audit
 version: 8.0.0
 status: stable
-description: "Kiểm toán giao diện (UI) với 57-point Anti-Slop checklist — fail nếu score < 90/100."
+description: "Kiểm toán giao diện (UI) với 57-check Anti-Slop checklist — fail nếu score < 76/85 base."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V8: Classification ─────────────────────────────────────
@@ -48,6 +48,8 @@ knowledge_scope:
     - anti-slop
   references:
     - design-system
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -81,12 +83,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-ui-audit — Anti-Slop UI Inspector
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ## Preconditions
 - [ ] `DESIGN.md` exists in project root
@@ -97,11 +94,6 @@ On missing precondition:
   EXIT: BLOCKED
   Message: "DESIGN.md not found. Run qk-project-bootstrap to create one, or provide design tokens manually."
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Scope
 - ✅ Score UI components against DESIGN.md tokens
@@ -114,11 +106,6 @@ schema_version: 2
 - ❌ Pixel-level screenshot comparison
 - ❌ Read entire CSS files — use targeted reads
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Priority Order
 
 | Priority | Category | Points | Skip Threshold |
@@ -127,16 +114,12 @@ schema_version: 2
 | P2 | Layout & Spacing (tokens, grid, whitespace) | 15pts | Budget < 30% |
 | P3 | Typography & Colors (DESIGN.md compliance) | 15pts | Budget < 50% |
 | P4 | Interactions & Animations (hover, focus, transitions) | 15pts | Budget < 60% |
-| P5 | Anti-Slop Detection (generic templates, slop colors) | 15pts | Budget < 70% |
+| P5 | Anti-Slop Detection (Tra chéo với R-C-09: thẻ card xám xịt, viền nhạt nhòa, text nhỏ...) | 15pts | Budget < 70% |
 | P6 | Performance & Best Practices | 10pts | Budget < 80% |
 | BONUS | Mobile & Cross-browser | 5pts extra | Always optional |
+| EXTENDED | Edge cases | 9pts extra | Always optional |
 
-**Total: 85 base + 5 bonus = 90 possible. Pass threshold: ≥ 90/100**
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+**Total: 85 base + 14 bonus/extended = 99 max. Pass threshold: ≥ 76/85 base (90%)**
 
 ## Workflow
 
@@ -150,11 +133,6 @@ schema_version: 2
 - Tokens extracted → go to Phase 2
 - DESIGN.md empty or incomplete → EXIT: BLOCKED
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 2 — Scan Target UI
 
 **Steps:**
@@ -164,7 +142,7 @@ schema_version: 2
 
 **Decision:**
 ```
-IF score accumulates ≥ 90 after P1+P2+P3
+IF score accumulates ≥ 76 after P1+P2+P3
   → Can skip P4–P6 if token budget < 40%
   → EXIT: PARTIAL (pass, but incomplete audit noted)
 
@@ -177,11 +155,6 @@ IF CRITICAL violation found (e.g., hardcoded password in UI, broken ARIA)
 - All categories checked → go to Phase 3
 - Token budget < 20% → go to Phase 3 with PARTIAL flag
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 3 — Score & Report
 
 **Steps:**
@@ -191,20 +164,15 @@ schema_version: 2
 
 **Decision:**
 ```
-IF total score ≥ 90
+IF total score ≥ 76
   → EXIT: SUCCESS
 
-IF total score 70–89
+IF total score 60–75
   → EXIT: PARTIAL — list required fixes
 
-IF total score < 70
+IF total score < 60
   → EXIT: FAILED — demand redesign, not patch
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Confidence Model
 
@@ -214,11 +182,6 @@ schema_version: 2
 | MEDIUM | Inferred from surrounding code patterns | Note assumption |
 | LOW | Cannot verify without rendering (e.g., animation timing) | Mark as "unverifiable — manual check required" |
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Severity
 
 | Level | Definition | Example |
@@ -227,11 +190,6 @@ schema_version: 2
 | HIGH | Design system contract broken | Hardcoded hex color not in DESIGN.md |
 | MEDIUM | UX degraded, workaround exists | Missing hover state, no loading indicator |
 | LOW | Minor inconsistency | Spacing off by 1 unit |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Evidence Format
 
@@ -254,21 +212,11 @@ Fix:        Replace with `var(--font-size-base)`
 Points:     -3 pts
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Retry Policy
 ```
 Audit is read-only — no retry needed.
 If file is inaccessible → note as PARTIAL and continue with other files.
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Escalation Rules
 
@@ -282,11 +230,6 @@ Questions:
 Recommended Assumptions (if proceeding):
   - Use industry-standard: 8px spacing unit, Inter font, neutral gray palette
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -307,11 +250,6 @@ schema_version: 2
 }
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Output Format
 
 ```
@@ -328,7 +266,7 @@ Scores:
   P5 Anti-Slop:      [X/15]
   P6 Performance:    [X/10]
   ─────────────────
-  Total:             [X/85] → [PASS ≥ 90% | FAIL < 90%]
+  Total:             [X/85 base] → [PASS ≥ 76/85 | FAIL < 76/85]
 
 Violations (top priority first):
   [SEVERITY] file:LINE — reason — Fix: suggestion (-Xpts)
@@ -342,28 +280,17 @@ Verdict:     [PASS | FAIL — requires redesign]
 Exit Code:   [SUCCESS | PARTIAL | FAILED]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Exit Codes
 
 | Code | Meaning | When |
 |------|---------|------|
-| SUCCESS | Score ≥ 90 — UI passes Anti-Slop | All checks done, no critical violations |
-| PARTIAL | Score 70–89 or incomplete audit | Some categories skipped due to token budget |
+| SUCCESS | Score ≥ 76 — UI passes Anti-Slop | All checks done, no critical violations |
+| PARTIAL | Score 60–75 or incomplete audit | Some categories skipped due to token budget |
 | BLOCKED | DESIGN.md missing or target not specified | Cannot audit without design contract |
-| FAILED | Score < 70 or CRITICAL violation found | Generic slop detected, redesign required |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
+| FAILED | Score < 60 or CRITICAL violation found | Generic slop detected, redesign required |
 
 ## References
-- Full 57-point checklist: `references/anti-slop-checklist.md`
+- Full 57-check checklist: `references/anti-slop-checklist.md`
 
 ---
-
 

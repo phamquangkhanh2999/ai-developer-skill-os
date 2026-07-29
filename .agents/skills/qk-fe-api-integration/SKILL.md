@@ -140,7 +140,7 @@ On missing precondition:
 **Decision:**
 ```
 IF wrapper/client found (e.g., apiClient.ts, axiosInstance.ts)
-  → Use it. NEVER bypass with raw fetch/axios.
+  → Use it. Ưu tiên bọc (wrap) bằng TanStack Query (useQuery/useMutation) nếu có thể. NEVER bypass with raw fetch/axios in components.
   → Confidence: HIGH → go to Phase 2
 
 ELSE IF no wrapper found
@@ -157,20 +157,22 @@ ELSE IF conflicting patterns found (mix of fetch + axios + rtk)
 
 ---
 
-### Phase 2 — Generate Types
+### Phase 2 — Generate Types & Validation
 
 **Steps:**
-1. Parse provided JSON payload → extract all fields with types
-2. Generate TypeScript interface (Request + Response)
-3. Flag any field that could be `null` or optional
+1. Parse provided JSON payload → extract all fields
+2. Generate **Zod schema** (`z.object({...})`) for runtime validation
+3. Export TypeScript interface via inferred Zod type (`export type Response = z.infer<typeof schema>`)
+4. Flag any field that could be `null` or optional with `.nullable()` or `.optional()`
 
 **Decision:**
 ```
 IF all fields clearly typed from JSON
+  → Khởi tạo Zod schema chính xác.
   → Confidence: HIGH → go to Phase 3
 
 ELSE IF some fields ambiguous (null | undefined)
-  → Mark as optional (?:) + add comment "// verify with backend"
+  → Mark as optional in Zod (`.optional()`) + add comment "// verify with backend"
   → Confidence: MEDIUM → go to Phase 3
 
 ELSE IF nested objects contain mixed null/non-null patterns
@@ -182,10 +184,11 @@ ELSE IF nested objects contain mixed null/non-null patterns
 ### Phase 3 — Implement Service + UI Binding
 
 **Steps:**
-1. Create/update service file (API calls only — no UI logic)
-2. Bind to component: implement Loading state (skeleton/spinner)
-3. Bind Success state: render data using generated types
-4. Bind Error state: handle HTTP errors per table below
+1. Create/update service file: Viết API fetcher function.
+2. Viết Custom Hook bọc fetcher function bằng **TanStack Query** (`useQuery` hoặc `useMutation`).
+3. Bind to component: Dùng các states từ hook (`isLoading`, `isPending`, `isError`, `data`) thay vì tự tạo `useEffect`.
+4. Bind Error state: handle HTTP errors per table below.
+5. Kiểm duyệt ranh giới an toàn (R-SEC-04): Validate dữ liệu API trả về bằng Zod Schema ở (2) trước khi render.
 
 **HTTP Error Handling (mandatory for ALL integrations):**
 ```
@@ -356,25 +359,3 @@ Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
 
 ---
 
-Consume backend API safely in frontend: identify existing client, generate types, implement service layer, and bind to UI with proper states.
-Triggered when user needs to integrate a backend API endpoint into a frontend application. Requires JSON payload sample and knowledge of existing API client patterns.
-- JSON payload sample (request/response)
-- API endpoint specification
-- Existing API client path (if any)
-- Component to bind (if specified)
-- Context graph (for existing patterns)
-1. **Identify:** Find existing API client or confirm need for new one
-2. **Generate:** Create TypeScript interfaces from JSON payload
-3. **Implement:** Build service layer with proper HTTP methods
-4. **Bind:** Connect to UI with Loading/Success/Error states
-5. **Audit:** Verify no hardcoded URLs, no API in JSX, proper error handling
-- NEVER bypass existing wrapper with raw fetch/axios
-- MUST generate strict TypeScript interfaces (no `any`)
-- MUST handle all 3 UI states: Loading, Success, Error
-- MUST NOT exceed token_budget (max 3 files, 100 lines each, 1 shell command)
-- MUST stop early if confidence threshold reached
-- Zero-Trust: Use existing client pattern, never invent new one without approval
-- Type Safety: All API responses must have explicit TypeScript types
-- Error Handling: All HTTP errors must be handled per mandatory table
-- Separation: Service layer only — no API calls in presentational components
----

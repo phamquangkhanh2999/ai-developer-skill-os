@@ -48,6 +48,8 @@ knowledge_scope:
     - codebase-health
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -105,8 +107,8 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 | Dimension | Max Points | Key Checks |
 |-----------|-----------|------------|
-| Security | 20 | 0 critical CVEs, no hardcoded secrets, auth guards present |
-| Code Quality | 20 | Functions ≤ 30L, complexity ≤ 10, no God Files |
+| Security | 20 | 0 critical CVEs, no hardcoded secrets, auth guards present, **tuân thủ Zero-Trust (R-SEC-04)** |
+| Code Quality | 20 | Functions ≤ 30L, complexity ≤ 10, no God Files, **sạch bóng Anti-patterns (R-C-09)** |
 | Architecture | 20 | Clean layers (UI/Logic/Data separated), no circular imports |
 | Dependencies | 20 | No deprecated packages, no unused deps, versions pinned |
 | Documentation | 20 | README complete, public APIs documented, DESIGN.md exists |

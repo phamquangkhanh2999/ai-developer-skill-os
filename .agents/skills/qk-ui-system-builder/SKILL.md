@@ -93,7 +93,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-ui-system-builder — Design System Constructor
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -193,16 +193,13 @@ IF some tokens inferred (MEDIUM confidence) → EXIT: PARTIAL, list them
 
 ---
 
-
 ---
 
 ## Priority Order
 
-
 ---
 
 ## Output Format
-
 
 ---
 ## Exit Codes
@@ -286,5 +283,4 @@ Recommended Assumptions:
 ```
 
 ---
-
 

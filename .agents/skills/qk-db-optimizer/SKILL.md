@@ -47,6 +47,7 @@ knowledge_scope:
     - query-optimization
   references:
     - architecture
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -80,7 +81,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-db-optimizer — Database Performance Tuner
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -112,7 +113,7 @@ On missing precondition:
 | P | Issue Type | Action | Skip Threshold |
 |---|-----------|--------|----------------|
 | P1 | Sequential scan on large table (> 10k rows) | Add composite index | Never |
-| P2 | N+1 query pattern | Eager load / DataLoader | Budget < 30% |
+| P2 | N+1 query pattern | Eager load / DataLoader (Ưu tiên theo chuẩn dự án, không tự chế query lồng) | Budget < 30% |
 | P3 | Missing JOIN (multiple queries for related data) | Rewrite with JOIN | Budget < 50% |
 | P4 | SELECT * (over-fetching) | Select specific columns | Budget < 60% |
 

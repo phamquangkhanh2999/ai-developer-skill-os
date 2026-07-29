@@ -85,7 +85,6 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-
 ## Preconditions
 - [ ] Project has `package.json` with lint/test scripts (or equivalent for other runtimes)
 - [ ] Target scope is specified (specific files, or whole project)
@@ -95,11 +94,6 @@ On missing precondition:
   EXIT: BLOCKED
   Message: "Không tìm thấy script lint/test. Vui lòng chỉ định lệnh kiểm tra."
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Scope & V8.2 Eval Pipeline
 - ✅ Run lint, type-check, tests, and security audit in sequence
@@ -112,11 +106,6 @@ schema_version: 2
 - ❌ Fix failing tests or lint errors (fixes go to qk-bug-resolution)
 - ❌ Skip any gate check or eval scorecard unless user explicitly allows
 - ❌ Override failing thresholds with "ignore" flags or fabricated LLM scores without trace evidence
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Pass/Fail Thresholds (Non-Negotiable)
 
@@ -149,11 +138,6 @@ eval_scorecard:
   zero_tolerance_hallucination: true
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Priority Order
 
 | Priority | Gate | Fail = Block? | Skip Allowed? |
@@ -166,11 +150,6 @@ schema_version: 2
 | P6 | Coverage check | YES if < 80% | Never |
 | P7 | Build | YES | Never |
 | P8 | Bundle size | WARN only | Budget < 80% |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Workflow
 
@@ -190,11 +169,6 @@ ELSE IF critical or high found
   → Report: exact package name, CVE, severity
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 2 — Type & Lint Gate (P2+P3)
 
 **Steps:**
@@ -213,11 +187,6 @@ ELSE IF type errors > 0
 ELSE IF lint errors > 0 (warnings OK)
   → EXIT: FAILED — list errors
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ### Phase 3 — Test Gate (P4+P5+P6)
 
@@ -245,11 +214,6 @@ Test fail
        └─ FAIL on retry → EXIT: FAILED — not flaky, real failure
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ### Phase 4 — Build Gate (P7)
 
 **Steps:**
@@ -268,11 +232,6 @@ ELSE IF warnings > 5
   → EXIT: PARTIAL — list warnings, continue to release if user confirms
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Confidence Model
 
 | Level | Condition | Action |
@@ -280,11 +239,6 @@ schema_version: 2
 | HIGH | Command exit code 0/non-0, numeric output | Report directly |
 | MEDIUM | Inferred from partial output (truncated logs) | Note potential missing info |
 | LOW | Script not found or output format unknown | EXIT: BLOCKED — clarify commands |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Severity
 
@@ -294,11 +248,6 @@ schema_version: 2
 | HIGH | Type error or failing test | `Cannot read property of undefined` |
 | MEDIUM | Coverage below threshold | 67% coverage (threshold 80%) |
 | LOW | Build warning | Unused export |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Evidence Format
 
@@ -321,11 +270,6 @@ Actual:     47/50 tests passed
 Fix:        See failing tests: auth.test.ts:L45, user.test.ts:L23, order.test.ts:L89
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
 ## Escalation Rules
 
 ```
@@ -340,11 +284,6 @@ Questions:
 Recommended Assumptions:
   - Standard: npm run lint + npm test + npm run build
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Handoff Contract
 
@@ -364,11 +303,6 @@ schema_version: 2
   "output_fields": ["gate_results", "coverage_percent", "violations_list", "exit_code"]
 }
 ```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
 
 ## Output Format
 
@@ -392,16 +326,9 @@ Failures (action required):
 Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
 ```
 
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-
 ---
 
 ## Retry Policy
-
 
 ---
 ## Exit Codes
@@ -414,5 +341,4 @@ schema_version: 2
 | FAILED | Any gate failed at threshold | Do NOT release — fix first |
 
 ---
-
 

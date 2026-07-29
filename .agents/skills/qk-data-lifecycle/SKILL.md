@@ -47,6 +47,8 @@ knowledge_scope:
     - migrations
   references:
     - architecture
+    - security
+    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -80,7 +82,7 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 # qk-data-lifecycle — Database Schema & Repository Manager
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
@@ -134,6 +136,9 @@ drop_column:
 
 rename_table:
   strategy: create new table → migrate → drop old (never ALTER TABLE RENAME in prod)
+  
+pii_data:
+  strategy: Khi add column chứa PII (Personal Identifiable Information), BẮT BUỘC áp dụng cơ chế hashing/encryption tương ứng (tuân thủ R-SEC-04).
 ```
 
 ---

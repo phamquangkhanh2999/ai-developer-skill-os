@@ -8,6 +8,20 @@ owner:
 
 verification_profile: bug-fix
 
+triggers:
+  - "fix bug"
+  - "sửa lỗi"
+  - "error"
+  - "exception"
+  - "crash"
+  - "stack trace"
+  - "not working"
+  - "bị lỗi"
+
+ide_binding:
+  slash_command: "/fix-bug"
+  aliases: ["/bug", "/debug"]
+
 steps:
   - id: observe
     name: "Thu thập triệu chứng"
@@ -57,6 +71,7 @@ steps:
       - confirmed_root_cause   # File + line + quoted code
       - evidence_quote         # Exact code causing the bug
     min_confidence: HIGH
+    context_budget: 150
     actions:
       - "Dùng grep_search để tìm pattern liên quan"
       - "Dùng view_file[StartLine:EndLine] để đọc section cụ thể"
@@ -79,7 +94,9 @@ steps:
       - "Không tạo wrapper script"
       - "Không dùng ?. hoặc ! để silence lỗi"
       - "Fix root cause, không patch bề mặt"
-
+    human_checkpoint:
+      condition: "file thuộc vùng auth/payment/permission/migration"
+      message: "Patch này chạm vào code nhạy cảm. Xác nhận an toàn trước khi thay đổi."
   - id: verify
     name: "Xác minh fix"
     purpose: "Xác nhận bug đã được fix và không có regression"
@@ -94,6 +111,9 @@ steps:
       - "Re-read patched code section"
       - "Chạy test liên quan nếu có"
       - "Kiểm tra caller/dependent nếu interface thay đổi"
+      - "Đảm bảo tuân thủ R-SEC-04 (Security Boundary)"
+      - "Đảm bảo tuân thủ R-C-09 (Zero-Slop)"
+      - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: FAILED
 
 escalation:

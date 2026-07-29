@@ -100,3 +100,13 @@ After any code change:
 1. Re-read the edited section to verify correctness.
 2. Check for syntax errors (mentally or with lint if available).
 3. Consider: does this change affect any callers or dependents?
+
+---
+
+## R-C-09: Anti-Patterns Compliance (Cross-Reference)
+
+Ngoài R-C-01 đến R-C-08 ở trên, Agent **MUST** tuân thủ đầy đủ danh sách đỏ tại `references/anti-patterns.md` (TypeScript, React/UI, Architecture, TanStack Ecosystem) trước khi coi một đoạn code là hoàn chỉnh.
+
+- `references/anti-patterns.md` là phần **mở rộng chi tiết** của rule này, không thay thế các rule R-C-01–08.
+- Khi viết component UI, đối chiếu thêm với `references/component-cookbook.md` để đảm bảo đúng cấu trúc giải phẫu (Types → Hook → JSX).
+- Nếu 2 nguồn mâu thuẫn nhau, `coding.md` (rule cấp cao) được ưu tiên; báo cáo mâu thuẫn để cập nhật `anti-patterns.md`.

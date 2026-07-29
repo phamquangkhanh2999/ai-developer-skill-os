@@ -1,24 +1,35 @@
 priority:
+  global:
+    weight: 100
+    description: "Baseline agent behavior policy applied to every task"
+    files: [global.md]
+
   safety:
     weight: 100
     description: "Command safety and destructive action guards"
+    files: [safety.md, command-safety.md]
 
   security:
     weight: 100
-    description: "Security audits and safe dependencies"
+    description: "Security audits, secret handling, and prompt-injection defense"
+    files: [security.md]
 
   governance:
     weight: 90
-    description: "Architecture boundaries and system evolution"
+    description: "Skill lifecycle, architecture boundaries, and system evolution"
+    files: [skill-quality.md]
 
   quality:
     weight: 80
     description: "Anti-slop, UX best practices, performance"
+    files: []  # reserved — no dedicated rule file yet
 
   coding:
     weight: 70
     description: "Engineering standards, SOLID, DRY"
+    files: [coding.md]
 
   style:
     weight: 40
     description: "Formatting, naming conventions"
+    files: []  # delegated to ESLint/Prettier config, not an AI rule file

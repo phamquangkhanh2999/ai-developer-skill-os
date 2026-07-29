@@ -1,5 +1,6 @@
 # Routing Table — qk-orchestrator V7.5
 
+> This is the ONLY routing table in the system. qk-orchestrator/SKILL.md must not contain a duplicate table.
 > Full intent → skill mapping. Updated whenever a new skill is added.
 
 ---
@@ -24,11 +25,22 @@
 | design system, token, CSS variable, design tokens | `qk-ui-system-builder` | DESIGN.md check |
 | project audit, health, tech debt, kiểm toán dự án | `qk-project-health` | direct |
 | new project, bootstrap, init, khởi tạo dự án | `qk-project-bootstrap` | direct |
-| help, list skills, danh sách, trợ giúp | `qk-orchestrator` | direct |
-| memory, context, recall, lưu ngữ cảnh | `qk-project-memory` | direct |
-| security, policy, authorization, bảo mật | `qk-policy-engine` | → redirect to `qk-access-policy` |
 | consume API, tích hợp API backend, gọi API từ FE | `qk-fe-api-integration` | `qk-context-loader` first |
 | UI audit, kiểm tra giao diện, anti-slop check | `qk-ui-audit` | DESIGN.md check |
+| metrics, telemetry, trace, agent observability, mô hình lỗi | `qk-agent-observability` | direct |
+| review code, kiểm toán, code review, PR | `qk-code-review` | direct |
+| graph, dependency, context, đọc hiểu architecture | `qk-context-loader` | direct |
+| design system rules, tokens structure, governance | `qk-design-system-engineering` | direct |
+| CI/CD, devops, pipeline, infrastructure, deployment strategy | `qk-devops-platform` | direct |
+| frontend architecture, file placement, routing strategy | `qk-frontend-architecture` | direct |
+| help, list skills, danh sách, trợ giúp | `qk-help` | direct |
+| orchestrate, định tuyến, phân loại yêu cầu | `qk-orchestrator` | direct |
+| product spec, requirement, tiêu chí chấp nhận | `qk-product-specification` | direct |
+| security, vulnerability scan, secret, OWASP | `qk-security-audit` | direct |
+| test strategy, mock, coverage, e2e, unit test | `qk-test-engineering` | direct |
+| web performance, accessibility, SEO, lighthouse | `qk-web-quality-gate` | direct |
+| memory, context, recall, lưu ngữ cảnh | `qk-project-memory` | direct |
+| security, policy, authorization, bảo mật | `qk-access-policy` | direct |
 
 ---
 

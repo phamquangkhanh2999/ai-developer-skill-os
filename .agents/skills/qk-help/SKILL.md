@@ -77,169 +77,31 @@ token_budget:
 exit_codes: [SUCCESS]
 ---
 
-# qk-help — Skill Directory V7.5
+# 🆘 V8.3 Skill System Help
 
-> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
+> Lệnh: `./qk-help`
 
-When triggered, display this reference and exit with SUCCESS.
+Hệ thống AI Developer Skin V8.3 (Zero-Trust & Anti-Slop Architecture) sử dụng kiến trúc **Governed Capabilities** thay vì Prompt Engineering truyền thống. Mỗi kỹ năng (skill) là một module độc lập, có Decision Boundary (giới hạn quyền hạn) và Token Budget (ngân sách thực thi) riêng.
 
----
+## 🛠 Cách Kích Hoạt Kỹ Năng
+Gõ `./qk-[tên-skill] [yêu cầu của bạn]`
 
-## Scope
-- ✅ Display available skills and their purposes
-- ✅ Show common pipelines and best practices
-- ✅ Provide quick reference for skill commands
+**Ví dụ:**
+- `./qk-ui-builder tạo trang login với Tailwind`
+- `./qk-feature-delivery thêm tính năng quên mật khẩu`
+- `./qk-bug-resolution fix lỗi hydration mismatch ở trang chủ`
+- `./qk-project-health đánh giá codebase`
 
-## Non-Goals
-- ❌ Execute any skill — only display information
-- ❌ Modify project files or configuration
-- ❌ Answer questions outside the skill system
+## 🚦 V8.3 Quality Gates
+Hệ thống áp dụng các checkpoint nghiêm ngặt. Nếu không qua được, AI sẽ tự động Block:
+1. **Validation Gate:** `qk-validation-gate` chạy lint/test/type-check.
+2. **Release Gate:** `qk-production-release` kiểm tra 8 cổng trước khi deploy.
+3. **Web Quality Gate:** `qk-web-quality-gate` check A11y, SEO, Performance.
+4. **UI Audit Gate:** `qk-ui-audit` check Anti-Slop (R-C-09).
+5. **Security Gate:** Tất cả các luồng phải tuân thủ Zero-Trust (R-SEC-04).
 
----
+## 📋 Xem Danh Sách Kỹ Năng
+Các kỹ năng được chia theo nhóm (Capabilities).
+Đọc file `.agents/skills/skills.json` hoặc thư mục `.agents/skills/` để xem toàn bộ danh sách.
 
-## Preconditions
-- [ ] User requests help or list of skills
-
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Vui lòng hỏi trợ giúp hoặc liệt kê skills."
-```
-
----
-
-## Scope
-- ✅ Display available skills and their purposes
-- ✅ Show common pipelines and best practices
-- ✅ Provide quick reference for skill commands
-
-## Non-Goals
-- ❌ Execute any skill — only display information
-- ❌ Modify project files or configuration
-- ❌ Answer questions outside the skill system
-
----
-
-## Priority Order
-
-| Priority | Task | Skip Threshold |
-|----------|------|----------------|
-| P1 | List all available skills | Never |
-| P2 | Show common pipelines | Never |
-| P3 | Provide usage examples | Never |
-
----
-
-## Workflow
-
-### Phase 1 — Display Skills
-
-**Steps:**
-1. Read `.agents/registry/skills-index.yml` to get active skill list
-2. Format as table: Command | Purpose | Cost
-3. Display common pipelines
-
-**Exit When:**
-- Help displayed → EXIT: SUCCESS
-
----
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | .agents/registry/skills-index.yml readable | Display directly |
-| MEDIUM | .agents/registry/skills-index.yml partially readable | Display what's available |
-| LOW | Cannot access .agents/registry/skills-index.yml | EXIT: BLOCKED |
-
----
-
-## Severity
-
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | N/A — this skill is read-only | — |
-| HIGH | N/A — this skill is read-only | — |
-| MEDIUM | N/A — this skill is read-only | — |
-| LOW | N/A — this skill is read-only | — |
-
----
-
-## Evidence Format
-
-```
-[INFO] qk-help
-Message: [help content displayed]
-Confidence: HIGH
-```
-
----
-
-## Retry Policy
-
-```
-Display fails
-  └─ Check if .agents/registry/skills-index.yml is accessible
-       ├─ Accessible → retry display
-       └─ Not accessible → EXIT: BLOCKED
-```
-
----
-
-## Escalation Rules
-
-```
-BLOCKED: Cannot access .agents/registry/skills-index.yml
-Missing:
-  - .agents/registry/skills-index.yml file
-Questions:
-  1. Bạn cần hỗ trợ gì? (liệt kê skills / hướng dẫn dùng)
-```
-
----
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["help_request"],
-  "optional_fields": ["specific_skill"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["skill_list", "pipelines", "usage_examples"],
-  "exit_code": "SUCCESS"
-}
-```
-
----
-
-## Output Format
-
-```
-📚 Help — Available Skills
-─────────────────────────────────────────────────
-[table of skills]
-
-Common Pipelines:
-[common workflows]
-
-Exit Code: SUCCESS
-```
-
----
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Help displayed successfully | Normal completion |
-| BLOCKED | Cannot access .agents/registry/skills-index.yml | Setup required |
-
----
+*Mẹo: Nếu không biết dùng skill nào, hãy nhờ `qk-orchestrator` phân tích yêu cầu của bạn.*
