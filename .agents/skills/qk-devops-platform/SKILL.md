@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-devops-platform
-version: 8.1.1
+version: 8.3.1
 status: experimental
 description: "Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường và chiến lược rollback."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

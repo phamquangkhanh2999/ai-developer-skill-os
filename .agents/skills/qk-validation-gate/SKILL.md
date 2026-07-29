@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-validation-gate
-version: 8.2.0
+version: 8.3.1
 status: stable
 description: "Cổng kiểm tra chất lượng & Eval Pipeline bắt buộc — chạy linters, tests, và đánh giá scorecard.yaml định lượng cho AI Agent."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

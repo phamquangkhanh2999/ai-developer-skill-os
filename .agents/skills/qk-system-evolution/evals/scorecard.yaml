@@ -1,6 +1,6 @@
 name: qk-system-evolution-eval
 description: Đánh giá độ an toàn của quy trình nâng cấp System & Framework
-version: 1.0.0
+version: 8.3.1
 threshold: 90 # Việc nâng cấp framework mang rủi ro sập hệ thống rất cao
 
 metrics:

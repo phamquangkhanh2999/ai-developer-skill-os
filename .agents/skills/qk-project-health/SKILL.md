@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-health
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

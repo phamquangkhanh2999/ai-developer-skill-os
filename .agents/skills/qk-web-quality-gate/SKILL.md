@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-web-quality-gate
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Kiểm toán tổng thể chất lượng Web: Accessibility (A11y), SEO, Web Performance, Security, UX Heuristics."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

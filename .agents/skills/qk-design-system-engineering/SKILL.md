@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-design-system-engineering
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

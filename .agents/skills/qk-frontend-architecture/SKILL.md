@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-frontend-architecture
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Công cụ quyết định kiến trúc Frontend (Chiến lược component, quản lý state, định tuyến)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

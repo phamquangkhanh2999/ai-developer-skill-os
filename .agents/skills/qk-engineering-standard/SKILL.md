@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-engineering-standard
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Ép buộc SOLID, DRY, Clean Code với ngưỡng số liệu cụ thể — không có rule mơ hồ."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

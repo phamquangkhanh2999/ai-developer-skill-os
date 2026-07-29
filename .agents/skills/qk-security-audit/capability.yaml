@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-security-audit"
-version: "8.1.0"
+version: "8.3.1"
 description: "Security audit (OWASP, dependency security, secret detection, permission model)."
 tools:
   - "filesystem"

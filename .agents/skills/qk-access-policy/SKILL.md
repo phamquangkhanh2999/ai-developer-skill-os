@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-access-policy
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

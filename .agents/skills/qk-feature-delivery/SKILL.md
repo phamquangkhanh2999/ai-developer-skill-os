@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-feature-delivery
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

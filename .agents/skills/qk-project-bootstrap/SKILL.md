@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-bootstrap
-version: 8.2.0
+version: 8.3.1
 status: stable
 description: "Khởi tạo dự án mới theo chuẩn V8.2 Blueprint Plugin Generator (project.yaml, 4-folder AI RAG hoặc Coding) với cấu trúc kiên cường."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

@@ -1,6 +1,6 @@
 name: qk-feature-delivery-eval
 description: Đánh giá quy trình phát triển tính năng mới (End-to-End)
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Tính năng mới phải đáp ứng các tiêu chuẩn khắt khe trước khi hoàn thành
 
 metrics:

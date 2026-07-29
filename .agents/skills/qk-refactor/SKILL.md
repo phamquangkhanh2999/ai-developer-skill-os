@@ -1,6 +1,6 @@
 ---
 name: qk-refactor
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

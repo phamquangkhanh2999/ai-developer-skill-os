@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-test-engineering
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Công cụ quyết định chiến lược kiểm thử (Unit, Integration, E2E, Coverage, Regression, Mock)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

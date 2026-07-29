@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-docs
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

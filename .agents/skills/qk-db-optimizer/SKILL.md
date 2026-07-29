@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-db-optimizer
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

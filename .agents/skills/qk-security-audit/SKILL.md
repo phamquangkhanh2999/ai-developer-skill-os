@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-security-audit
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Security audit (OWASP, dependency security, secret detection, permission model)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-memory
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

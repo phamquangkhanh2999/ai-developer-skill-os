@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ui-audit
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Kiểm toán giao diện (UI) với 57-check Anti-Slop checklist — fail nếu score < 76/85 base."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

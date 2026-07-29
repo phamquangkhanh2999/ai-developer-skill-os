@@ -1,6 +1,6 @@
 name: qk-code-review-eval
 description: Đánh giá chất lượng thực thi quy trình Code/AI Review
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Đánh giá tư duy Architect và ngôn ngữ phản hồi
 
 metrics:

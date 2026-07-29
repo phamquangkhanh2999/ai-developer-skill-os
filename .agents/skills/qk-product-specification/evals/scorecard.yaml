@@ -1,6 +1,6 @@
 name: qk-product-specification-eval
 description: Đánh giá Tư duy Sản phẩm và Phân tích Yêu cầu
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Đảm bảo Spec rõ ràng và chứa đầy đủ tiêu chí bảo mật
 
 metrics:

@@ -1,6 +1,6 @@
 name: qk-context-loader-eval
 description: Đánh giá khả năng phân tích kiến trúc và tải context
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Tính chính xác của context là cốt lõi để tránh hallucination
 
 metrics:

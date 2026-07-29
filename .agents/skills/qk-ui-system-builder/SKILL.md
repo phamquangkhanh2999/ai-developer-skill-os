@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ui-system-builder
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Xây dựng Design System và token library từ DESIGN.md — không tự đặt ra token ngoài contract."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

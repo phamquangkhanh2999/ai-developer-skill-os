@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-ai-builder"
-version: "8.2.0"
+version: "8.3.1"
 description: "Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng capability.yaml, data discipline 4-folder và Eval Pipeline."
 tools:
   - "filesystem"

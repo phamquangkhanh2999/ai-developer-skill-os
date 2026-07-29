@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ai-builder
-version: 8.2.0
+version: 8.3.1
 status: stable
 description: "Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng capability.yaml, data discipline 4-folder và Eval Pipeline."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-product-specification
-version: 8.1.0
+version: 8.3.1
 status: experimental
 description: "Product thinking (Idea → Requirement → Acceptance criteria → Technical spec)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

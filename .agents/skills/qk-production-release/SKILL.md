@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-production-release
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

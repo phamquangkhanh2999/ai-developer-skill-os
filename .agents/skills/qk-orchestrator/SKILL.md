@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-orchestrator
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

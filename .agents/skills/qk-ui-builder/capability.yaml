@@ -1,6 +1,6 @@
 schema_version: 1
 id: "qk-ui-builder"
-version: "8.2.0"
+version: "8.3.1"
 description: "Xây dựng, sửa, audit, và học UI — từ Figma/ảnh, map API, fix bug UI, đến redesign cấu trúc."
 dependencies:
   - "feature-delivery"

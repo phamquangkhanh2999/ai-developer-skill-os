@@ -1,6 +1,6 @@
 name: qk-production-release-eval
 description: Đánh giá quá trình kiểm duyệt phát hành (Release Gate)
-version: 1.0.0
+version: 8.3.1
 threshold: 100 # Phải đạt 100 điểm vì lỗi ở Gate này có thể gây sập Production
 
 metrics:

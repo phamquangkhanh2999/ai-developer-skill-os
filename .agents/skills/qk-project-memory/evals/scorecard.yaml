@@ -1,6 +1,6 @@
 name: qk-project-memory-eval
 description: Đánh giá quá trình lưu trữ và truy xuất ngữ cảnh dài hạn (Project Memory)
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Yêu cầu độ chính xác cao khi ghi đè hoặc lưu trữ để tránh ảo giác
 
 metrics:

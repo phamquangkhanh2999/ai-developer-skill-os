@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-bug-resolution
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

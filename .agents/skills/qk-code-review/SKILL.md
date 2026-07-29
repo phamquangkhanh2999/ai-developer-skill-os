@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-code-review
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Elite AI/Code Review System: Kiểm toán, Review code và cấu hình AI với tư duy Architect, áp dụng 4-Phase Review."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

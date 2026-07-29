@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-[skill-name]
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "[Một câu — skill này làm gì và dành cho ai]"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

@@ -1,6 +1,6 @@
 name: qk-design-system-engineering-eval
 description: Đánh giá chất lượng quản trị hệ thống thiết kế (Design System)
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Đảm bảo sự nhất quán và ngăn chặn UI Slop từ gốc
 
 metrics:

@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-context-loader
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Tải context và vẽ dependency graph chính xác trước khi code — ngăn hallucination kiến trúc."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

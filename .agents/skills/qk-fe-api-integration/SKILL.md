@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-fe-api-integration
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Consume API Backend, quản lý State, bind vào UI — tuân thủ kiến trúc Base dự án"
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-data-lifecycle
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

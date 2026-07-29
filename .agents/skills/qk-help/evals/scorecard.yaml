@@ -1,6 +1,6 @@
 name: qk-help-eval
 description: Đánh giá khả năng cung cấp thông tin hướng dẫn
-version: 1.0.0
+version: 8.3.1
 threshold: 100 # Kỹ năng đơn giản, yêu cầu độ chính xác cao khi cung cấp thông tin
 
 metrics:

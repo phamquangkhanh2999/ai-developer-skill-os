@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-api-lifecycle
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

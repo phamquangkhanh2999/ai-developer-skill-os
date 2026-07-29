@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-db-optimizer"
-version: "8.0.0"
+version: "8.3.1"
 description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
 tools:
   - "filesystem"

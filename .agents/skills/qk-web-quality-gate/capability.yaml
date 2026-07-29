@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-web-quality-gate"
-version: "8.1.0"
+version: "8.3.1"
 description: "Kiểm toán tổng thể chất lượng Web: Accessibility (A11y), SEO, Web Performance, Security, UX Heuristics."
 tools:
   - "filesystem"

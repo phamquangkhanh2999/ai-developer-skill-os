@@ -1,6 +1,6 @@
 name: qk-ui-audit-eval
 description: Đánh giá khả năng rà soát UI Anti-Slop
-version: 1.0.0
+version: 8.3.1
 threshold: 90 # Đóng vai trò chốt chặn UI chất lượng cao, không khoan nhượng với Slop
 
 metrics:

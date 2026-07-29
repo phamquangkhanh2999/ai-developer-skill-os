@@ -1,6 +1,6 @@
 name: qk-bug-resolution-eval
 description: Đánh giá chất lượng quy trình sửa lỗi (Bug Resolution)
-version: 1.0.0
+version: 8.3.1
 threshold: 85 # Quy trình sửa lỗi cần bằng chứng rõ ràng và sửa đúng trọng tâm
 
 metrics:

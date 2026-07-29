@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-project-memory"
-version: "8.0.0"
+version: "8.3.1"
 description: "Lưu trữ và truy xuất ngữ cảnh dự án dài hạn — chỉ lưu fact đã xác minh, không lưu giả thuyết."
 tools:
   - "filesystem"

@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-system-evolution
-version: 8.0.0
+version: 8.3.1
 status: stable
 description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
