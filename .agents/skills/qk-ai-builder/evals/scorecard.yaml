@@ -1,6 +1,6 @@
 name: qk-ai-builder-eval
 description: Đánh giá chất lượng thiết kế Agent & RAG Pipeline
-version: 8.3.1
+version: 9.0.0
 threshold: 90 # Yêu cầu rất cao vì liên quan đến an ninh (injection) và cấu trúc V8
 
 metrics:

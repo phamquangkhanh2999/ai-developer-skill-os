@@ -1,6 +1,6 @@
 name: qk-security-audit-eval
 description: Đánh giá chất lượng Kiểm toán Bảo mật
-version: 8.3.1
+version: 9.0.0
 threshold: 95 # Threshold gần như tuyệt đối vì đây là lưới lọc bảo mật cuối cùng
 
 metrics:

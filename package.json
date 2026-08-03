@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "8.3.1",
-  "description": "EDAOS v8.3 — Governed Capability Metadata & Eval Platform: Blueprints organize, manifests govern, registries accelerate.",
+  "version": "9.0.0",
+  "description": "EDAOS v9.0 — Governed Capability Platform & Universal Project Knowledge V1 (Dual-Mode Memory Architecture).",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -20,12 +20,13 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "sync:v9": "node tooling/sync-versions.js",
     "build:registry": "node tooling/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:registry": "vitest run && node tooling/build-registry.js",
     "test:graph": "node tooling/validate-graph.js",
-    "lint": "node bin/lint.js",
+    "lint": "node tooling/validate-skills.js",
     "eval": "node evals/runner.js",
     "eval:all": "node evals/runner.js --all",
     "test:agent": "node tests/agent-evaluation/runner/evaluate-routing.js",

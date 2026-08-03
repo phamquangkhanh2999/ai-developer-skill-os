@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-orchestrator"
-version: "8.3.1"
+version: "9.0.0"
 description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
 tools:
   - "filesystem"

@@ -1,6 +1,6 @@
 name: qk-project-bootstrap-eval
 description: Đánh giá chất lượng khởi tạo dự án V8.2 Blueprint
-version: 8.3.1
+version: 9.0.0
 threshold: 85 # Đảm bảo cấu trúc kiến trúc được thiết lập chuẩn xác ngay từ đầu
 
 metrics:

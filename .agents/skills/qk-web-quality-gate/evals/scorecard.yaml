@@ -1,6 +1,6 @@
 name: qk-web-quality-gate-eval
 description: Đánh giá chất lượng tổng thể của Web (Performance, SEO, A11y, UX)
-version: 8.3.1
+version: 9.0.0
 threshold: 85 # Đảm bảo đo lường đầy đủ 4 trục chất lượng của ứng dụng Web
 
 metrics:
@@ -23,4 +23,4 @@ metrics:
     description: Các đề xuất tối ưu có khả thi để lập trình viên thực hiện ngay không?
     weight: 25
     criteria:
-      - Không chỉ ra lỗi chung chung mà chỉ định rõ cách fix (vd: "Thêm loading='lazy' vào thẻ img dòng 15") (25đ)
+      - "Không chỉ ra lỗi chung chung mà chỉ định rõ cách fix (ví dụ: Thêm loading='lazy' vào thẻ img dòng 15) (25đ)"

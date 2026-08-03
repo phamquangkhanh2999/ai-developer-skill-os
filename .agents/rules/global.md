@@ -133,3 +133,16 @@ Agent **SHOULD**:
 1. Ask clarification
 2. Present top candidates
 3. Explain missing information
+
+---
+
+## R-G-11: Knowledge & Memory Discipline (V1 / AI Skin V9)
+
+**MUST** govern project memory like source code: simple, reviewable, updatable, and always human-approved.
+
+- **Dual-Mode Setup:** Prefer `.ai-local/` (Private Mode, gitignored) or `.agents/` (Shared Mode, git-commited).
+- **Navigator ONLY:** Memory reduces discovery time; it is NOT a replacement for checking live source code.
+- **Strict Content Bounds:** Only store 4 categories in `knowledge/index.yaml`: `Architecture`, `Convention`, `Pattern`, and `Hard Bug`. Discard routine typos, trivial CSS, and standard CRUD.
+- **Zero-Overwrite & Portable:** Mark outdated facts as `status: Archived` (never overwrite history). Always use workspace-relative paths (`src/...`) and AST symbol names instead of hardcoded disk paths or rigid line numbers.
+- **No Silent Mutate:** Never edit memory files automatically without proposing to the developer and receiving affirmative confirmation via `/learn` or explicit instructions.
+

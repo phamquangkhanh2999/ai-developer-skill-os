@@ -1,6 +1,6 @@
 name: qk-docs-eval
 description: Đánh giá chất lượng tài liệu và kỹ năng viết Docs
-version: 8.3.1
+version: 9.0.0
 threshold: 85 # Đảm bảo tài liệu phản ánh chính xác 100% logic code thực tế
 
 metrics:

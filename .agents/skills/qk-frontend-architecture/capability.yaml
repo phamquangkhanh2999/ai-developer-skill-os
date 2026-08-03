@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-frontend-architecture"
-version: "8.3.1"
+version: "9.0.0"
 description: "Công cụ quyết định kiến trúc Frontend (Chiến lược component, quản lý state, định tuyến)."
 tools:
   - "filesystem"

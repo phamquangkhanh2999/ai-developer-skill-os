@@ -1,12 +1,21 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v8.3.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v9.0.0
 
-> **v8.3.0 "EDAOS v8.3 — Governed Capability Metadata & Eval Platform"**
+> **v9.0.0 "EDAOS v9.0 — Governed Capability & Universal Project Knowledge V1 Architecture"**
 
-Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V8.3.0 (EDAOS v8.3)** với kiến trúc **Manifest-First & Eval Platform**, giúp giảm tối đa chi phí nhận thức (cognitive load) cho các AI Agent thế hệ mới (như Antigravity) nhờ chỉ định ranh giới định lượng, đồ thị phụ thuộc O(1), và các Blueprint Plugins quy chuẩn cho từng ngành nghề kỹ thuật.
+Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.0.0 (EDAOS v9.0)** với kiến trúc **Universal Project Knowledge V1 & Dual-Mode Memory Platform**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
 
 ---
 
-## 🏗️ 4 Trụ Cột Kiến Trúc Cốt Lõi (EDAOS v8.2 Architecture)
+## 🧭 Kiến Trúc Trí Nhớ Dự Án (Universal Project Knowledge V1)
+- **Quản trị như Source Code:** Tri thức dự án đơn giản, minh bạch, có thể xem xét (review) qua Pull Request, và **luôn có con người phê duyệt** (AI Đề xuất -> Con người Phê duyệt via `/learn` hoặc `./qk-project-memory`).
+- **Hai Chế Độ (Dual-Mode):** 
+  - *Private Mode (`.ai-local/`):* Bộ nhớ cá nhân ẩn danh, tự động được thêm vào `.gitignore` để bảo vệ sự riêng tư.
+  - *Shared Mode (`.agents/`):* Tri thức chung cho cả Team và hệ thống CI/CD, có thể commit và review ngang hàng như code.
+- **Tối Ưu Nhảy Sọt (Navigator):** File `AGENTS.md` giới hạn siêu gọn dưới 100 dòng làm bản đồ chỉ đường, kết hợp cùng `knowledge/index.yaml` (lưu trữ đúng 4 loại: *Architecture, Convention, Pattern, Hard Bug*), triệt tiêu 80% chi phí tìm kiếm mù lòa (zero redundant searches).
+
+---
+
+## 🏗️ 4 Trụ Cột Kiến Trúc Cốt Lõi (EDAOS v9.0 Architecture)
 
 ### 1. Manifest-First & O(1) Registry Engine
 Không còn phụ thuộc vào việc đọc/scan toàn bộ markdown mệt mỏi. AI Agent tra cứu siêu dữ liệu từ `.agents/registry/index.yaml` và kiểm duyệt chu trình không lặp (acyclic validation) thông qua O(1) graph JSON (`.agents/registry/graph.json`). Tốc độ hiểu và phân công năng lực đạt ngưỡng sub-second!

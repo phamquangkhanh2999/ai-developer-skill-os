@@ -1,6 +1,6 @@
 name: qk-access-policy-eval
 description: Đánh giá chất lượng thực thi của kỹ năng qk-access-policy
-version: 8.3.1
+version: 9.0.0
 threshold: 100 # Cần đạt điểm tuyệt đối với Access Policy vì tính chất bảo mật
 
 metrics:

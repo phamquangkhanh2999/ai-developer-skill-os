@@ -1,6 +1,6 @@
 name: qk-ui-system-builder-eval
 description: Đánh giá việc khởi tạo Design System Tokens
-version: 8.3.1
+version: 9.0.0
 threshold: 85 # Đảm bảo tokens sinh ra ánh xạ 1:1 với contract
 
 metrics:

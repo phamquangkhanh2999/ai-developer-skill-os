@@ -1,6 +1,6 @@
 name: qk-engineering-standard-eval
 description: Đánh giá việc áp dụng Tiêu chuẩn Kỹ thuật và Clean Code
-version: 8.3.1
+version: 9.0.0
 threshold: 80 # Đánh giá tính chính xác của việc tính điểm Health Score
 
 metrics:
@@ -17,8 +17,8 @@ metrics:
     description: Báo cáo có tính toán điểm sức khỏe (Health Score) chuẩn xác không?
     weight: 35
     criteria:
-      - Trừ điểm đúng theo thang điểm (CRITICAL: -25, HIGH: -10, MEDIUM: -5, LOW: -2) (20đ)
-      - Trả về đúng mức Exit Code tương ứng (SUCCESS nếu >=80, FAILED nếu <60) (15đ)
+      - 'Trừ điểm đúng theo thang điểm (CRITICAL: -25, HIGH: -10, MEDIUM: -5, LOW: -2) (20đ)'
+      - 'Trả về đúng mức Exit Code tương ứng (SUCCESS nếu >=80, FAILED nếu <60) (15đ)'
 
   - id: non_intrusive_reporting
     name: Báo cáo không can thiệp (Read-only)

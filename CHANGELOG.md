@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [9.0.0] — 2026-08 — EDAOS v9.0: Universal Project Knowledge V1 & Dual-Mode Memory Architecture
+
+### Added
+- **Universal Project Knowledge Protocol V1 (AI Skin V9)**: Core memory discipline integrated across all 32 developer skills (`qk-*`) and core OS rules.
+- **Dual-Mode Memory Setup**: Fully automated support for Private Mode (`.ai-local/`, git-ignored by default) and Shared Team Mode (`.agents/`, commit/reviewable via PRs).
+- **Pre-flight & Post-flight Governance**: Skills automatically check memory before performing redundant project searches (Navigator pattern) and propose structured knowledge harvesting (`Architecture`, `Convention`, `Pattern`, `Hard Bug`) subject to human confirmation (AI proposes → Human approves).
+- **Zero-Overwrite & Portable References**: Mandatory 100-line limit for project `AGENTS.md`, workspace-relative symbol paths, and immutable memory history (`status: Active` → `Archived`).
+
 ## [8.3.1] — 2026-07 — EDAOS v8.3.1: Eval Pipeline & Agentic Governance
 
 ### Added

@@ -1,7 +1,7 @@
 # registry/capability-graph.yml
 # GENERATED FILE - DO NOT EDIT MANUALLY.
-version: 8.1.3
-generated_at: '2026-07-29T07:30:08.002Z'
+version: 9.0.0
+generated_at: '2026-08-03T10:30:00.000Z'
 nodes:
   qk-access-policy:
     type: capability
@@ -250,6 +250,17 @@ nodes:
     does_not_own: []
     conflicts: []
     workflow: code-review
+  qk-ui-builder:
+    type: capability
+    maturity: stable
+    owns:
+      - ui components
+      - frontend layouts
+    does_not_own:
+      - design tokens
+      - system rules
+    conflicts: []
+    workflow: feature-delivery
   qk-ui-system-builder:
     type: capability
     maturity: stable

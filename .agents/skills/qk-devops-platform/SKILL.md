@@ -1,12 +1,12 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-devops-platform
-version: 8.3.1
+version: 9.0.0
 status: experimental
 description: "Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường và chiến lược rollback."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
-# ── V8: Classification ─────────────────────────────────────
+# ── V9: Classification ─────────────────────────────────────
 type: capability
 
 intent:
@@ -107,6 +107,136 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 # qk-devops-platform — Platform Engineer
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
+
+## Memory Workflow
+
+### Pre-flight Retrieve (Trước khi thực thi)
+- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
+  bắt buộc tra cứu:
+  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
+  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
+
+- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
+  - Architecture
+  - Hard Bug
+  - Convention
+  - Pattern
+  - Tech Debt Pattern
+  - 👉 *Domain Focus:* Architecture / Hard Bug (vd: quy trình CI/CD pipeline, rollback strategy, docker env).
+
+- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
+  Không được xem Memory là Source of Truth.
+  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
+
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: thay đổi runner CI, cấu hình rollback mới).
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+- 👉 *Domain Ignore:* Log build tạm thời của CI/CD session.
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: thay đổi runner CI, cấu hình rollback mới).
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+- 👉 *Domain Ignore:* Log build tạm thời của CI/CD session.
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
+---
+---
+---
 
 ## Preconditions
 - [ ] Requirements cho môi trường triển khai đã có sẵn.

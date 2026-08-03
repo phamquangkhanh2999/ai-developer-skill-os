@@ -1,0 +1,26 @@
+name: qk-ui-builder-eval
+description: Đánh giá việc thiết kế và xây dựng giao diện người dùng (UI)
+version: 9.0.0
+threshold: 85 # Đảm bảo giao diện hiện đại, chuẩn token và thẩm mỹ cao
+
+metrics:
+  - id: design_token_compliance
+    name: Tuân thủ Design Token (DESIGN.md)
+    description: Code sinh ra có sử dụng chuẩn token màu sắc và kích thước của hệ thống không?
+    weight: 45
+    criteria:
+      - Tuyệt đối sử dụng các biến CSS từ hợp đồng thiết kế, không dùng màu vô danh giá trị cứng (45đ)
+
+  - id: modern_rich_aesthetics
+    name: Thẩm mỹ hiện đại (Anti-Slop)
+    description: Giao diện có sinh động, tinh tế và loại bỏ cảm giác AI sơ sài không?
+    weight: 30
+    criteria:
+      - Sử dụng tráng gương, hover effect và bố cục rõ rệt, không làm giao diện đơn điệu (30đ)
+
+  - id: component_reusability
+    name: Tính tái sử dụng và tinh gọn
+    description: Cấu trúc component có gọn gàng và dễ mở rộng trong tương lai không?
+    weight: 25
+    criteria:
+      - Chia nhỏ logic sang custom hooks hoặc sub-components hợp lý (25đ)

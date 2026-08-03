@@ -43,7 +43,7 @@ function evaluateSkill(skillName) {
   console.log(`\n[1/3] Running Validation Gates...`);
   
   console.log(`  > Running npm run lint...`);
-  const lintRes = spawnSync('npm', ['run', 'lint'], { stdio: 'ignore' });
+  const lintRes = spawnSync('npm', ['run', 'lint'], { stdio: 'ignore', shell: true });
   if (lintRes.status !== 0) {
     console.log(`  ⚠️ Linting returned errors or warnings.`);
   } else {

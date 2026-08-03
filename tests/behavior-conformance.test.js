@@ -23,7 +23,7 @@ function parseBSF(skillPath) {
   if (!fmMatch) return null;
   const frontmatter = YAML.load(fmMatch[1]);
   let type = 'legacy';
-  if (frontmatter.version && frontmatter.version.startsWith('8.')) type = 'v8';
+  if (frontmatter.version && (frontmatter.version.startsWith('8.') || frontmatter.version.startsWith('9.'))) type = 'v8';
   else if (frontmatter.version && frontmatter.version.startsWith('7.')) type = 'v7';
   else if (frontmatter.version && frontmatter.version.startsWith('6.')) type = 'v6';
   

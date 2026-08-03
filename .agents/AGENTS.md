@@ -39,6 +39,27 @@ Changes applied:
   [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
 ```
 
+[Universal Project Knowledge Protocol V1 (AI Skin V9)]
+Khi thực thi BẤT KỲ kỹ năng nào (tất cả các lệnh `./qk-*` hoặc task code thường), bạn BẮT BUỘC tuân thủ Kỷ Luật Trí Nhớ V1:
+
+1. **Kim chỉ nam tối thượng**:
+   - *"Knowledge phải được quản lý giống như source code: đơn giản, có thể xem xét (review), có thể cập nhật, có thể loại bỏ và luôn có con người chịu trách nhiệm phê duyệt."*
+   - *"Memory chỉ dùng để giảm thời gian tìm kiếm (Navigator), không thay thế việc đọc mã nguồn hiện tại (Not a Source of Truth)."*
+   - *"AGENTS.md và knowledge/index.yaml là tài liệu kỹ thuật của dự án, tuyệt đối KHÔNG phải nhật ký hội thoại của AI."*
+
+2. **Cơ chế tra cứu trước khi làm (Pre-flight Load)**:
+   - Trước khi mò mẫm tìm kiếm toàn dự án (search_web/grep), BẮT BUỘC kiểm tra và tra cứu `index.yaml` (trong `.ai-local/knowledge/` cho Private Mode, hoặc `.agents/knowledge/` cho Shared Mode).
+   - Nếu tìm thấy Pattern/Fact liên quan có `status: Active`, áp dụng NGAY LẬP TỨC để bỏ qua bước search dài dòng.
+
+3. **Cơ chế thu hạch tri thức hậu task (Post-flight Harvest - AI Đề xuất, Con người Phê duyệt)**:
+   - Sau khi hoàn thành task, tự đặt câu hỏi: *"Task này có thuộc 1 trong 4 loại (Architecture, Convention, Pattern, Hard Bug) và có đáng nhớ để giúp mở file nhanh hơn / tránh lỗi trả giá đắt không?"*
+   - KHÔNG bao giờ tự động sửa ngầm file bộ nhớ. Nếu phát hiện tri thức đáng nhớ, trả về tóm tắt đề xuất và yêu cầu **Người dùng Phê Duyệt**. Các thao tác typo, CSS vặt, đổi text, CRUD thường BẮT BUỘC bỏ qua (Dismiss).
+
+4. **Kỷ luật lưu trữ (Two-Mode & Zero-Overwrite)**:
+   - *Mode 1 (Private - Mặc định cho cá nhân)*: Lưu tại `.ai-local/` (bắt buộc chèn vào `.gitignore`).
+   - *Mode 2 (Shared - Cho Team & CI/CD)*: Lưu tại `.agents/` (để commit & review qua Pull Request).
+   - *Giới hạn siêu gọn*: File `AGENTS.md` của dự án phải DƯỚI 100 dòng. `index.yaml` chỉ dùng đường dẫn tương đối (`src/...`) và tham chiếu biểu tượng (Symbol), tuyệt đối không fix cứng đường dẫn ổ đĩa tuyệt đối cá nhân. Khi tri thức cũ thay đổi, chuyển sang `status: Archived`, không được xóa đè lịch sử (Zero-Overwrite).
+
 [Command Arguments]
 Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).
 Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.

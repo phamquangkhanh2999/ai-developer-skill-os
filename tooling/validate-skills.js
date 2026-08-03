@@ -31,7 +31,7 @@ function parseFrontmatter(content) {
   const version = extract('version') || '7.5.0';
   let status = extract('status');
   
-  if (!status && version.startsWith('8.')) {
+  if (!status && (version.startsWith('8.') || version.startsWith('9.'))) {
       status = 'stable';
   } else if (!status) {
       status = 'legacy';

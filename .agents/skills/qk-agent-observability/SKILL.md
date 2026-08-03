@@ -1,6 +1,6 @@
 ---
 name: qk-agent-observability
-version: 8.3.1
+version: 9.0.0
 status: experimental
 description: "Lớp theo dõi (Observability) cho phép giám sát quyết định, luân chuyển và các mô hình lỗi."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
@@ -109,6 +109,136 @@ This skill enables tracking and observing the AI agent's own behavior, decisions
 
 ---
 
+## Memory Workflow
+
+### Pre-flight Retrieve (Trước khi thực thi)
+- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
+  bắt buộc tra cứu:
+  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
+  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
+
+- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
+  - Architecture
+  - Hard Bug
+  - Convention
+  - Pattern
+  - Tech Debt Pattern
+  - 👉 *Domain Focus:* Hard Bug / Convention (vd: mô hình lỗi lặp vô tận, giới hạn token budget).
+
+- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
+  Không được xem Memory là Source of Truth.
+  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
+
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+  - 👉 *Domain Harvest:* Hard Bug mới có khả năng tái diễn (vd: lỗi loop định tuyến cần blacklist).
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+- 👉 *Domain Ignore:* Trace log của một session đơn lẻ (tự XÓA sau khi thực thi).
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+  - 👉 *Domain Harvest:* Hard Bug mới có khả năng tái diễn (vd: lỗi loop định tuyến cần blacklist).
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+- 👉 *Domain Ignore:* Trace log của một session đơn lẻ (tự XÓA sau khi thực thi).
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
+---
+---
+---
+
 ## Scope
 - ✅ Monitor agent decision boundaries and token budgets during execution
 - ✅ Record execution traces and accuracy metrics into `evals/traces/` for quantitative verification
@@ -118,6 +248,12 @@ This skill enables tracking and observing the AI agent's own behavior, decisions
 - ❌ Monitor infrastructure servers, Kubernetes pods, or external application metrics
 - ❌ Alter runtime execution paths outside of established boundary validation rules
 - ❌ Tự tính pass/fail hay enforce threshold — đó là việc của `qk-validation-gate` (xem `decision_boundary.does_not_own`)
+
+---
+
+## 🧭 V1 Knowledge Protocol (AI Skin V9)
+- **Pre-flight Check:** BẮT BUỘC tra cứu `.ai-local/knowledge/index.yaml` hoặc `.agents/knowledge/index.yaml` (nếu tồn tại) trước khi tiến hành tìm kiếm mù toàn dự án. Nếu có pattern/fact liên quan (`status: Active`), áp dụng ngay để bỏ qua bước search dài dòng.
+- **Post-flight Harvest (AI Đề xuất -> Con người Phê duyệt):** Sau khi hoàn thành task, nếu phát hiện tri thức thuộc 4 loại (`Architecture`, `Convention`, `Pattern`, `Hard Bug`) có giá trị giảm thời gian cho tương lai, hãy tóm tắt đề xuất và yêu cầu Người dùng xác nhận trước khi lưu lại. Bỏ qua các thay đổi lặt vặt (typo, CSS, CRUD thường).
 
 ---
 

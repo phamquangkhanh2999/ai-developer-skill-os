@@ -1,6 +1,6 @@
 name: qk-refactor-eval
 description: Đánh giá an toàn và hiệu quả của tiến trình Refactor
-version: 8.3.1
+version: 9.0.0
 threshold: 90 # Yêu cầu an toàn rất cao, refactor không được làm hỏng tính năng
 
 metrics:

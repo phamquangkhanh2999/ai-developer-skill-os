@@ -1,6 +1,6 @@
 name: qk-orchestrator-eval
 description: Đánh giá khả năng điều phối và định tuyến tác vụ (Task Routing)
-version: 8.3.1
+version: 9.0.0
 threshold: 85 # Đóng vai trò kiểm soát luồng, yêu cầu độ chính xác cao
 
 metrics:
