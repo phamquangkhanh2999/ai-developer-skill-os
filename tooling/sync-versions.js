@@ -167,10 +167,16 @@ function getMemoryWorkflow(skillName) {
 
   return `## Memory Workflow
 
+### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
+- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục \`.ai-local/\` tại gốc dự án:
+  - **Tự động tạo mới:** Nếu \`.ai-local/\` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục \`.ai-local/knowledge/\` (và file \`index.yaml\` nếu cần thiết) cùng \`.ai-local/candidates/\`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
+  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file \`.gitignore\` của dự án, nếu chưa có dòng \`.ai-local/\` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
+
+---
+
 ### Pre-flight Retrieve (Trước khi thực thi)
 - Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
   bắt buộc tra cứu:
-  - \`.agents/knowledge/index.yaml\` (Shared Project Knowledge)
   - \`.ai-local/knowledge/index.yaml\` (Private Local Knowledge)
 
 - Ưu tiên sử dụng các Knowledge đang có trạng thái \`Active\` thuộc:
@@ -211,7 +217,7 @@ Sau khi hoàn thành task:
 - Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
 
 \`\`\`
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
 \`\`\`
 
 - Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
@@ -252,10 +258,8 @@ skills.forEach(skill => {
     // Inject or update Memory Workflow (except qk-project-memory which manages memory itself)
     if (skill !== 'qk-project-memory' && skill !== 'qk-help') {
       const block = getMemoryWorkflow(skill);
-      if (newContent.includes('## Memory Workflow')) {
-        newContent = newContent.replace(/## Memory Workflow[\s\S]*?(?=\r?\n---\r?\n|\r?\n## )/m, block.trimEnd());
-      } else if (newContent.includes('## 🧭 V1 Knowledge Protocol')) {
-        newContent = newContent.replace(/## 🧭 V1 Knowledge Protocol[\s\S]*?(?=\r?\n---\r?\n|\r?\n## )/m, block.trimEnd());
+      if (newContent.includes('## Memory Workflow') || newContent.includes('## 🧭 V1 Knowledge Protocol')) {
+        newContent = newContent.replace(/## (?:Memory Workflow|🧭 V1 Knowledge Protocol)[\s\S]*?(?=\r?\n## [^#]|$)/m, block.trimEnd() + '\n\n');
       } else if (newContent.includes('## Preconditions')) {
         newContent = newContent.replace('## Preconditions', block + '## Preconditions');
       } else if (newContent.includes('## Scope')) {

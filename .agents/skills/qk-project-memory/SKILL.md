@@ -3,7 +3,7 @@
 name: qk-project-memory
 version: 9.1.0
 status: stable
-description: "Quản trị Tri thức và Bộ nhớ dự án V1 (Dual-Mode Shared/Private) — Quản lý như source code: đơn giản, có thể review, cập nhật và luôn có con người phê duyệt."
+description: "Quản trị Tri thức và Bộ nhớ dự án V1 (Local Private Mode) — Quản lý tại .ai-local/ như source code: tự động khởi tạo, bảo mật gitignore, có thể review, cập nhật và luôn có con người phê duyệt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -98,27 +98,23 @@ exit_codes: [SUCCESS, BLOCKED, DISMISSED, FAILED]
 
 ---
 
-## 1. Hai Chế Độ Lưu Trữ (Dual-Mode Design)
+## 1. Chế Độ Lưu Trữ Local Private & Tự Động Khởi Tạo (Self-Init Protocol)
 
-Tùy thuộc vào nhu cầu bảo mật hay làm việc nhóm, V1 hỗ trợ 2 chế độ (Mode):
+Tri thức dự án V1 được chuẩn hóa duy nhất dưới chế độ **Local Private Mode** nhằm đảm bảo an toàn bảo mật riêng tư, tránh nhầm lẫn và không xâm phạm Git chính của team:
 
-### Mode 1: Private Mode (Mặc định cho cá nhân)
+### Cấu Trúc Bộ Nhớ (.ai-local/)
 ```text
 .ai-local/
 ├── AGENTS.md            ──> Bản đồ dự án (< 100 dòng)
-└── knowledge/
-      └── index.yaml     ──> Kho tri thức 4 lĩnh vực
+├── knowledge/
+│     └── index.yaml     ──> Kho tri thức 4 lĩnh vực
+└── candidates/          ──> Kho lưu Candidate Memory tạm thời
 ```
-- **Bảo mật tuyệt đối:** Thư mục `.ai-local/` BẮT BUỘC được định danh trong `.gitignore` của dự án (hoặc Global Git Ignore). Tri thức nằm trọn trên máy lập trình viên dùng Skin, không đẩy lên Git.
-
-### Mode 2: Shared Mode (Dành cho Team & CI/CD)
-```text
-.agents/
-├── AGENTS.md            ──> Bản đồ dự án (< 100 dòng)
-└── knowledge/
-      └── index.yaml     ──> Kho tri thức 4 lĩnh vực
-```
-- **Đồng bộ toàn đội:** Thư mục `.agents/` được commit, tạo Pull Request (PR), team review và merge vào codebase như source code. Ai clone dự án về đều nhận trọn vẹn tri thức tái sử dụng.
+- **Tự động Khởi tạo (Self-Init) & Gitignore Bắt Buộc:**
+  - Bất cứ khi nào kích hoạt kỹ năng hoặc khi cần tra cứu/lưu trữ tri thức mà thư mục `.ai-local/` chưa tồn tại trong gốc dự án, AI **BẮT BUỘC** tự động tạo ngay cấu trúc thư mục này cùng các file `AGENTS.md` và `knowledge/index.yaml`.
+  - AI **BẮT BUỘC** kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động chèn vào ngay lập tức.
+  - Tuyệt đối không dừng lại để hỏi ý kiến hay chờ phê duyệt về việc khởi tạo bộ nhớ local này. AI phải luôn chủ động để không bị bối rối về nơi tìm kiếm hay lưu trữ tri thức.
+- **Đã loại bỏ Shared Mode:** Không sử dụng hay tìm kiếm tại `.agents/knowledge/index.yaml` để thống nhất một nguồn tra cứu duy nhất từ `.ai-local/`.
 
 ---
 
@@ -229,7 +225,7 @@ AI tóm tắt nội dung tri thức dưới chuẩn đinh dạc của `index.yam
 Trình bày rõ trước người dùng trên chat:
 ```markdown
 💡 [AI Skin Project Memory]: Phát hiện tri thức mới đáng ghi nhớ cho dự án.
-Đề xuất ghi vào `[Mode: .ai-local / .agents]/knowledge/index.yaml`:
+Đề xuất ghi vào `.ai-local/knowledge/index.yaml`:
 
 ... (Nội dung YAML tóm tắt) ...
 

@@ -140,7 +140,7 @@ Agent **SHOULD**:
 
 **MUST** govern project memory like source code: simple, reviewable, updatable, and always human-approved.
 
-- **Dual-Mode Setup:** Prefer `.ai-local/` (Private Mode, gitignored) or `.agents/` (Shared Mode, git-commited).
+- **Self-Init & Local Private Mode:** Always use `.ai-local/` (Private Mode, gitignored) as the sole storage for learned knowledge and memory. If `.ai-local/` does not exist in the project root, the agent **MUST** automatically create the folder structure (`.ai-local/knowledge/`, `.ai-local/candidates/`) and add `.ai-local/` to the project's `.gitignore` file immediately before proceeding. Shared Mode (`.agents/knowledge/index.yaml`) is explicitly disabled and prohibited for dynamic project memory.
 - **Navigator ONLY:** Memory reduces discovery time; it is NOT a replacement for checking live source code.
 - **Strict Content Bounds:** Only store 4 categories in `knowledge/index.yaml`: `Architecture`, `Convention`, `Pattern`, and `Hard Bug`. Discard routine typos, trivial CSS, and standard CRUD.
 - **Zero-Overwrite & Portable:** Mark outdated facts as `status: Archived` (never overwrite history). Always use workspace-relative paths (`src/...`) and AST symbol names instead of hardcoded disk paths or rigid line numbers.

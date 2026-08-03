@@ -2,16 +2,16 @@
 
 > **v9.0.0 "EDAOS v9.0 — Governed Capability & Universal Project Knowledge V1 Architecture"**
 
-Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.0.0 (EDAOS v9.0)** với kiến trúc **Universal Project Knowledge V1 & Dual-Mode Memory Platform**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
+Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.1.0 (EDAOS v9.1)** với kiến trúc **Universal Project Knowledge V1 (Local Private & Self-Init Architecture)**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
 
 ---
 
-## 🧭 Kiến Trúc Trí Nhớ Dự Án (Universal Project Knowledge V1)
-- **Quản trị như Source Code:** Tri thức dự án đơn giản, minh bạch, có thể xem xét (review) qua Pull Request, và **luôn có con người phê duyệt** (AI Đề xuất -> Con người Phê duyệt via `/learn` hoặc `./qk-project-memory`).
-- **Hai Chế Độ (Dual-Mode):** 
-  - *Private Mode (`.ai-local/`):* Bộ nhớ cá nhân ẩn danh, tự động được thêm vào `.gitignore` để bảo vệ sự riêng tư.
-  - *Shared Mode (`.agents/`):* Tri thức chung cho cả Team và hệ thống CI/CD, có thể commit và review ngang hàng như code.
-- **Tối Ưu Nhảy Sọt (Navigator):** File `AGENTS.md` giới hạn siêu gọn dưới 100 dòng làm bản đồ chỉ đường, kết hợp cùng `knowledge/index.yaml` (lưu trữ đúng 4 loại: *Architecture, Convention, Pattern, Hard Bug*), triệt tiêu 80% chi phí tìm kiếm mù lòa (zero redundant searches).
+## 🧭 Kiến Trúc Trí Nhớ Dự Án (Universal Project Knowledge V1 - Local Private Mode)
+- **Quản trị như Source Code:** Tri thức dự án đơn giản, minh bạch, có thể xem xét (review) và **luôn có con người phê duyệt** (AI Đề xuất -> Con người Phê duyệt via `/learn` hoặc `./qk-project-memory`).
+- **Chính sách Local Private Duy Nhất & Tự động Khởi tạo (Self-Init Protocol):** 
+  - *Bộ Nhớ Cá Nhân (`.ai-local/`):* Toàn bộ tri thức ghi nhớ của dự án được tập trung lưu tại thư mục `.ai-local/` (bao gồm `AGENTS.md` và `knowledge/index.yaml`). Đã loại bỏ hoàn toàn chế độ dùng chung (`.agents/knowledge/index.yaml` - Shared Mode) để đảm bảo quyền riêng tư và tránh xung đột khi làm việc nhóm.
+  - *Tự động Khởi tạo & Bảo mật Gitignore:* Bất cứ khi nào AI kích hoạt kỹ năng hoặc cần tra cứu/học tri thức mà thư mục `.ai-local/` chưa tồn tại trong gốc dự án, AI **BẮT BUỘC** tự động tạo cấu trúc thư mục này và tự động thêm dòng `.ai-local/` vào file `.gitignore` của dự án ngay lập tức.
+- **Tối Ưu Nhảy Sọt (Navigator):** File `.ai-local/AGENTS.md` giới hạn siêu gọn dưới 100 dòng làm bản đồ chỉ đường, kết hợp cùng `.ai-local/knowledge/index.yaml` (lưu trữ đúng 4 loại: *Architecture, Convention, Pattern, Hard Bug*), triệt tiêu 80% chi phí tìm kiếm mù lòa (zero redundant searches).
 
 ---
 

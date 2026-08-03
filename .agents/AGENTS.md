@@ -47,18 +47,18 @@ Khi thực thi BẤT KỲ kỹ năng nào (tất cả các lệnh `./qk-*` hoặ
    - *"Memory chỉ dùng để giảm thời gian tìm kiếm (Navigator), không thay thế việc đọc mã nguồn hiện tại (Not a Source of Truth)."*
    - *"AGENTS.md và knowledge/index.yaml là tài liệu kỹ thuật của dự án, tuyệt đối KHÔNG phải nhật ký hội thoại của AI."*
 
-2. **Cơ chế tra cứu trước khi làm (Pre-flight Load)**:
-   - Trước khi mò mẫm tìm kiếm toàn dự án (search_web/grep), BẮT BUỘC kiểm tra và tra cứu `index.yaml` (trong `.ai-local/knowledge/` cho Private Mode, hoặc `.agents/knowledge/` cho Shared Mode).
+2. **Cơ chế tự động khởi tạo & tra cứu (Self-Init & Pre-flight Load)**:
+   - **Tự động Khởi tạo & Gitignore:** Nếu thư mục `.ai-local/` chưa tồn tại trong project, AI BẮT BUỘC phải tự động tạo cấu trúc thư mục (`.ai-local/knowledge/`, `.ai-local/candidates/`) và tự động thêm dòng `.ai-local/` vào file `.gitignore` của dự án (nếu chưa có) để đảm bảo AI biết rõ nơi tra cứu/lưu trữ và tuyệt đối bảo mật tri thức cá nhân.
+   - **Tra cứu trước khi làm:** Trước khi mò mẫm tìm kiếm toàn dự án (search_web/grep), BẮT BUỘC kiểm tra và tra cứu tại `.ai-local/knowledge/index.yaml`.
    - Nếu tìm thấy Pattern/Fact liên quan có `status: Active`, áp dụng NGAY LẬP TỨC để bỏ qua bước search dài dòng.
 
-3. **Cơ chế thu hạch tri thức hậu task (Post-flight Harvest - AI Đề xuất, Con người Phê duyệt)**:
+3. **Cơ chế thu hoạch tri thức hậu task (Post-flight Harvest - AI Đề xuất, Con người Phê duyệt)**:
    - Sau khi hoàn thành task, tự đặt câu hỏi: *"Task này có thuộc 1 trong 4 loại (Architecture, Convention, Pattern, Hard Bug) và có đáng nhớ để giúp mở file nhanh hơn / tránh lỗi trả giá đắt không?"*
    - KHÔNG bao giờ tự động sửa ngầm file bộ nhớ. Nếu phát hiện tri thức đáng nhớ, trả về tóm tắt đề xuất và yêu cầu **Người dùng Phê Duyệt**. Các thao tác typo, CSS vặt, đổi text, CRUD thường BẮT BUỘC bỏ qua (Dismiss).
 
-4. **Kỷ luật lưu trữ (Two-Mode & Zero-Overwrite)**:
-   - *Mode 1 (Private - Mặc định cho cá nhân)*: Lưu tại `.ai-local/` (bắt buộc chèn vào `.gitignore`).
-   - *Mode 2 (Shared - Cho Team & CI/CD)*: Lưu tại `.agents/` (để commit & review qua Pull Request).
-   - *Giới hạn siêu gọn*: File `AGENTS.md` của dự án phải DƯỚI 100 dòng. `index.yaml` chỉ dùng đường dẫn tương đối (`src/...`) và tham chiếu biểu tượng (Symbol), tuyệt đối không fix cứng đường dẫn ổ đĩa tuyệt đối cá nhân. Khi tri thức cũ thay đổi, chuyển sang `status: Archived`, không được xóa đè lịch sử (Zero-Overwrite).
+4. **Kỷ luật lưu trữ Local Private (Zero-Overwrite)**:
+   - *Chế độ Local Private duy nhất:* Toàn bộ tri thức bộ nhớ dự án được lưu tại `.ai-local/` (bắt buộc chèn vào `.gitignore`). Đã loại bỏ hoàn toàn việc lưu trữ chung qua `.agents/knowledge/` (Shared Mode) để tập trung vào không gian làm việc cá nhân, tránh nhầm lẫn và không xâm lấn git.
+   - *Giới hạn siêu gọn*: File `.ai-local/AGENTS.md` phải DƯỚI 100 dòng. `index.yaml` chỉ dùng đường dẫn tương đối (`src/...`) và tham chiếu biểu tượng (Symbol), tuyệt đối không fix cứng đường dẫn ổ đĩa tuyệt đối cá nhân. Khi tri thức cũ thay đổi, chuyển sang `status: Archived`, không được xóa đè lịch sử (Zero-Overwrite).
 
 [Command Arguments]
 Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).

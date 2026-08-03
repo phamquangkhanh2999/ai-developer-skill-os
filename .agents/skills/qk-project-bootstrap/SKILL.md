@@ -90,10 +90,16 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 ## Memory Workflow
 
+### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
+- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
+  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
+  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
+
+---
+
 ### Pre-flight Retrieve (Trước khi thực thi)
 - Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
   bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
   - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
 
 - Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
@@ -136,7 +142,7 @@ Sau khi hoàn thành task:
 - Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
 
 ```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
 ```
 
 - Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
@@ -161,6 +167,33 @@ Không lưu:
 > **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
 
 ---
+
+
+
+### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
+- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
+  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
+  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
+
+---
+
+### Pre-flight Retrieve (Trước khi thực thi)
+- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
+  bắt buộc tra cứu:
+  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
+
+- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
+  - Architecture
+  - Hard Bug
+  - Convention
+  - Pattern
+  - Tech Debt Pattern
+  - 👉 *Domain Focus:* Architecture / Convention (vd: mô hình 4-folder RAG/Agent, blueprint quy chuẩn V9).
+
+- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
+  Không được xem Memory là Source of Truth.
+  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
+
 ---
 
 ### Learning Flow (AI tự học có kiểm soát)
@@ -189,7 +222,7 @@ Sau khi hoàn thành task:
 - Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
 
 ```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
 ```
 
 - Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
@@ -213,62 +246,6 @@ Không lưu:
 > **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
 > **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
 
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Cấu trúc thư mục hoặc template scaffold mẫu mới của dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* File cấu hình local rác (đã đưa vào gitignore).
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
@@ -287,13 +264,13 @@ On missing precondition:
 - ✅ **One-Click Blueprint Selection:** Choose from Blueprint Plugins (`coding`, `rag`, `workflow`, `enterprise`).
 - ✅ **Generate `project.yaml`:** Copy appropriate manifest from `.agents/blueprints/<type>/project.yaml.tpl` to workspace root.
 - ✅ **Initialize Project Scaffolding:** Create standard directory structure (including the **4-Folder RAG Architecture** for AI projects).
-- ✅ **Initialize Project Knowledge V1:** Setup Dual-Mode Memory architecture (`.ai-local/` Private Mode with `.gitignore` entry by default, or `.agents/` Shared Mode) containing concise `AGENTS.md` (<100 lines) and `knowledge/index.yaml` (4 core types: Architecture, Convention, Pattern, Hard Bug).
+- ✅ **Initialize Project Knowledge V1:** Setup Local Private Memory architecture (`.ai-local/` directory with automatic `.gitignore` entry included by default) containing concise `AGENTS.md` (<100 lines) and `knowledge/index.yaml` (4 core types: Architecture, Convention, Pattern, Hard Bug).
 - ✅ **Configure Tooling:** Linter, Prettier, TypeScript strict mode, or Python environment depending on stack.
 - ✅ **Generate `DESIGN.md`:** Mandatory brand & token contract for any UI project.
 
 ## Non-Goals
 - ❌ Skip `project.yaml` workspace manifest initialization
-- ❌ Skip Project Knowledge V1 (`AGENTS.md` & `index.yaml` memory setup)
+- ❌ Skip Project Knowledge V1 (`AGENTS.md` & `index.yaml` memory setup in `.ai-local/`)
 - ❌ Skip DESIGN.md for UI projects
 - ❌ Hardcode outdated dependency versions or absolute machine disk paths
 - ❌ Skip README or documentation
@@ -306,7 +283,7 @@ On missing precondition:
 *Activated when building AI agents, RAG engines, or domain automation.*
 ```text
 project.yaml              # ⭐ V8.2 Workspace Manifest (Profiles & Capabilities)
-.ai-local/                # ⭐ V1 Private Project Memory (Gitignored) OR .agents/ Shared Memory
+.ai-local/                # ⭐ V1 Private Project Memory (Self-Init & Gitignored by default)
 ├── AGENTS.md             # Project roadmap & quick actions (<100 lines)
 └── knowledge/
       └── index.yaml      # Architecture, Convention, Pattern & Hard Bug repository
@@ -330,7 +307,7 @@ evals/                    # Quantitative validation evidence
 *Activated when developing software applications or UI components.*
 ```text
 project.yaml              # ⭐ V8.2 Workspace Manifest
-.ai-local/                # ⭐ V1 Private Project Memory (Gitignored) OR .agents/ Shared Memory
+.ai-local/                # ⭐ V1 Private Project Memory (Self-Init & Gitignored by default)
 ├── AGENTS.md             # Project roadmap & quick actions (<100 lines)
 └── knowledge/
       └── index.yaml      # Architecture, Convention, Pattern & Hard Bug repository
@@ -348,7 +325,7 @@ DESIGN.md                 # Brand & Design Contract
 ### 3. Automation Workflows (n8n & Data ETL)
 ```text
 project.yaml              # ⭐ V8.2 Workspace Manifest
-.ai-local/                # ⭐ V1 Private Project Memory (Gitignored) OR .agents/ Shared Memory
+.ai-local/                # ⭐ V1 Private Project Memory (Self-Init & Gitignored by default)
 workflows/                # Automation graphs & JSON blueprints
 connectors/               # API & Database integrations
 pipelines/                # Transformation scripts
@@ -360,12 +337,12 @@ evals/                    # Traceability logs
 ## Required Files Checklist
 ```
 [ ] project.yaml — V8.2 Machine-readable Workspace Manifest
-[ ] .ai-local/AGENTS.md OR .agents/AGENTS.md — V1 Project Architecture Navigator (<100 lines)
-[ ] .ai-local/knowledge/index.yaml OR .agents/knowledge/index.yaml — V1 Actionable Knowledge Base
+[ ] .ai-local/AGENTS.md — V1 Project Architecture Navigator (<100 lines)
+[ ] .ai-local/knowledge/index.yaml — V1 Actionable Knowledge Base (Self-Init on demand)
 [ ] package.json / pyproject.toml — dependencies and scripts
 [ ] tsconfig.json — strict mode enabled (if TypeScript)
 [ ] .eslintrc / .prettierrc — project standard linting and formatting
-[ ] .gitignore — standard entries (MUST include .ai-local/ if Private Mode)
+[ ] .gitignore — standard entries (MUST include .ai-local/ to protect personal project memory)
 [ ] README.md — project description + setup instructions
 [ ] DESIGN.md — (UI projects) brand contract with color/font/spacing tokens
 [ ] evals/scorecard.yaml — (AI/RAG/Workflow projects) eval standard
@@ -399,8 +376,6 @@ evals/                    # Traceability logs
 --transition-fast: 150ms ease;
 --transition-base: 250ms ease;
 ```
-
----
 
 ---
 
@@ -543,4 +518,3 @@ Recommended Assumptions (if proceeding):
 ```
 
 ---
-
