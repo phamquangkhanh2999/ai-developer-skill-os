@@ -1,8 +1,8 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v9.0.0
+# 🚀 AI Developer Skill OS (ai-developer-skill-os) v9.1.1
 
-> **v9.0.0 "EDAOS v9.0 — Governed Capability & Universal Project Knowledge V1 Architecture"**
+> **v9.1.1 "EDAOS v9.1 — Governed Capability & Universal Project Knowledge V1 Architecture"**
 
-Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.1.0 (EDAOS v9.1)** với kiến trúc **Universal Project Knowledge V1 (Local Private & Self-Init Architecture)**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
+Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.1.1 (EDAOS v9.1.1)** với kiến trúc **Universal Project Knowledge V1 (Local Private & Self-Init Architecture)**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
 
 ---
 
