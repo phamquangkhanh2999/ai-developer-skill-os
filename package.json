@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "9.0.0",
-  "description": "EDAOS v9.0 — Governed Capability Platform & Universal Project Knowledge V1 (Dual-Mode Memory Architecture).",
+  "version": "9.1.0",
+  "description": "EDAOS v9.1 — Governed Capability Platform & Universal Project Knowledge V1 (Candidate Memory & Golden Rule Architecture).",
   "main": "bin/install.js",
   "files": [
     "bin",

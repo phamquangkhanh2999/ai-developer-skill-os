@@ -1,6 +1,6 @@
 schema_version: 1
 id: "qk-refactor"
-version: "9.0.0"
+version: "9.1.0"
 description: "Tái cấu trúc và dọn dẹp mã nguồn để dễ bảo trì hơn mà không làm thay đổi logic hoạt động bên ngoài."
 dependencies:
   - "refactor"

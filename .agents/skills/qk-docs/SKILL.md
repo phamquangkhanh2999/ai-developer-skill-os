@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-docs
-version: 9.0.0
+version: 9.1.0
 status: stable
 description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
@@ -106,6 +106,59 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
   Không được xem Memory là Source of Truth.
   Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
 
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
 ---
 
 ### Learning Flow (AI tự học có kiểm soát)

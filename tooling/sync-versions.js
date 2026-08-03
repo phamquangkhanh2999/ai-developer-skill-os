@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const targetVersion = "9.0.0";
+const targetVersion = "9.1.0";
 const rootDir = process.cwd();
 const skillsDir = path.join(rootDir, '.agents', 'skills');
 

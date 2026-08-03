@@ -1,6 +1,6 @@
 name: qk-data-lifecycle-eval
 description: Đánh giá chất lượng quản lý Schema và an toàn Migration
-version: 9.0.0
+version: 9.1.0
 threshold: 90 # Tiêu chuẩn rất cao vì rủi ro mất mát dữ liệu (Data loss) là CRITICAL
 
 metrics:

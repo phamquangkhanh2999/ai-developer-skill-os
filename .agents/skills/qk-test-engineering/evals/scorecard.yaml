@@ -1,6 +1,6 @@
 name: qk-test-engineering-eval
 description: Đánh giá tư duy Chiến lược Kiểm thử (Test Strategy)
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo tư vấn chiến lược rõ ràng và bao quát rủi ro
 
 metrics:

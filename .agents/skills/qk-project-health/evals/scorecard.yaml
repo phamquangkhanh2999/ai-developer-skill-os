@@ -1,6 +1,6 @@
 name: qk-project-health-eval
 description: Đánh giá năng lực Kiểm toán toàn diện sức khỏe Codebase
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo chấm điểm công tâm và vạch ra Roadmap cải thiện rõ ràng
 
 metrics:

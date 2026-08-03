@@ -1,6 +1,6 @@
 name: qk-web-quality-gate-eval
 description: Đánh giá chất lượng tổng thể của Web (Performance, SEO, A11y, UX)
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo đo lường đầy đủ 4 trục chất lượng của ứng dụng Web
 
 metrics:

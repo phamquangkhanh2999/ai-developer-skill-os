@@ -1,6 +1,6 @@
 name: qk-db-optimizer-eval
 description: Đánh giá chất lượng tối ưu hóa Database
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Yêu cầu dựa trên bằng chứng, không đoán mò
 
 metrics:

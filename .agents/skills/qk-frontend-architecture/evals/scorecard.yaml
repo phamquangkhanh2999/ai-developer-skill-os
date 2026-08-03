@@ -1,6 +1,6 @@
 name: qk-frontend-architecture-eval
 description: Đánh giá năng lực thiết kế Kiến trúc Frontend
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo các quyết định kiến trúc đúng đắn và không bị lấn sân
 
 metrics:

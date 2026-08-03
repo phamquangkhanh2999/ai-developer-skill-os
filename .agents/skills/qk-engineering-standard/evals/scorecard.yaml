@@ -1,6 +1,6 @@
 name: qk-engineering-standard-eval
 description: Đánh giá việc áp dụng Tiêu chuẩn Kỹ thuật và Clean Code
-version: 9.0.0
+version: 9.1.0
 threshold: 80 # Đánh giá tính chính xác của việc tính điểm Health Score
 
 metrics:

@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-validation-gate"
-version: "9.0.0"
+version: "9.1.0"
 description: "Cổng kiểm tra chất lượng & Eval Pipeline bắt buộc — chạy linters, tests, và đánh giá scorecard.yaml định lượng cho AI Agent."
 tools:
   - "filesystem"

@@ -1,6 +1,6 @@
 name: qk-api-lifecycle-eval
 description: Đánh giá chất lượng thiết kế và triển khai API
-version: 9.0.0
+version: 9.1.0
 threshold: 90 # Tiêu chuẩn cao vì liên quan đến hợp đồng dữ liệu và bảo mật cổng vào
 
 metrics:

@@ -1,6 +1,6 @@
 name: qk-ui-builder-eval
 description: Đánh giá việc thiết kế và xây dựng giao diện người dùng (UI)
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo giao diện hiện đại, chuẩn token và thẩm mỹ cao
 
 metrics:

@@ -8,7 +8,7 @@
 schema_version: 1
 
 id: qk-template-capability
-version: "9.0.0"
+version: "9.1.0"
 description: "Brief 1-line objective description of this capability for sub-second registry indexing."
 
 dependencies: []

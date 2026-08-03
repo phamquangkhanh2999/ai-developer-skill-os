@@ -1,7 +1,7 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-memory
-version: 9.0.0
+version: 9.1.0
 status: stable
 description: "Quản trị Tri thức và Bộ nhớ dự án V1 (Dual-Mode Shared/Private) — Quản lý như source code: đơn giản, có thể review, cập nhật và luôn có con người phê duyệt."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]

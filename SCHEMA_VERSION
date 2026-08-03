@@ -1,7 +1,7 @@
 {
-  "platform_version": "9.0.0",
-  "schema_version": "9.0.0",
-  "description": "AI Developer Skill OS V9.0 - Governed Capability & Universal Project Knowledge Platform",
+  "platform_version": "9.1.0",
+  "schema_version": "9.1.0",
+  "description": "AI Developer Skill OS V9.1 - Governed Capability & Candidate Memory Knowledge Platform",
   "last_updated": "2026-08-03",
   "compatible_skill_versions": "9.x.x",
   "registry_schema": {

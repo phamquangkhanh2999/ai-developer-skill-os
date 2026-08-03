@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-system-evolution"
-version: "9.0.0"
+version: "9.1.0"
 description: "Nâng cấp thư viện/framework an toàn với rollback plan bắt buộc — incremental, không big-bang."
 tools:
   - "filesystem"

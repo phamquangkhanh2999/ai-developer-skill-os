@@ -1,7 +1,7 @@
 # Auto-generated from SKILL.md frontmatter
 schema_version: 1
 id: "qk-test-engineering"
-version: "9.0.0"
+version: "9.1.0"
 description: "Công cụ quyết định chiến lược kiểm thử (Unit, Integration, E2E, Coverage, Regression, Mock)."
 tools:
   - "filesystem"

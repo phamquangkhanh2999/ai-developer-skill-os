@@ -1,6 +1,6 @@
 name: qk-devops-platform-eval
 description: Đánh giá chất lượng cấu trúc DevOps và CI/CD
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo an toàn hạ tầng và khả năng chịu lỗi (Rollback)
 
 metrics:

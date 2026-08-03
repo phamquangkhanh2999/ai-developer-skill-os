@@ -1,6 +1,6 @@
 name: qk-fe-api-integration-eval
 description: Đánh giá chất lượng tích hợp API vào giao diện Frontend
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Đảm bảo tính toàn vẹn của DTO, UI State và ranh giới bảo mật
 
 metrics:

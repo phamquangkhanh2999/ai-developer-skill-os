@@ -1,6 +1,6 @@
 name: qk-validation-gate-eval
 description: Đánh giá Cổng kiểm tra Chất lượng V8.2
-version: 9.0.0
+version: 9.1.0
 threshold: 100 # Phải đạt 100 điểm tuyệt đối vì đây là lưới rà soát cuối cùng trước khi Release
 
 metrics:

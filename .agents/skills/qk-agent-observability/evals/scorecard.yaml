@@ -1,6 +1,6 @@
 name: qk-agent-observability-eval
 description: Đánh giá khả năng thu thập dữ liệu (trace) và phát hiện lỗi của agent
-version: 9.0.0
+version: 9.1.0
 threshold: 85 # Không yêu cầu tuyệt đối, nhưng cần đảm bảo observability hoạt động tốt
 
 metrics:
