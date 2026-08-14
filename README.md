@@ -40,7 +40,7 @@ Các kỹ năng được quản lý bằng **Capability Graph** và được đ�
 1. **Core & Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-project-memory`, `qk-help`
 2. **Product & Architecture:** `qk-product-specification`, `qk-project-bootstrap`, `qk-frontend-architecture`
 3. **Frontend & UI:** `qk-design-system-engineering`, `qk-ui-system-builder`, `qk-ui-builder`, `qk-fe-api-integration`, `qk-ui-audit`
-4. **Backend & Data:** `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-access-policy`
+4. **Backend & Data:** `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-data-engineer`, `qk-access-policy`
 5. **Engineering & Delivery:** `qk-feature-delivery`, `qk-bug-resolution`, `qk-engineering-standard`, `qk-system-evolution`, `qk-docs`
 6. **Quality & Testing:** `qk-test-engineering`, `qk-validation-gate`, `qk-web-quality-gate`, `qk-project-health`
 7. **Security, DevOps & Analytics:** `qk-security-audit`, `qk-db-optimizer`, `qk-devops-platform`, `qk-production-release`, `qk-agent-observability`, `qk-ai-builder`
