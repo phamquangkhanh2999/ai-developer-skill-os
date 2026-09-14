@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-health
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Kiểm toán toàn diện Code Smells, Tech Debt, Architecture — health score 0–100 với actionable roadmap."
+description: "Kiểm toán toàn diện sức khỏe dự án: đo lường Code Smells, Technical Debt, độ phức tạp Cyclomatic, God files, vi phạm SOLID — chấm điểm Health Score (0–100) và đề xuất lộ trình cải tiến. Dùng skill này khi user nhắc đến: audit project, code smell, tech debt, health check, project score, nợ kỹ thuật, kiểm tra sức khỏe code, đánh giá chất lượng dự án — kể cả khi chỉ nói 'xem thử project này nợ kỹ thuật nhiều không' — KHÔNG dùng cho phân tích tính khả thi hay gap analysis trước khi code (dùng qk-project-audit)."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -12,6 +12,7 @@ type: utility
 intent:
   - project-audit
   - codebase-health
+  - tech-debt-analysis
 
 complexity:
   level: high
@@ -22,11 +23,15 @@ complexity:
     has_breaking_change: false
 
 triggers:
-  - "audit code"
-  - "check health"
-  - "tech debt"
+  - "audit project"
   - "code smell"
-  - "kiểm toán"
+  - "tech debt"
+  - "health check"
+  - "project score"
+  - "nợ kỹ thuật"
+  - "kiểm tra sức khỏe code"
+  - "đánh giá chất lượng dự án"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: code-review
@@ -40,12 +45,15 @@ tools:
   - terminal
 
 related_skills:
-  - qk-engineering-standard
+  - qk-code-review
+  - qk-refactor
+  - qk-security-audit
 
 knowledge_scope:
   owns:
     - tech-debt
     - codebase-health
+    - code-metrics
   references:
     - architecture
     - security
@@ -73,529 +81,122 @@ produces: [report]
 consumes: [source-code]
 
 token_budget:
-  max_files_read: 5
-  max_lines_per_read: 100
-  max_shell_commands: 1
+  max_files_read: 12
+  max_lines_per_read: 150
+  max_shell_commands: 2
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-project-health — Complete Codebase Audit
+# qk-project-health — Codebase Health Auditor & Tech Debt Evaluator
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm kiểm toán độc lập chất lượng toàn diện của codebase, đo lường nợ kỹ thuật (Technical Debt) theo các ngưỡng định lượng chuẩn hóa (R-C-09 & R-C-10), chấm điểm **Health Score (0–100)** và cung cấp lộ trình tái cấu trúc khả thi.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Hard Bug (vd: chỉ số sức khỏe codebase 0-100, các điểm nợ kỹ thuật tech debt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Mô hình Code Smell hoặc Tech Debt hệ thống cần theo dõi tiêu diệt.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Report health tạm thời của 1 đợt scan.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Hard Bug (vd: chỉ số sức khỏe codebase 0-100, các điểm nợ kỹ thuật tech debt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Mô hình Code Smell hoặc Tech Debt hệ thống cần theo dõi tiêu diệt.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Report health tạm thời của 1 đợt scan.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Hard Bug (vd: chỉ số sức khỏe codebase 0-100, các điểm nợ kỹ thuật tech debt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Mô hình Code Smell hoặc Tech Debt hệ thống cần theo dõi tiêu diệt.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Report health tạm thời của 1 đợt scan.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Mô hình Code Smell hoặc Tech Debt hệ thống cần theo dõi tiêu diệt.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Report health tạm thời của 1 đợt scan.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Mô hình Code Smell hoặc Tech Debt hệ thống cần theo dõi tiêu diệt.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Report health tạm thời của 1 đợt scan.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Project root is accessible
+
+Trước khi tiến hành kiểm toán sức khỏe:
+
+- [ ] Xác định rõ phạm vi kiểm toán: Toàn bộ codebase (Full repository) hay Module / Thư mục cụ thể.
+- [ ] Đọc file conventions trong `.agents/DEV_PROFILE.md` để đánh giá đúng tiêu chuẩn dự án.
+- [ ] Nếu codebase chưa có source code hoặc chỉ có file khởi tạo rỗng:
+  → **EXIT: BLOCKED**
+  → Báo cáo: "Dự án chưa đủ mã nguồn để đánh giá chỉ số nợ kỹ thuật."
 
 ---
 
 ## Scope
-- ✅ Score 5 health dimensions (0–20 pts each = 100 total)
-- ✅ Identify deprecated packages and security vulnerabilities
-- ✅ Produce actionable refactoring roadmap
 
-## Non-Goals
-- ❌ Fix issues — report only
-- ❌ Hide systemic architectural flaws
+✅ Skill này làm:
+- Quét các vi phạm số liệu kỹ thuật (Metric thresholds theo R-C-10):
+  - Function dài quá 40 dòng.
+  - File dài quá 300 dòng (God files).
+  - Nesting depth vượt quá 3 tầng.
+  - Cyclomatic complexity ước tính > 10.
+- Phát hiện các Code Smells kinh điển: Duplicated logic (vi phạm DRY), Dead code, Magic numbers/strings, Any-casting lạm dụng, Silent error swallowing (`catch {}` rỗng).
+- Đánh giá kiến trúc: Circular dependencies, vi phạm phân tầng (e.g. Controller truy cập trực tiếp DB, UI chứa business calculation).
+- Chấm điểm **Health Score (0–100)** phân bổ theo 4 trục:
+  - Architecture Consistency (25đ)
+  - Maintainability & Clean Code (25đ)
+  - Testability & Reliability (25đ)
+  - Hygiene & Security Practice (25đ)
+- Lập bảng danh mục nợ kỹ thuật xếp hạng ưu tiên (P0: Nguy hiểm, P1: Cần refactor sớm, P2: Nợ nhỏ).
 
----
-
-## Health Scoring System
-
-| Dimension | Max Points | Key Checks |
-|-----------|-----------|------------|
-| Security | 20 | 0 critical CVEs, no hardcoded secrets, auth guards present, **tuân thủ Zero-Trust (R-SEC-04)** |
-| Code Quality | 20 | Functions ≤ 30L, complexity ≤ 10, no God Files, **sạch bóng Anti-patterns (R-C-09)** |
-| Architecture | 20 | Clean layers (UI/Logic/Data separated), no circular imports |
-| Dependencies | 20 | No deprecated packages, no unused deps, versions pinned |
-| Documentation | 20 | README complete, public APIs documented, DESIGN.md exists |
-
-**Total: 100 pts. Grades: A (90+) / B (75-89) / C (60-74) / D (<60)**
-
----
-
-## Priority Order
-| P | Dimension | Never Skip? |
-|---|-----------|-------------|
-| P1 | Security | Yes |
-| P2 | Code Quality | Yes |
-| P3 | Architecture | Budget < 30% |
-| P4 | Dependencies | Budget < 50% |
-| P5 | Documentation | Budget < 60% |
+❌ Skill này KHÔNG làm:
+- Trực tiếp sửa đổi code của người dùng (`side_effects: read_only`).
+- Audit chuyên sâu lỗ hổng bảo mật CVE (thuộc `qk-security-audit`).
+- Tối ưu truy vấn SQL cụ thể (thuộc `qk-db-optimizer`).
 
 ---
 
-## Workflow
+## Execution Steps
 
-### Phase 1 — Quick Scan (P1+P2)
-1. `grep_search` for: hardcoded secrets, `eval(`, `any` types, `console.log`
-2. Sample 3 key files → check function lengths, file sizes
-3. Score Security (0–20) + Code Quality (0–20)
-
-### Phase 2 — Structure Scan (P3+P4)
-1. Read `package.json` — check outdated/deprecated packages
-2. Check import patterns for circular dependencies or layer violations
-3. Score Architecture (0–20) + Dependencies (0–20)
-
-### Phase 3 — Docs Scan (P5) + Report
-1. Check README, DESIGN.md, key function JSDoc
-2. Score Documentation (0–20)
-3. Generate full report + prioritized roadmap
-
----
-
-## Evidence Format
+### Step 1 — Quét tĩnh & Phân tích Kích thước (Size & Structure Scan)
 ```
-[SEVERITY] Dimension: [SECURITY|QUALITY|ARCH|DEPS|DOCS]
-Finding:    [specific issue]
-Location:   [file:line OR package name]
-Confidence: HIGH
-Impact:     -N pts
-Fix:        [actionable suggestion]
+Inputs:  Workspace files
+Actions:
+  - Thống kê các file có độ dài lớn nhất (> 300 dòng).
+  - Tìm kiếm các file gom quá nhiều trách nhiệm (God components / God services).
+  - Liệt kê các hàm vượt quá 40 dòng.
+Outputs: Danh sách các điểm nóng về kích thước (Hotspots)
 ```
 
----
-
-## Output Format
+### Step 2 — Phát hiện Code Smells & Vi phạm Tiêu chuẩn
 ```
-🏥 Project Health Report
-─────────────────────────────────────────────────
-Grade: [A|B|C|D] ([Score]/100)
+Actions:
+  - Grep các mẫu vi phạm:
+    - Empty catch blocks / Silent error suppression.
+    - `as any` hoặc `@ts-ignore` tràn lan.
+    - Console.log / print debug bị bỏ quên.
+    - Magic strings / Magic numbers trong logic điều kiện.
+  - Kiểm tra tính gắn kết của modules (Cohesion & Coupling).
+Outputs: Bảng thống kê các lỗi Code Smell theo mức độ nghiêm trọng
+```
 
-Scores:
-  Security:      [N/20]
-  Code Quality:  [N/20]
-  Architecture:  [N/20]
-  Dependencies:  [N/20]
-  Documentation: [N/20]
+### Step 3 — Chấm điểm Health Score định lượng (Rubric 0–100)
+```
+Cách tính điểm:
+  100 Điểm Gốc
+  - Trừ 2đ cho mỗi God file (>300 lines) (Max trừ 20đ).
+  - Trừ 1đ cho mỗi hàm quá dài (>40 lines) (Max trừ 15đ).
+  - Trừ 3đ cho mỗi vi phạm Silent error hoặc IDOR/Any (Max trừ 20đ).
+  - Trừ 5đ nếu thiếu hoàn toàn Unit test hoặc cấu trúc phân tầng bị đảo lộn (Max trừ 25đ).
+  - Trừ 2đ cho mỗi block logic trùng lặp rõ ràng (Max trừ 20đ).
+Outputs: Điểm số Health Score (Ví dụ: 74/100)
+```
 
-Critical Issues (fix immediately):
-  [list CRITICAL findings]
-
-Refactoring Roadmap (priority order):
-  1. [Most impactful — estimated effort]
-  2. [Second — estimated effort]
-  3. [Third]
-
-Exit Code: [SUCCESS (A/B) | PARTIAL (C) | FAILED (D)]
+### Step 4 — Lập Báo cáo Kiểm toán & Lộ trình Cải tiến
+```
+Format báo cáo:
+  1. HEALTH SCORE: XX/100 (Rating: Critical / Warning / Good / Excellent)
+  2. EXECUTIVE SUMMARY: 3 điểm mạnh & 3 vấn đề lớn nhất.
+  3. HOTSPOT AUDIT: Bảng danh sách files & lines cần xử lý.
+  4. ACTIONABLE ROADMAP:
+     - [P0] Fix ngay: Các điểm nghẽn nghiêm trọng có nguy cơ gây crash/leak.
+     - [P1] Sprint tới: Tách God files và hàm phức tạp (gợi ý dùng `qk-refactor`).
+     - [P2] Tech debt backlog: Dọn dẹp magic constants và dead code.
 ```
 
 ---
 
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Audit completed and report generated with scores | Normal completion |
-| PARTIAL | Audit completed but some directories skipped (token limit) | Large project |
-| BLOCKED | Project is empty or completely unreadable | Missing project |
-| FAILED | Cannot calculate score due to tool failure | Linter crashed |
+## Prompt Template
 
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Analyzed via AST, linters, or exhaustive search | Include in report as fact |
-| MEDIUM | Sampled a few files, assumed pattern holds | Note as "Project trend" |
-| LOW | Did not check | Do NOT include in report |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Security flaw or completely broken architecture | API keys committed, cyclical dependency |
-| HIGH | Major tech debt slowing down development | God objects, missing tests on core logic |
-| MEDIUM | Inconsistent patterns | Mixing fetch/axios, tabs/spaces |
-| LOW | Minor code smell | Magic numbers in UI |
-
----
-
-## Retry Policy
 ```
-Audit fails
-  └─ Token limit hit (project too large)
-       ├─ Ask user to narrow scope (e.g., audit only src/api/)
-       └─ Do NOT auto-retry full project scan
+Scope:        [Toàn bộ dự án / Thư mục src/services / Module checkout]
+Trọng tâm:    [Đo lường nợ kỹ thuật / Chuẩn bị refactor lớn / Đánh giá code định kỳ]
+Ngưỡng mong muốn: [Muốn đạt tối thiểu bao nhiêu điểm]
 ```
 
----
+### Ví dụ theo Nhu cầu:
 
-## Escalation Rules
+**Audit toàn diện dự án chuẩn bị mở rộng tính năng**
 ```
-BLOCKED: Project unreadable or empty
-Missing:
-  - Source code
-Questions:
-  1. Thư mục mã nguồn chính nằm ở đâu? (ví dụ: src/, lib/)
-Recommended Assumptions:
-  - Scan typical directories (src, app, lib, test)
+Scope:        Toàn bộ repo
+Trọng tâm:    Tìm các file có độ phức tạp cao và kiến trúc lộn xộn trước khi scale.
 ```
-
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": [],
-  "optional_fields": ["target_directory"]
-}
-```
-### Produces
-```json
-{
-  "to": "user or qk-system-evolution",
-  "output_fields": ["health_score", "critical_issues", "refactoring_roadmap", "exit_code"]
-}
-```
-
----
+→ AI quét toàn bộ source code, xuất báo cáo Health Score kèm danh sách Top 5 God Files cần tách trước khi implement tính năng mới.
 

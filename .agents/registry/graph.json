@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_version": "8.2",
-  "generated_at": "2026-08-14T03:33:18.557Z",
+  "generated_at": "2026-09-14T04:22:18.791Z",
   "nodes": {
     "qk-access-policy": {
       "path": ".agents/skills/qk-access-policy",
@@ -31,6 +31,18 @@
       "tags": [
         "ai",
         "builder"
+      ],
+      "dependencies": [],
+      "dependents": [],
+      "is_orphan": true
+    },
+    "qk-fe-api-integration": {
+      "path": ".agents/skills/qk-fe-api-integration",
+      "version": "9.1.0",
+      "tags": [
+        "fe",
+        "api",
+        "integration"
       ],
       "dependencies": [],
       "dependents": [],
@@ -82,7 +94,7 @@
     },
     "qk-data-engineer": {
       "path": ".agents/skills/qk-data-engineer",
-      "version": "9.1.0",
+      "version": "9.2.0",
       "tags": [
         "data",
         "engineer"
@@ -159,18 +171,6 @@
       "dependents": [],
       "is_orphan": true
     },
-    "qk-fe-api-integration": {
-      "path": ".agents/skills/qk-fe-api-integration",
-      "version": "9.1.0",
-      "tags": [
-        "fe",
-        "api",
-        "integration"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": true
-    },
     "qk-feature-delivery": {
       "path": ".agents/skills/qk-feature-delivery",
       "version": "9.1.0",
@@ -235,6 +235,19 @@
       "dependents": [],
       "is_orphan": true
     },
+    "qk-project-audit": {
+      "path": ".agents/skills/qk-project-audit",
+      "version": "9.2.0",
+      "tags": [
+        "project",
+        "audit"
+      ],
+      "dependencies": [
+        "feature-delivery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
     "qk-project-bootstrap": {
       "path": ".agents/skills/qk-project-bootstrap",
       "version": "9.1.0",
@@ -292,11 +305,10 @@
       "is_orphan": true
     },
     "qk-system-evolution": {
-      "path": ".agents/skills/qk-system-evolution",
+      "path": ".agents/skills/qk-upgrade",
       "version": "9.1.0",
       "tags": [
-        "system",
-        "evolution"
+        "upgrade"
       ],
       "dependencies": [],
       "dependents": [],
@@ -377,6 +389,7 @@
     "qk-access-policy": [],
     "qk-agent-observability": [],
     "qk-ai-builder": [],
+    "qk-fe-api-integration": [],
     "qk-api-lifecycle": [],
     "qk-bug-resolution": [],
     "qk-code-review": [],
@@ -390,13 +403,15 @@
     "qk-devops-platform": [],
     "qk-docs": [],
     "qk-engineering-standard": [],
-    "qk-fe-api-integration": [],
     "qk-feature-delivery": [],
     "qk-frontend-architecture": [],
     "qk-help": [],
     "qk-orchestrator": [],
     "qk-product-specification": [],
     "qk-production-release": [],
+    "qk-project-audit": [
+      "feature-delivery"
+    ],
     "qk-project-bootstrap": [],
     "qk-project-health": [],
     "qk-project-memory": [],
@@ -415,7 +430,10 @@
     "qk-web-quality-gate": []
   },
   "stats": {
-    "total_capabilities": 33,
+    "total_scanned": 34,
+    "active": 29,
+    "archived": 2,
+    "relocated": 2,
     "has_cycles": false
   }
 }

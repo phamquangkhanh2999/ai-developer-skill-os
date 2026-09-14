@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-code-review
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Elite AI/Code Review System: Kiểm toán, Review code và cấu hình AI với tư duy Architect, áp dụng 4-Phase Review."
+description: "Review code, AI config, hoặc skin rules theo 4 phases với Architect mindset — phát hiện bug, security issue, architecture smell, logic error. Dùng skill này khi user nhắc đến: review code, code review, kiểm tra code, đánh giá code, review skin, review rule, review ai config, audit PR — kể cả khi chỉ nói \"xem thử code này ổn không\"."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -30,7 +30,9 @@ triggers:
   - "đánh giá code"
   - "review skin"
   - "review rule"
-  - "review ai"
+  - "review ai config"
+  - "audit PR"
+
 
 selection:
   priority: high
@@ -46,9 +48,8 @@ tools:
   - filesystem
 
 related_skills:
-  - qk-validation-gate
-  - qk-engineering-standard
   - qk-project-health
+  - qk-security-audit
 
 knowledge_scope:
   owns:
@@ -91,441 +92,162 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-Biến quá trình Code Review từ "bắt bẻ" (gatekeeping) thành "chia sẻ tri thức" (knowledge sharing) thông qua phản hồi mang tính xây dựng, phân tích có hệ thống và hợp tác cải tiến.
+Biến quá trình Code Review từ "bắt bẻ" (gatekeeping) thành "chia sẻ tri thức" (knowledge sharing) thông qua phản hồi mang tính xây dựng, phân tích có hệ thống và hợp tác cải tiến theo tư duy Kiến trúc sư (Architect mindset).
 
----
-
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention / Pattern hiện hành của dự án (Ground Truth để thẩm định).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: phát hiện anti-pattern lặp đi lặp lại trong codebase).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các góp ý phong cách (formatting/linting) đơn lẻ trong một PR.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention / Pattern hiện hành của dự án (Ground Truth để thẩm định).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: phát hiện anti-pattern lặp đi lặp lại trong codebase).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các góp ý phong cách (formatting/linting) đơn lẻ trong một PR.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention / Pattern hiện hành của dự án (Ground Truth để thẩm định).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: phát hiện anti-pattern lặp đi lặp lại trong codebase).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các góp ý phong cách (formatting/linting) đơn lẻ trong một PR.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: phát hiện anti-pattern lặp đi lặp lại trong codebase).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các góp ý phong cách (formatting/linting) đơn lẻ trong một PR.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: phát hiện anti-pattern lặp đi lặp lại trong codebase).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các góp ý phong cách (formatting/linting) đơn lẻ trong một PR.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
 
-- [ ] Xác định rõ đối tượng cần review: Mã nguồn phần mềm (React, Java, etc.) hay Cấu hình AI (Skin, Rules, Workflows).
-- [ ] Cung cấp ngữ cảnh hoặc mục tiêu của đoạn code/cấu hình cần review.
+Trước khi thực hiện review, AI BẮT BUỘC kiểm tra:
 
+- [ ] Xác định đối tượng review: files cụ thể, diff/PR, hay cấu hình AI/rules.
+- [ ] Đọc `.agents/DEV_PROFILE.md` để nắm coding standards, architectural rules, và constraints.
+- [ ] Đảm bảo files cần review tồn tại và có thể đọc được nội dung.
+- [ ] Nếu scope review vượt quá khả năng context (ví dụ toàn bộ repo hàng nghìn files cùng lúc):
+  → **EXIT: BLOCKED**
+  → Báo cáo user chia nhỏ phạm vi review theo module hoặc PR diff.
+
+---
+
+## Scope
+
+✅ Skill này làm:
+- Phân tích code theo 4 tầng: Bug/Logic, Security, Architecture/Maintainability, Coding Standards.
+- Đánh giá chất lượng của cấu hình AI (SKILL.md, workflow YAML, system rules).
+- Cung cấp feedback định lượng, phân loại độ nghiêm trọng: CRITICAL, HIGH, MEDIUM, LOW.
+- Gợi ý giải pháp cụ thể (concrete diffs / refactor snippet) cho từng vấn đề.
+- Hoạt động ở chế độ **read-only** (chỉ xuất báo cáo, không tự ý sửa code).
+
+❌ Skill này KHÔNG làm:
+- Tự động áp dụng code fix vào source code của user (→ user quyết định hoặc dùng `qk-refactor`).
+- Quét toàn bộ vulnerabilities của third-party dependencies qua CVE database (→ `qk-security-audit`).
+- Đo lường và chấm điểm tổng thể kỹ thuật dự án (→ `qk-project-health`).
+
+---
+
+## Execution Steps
+
+### Step 1 — Context & Target Ingestion
 ```
-On missing precondition → EXIT: BLOCKED
-Report: "Missing: Vui lòng cung cấp ngữ cảnh hoặc chỉ định rõ file cần review."
-```
-
----
-
-## Dynamic Context Loading (Tải Ngữ Cảnh Động)
-
-> **CHỈ ĐỌC KHI CẦN (on-demand):** Chỉ mở file references/ nếu có vấn đề cụ thể cần xác minh. Đừng đọc trước khi chưa thấy vấn đề.
-
-- **Nếu review AI Config** và phát hiện vấn đề schema/anti-pattern → đọc `references/ai/v8-schema-validation.md` HOẶC `references/ai/ai-anti-patterns.md` (không cần đọc cả 2 nếu không liên quan).
-- **Nếu review Code** và gặp vấn đề ngôn ngữ cụ thể → đọc `references/languages/[tên-ngôn-ngữ].md`.
-- **Nếu review cross-cutting** và cần xác minh architecture → đọc `references/cross-cutting/architecture-review-guide.md`.
-- **Default (80% trường hợp):** Dùng kiến thức có sẵn, không đọc references.
-
----
-
-## 4-Phase Review Process
-
-Là một AI Architect, quá trình review phải tuân thủ nghiêm ngặt 4 giai đoạn sau:
-
-### Phase 1: Context Gathering & Loading (Thu thập & Nạp Ngữ Cảnh)
-- Đọc file mô tả (PR, Issue) hoặc yêu cầu của người dùng.
-- **Thực thi Dynamic Context Loading** (đọc các file reference cần thiết như đã định nghĩa ở trên).
-
-### Phase 2: High-Level Review (Kiến trúc & Chuẩn mực)
-- **Đối với AI Config:** Kiểm tra cấu trúc V8 (Identity, Intent, Complexity, Triggers). 
-- **Đối với Code Phần mềm:** Kiểm tra SOLID, Coupling/Cohesion, Performance, Security. **BẮT BUỘC đối chiếu với luật chống rác mã (R-C-09) và ranh giới Zero-Trust (R-SEC-04). Vi phạm sẽ bị đánh tag `[blocking]`.**
-
-### Phase 3: Deep-dive & Logic Review (Phân tích chi tiết)
-- **Đối với AI Config:** Kiểm tra rủi ro "ảo giác" (hallucination), token abuse, side-effects, stop_early.
-- **Đối với Code Phần mềm:** Rà soát edge cases, lỗi logic chuyên sâu theo từng ngôn ngữ (Tham chiếu theo `languages` guides).
-
-### Phase 4: Summary & Decision (Tổng hợp & Quyết định)
-- Đưa ra báo cáo theo `Output Format`.
-- Gắn nhãn `Severity Tags` rõ ràng.
-
----
-
-## Feedback Principles (Nguyên tắc Phản hồi)
-
-- **Collaborative Language (Ngôn từ hợp tác)**: Thay vì ra lệnh ("Sửa cái này thành X", "Bỏ dòng này đi"), hãy dùng câu hỏi gợi mở ("Nếu chúng ta dùng X ở đây thì có tối ưu hiệu năng hơn không?", "Có vẻ logic này bị lặp, chúng ta extract nó ra hàm riêng được không?").
-- **Differentiate Severity (Phân biệt mức độ)**: Bắt buộc sử dụng các nhãn sau để phân loại mức độ phản hồi:
-  - 🔴 `[blocking]` - Lỗi nghiêm trọng (VD: Security flaw, thiếu token_budget). Bắt buộc phải sửa.
-  - 🟡 `[important]` - Lỗi quan trọng (VD: Performance leak, trigger quá rộng). Nên sửa hoặc cần thảo luận.
-  - 🟢 `[nit]` - Cải thiện nhỏ (VD: Lỗi chính tả, format, naming). Không bắt buộc.
-  - 💡 `[suggestion]` - Cách tiếp cận hoặc thư viện thay thế để tham khảo.
-  - 📚 `[learning]` - Giải thích nguyên lý (Why) để chia sẻ kiến thức, không yêu cầu hành động.
-  - 🎉 `[praise]` - Lời khen cho đoạn code / logic thiết kế tốt.
-
----
-
-## Output Format
-
-```markdown
-## qk-code-review Report
-─────────────────────────────────────────────────
-**Target:** [Tên file / Chức năng]
-**Status:** SUCCESS | BLOCKED | FAILED | PARTIAL
-
-### 📊 Executive Summary
-[1-2 câu tóm tắt chất lượng tổng thể của mã nguồn/cấu hình. VD: "Kiến trúc rõ ràng, nhưng tiềm ẩn rủi ro lặp vô hạn ở dòng 45."]
-
-### 🔍 Findings & Recommendations
-
-[Nhóm các findings theo mức độ nghiêm trọng giảm dần. LUÔN đính kèm snippet / file line nếu có thể]
-
-- 🔴 `[blocking]`: [Vấn đề nghiêm trọng]
-  - *Location*: `file.ts:L45`
-  - *Feedback*: [Câu hỏi/Gợi ý sửa chữa]
-  
-- 🟡 `[important]`: [Vấn đề quan trọng]
-- 💡 `[suggestion]`: [Gợi ý cải thiện]
-- 🟢 `[nit]`: [Góp ý nhỏ]
-- 🎉 `[praise]`: [Khen ngợi]
-
-### 🛠️ Suggested Fixes (Optional)
-[Cung cấp Code diff hoặc YAML chuẩn xác để user dễ dàng copy & paste. TUYỆT ĐỐI KHÔNG tự sửa file nếu user chưa yêu cầu]
-
-### ✅ Verdict
-- [ ] Approve (Có thể merge/deploy ngay)
-- [ ] Changes Requested (Cần sửa các mục `[blocking]`)
-- [ ] Comment (Chỉ là gợi ý, quyền quyết định ở user)
+Inputs:  Danh sách files/diff từ user, DEV_PROFILE.md
+Actions:
+  - Đọc nội dung source code mục tiêu.
+  - Phân tích vai trò của file trong kiến trúc chung (domain, service, UI, infra).
+Output: Scope boundary & Review target map
 ```
 
+### Step 2 — Multi-Dimensional Analysis
+```
+Inputs:  Source code, Standards & Rules
+Actions:
+  - Phase 1: Logic & Correctness (xử lý null/undefined, race conditions, edge cases).
+  - Phase 2: Security & Privacy (input validation, SQLi/XSS, secret leaks, access control).
+  - Phase 3: Architecture & Clean Code (SOLID, DRY, coupled dependencies, readability).
+  - Phase 4: Conventions & Performance (quy ước đặt tên, N+1 query, re-render).
+Output: Raw findings list
+```
+
+### Step 3 — Constructive Synthesis & Remediation
+```
+Inputs:  Raw findings list
+Actions:
+  - Lọc bỏ false positives và gán nhãn mức độ nghiêm trọng (CRITICAL/HIGH/MEDIUM/LOW).
+  - Với mỗi finding, viết lý do (Why) và đề xuất code snippet cải tiến (How to fix).
+Output: Structured Review Report
+```
+
+### Step 4 — Verification & Delivery
+```
+Inputs:  Structured Review Report
+Actions:
+  - Rà soát tính khả thi của các đề xuất.
+  - Trình bày báo cáo rõ ràng, mạch lạc theo ngôn ngữ tiếng Việt (code snippets giữ English).
+Exit: SUCCESS
+```
+
+---
+
+## Prompt Template
+
+AI đọc `DEV_PROFILE.md` để biết conventions + constraints. Review sẽ đánh giá theo đúng tiêu chuẩn dự án.
+
+```
+Review:     [File / folder / PR diff cần review]
+Focus:      [security / performance / architecture / logic / correctness — hoặc "full"]
+Context:    [Đây là feature mới / bug fix / refactor / migration / ...]
+Bỏ qua:    [Những thứ không cần comment — vd: style, naming, test coverage]
+```
+
+---
+
+### Theo Role — AI review theo tiêu chí khác nhau:
+
+**role: fe**
+```
+Review:     src/features/cart/ (toàn bộ folder — PR mới)
+Focus:      correctness + performance
+Context:    Vừa implement giỏ hàng — lần đầu có optimistic updates
+Bỏ qua:    CSS naming convention
+```
+→ AI xem xét: race condition trong optimistic update, stale closure trong
+  useCallback/useEffect, unnecessary re-render (missing memo/deps array),
+  missing error boundary, accessibility của interactive elements,
+  bundle size impact của dependencies mới.
+
+**role: be**
+```
+Review:     src/routes/payments/ + src/services/PaymentService.ts
+Focus:      security + correctness
+Context:    Tích hợp payment gateway mới (Stripe) — business critical
+Bỏ qua:    Code style
+```
+→ AI xem xét: idempotency key usage, webhook signature verification,
+  sensitive data logging (card numbers, CVV không được log),
+  error handling không leak internal info ra response, DB transaction scope,
+  rate limiting, secrets không hardcode.
+
+**role: fullstack**
+```
+Review:     src/features/reports/ (FE + BE cùng PR)
+Focus:      architecture + contract
+Context:    Feature mới — export báo cáo, cả FE và BE trong cùng PR
+Bỏ qua:    Test coverage (sẽ thêm sau)
+```
+→ AI xem xét: type contract giữa FE-BE (có dùng shared types không),
+  FE không hard-code assumptions về response shape, BE thay đổi response
+  có break FE không, error shape nhất quán, loading state đầy đủ.
+
+**role: data**
+```
+Review:     dags/customer_churn_pipeline.py + models/mart/fct_churn.sql
+Focus:      correctness + reliability
+Context:    Pipeline mới chạy weekly, dữ liệu dùng cho ML model
+Bỏ qua:    SQL formatting style
+```
+→ AI xem xét: idempotency (re-run an toàn không), partition filter đúng chưa
+  (tránh full scan), data quality assertions có đủ không, schema evolution
+  strategy, downstream dependencies được documented chưa, SLA realistic không.
+
+**role: ai-engineer**
+```
+Review:     prompts/ + retrieval/pipeline.py
+Focus:      correctness + hallucination risk
+Context:    RAG pipeline sắp ra production — cần review kỹ trước khi deploy
+Bỏ qua:    Code style
+```
+→ AI xem xét: system prompt có enforce grounding không ("chỉ dùng context được cung cấp"),
+  retrieval có thể trả empty context không (edge case), temperature setting phù hợp,
+  PII trong training data / retrieved context, prompt injection risk,
+  eval metrics có được log không, fallback khi LLM unavailable.
+
+**role: devops**
+```
+Review:     .github/workflows/ + terraform/modules/ecs/
+Focus:      security + correctness
+Context:    Infrastructure change — scale up ECS service + thêm ALB rule
+Bỏ qua:    Resource naming convention (đã có convention riêng)
+```
+→ AI xem xét: secrets exposed trong logs hay env vars không, IAM least-privilege
+  (role có quá nhiều permission không), rollback plan rõ ràng chưa,
+  state file được lock và store an toàn không, có test trên staging trước prod không,
+  blast radius nếu Terraform apply fail giữa chừng.

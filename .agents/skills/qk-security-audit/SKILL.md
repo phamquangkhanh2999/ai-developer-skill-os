@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-security-audit
-version: 9.1.0
+version: 9.2.0
 status: experimental
-description: "Security audit (OWASP, dependency security, secret detection, permission model)."
+description: "Audit bảo mật ứng dụng theo OWASP: phát hiện lỗ hổng, secret leak, dependency risk, permission model — output là report + remediation plan, KHÔNG tự sửa code. Dùng skill này khi user nhắc đến: security audit, kiểm tra bảo mật, scan lỗ hổng, owasp, tìm secret leak, dependency vulnerability, npm audit, pip audit, lộ api key — kể cả khi chỉ nói 'code này có an toàn không'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -19,15 +19,21 @@ complexity:
   level: high
   criteria:
     files_affected: "1-10"
-    has_behavior_change: true
-    has_external_dependency: true
+    has_behavior_change: false
+    has_external_dependency: false
     has_breaking_change: false
 
 triggers:
+  - "security audit"
   - "kiểm tra bảo mật"
   - "scan lỗ hổng"
-  - "audit code"
+  - "owasp"
   - "tìm secret leak"
+  - "dependency vulnerability"
+  - "npm audit"
+  - "pip audit"
+  - "lộ api key"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: security-audit
@@ -66,8 +72,9 @@ decision_boundary:
     - penetration testing
     - compliance certification
   conflicts_with: []
-  delegates_to:
-    - qk-validation-gate
+  delegates_to: []
+  # Note: validation/verify logic nằm trong step 'verify' của workflow security-audit.yml
+  # qk-validation-gate đã được downgrade thành workflow step (v9.2.1) — không còn là skill độc lập
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -107,9 +114,9 @@ learnings: []
 execution_mode: deterministic
 cost: medium
 latency: slow
-risk: low
+risk: medium        # scan đọc sensitive files (env, config, secrets) — không phải low
 side_effects: read_only
-produces: [report, security_fixes]
+produces: [report, remediation_plan]   # read_only = không tự patch code, chỉ báo cáo + đề xuất fix
 consumes: [user-description]
 
 token_budget:
@@ -125,478 +132,149 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Hard Bug / Architecture (vd: lỗ hổng OWASP, lộ rò rỉ secret, quy chuẩn Zero-Trust R-SEC-04).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Lỗ hổng bảo mật mới phát hiện (Hard Bug) hoặc chính sách an toàn mới.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Cảnh báo scanner giả (false positive) đã xác thực.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Hard Bug / Architecture (vd: lỗ hổng OWASP, lộ rò rỉ secret, quy chuẩn Zero-Trust R-SEC-04).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Lỗ hổng bảo mật mới phát hiện (Hard Bug) hoặc chính sách an toàn mới.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Cảnh báo scanner giả (false positive) đã xác thực.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Hard Bug / Architecture (vd: lỗ hổng OWASP, lộ rò rỉ secret, quy chuẩn Zero-Trust R-SEC-04).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Lỗ hổng bảo mật mới phát hiện (Hard Bug) hoặc chính sách an toàn mới.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Cảnh báo scanner giả (false positive) đã xác thực.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Lỗ hổng bảo mật mới phát hiện (Hard Bug) hoặc chính sách an toàn mới.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Cảnh báo scanner giả (false positive) đã xác thực.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Lỗ hổng bảo mật mới phát hiện (Hard Bug) hoặc chính sách an toàn mới.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Cảnh báo scanner giả (false positive) đã xác thực.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Tuân thủ `security.md`.
-- [ ] Xác định phạm vi codebase cần audit.
+
+- [ ] Biết scope cần audit: toàn bộ codebase / 1 module / 1 PR / 1 dependency
+  → Nếu chưa biết: hỏi user trước khi bắt đầu scan
+- [ ] Không được ghi vào bất kỳ file nào trong quá trình audit (`side_effects: read_only`)
+- [ ] Nếu phát hiện secret đang live (API key, password): **BLOCKED ngay** — báo user xử lý trước
+- [ ] Output là report + remediation_plan — KHÔNG tự sửa code, KHÔNG tự revoke secret
+
+---
 
 ## Scope
-- Quét và phát hiện các rủi ro bảo mật từ dependencies bên thứ ba.
-- Nhận diện secret bị hardcode/leak (API keys, passwords, tokens).
-- Rà soát mô hình phân quyền (RBAC, ABAC) và kiểm tra lỗ hổng logic (BOLA, Broken Auth).
-- **Quét lỗ hổng Prompt Injection và xác minh ranh giới Zero-Trust theo đúng R-SEC-04.**
-- Check dựa trên OWASP Top 10.
-- Khuyến nghị bản vá bảo mật tương ứng.
 
-## Non-Goals
-- ❌ Provide implementation outside of Security Vulnerability Detection scope
-- ❌ Override explicit user directives without explanation
-- ❌ Guess ambiguous requirements without asking
+✅ Skill này làm:
+- Scan OWASP Top 10: injection, broken auth, sensitive data exposure, XSS, IDOR...
+- Detect secret/credential leak trong code, config, commit history pattern
+- Audit dependency vulnerabilities (npm audit / pip audit / cargo audit equivalent)
+- Review permission model: RBAC gaps, over-privileged roles, missing auth checks
+- Phát hiện prompt injection risk (nếu project có AI/LLM component)
+- Output: Severity-ranked finding list + remediation plan cho từng finding
 
-## Priority Order
+❌ Skill này KHÔNG làm:
+- Tự sửa code để fix lỗ hổng (→ dùng `qk-bug-resolution` sau khi có report)
+- Implement RBAC/ABAC (→ `qk-access-policy`)
+- Penetration testing thực sự (cần human expert)
+- Compliance certification (SOC2, ISO27001...)
+- Revoke credentials hay rotate secrets (→ user tự làm)
 
-| Priority | Task | Skip Threshold |
-|----------|------|----------------|
-| P1 | Core Security Vulnerability Detection analysis and decision making | Never |
-| P2 | Validation of existing patterns | Budget < 30% |
-| P3 | Detailed documentation generation | Budget < 50% |
-| P4 | Edge case exploration | Budget < 70% |
+---
 
-## Workflow
+## Execution Steps
 
-### Phase 1 — Context Loading
-**Steps:**
-1. Read existing configuration and requirements related to Security Vulnerability Detection.
-2. Check for missing preconditions.
-
-**Decision:**
+### Step 1 — Xác định scope và threat model
 ```
-IF context is clear
-  → Confidence: HIGH → go to Phase 2
-ELSE
-  → EXIT: BLOCKED — ask user
-```
-
-### Phase 2 — Analysis & Strategy
-**Steps:**
-1. Analyze the current state against Security Vulnerability Detection best practices.
-2. Formulate strategy or audit report based on findings.
-
-**Decision:**
-```
-IF strategy/audit is complete
-  → Confidence: HIGH → go to Phase 3
-ELSE IF minor gaps exist
-  → Confidence: MEDIUM → proceed with assumptions noted
+Inputs:  user_description, DEV_PROFILE.md (stack info)
+Actions:
+  - Xác định: audit toàn bộ / module cụ thể / diff của PR
+  - Xác định attack surface dựa trên stack:
+    Web app    → injection, XSS, CSRF, auth bypass
+    API        → broken auth, IDOR, rate limiting, input validation
+    Data       → SQL injection, data exposure, access control
+    AI/LLM     → prompt injection, data poisoning, model extraction
+    DevOps     → secrets in CI, misconfigured IAM, container escape
+  - List top 5 risk areas cần ưu tiên
+Outputs: audit_scope, threat_model
+Exit: BLOCKED nếu scope quá rộng mà không có priority
 ```
 
-### Phase 3 — Finalization
-**Steps:**
-1. Generate final report or configuration.
-2. Prepare handoff data for subsequent skills.
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | All preconditions met, context fully understood | Proceed directly |
-| MEDIUM | Some context missing but safe defaults exist | Proceed and note assumptions |
-| LOW | Core requirements missing | EXIT: BLOCKED |
-
-## Severity (for findings)
-
-| Level | Definition |
-|-------|-----------|
-| CRITICAL | Severe violation of Security Vulnerability Detection principles |
-| HIGH | Significant risk or technical debt |
-| MEDIUM | Suboptimal pattern but functional |
-| LOW | Minor style or documentation issue |
-
-## Evidence Format
-
+### Step 2 — Scan theo OWASP Top 10
 ```
-[SEVERITY] Context/File
-Issue:      [what was found]
-Confidence: HIGH
-Recommendation: [actionable advice]
+Actions (đọc có mục tiêu, không dump toàn bộ codebase):
+  A01 Broken Access Control:
+    - Grep auth middleware: routes có bị skip không
+    - Check role check consistency (if admin check ở route nhưng thiếu ở service)
+  A02 Cryptographic Failures:
+    - Tìm hardcoded secrets: grep pattern (password=, api_key=, secret=, token=)
+    - Check password hashing: bcrypt/argon2 hay MD5/SHA1?
+    - Check TLS config nếu có
+  A03 Injection:
+    - SQL: tìm string concatenation trong queries
+    - Command injection: exec(), eval(), subprocess với user input
+    - Template injection (SSTI)
+  A05 Security Misconfiguration:
+    - .env.example so sánh với .env (nếu đọc được)
+    - CORS config: wildcard origin?
+    - Debug mode enabled trong production config?
+  A06 Vulnerable Components:
+    - Đọc package.json / requirements.txt / go.mod
+    - Flag packages có known CVE hoặc deprecated
+  A09 Logging Failures:
+    - Sensitive data trong logs (password, token, PII)?
+    - Missing security event logging (failed login, permission denied)?
+Token budget: max 10 files, 150 lines/file — ưu tiên auth/middleware/config files
 ```
 
-## Retry Policy
+### Step 3 — Detect Secret Leak
 ```
-Task fails due to missing context
-  └─ Ask user for clarification
-       ├─ Provided → Retry Phase 1
-       └─ Not provided → EXIT: BLOCKED
-```
-
-## Escalation Rules
-
-```
-BLOCKED: Missing critical context for Security Vulnerability Detection
-Missing:
-  - [Specific requirement]
-Questions:
-  1. Bạn có thể cung cấp thêm thông tin về yêu cầu này không?
-  2. Mục tiêu chính của bạn là gì?
-Recommended Assumptions: none
+Actions:
+  - Grep patterns: (api[_-]?key|secret|password|token|credential)\s*[:=]\s*['"][^'"]{8,}
+  - Check: .env files committed? (git ls-files | grep .env)
+  - Check config files: database URL có credential?
+  - Check source code comments: TODO fix this hardcoded password
+  - Check test files: mock credentials có bị copy từ production?
+Exit: BLOCKED ngay nếu tìm thấy live credential — báo user xử lý trước khi tiếp tục
 ```
 
-## Handoff Contract
+### Step 4 — Output Report
+```
+Format bắt buộc:
+  CRITICAL (fix ngay, không deploy):
+    [C1] [Tên lỗi] — [File:line] — [Mô tả] — [Remediation]
 
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["context"],
-  "optional_fields": ["existing_config"]
-}
+  HIGH (fix trong sprint này):
+    [H1] [Tên lỗi] — [File:line] — [Mô tả] — [Remediation]
+
+  MEDIUM (schedule fix):
+    [M1] ...
+
+  LOW / INFORMATIONAL:
+    [L1] ...
+
+  SUMMARY:
+    Critical: N | High: N | Medium: N | Low: N
+    Most urgent: [top 3 cần fix ngay]
+    Recommended next skill: qk-bug-resolution (để fix từng finding)
+                            qk-access-policy (nếu có RBAC gap)
 ```
 
-### Produces
-```json
-{
-  "to": "user or downstream skill",
-  "output_fields": ["strategy_report", "exit_code"]
-}
+---
+
+## Prompt Template
+
+```
+Audit scope: [toàn bộ codebase / module X / PR #N / file Y]
+Stack:       [đọc từ DEV_PROFILE.md — hoặc ghi rõ nếu chưa có]
+Ưu tiên:    [injection / secrets / auth / dependencies / tất cả]
+Context:     [sắp deploy production / sau khi thêm auth feature / định kỳ / ...]
 ```
 
-## Exit Codes
+### Theo Role:
 
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Security Vulnerability Detection task completed successfully | Strategy/audit generated |
-| PARTIAL | Task completed with assumptions | Medium confidence |
-| BLOCKED | Missing context | Cannot proceed |
-| FAILED | Critical conflict or error | Unresolvable constraint |
+**role: be / fullstack**
+```
+Audit scope: src/api/ + src/middleware/
+Ưu tiên:    auth bypass, SQL injection, secret leak
+Context:    Sắp deploy lên production lần đầu
+```
+→ AI focus: auth middleware completeness, parameterized queries, JWT validation, CORS.
+
+**role: devops**
+```
+Audit scope: .github/workflows/ + Dockerfile + terraform/
+Ưu tiên:    secrets in CI, IAM over-privilege, container security
+Context:    Sau khi onboard engineer mới vào team
+```
+→ AI focus: secrets in env vars vs secrets manager, IAM least privilege, base image CVEs.
+
+**role: ai-engineer**
+```
+Audit scope: prompts/ + agents/ + retrieval/
+Ưu tiên:    prompt injection, data poisoning, PII in context
+Context:    RAG system sắp ra production
+```
+→ AI focus: input sanitization trước khi đưa vào prompt, output filtering,
+  PII không được persist trong vector DB, guardrails có đủ không.

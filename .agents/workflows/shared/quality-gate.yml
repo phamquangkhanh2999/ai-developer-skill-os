@@ -1,0 +1,94 @@
+name: quality-gate
+version: 9.2.0
+description: "Shared quality gate — embedded vào bước verify của feature-delivery, bug-resolution, refactor. Source of truth duy nhất cho R-C-10 checklist."
+type: shared-step
+
+# ─────────────────────────────────────────────────────────────
+# CÁCH DÙNG TRONG WORKFLOW:
+#   Trong step verify của workflow, thêm dòng sau vào actions:
+#   - "Áp dụng shared quality gate: xem .agents/workflows/shared/quality-gate.yml"
+#   Rồi liệt kê CHỈ những check đặc thù của workflow đó.
+#
+# KHÔNG copy toàn bộ checklist này vào workflow — trỏ về file này.
+# Khi cần update checklist: sửa file này, tất cả workflow tự được cập nhật.
+# ─────────────────────────────────────────────────────────────
+
+universal_checks:
+  description: "Áp dụng cho MỌI workflow có side_effects: edit_files (R-C-10 trong coding.md)"
+  items:
+    - id: fn-length
+      check: "Function length ≤ 40 lines"
+      action: "Extract sub-function nếu vi phạm"
+
+    - id: file-length
+      check: "File length ≤ 300 lines"
+      action: "Split module nếu vi phạm"
+
+    - id: nesting-depth
+      check: "Nesting depth ≤ 3 levels"
+      action: "Extract early return hoặc helper function"
+
+    - id: cyclomatic
+      check: "Cyclomatic complexity ≤ 10"
+      action: "Simplify conditions, extract logic"
+
+    - id: no-silent-errors
+      check: "Không có empty catch, không dùng `!` hoặc `as` để bypass type"
+      action: "Fix root cause — report BLOCKED nếu không rõ root cause"
+
+    - id: no-magic-numbers
+      check: "Không có magic numbers/strings trong logic"
+      action: "Extract thành named constant"
+
+    - id: dry
+      check: "Không có logic lặp ≥ 2 lần"
+      action: "Extract thành shared function/util"
+
+    - id: naming
+      check: "Naming conventions: camelCase fn, PascalCase class, UPPER_SNAKE constant"
+      action: "Rename theo convention"
+
+    - id: no-console-log
+      check: "Không có console.log/print/fmt.Println debug còn sót"
+      action: "Xóa hoặc thay bằng proper logger"
+
+    - id: root-cause-fix
+      check: "Fix là root cause, không phải symptom patch"
+      action: "Report BLOCKED nếu root cause chưa rõ"
+
+workflow_specific_checks:
+  feature-delivery:
+    description: "Thêm vào sau universal_checks khi verify feature mới"
+    items:
+      - id: acceptance-criteria
+        check: "Tất cả acceptance criteria đã được đáp ứng"
+        action: "List unmet criteria, report PARTIAL nếu còn thiếu"
+      - id: run-tests
+        check: "Chạy linter + test suite (npm run lint / ruff / eslint / pytest)"
+        action: "Fix lint errors trước khi report SUCCESS"
+
+  bug-resolution:
+    description: "Thêm vào sau universal_checks khi verify bug fix"
+    items:
+      - id: no-regression
+        check: "Callers/dependents không bị break"
+        action: "Đọc caller files, verify interface không thay đổi"
+      - id: security-boundary
+        check: "Tuân thủ R-SEC-04 (Security Boundary)"
+        action: "Flag nếu fix chạm auth/payment/permission code"
+
+  refactor:
+    description: "Thêm vào sau universal_checks khi verify refactor"
+    items:
+      - id: behavior-unchanged
+        check: "External behavior giống hệt trước refactor"
+        action: "So sánh với current_behavior_summary, report FAILED nếu có diff"
+      - id: run-tests
+        check: "Test suite pass — không có regression"
+        action: "Report FAILED + rollback nếu test fail sau refactor"
+
+exit_criteria:
+  SUCCESS:  "Tất cả universal_checks + workflow_specific_checks đều pass"
+  PARTIAL:  "Universal checks pass, nhưng có workflow-specific check chưa xong (VD: test chưa được viết)"
+  FAILED:   "Bất kỳ universal check nào fail, hoặc behavior changed sau refactor, hoặc test regression"
+  BLOCKED:  "Root cause chưa rõ, hoặc thiếu thông tin để verify"

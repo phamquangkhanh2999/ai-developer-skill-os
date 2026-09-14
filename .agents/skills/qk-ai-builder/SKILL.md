@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ai-builder
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Thiết kế Governed AI Agent & RAG pipelines theo chuẩn V8.2 — Đóng gói bằng capability.yaml, data discipline 4-folder và Eval Pipeline."
+description: "Thiết kế và implement AI Agent hoặc RAG pipeline với eval criteria bắt buộc. Dùng skill này khi user nhắc đến: build ai, rag pipeline, prompt engineering, viết prompt, thiết kế agent, llm, vector database, embedding, retrieval, chatbot, ai logic, tạo skill — kể cả khi chỉ nói \"muốn AI trả lời từ tài liệu của mình\"."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -23,10 +23,18 @@ complexity:
 
 triggers:
   - "build ai"
+  - "rag pipeline"
+  - "prompt engineering"
   - "viết prompt"
-  - "thiết kế bot"
+  - "thiết kế agent"
+  - "llm"
+  - "vector database"
+  - "embedding"
+  - "retrieval"
+  - "chatbot"
   - "ai logic"
   - "tạo skill"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
@@ -85,603 +93,162 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm thiết kế và hiện thực hóa AI Agent, RAG pipelines, prompt systems và eval criteria. Cam kết chống hallucination, tối ưu hóa token budget, quản lý context window và bảo vệ dữ liệu nhạy cảm.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: cấu hình provider LLM, chuẩn RAG pipeline, prompt template).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: quy chuẩn JSON schema cho prompt, scorecard định lượng).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các thao tác tinh chỉnh từ ngữ prompt tạm thời cho 1 task đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: cấu hình provider LLM, chuẩn RAG pipeline, prompt template).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: quy chuẩn JSON schema cho prompt, scorecard định lượng).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các thao tác tinh chỉnh từ ngữ prompt tạm thời cho 1 task đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: cấu hình provider LLM, chuẩn RAG pipeline, prompt template).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: quy chuẩn JSON schema cho prompt, scorecard định lượng).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các thao tác tinh chỉnh từ ngữ prompt tạm thời cho 1 task đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: quy chuẩn JSON schema cho prompt, scorecard định lượng).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các thao tác tinh chỉnh từ ngữ prompt tạm thời cho 1 task đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: quy chuẩn JSON schema cho prompt, scorecard định lượng).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các thao tác tinh chỉnh từ ngữ prompt tạm thời cho 1 task đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] AI task is defined: what input → what output
-- [ ] LLM provider is specified (OpenAI, Anthropic, Gemini, local)
+
+Trước khi triển khai bất kỳ hệ thống AI nào, AI BẮT BUỘC kiểm tra:
+
+- [ ] Xác định AI stack từ `.agents/DEV_PROFILE.md` (LLM provider, Vector DB, Framework như LangChain/LlamaIndex/Vercel AI SDK).
+- [ ] Xác định rõ Evaluation criteria: Tiêu chí đo lường độ chính xác (Relevance, Faithfulness, Hallucination rate).
+- [ ] Kiểm tra chính sách dữ liệu: Có dữ liệu PII (thông tin định danh cá nhân) hoặc secrets cần sanitize trước khi gửi LLM không?
+- [ ] Nếu không có phương án kiểm thử / eval criteria đo lường chất lượng AI:
+  → **EXIT: BLOCKED**
+  → Báo cáo user: Bắt buộc định nghĩa Eval criteria trước khi tiến hành code pipeline.
 
 ---
 
-## Scope & V8.2 Governed Capability Design
-- ✅ **Capability Packaging:** Design modular AI capabilities paired with machine-readable `capability.yaml` and `scorecard.yaml` eval rubrics. *(Note: This packaging requirement applies only to new AI-agent/RAG capabilities generated by this skill, not to general-purpose dev-tooling skills).*
-- ✅ **Universal 4-Folder Discipline:** Enforce clean separation of Prompt Engineering (`prompts/`), Immutable Raw Data vs Clean Processed Chunks (`data/`), Modular Micro-skills (`agents/`), and Empirical Evals (`evals/`).
-- ✅ **Eval-Driven Pipeline:** Move from static `Prompt -> Output` to the closed-loop V8.2 workflow:
-  `Prompt -> Execution -> Trace Log -> Evaluation (scorecard) -> Quality Gate -> Release Report`
-- ✅ Design strict, deterministic system prompts with structured JSON outputs.
-- ✅ Sanitize user inputs before LLM ingestion (Anti-Injection).
+## Scope
 
-## Non-Goals
-- ❌ Modify or override files located in `data/raw/` (must remain immutable ground-truth)
-- ❌ Create unguided AI chat loops without structured eval criteria or trace records
-- ❌ Trust LLM output for critical logic without quantitative verification via `qk-validation-gate`
-- ❌ Use raw user input directly in prompts without sanitization
+✅ Skill này làm:
+- Thiết kế luồng RAG (Chunking, Embedding, Vector Search, Re-ranking, Context Augmentation).
+- Xây dựng Agent logic (Tool use, Function calling, Structured output, Memory loop).
+- Tối ưu hóa System Prompt: Vai trò, nhiệm vụ, định dạng output (JSON schema/Markdown), guardrails.
+- Xây dựng Eval suite và bộ test cases đánh giá định lượng câu trả lời của AI.
+- Quản lý token budget, streaming response, và cơ chế fallback khi LLM timeout/rate-limit.
 
----
-
-## System Prompt Template (Required Structure)
-
-```
-[ROLE]
-You are a [specific role]. You [specific expertise].
-
-[TASK]
-Your task is to [exact task description].
-
-[CONSTRAINTS]
-- Always [constraint 1]
-- Never [constraint 2]
-- If [edge case] → [specific action]
-
-[OUTPUT FORMAT]
-Return ONLY valid JSON matching this schema:
-{
-  "field1": "string",
-  "field2": number,
-  "confidence": "high|medium|low"
-}
-
-[EXAMPLES]
-Input: [example]
-Output: {"field1": "...", "field2": 0, "confidence": "high"}
-```
+❌ Skill này KHÔNG làm:
+- Huấn luyện hoặc fine-tune foundation models từ đầu (pre-training).
+- Viết giao diện Frontend Chatbot hoàn chỉnh (→ `qk-ui-builder` hoặc `qk-api-consumer`).
+- Quản lý hạ tầng GPU / Kubernetes cluster chạy model (→ `qk-devops-platform`).
 
 ---
 
-## Anti-Injection Checklist (Tuân thủ R-SEC-04)
+## Execution Steps
+
+### Step 1 — Architecture & Pipeline Design
 ```
-[ ] User input is wrapped in XML tags: <user_input>{input}</user_input>
-[ ] System instructions are separate from user content
-[ ] Input is validated/sanitized before injection (no raw HTML/JS)
-[ ] Max token limit set for user input
-[ ] Output is parsed as JSON (not eval'd)
-[ ] Confidence field in output triggers human review if "low"
+Inputs:  Yêu cầu từ user, Data sources, DEV_PROFILE.md
+Actions:
+  - Lựa chọn mô hình: Direct prompting vs RAG vs Agentic tool calling.
+  - Thiết kế chiến lược chia nhỏ dữ liệu (Chunk size, chunk overlap) và vector embedding.
+  - Xác định schema cho Structured Output (JSON Schema / Zod).
+Output: AI Architecture Specification
 ```
 
----
-
-## RAG Pipeline Pattern
+### Step 2 — Prompt Engineering & Guardrails
 ```
-User Query
-  └─ Sanitize + embed query
-       └─ Vector search (top-K = 5)
-            └─ Re-rank by relevance
-                 └─ Build prompt: [System] + [Retrieved Context] + [User Query]
-                      └─ LLM call
-                           └─ Validate output schema
-                                └─ Return to user
+Inputs:  AI Architecture Specification
+Actions:
+  - Viết System Prompt có cấu trúc rõ ràng: Role, Capabilities, Boundaries, Output Format.
+  - Thiết lập Guardrails: Khử jailbreak, cấm hallucination khi thiếu dữ liệu, lọc PII.
+  - Thiết lập vài ví dụ minh họa (Few-shot learning) nếu cần chuẩn hóa logic phức tạp.
+Output: Production-grade Prompt definitions
+```
+
+### Step 3 — Pipeline Implementation & Integration
+```
+Inputs:  Prompts, Schemas, AI SDK
+Actions:
+  - Code pipeline tích hợp LLM client với error handling, retry backoff và fallback logic.
+  - Kết nối Vector store / Document retriever và reranker (nếu là RAG).
+  - Tích hợp function calling và parse structured outputs an toàn.
+Output: Functional AI Pipeline code
+```
+
+### Step 4 — Verification & Eval Execution
+```
+Inputs:  AI Pipeline, Test dataset
+Actions:
+  - Chạy eval test cases để đo lường: Faithfulness (độ trung thực), Retrieval recall, Latency.
+  - Đảm bảo token cost nằm trong ngân sách cho phép.
+Exit: SUCCESS nếu vượt qua các ngưỡng benchmark chất lượng đã cam kết.
 ```
 
 ---
 
----
+## Prompt Template
 
-## Priority Order
+AI đọc `DEV_PROFILE.md` để biết LLM, vector DB, và pipeline framework đang dùng.
+Mô tả agent/pipeline cần build — AI thiết kế đúng kiến trúc, không generic.
 
-| Priority | Task | Skip Threshold |
-|----------|------|----------------|
-| P1 | System Prompt structure defined | Never |
-| P2 | Anti-Injection checklist applied | Never |
-| P3 | Output schema validated | Budget < 30% |
-| P4 | 4-folder discipline (prompts/data/agents/evals) set up | Budget < 50% |
-| P5 | Examples/few-shot added | Budget < 70% |
-
----
-
-## Workflow
-
-### Phase 1 — Prompt Design
-**Steps:**
-1. Define the system prompt using the Required Structure (ROLE, TASK, CONSTRAINTS).
-2. Explicitly specify the OUTPUT FORMAT as structured JSON.
-3. Add few-shot EXAMPLES to guide the LLM.
-
-**Decision:**
 ```
-IF prompt has all sections
-  → Confidence: HIGH → go to Phase 2
-ELSE
-  → EXIT: BLOCKED — request missing details
-```
-
-### Phase 2 — Security & Validation
-**Steps:**
-1. Apply the Anti-Injection Checklist.
-2. Validate that user inputs are wrapped in XML tags and sanitized.
-3. Ensure the output schema contains a confidence score field.
-
-**Decision:**
-```
-IF all security checks pass
-  → Confidence: HIGH → go to Phase 3
-ELSE
-  → EXIT: FAILED — fix security gaps
-```
-
-### Phase 3 — Pipeline & Packaging
-**Steps:**
-1. Map the process to the RAG Pipeline Pattern if context retrieval is needed.
-2. Ensure files are organized into the 4-Folder Discipline (prompts/, data/, agents/, evals/).
-3. Generate `capability.yaml` and `scorecard.yaml` for evaluation.
-
-**Decision:**
-```
-IF packaging complete
-  → EXIT: SUCCESS
-ELSE
-  → EXIT: PARTIAL — note missing folder structure or evals
+Build:       [RAG pipeline / AI agent / prompt chain / eval suite / ...]
+Mục đích:   [System này làm gì, cho ai dùng]
+Input:       [User query / document / event / ...]
+Output:      [Response format, citation style, action taken]
+Constraints: [Latency budget, cost/query, context window limit, PII rules]
+Eval:        [Thành công trông như thế nào — metric cụ thể]
 ```
 
 ---
 
-## Output Format
+### Ví dụ theo use case:
 
+**RAG — Tài liệu nội bộ (OpenAI + pgvector + LangChain)**
 ```
-🤖 AI Builder Output
-─────────────────────────────────────────────────
-Task:        [Description of the AI task]
-Confidence:  [HIGH | MEDIUM | LOW]
-
-Design:
-  ✅ System Prompt Template created
-  ✅ Output JSON Schema defined
-  ✅ [N] few-shot examples included
-
-Security & Validation:
-  ✅ User input wrapped in <user_input> tags
-  ✅ Anti-Injection checklist passed
-
-Packaging:
-  ✅ 4-folder structure initialized
-  ✅ capability.yaml & scorecard.yaml generated
-
-Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
+Build:       RAG pipeline cho Q&A tài liệu nội bộ công ty
+Mục đích:   Nhân viên hỏi về policy, quy trình, handbook — AI trả lời có citation
+Input:       User question (text), corpus: 500 PDF files (~50k pages)
+Output:      { answer: string, citations: [{doc, page, excerpt}], confidence: high|low }
+Constraints: Latency < 3s, cost < $0.01/query, không trả lời ngoài corpus
+Eval:        Faithfulness > 0.85, Answer relevance > 0.80, No hallucination on factual Q
 ```
+→ AI thiết kế: chunking strategy (semantic vs fixed với overlap),
+  embedding model (text-embedding-3-small vs large — cost vs quality),
+  pgvector index type (ivfflat vs hnsw), retrieval pipeline (vector search → rerank),
+  system prompt với grounding enforcement, citation extraction,
+  eval harness (RAGAS metrics), fallback khi confidence thấp.
 
----
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Prompt designed with all required sections, anti-injection applied | All checks passed |
-| PARTIAL | Prompt works but missing examples or output validation | Medium confidence result |
-| BLOCKED | Task or output format not defined clearly enough | Cannot design without clear spec |
-| FAILED | Prompt design has security vulnerability (direct injection risk) | Security gate failure |
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Task clearly defined, output format specified, examples provided | Build directly |
-| MEDIUM | Task clear but output format ambiguous | Note assumption, add validation layer |
-| LOW | Task too vague ("make an AI assistant") | EXIT: BLOCKED — define specific task |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Prompt injection attack possible | User input directly in system prompt |
-| HIGH | LLM output used without validation in business logic | JSON parse without schema check |
-| MEDIUM | Missing examples leads to inconsistent output | No few-shot examples in prompt |
-| LOW | Output format not explicitly stated | Returns text instead of JSON |
-
----
-
-## Evidence Format
+**Agentic — Tool-calling Agent (OpenAI + LangGraph)**
 ```
-[SEVERITY] src/prompts/[name].ts:LINE
-Issue:      [specific vulnerability or gap]
-Confidence: HIGH
-Fix:        [specific change]
+Build:       Customer support agent tự động xử lý refund requests
+Mục đích:   Giảm ticket cho support team — tự xử lý 80% refund đơn giản
+Input:       Customer message qua chat widget
+Output:      Tự động: approve/reject refund, update order status, gửi email
+             Escalate: chuyển human agent nếu case phức tạp
+Constraints: Không approve refund > $500 tự động, log mọi quyết định,
+             PII không được gửi sang LLM ngoài (dùng on-premise model)
+Eval:        Accuracy > 95% trên refund eligibility, escalation rate < 20%,
+             False approve rate = 0% cho orders > $500
 ```
+→ AI thiết kế: tool definitions (check_order, process_refund, escalate_to_human),
+  LangGraph state machine cho multi-turn conversation,
+  guardrails cho financial limits (rule-based, không phụ thuộc LLM),
+  audit trail cho mọi action, PII redaction trước khi gửi LLM,
+  human-in-the-loop node, eval test cases với adversarial inputs.
 
-**Example:**
+**Prompt Engineering — Structured Output (Anthropic Claude)**
 ```
-[CRITICAL] src/prompts/chat.ts:34
-Issue:      User input `${userMessage}` injected directly in system prompt — injection risk
-Confidence: HIGH
-Fix:        Wrap in <user_input>{userMessage}</user_input> XML tags
+Build:       Pipeline extract thông tin từ hóa đơn PDF → JSON
+Mục đích:   Tự động hóa nhập liệu kế toán — xử lý 1000 hóa đơn/ngày
+Input:       PDF hóa đơn (scan hoặc digital), đa ngôn ngữ (VN, EN, JP)
+Output:      { vendor, date, total, currency, lineItems: [], taxAmount, invoiceNumber }
+Constraints: Accuracy > 99% trên digital PDFs, > 95% trên scanned,
+             Latency < 5s/invoice, cost < $0.005/invoice
+Eval:        Field-level accuracy per invoice type, error rate theo language
 ```
+→ AI thiết kế: PDF parsing strategy (PyMuPDF vs vision model),
+  structured output với JSON schema (tool_use / response_format),
+  few-shot examples cho từng invoice format,
+  confidence scoring per field, human review queue cho low-confidence,
+  batch processing pipeline, cost tracking per document type,
+  A/B test prompt versions.
 
----
-
-## Retry Policy
+**Eval Suite — Đánh giá AI system hiện có**
 ```
-LLM output validation fails
-  └─ Retry with stronger output format instruction (add explicit JSON schema)
-       ├─ PASS on retry → EXIT: SUCCESS, note "required stronger schema enforcement"
-       └─ FAIL on retry → EXIT: PARTIAL — add human review gate
-            └─ Do NOT auto-retry more than 1 time — risk of infinite loop
+Build:       Eval pipeline cho RAG system đang chạy production
+Mục đích:   Detect regression khi thay đổi prompt hoặc retrieval config
+Input:       Golden dataset: 200 Q&A pairs có ground truth answers
+Output:      Eval report: faithfulness, relevance, correctness per category,
+             comparison vs baseline version
+Constraints: Eval phải chạy trong CI/CD, kết quả trong < 10 phút
+Eval:        Chính eval này cần được validate bằng human judgment sample
 ```
-
----
-
-## Escalation Rules
-```
-BLOCKED: AI task not specific enough to design prompt
-Missing:
-  - Specific task description (what input → what output)
-  - Output format specification (JSON schema or text structure)
-Questions:
-  1. Input cụ thể là gì? (user text, document, structured data)
-  2. Output cần trả về dạng gì? (JSON với field gì / plain text)
-Recommended Assumptions (if proceeding):
-  - Structured JSON output with confidence field
-  - Deny-by-default: reject off-topic requests in system prompt
-```
-
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["task_description", "input_type", "output_format"],
-  "optional_fields": ["examples", "llm_provider", "max_tokens"]
-}
-```
-### Produces
-```json
-{
-  "to": "user or qk-validation-gate",
-  "output_fields": ["system_prompt", "output_schema", "anti_injection_checklist", "exit_code"]
-}
-```
-
----
-
+→ AI thiết kế: RAGAS framework setup, golden dataset format,
+  LLM-as-judge prompt design (với rubric rõ ràng),
+  metric thresholds cho CI gate (fail build nếu faithfulness < 0.80),
+  regression detection (compare vs previous run),
+  human calibration workflow cho judge prompts.

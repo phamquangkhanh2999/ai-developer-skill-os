@@ -98,7 +98,7 @@ steps:
 
   - id: verify
     name: "Verify implementation"
-    purpose: "Xác nhận feature hoạt động đúng theo acceptance criteria"
+    purpose: "Xác nhận feature hoạt động đúng theo acceptance criteria — quality gate bắt buộc"
     required: true
     skip_if: null
     inputs:
@@ -107,11 +107,15 @@ steps:
       - modified_files
     outputs:
       - verification_result
-      - unmet_criteria      # Any criteria not yet met
+      - unmet_criteria
+      - quality_gate_result   # PASS | PARTIAL | FAIL
     actions:
-      - "Đối chiếu từng acceptance criterion"
+      - "Đối chiếu từng acceptance criterion — list unmet nếu có"
       - "Re-read key implementation sections"
-      - "Run tests nếu có"
+      - "Run linter nếu có (npm run lint / ruff / eslint)"
+      - "Run tests nếu có (npm test / pytest / go test)"
+      - "Áp dụng shared quality gate → xem: .agents/workflows/shared/quality-gate.yml"
+      - "  Checklist: universal_checks + feature-delivery specific checks"
       - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: PARTIAL
 

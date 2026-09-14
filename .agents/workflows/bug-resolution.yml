@@ -98,21 +98,21 @@ steps:
       condition: "file thuộc vùng auth/payment/permission/migration"
       message: "Patch này chạm vào code nhạy cảm. Xác nhận an toàn trước khi thay đổi."
   - id: verify
-    name: "Xác minh fix"
-    purpose: "Xác nhận bug đã được fix và không có regression"
+    name: "Xác minh fix + quality gate"
+    purpose: "Xác nhận bug đã được fix, không có regression, code đạt quality threshold"
     required: true
     skip_if: null
     inputs:
       - patched_files
     outputs:
       - verification_result   # PASS | FAIL | PARTIAL
-      - evidence_of_fix       # Re-read patched section
+      - evidence_of_fix
+      - quality_gate_result   # PASS | FAIL
     actions:
       - "Re-read patched code section"
       - "Chạy test liên quan nếu có"
-      - "Kiểm tra caller/dependent nếu interface thay đổi"
-      - "Đảm bảo tuân thủ R-SEC-04 (Security Boundary)"
-      - "Đảm bảo tuân thủ R-C-09 (Zero-Slop)"
+      - "Áp dụng shared quality gate → xem: .agents/workflows/shared/quality-gate.yml"
+      - "  Checklist: universal_checks + bug-resolution specific checks"
       - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: FAILED
 

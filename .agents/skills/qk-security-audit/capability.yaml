@@ -26,5 +26,4 @@ decision_boundary:
     - "penetration testing"
     - "compliance certification"
   conflicts_with: []
-  delegates_to:
-    - "qk-validation-gate"
+  delegates_to: []

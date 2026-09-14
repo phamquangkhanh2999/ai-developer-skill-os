@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-ui-audit
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Kiểm toán giao diện (UI) với 57-check Anti-Slop checklist — fail nếu score < 76/85 base."
+description: "Kiểm toán chất lượng thiết kế UI với 57-check Anti-Slop checklist: spacing nhất quán, contrast ratio, component polish, interaction states. Output là nhận xét thiết kế và danh sách cần cải thiện. Dùng skill này khi user nhắc đến: review ui, audit giao diện, kiểm tra ui, ui quality, component spacing, design consistency, anti-slop — KHÔNG dùng cho đo hiệu năng hay SEO."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -22,11 +22,14 @@ complexity:
     has_breaking_change: false
 
 triggers:
-  - "audit ui"
-  - "check ui"
-  - "kiểm tra giao diện"
-  - "ui slop"
   - "review ui"
+  - "audit giao diện"
+  - "kiểm tra ui"
+  - "ui quality"
+  - "component spacing"
+  - "design consistency"
+  - "anti"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: code-review
@@ -85,555 +88,88 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-## Memory Workflow
+Chịu trách nhiệm kiểm toán chi tiết tính thẩm mỹ, sự nhất quán và độ hoàn thiện thị giác của giao diện người dùng theo bộ **57-Check Anti-Slop Checklist**. Ngăn chặn triệt để tình trạng giao diện AI cẩu thả (AI-generated slop): lệch nhịp spacing, độ tương phản kém, thiếu states tương tác.
 
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Pattern (vd: 57 check Anti-Slop, độ tương phản A11y, Design Contract).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Các mẫu lỗi AI-Slop phổ biến mới phát hiện trong UI dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Lỗi lệch vài pixel hoặc sai color shade lẻ tẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Pattern (vd: 57 check Anti-Slop, độ tương phản A11y, Design Contract).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Các mẫu lỗi AI-Slop phổ biến mới phát hiện trong UI dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Lỗi lệch vài pixel hoặc sai color shade lẻ tẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Pattern (vd: 57 check Anti-Slop, độ tương phản A11y, Design Contract).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Các mẫu lỗi AI-Slop phổ biến mới phát hiện trong UI dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Lỗi lệch vài pixel hoặc sai color shade lẻ tẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Các mẫu lỗi AI-Slop phổ biến mới phát hiện trong UI dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Lỗi lệch vài pixel hoặc sai color shade lẻ tẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Các mẫu lỗi AI-Slop phổ biến mới phát hiện trong UI dự án.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Lỗi lệch vài pixel hoặc sai color shade lẻ tẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] `DESIGN.md` exists in project root
-- [ ] Target UI file(s) or component(s) are specified
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "DESIGN.md not found. Run qk-project-bootstrap to create one, or provide design tokens manually."
-```
+Trước khi audit giao diện, AI BẮT BUỘC kiểm tra:
 
-## Scope
-- ✅ Score UI components against DESIGN.md tokens
-- ✅ Detect generic AI-slop aesthetics
-- ✅ Verify ARIA roles and contrast ratios
-- ✅ Validate responsive, interactive, and animation states
-
-## Non-Goals
-- ❌ Fix the UI — only audit and report (fixes go to qk-ui-builder)
-- ❌ Pixel-level screenshot comparison
-- ❌ Read entire CSS files — use targeted reads
-
-## Priority Order
-
-| Priority | Category | Points | Skip Threshold |
-|----------|----------|--------|----------------|
-| P1 | Accessibility (ARIA, contrast, keyboard) | 15pts | Never |
-| P2 | Layout & Spacing (tokens, grid, whitespace) | 15pts | Budget < 30% |
-| P3 | Typography & Colors (DESIGN.md compliance) | 15pts | Budget < 50% |
-| P4 | Interactions & Animations (hover, focus, transitions) | 15pts | Budget < 60% |
-| P5 | Anti-Slop Detection (Tra chéo với R-C-09: thẻ card xám xịt, viền nhạt nhòa, text nhỏ...) | 15pts | Budget < 70% |
-| P6 | Performance & Best Practices | 10pts | Budget < 80% |
-| BONUS | Mobile & Cross-browser | 5pts extra | Always optional |
-| EXTENDED | Edge cases | 9pts extra | Always optional |
-
-**Total: 85 base + 14 bonus/extended = 99 max. Pass threshold: ≥ 76/85 base (90%)**
-
-## Workflow
-
-### Phase 1 — Load Design Contract
-
-**Steps:**
-1. `grep_search` for DESIGN.md → read color tokens, spacing scale, typography
-2. Extract key tokens: primary colors (HSL), spacing unit, font families, border-radius, shadow levels
-
-**Exit When:**
-- Tokens extracted → go to Phase 2
-- DESIGN.md empty or incomplete → EXIT: BLOCKED
-
-### Phase 2 — Scan Target UI
-
-**Steps:**
-1. `view_file[targeted]` — read component file(s), focus on className, style, and JSX structure
-2. Check against each Priority category in order (P1 → P6)
-3. Log each finding with Evidence Format
-
-**Decision:**
-```
-IF score accumulates ≥ 76 after P1+P2+P3
-  → Can skip P4–P6 if token budget < 40%
-  → EXIT: PARTIAL (pass, but incomplete audit noted)
-
-IF CRITICAL violation found (e.g., hardcoded password in UI, broken ARIA)
-  → STOP audit, report immediately
-  → EXIT: FAILED
-```
-
-**Exit When:**
-- All categories checked → go to Phase 3
-- Token budget < 20% → go to Phase 3 with PARTIAL flag
-
-### Phase 3 — Score & Report
-
-**Steps:**
-1. Calculate total score per category
-2. Identify top 3 most impactful fixes
-3. Generate report with Evidence Format entries
-
-**Decision:**
-```
-IF total score ≥ 76
-  → EXIT: SUCCESS
-
-IF total score 60–75
-  → EXIT: PARTIAL — list required fixes
-
-IF total score < 60
-  → EXIT: FAILED — demand redesign, not patch
-```
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Token clearly absent/present, ARIA attribute visible | Report directly |
-| MEDIUM | Inferred from surrounding code patterns | Note assumption |
-| LOW | Cannot verify without rendering (e.g., animation timing) | Mark as "unverifiable — manual check required" |
-
-## Severity
-
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Accessibility violation blocking disabled users | Missing alt text, contrast ratio < 3:1 |
-| HIGH | Design system contract broken | Hardcoded hex color not in DESIGN.md |
-| MEDIUM | UX degraded, workaround exists | Missing hover state, no loading indicator |
-| LOW | Minor inconsistency | Spacing off by 1 unit |
-
-## Evidence Format
-
-```
-[SEVERITY] path/to/Component.tsx:LINE
-Category:   [Accessibility|Layout|Typography|Interaction|Anti-Slop|Performance]
-Reason:     [specific violation description]
-Confidence: [HIGH|MEDIUM|LOW]
-Fix:        [one-line actionable suggestion]
-Points:     -N pts
-```
-
-**Example:**
-```
-[HIGH] src/components/Button.tsx:23
-Category:   Typography
-Reason:     font-size hardcoded as "16px" — should use DESIGN.md token `--font-size-base`
-Confidence: HIGH
-Fix:        Replace with `var(--font-size-base)`
-Points:     -3 pts
-```
-
-## Retry Policy
-```
-Audit is read-only — no retry needed.
-If file is inaccessible → note as PARTIAL and continue with other files.
-```
-
-## Escalation Rules
-
-```
-BLOCKED: DESIGN.md missing or unreadable
-Missing:
-  - DESIGN.md with color tokens, spacing scale, typography definition
-Questions:
-  1. Có file design system nào khác không? (tokens.css, theme.ts, etc.)
-  2. Bạn có thể cung cấp màu sắc / font / spacing chính của dự án không?
-Recommended Assumptions (if proceeding):
-  - Use industry-standard: 8px spacing unit, Inter font, neutral gray palette
-```
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["target_component_path", "design_md_path"],
-  "optional_fields": ["specific_checklist_categories"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "qk-ui-builder (if fixes needed)",
-  "output_fields": ["audit_score", "violations_list", "top_3_fixes", "exit_code"]
-}
-```
-
-## Output Format
-
-```
-🎨 UI Audit Report
-─────────────────────────────────────────────────
-Component:   [path/to/component]
-DESIGN.md:   [found | not found]
-
-Scores:
-  P1 Accessibility:  [X/15]
-  P2 Layout:         [X/15]
-  P3 Typography:     [X/15]
-  P4 Interactions:   [X/15]
-  P5 Anti-Slop:      [X/15]
-  P6 Performance:    [X/10]
-  ─────────────────
-  Total:             [X/85 base] → [PASS ≥ 76/85 | FAIL < 76/85]
-
-Violations (top priority first):
-  [SEVERITY] file:LINE — reason — Fix: suggestion (-Xpts)
-
-Top 3 Required Fixes:
-  1. [Most impactful fix]
-  2. [Second fix]
-  3. [Third fix]
-
-Verdict:     [PASS | FAIL — requires redesign]
-Exit Code:   [SUCCESS | PARTIAL | FAILED]
-```
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Score ≥ 76 — UI passes Anti-Slop | All checks done, no critical violations |
-| PARTIAL | Score 60–75 or incomplete audit | Some categories skipped due to token budget |
-| BLOCKED | DESIGN.md missing or target not specified | Cannot audit without design contract |
-| FAILED | Score < 60 or CRITICAL violation found | Generic slop detected, redesign required |
-
-## References
-- Full 57-check checklist: `references/anti-slop-checklist.md`
+- [ ] Xác định các file UI component hoặc trang cần audit (`.tsx`, `.vue`, `.svelte`, `.html`, `.css`).
+- [ ] Đọc file cấu hình thiết kế nếu có (`DESIGN.md`, `tailwind.config.js`, tokens file) để lấy chuẩn so sánh.
+- [ ] Kiểm tra xem component có mã nguồn rõ ràng để phân tích styling không.
+- [ ] Nếu component sử dụng inline style hoặc cấu trúc quá rối loạn không thể đọc được layout:
+  → **EXIT: PARTIAL**
+  → Báo cáo user tình trạng code kèm khuyến nghị refactor trước khi audit chi tiết.
 
 ---
 
+## Scope
+
+✅ Skill này làm:
+- Rà soát 4 nhóm kiểm tra chính theo chuẩn Anti-Slop:
+  1. Spacing & Grid System (4px/8px grid alignment, nhất quán padding/margin, không dùng giá trị arbitrary tùy tiện).
+  2. Color & Contrast (Tỉ lệ tương phản văn bản/nền theo WCAG AA, tính nhất quán của bảng màu token).
+  3. Typography & Hierarchy (Phân cấp kích cỡ font chữ, line-height, font-weight có trật tự).
+  4. Interactive States (Đầy đủ hover, active, focus-visible, disabled, loading, skeleton states).
+- Xuất danh sách các điểm vi phạm (Slop items) kèm vị trí dòng code cụ thể.
+- Đề xuất mã CSS / Tailwind class sửa đổi chuẩn chỉnh.
+- Chế độ hoạt động: **Read-Only / Inspection Report** (không tự sửa code khi chưa duyệt).
+
+❌ Skill này KHÔNG làm:
+- Đo lường hiệu năng kỹ thuật web, Core Web Vitals, SEO tags (→ `qk-web-quality-gate`).
+- Xây dựng component mới từ bản vẽ Figma (→ `qk-ui-builder`).
+- Định nghĩa lại toàn bộ hệ thống Design Tokens từ gốc (→ `qk-design-system-engineering`).
+
+---
+
+## Execution Steps
+
+### Step 1 — Target Ingestion & Design Baseline
+```
+Inputs:  Danh sách file UI, DESIGN.md / Tailwind config
+Actions:
+  - Nạp source code component.
+  - Xác định Design Tokens chuẩn của dự án (màu sắc, spacing scales, border-radius).
+Output: Component AST / Markup map
+```
+
+### Step 2 — 57-Check Anti-Slop Audit
+```
+Inputs:  Component code, Design tokens
+Actions:
+  - Quét Spacing: Phát hiện các giá trị cứng (hardcoded px) thay vì dùng token (ví dụ: mt-[13px]).
+  - Quét Visual Hierarchy: Đảm bảo tiêu đề và nội dung có sự phân biệt rõ ràng.
+  - Quét Interactive States: Kiểm tra các button, input, link xem có `:focus-visible` và `:disabled` chuẩn không.
+  - Quét Layout Bugs: Xử lý tràn chữ (overflow, text truncation), co giãn responsive.
+Output: Audit findings categorized by severity
+```
+
+### Step 3 — Remediation Formulation
+```
+Inputs:  Audit findings
+Actions:
+  - Viết giải thích ngắn gọn lý do vi phạm.
+  - Cung cấp đoạn code so sánh Before/After cụ thể.
+Output: Anti-Slop Audit Report
+```
+
+### Step 4 — Verification & Delivery
+```
+Inputs:  Anti-Slop Audit Report
+Actions:
+  - Đảm bảo các khuyến nghị tuân thủ 100% stack khai báo trong DEV_PROFILE.md.
+  - Bàn giao báo cáo cho kỹ sư frontend.
+Exit: SUCCESS
+```
+
+---
+
+## Prompt Template
+
+```
+UI Component / Trang: [Đường dẫn file component hoặc page cần kiểm tra]
+Design Tokens:       [File cấu hình tailwind.config / css tokens / DESIGN.md]
+Vấn đề nghi ngờ:    [Bị lệch spacing, nút bấm xấu, thiếu hover state, ...]
+```

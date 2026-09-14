@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-db-optimizer
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Tối ưu Database dựa trên bằng chứng: EXPLAIN → phân tích → index/join — không đoán mò."
+description: "Tối ưu hiệu năng Database dựa trên bằng chứng kỹ thuật: phân tích EXPLAIN/ANALYZE, phát hiện N+1 queries, thiết kế Composite/Partial Index, refactor câu truy vấn chậm. Dùng skill này khi user nhắc đến: tối ưu query, query chậm, optimize db, thêm index, explain, slow query, n+1 query, lag database — kể cả khi chỉ nói 'câu SQL này chạy mất 5 giây'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -17,7 +17,7 @@ complexity:
   level: high
   criteria:
     files_affected: "1-5"
-    has_behavior_change: true
+    has_behavior_change: false
     has_external_dependency: true
     has_breaking_change: false
 
@@ -26,6 +26,11 @@ triggers:
   - "query chậm"
   - "optimize db"
   - "thêm index"
+  - "explain"
+  - "slow query"
+  - "n+1 query"
+  - "lag database"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: refactor
@@ -40,11 +45,13 @@ tools:
 
 related_skills:
   - qk-data-lifecycle
+  - qk-refactor
 
 knowledge_scope:
   owns:
     - database-performance
     - query-optimization
+    - index-engineering
   references:
     - architecture
     - anti-patterns
@@ -71,526 +78,133 @@ produces: [code, report]
 consumes: [query-log, source-code]
 
 token_budget:
-  max_files_read: 3
-  max_lines_per_read: 100
+  max_files_read: 5
+  max_lines_per_read: 150
   max_shell_commands: 2
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-db-optimizer — Database Performance Tuner
+# qk-db-optimizer — Evidence-Based Database Performance Tuner
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm chẩn đoán và khắc phục điểm nghẽn hiệu năng cơ sở dữ liệu dựa trên **bằng chứng đo lường thực tế**: `EXPLAIN (ANALYZE, BUFFERS)` → tìm root cause → đề xuất Index / Query Rewrite — **tuyệt đối không đoán mò**.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Pattern / Hard Bug (vd: lỗi slow query từng gặp, kế hoạch index đã duyệt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern tối ưu (vd: chuẩn composite index, partition strategy).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu kết quả EXPLAIN tạm thời của 1 query.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Pattern / Hard Bug (vd: lỗi slow query từng gặp, kế hoạch index đã duyệt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern tối ưu (vd: chuẩn composite index, partition strategy).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu kết quả EXPLAIN tạm thời của 1 query.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Pattern / Hard Bug (vd: lỗi slow query từng gặp, kế hoạch index đã duyệt).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern tối ưu (vd: chuẩn composite index, partition strategy).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu kết quả EXPLAIN tạm thời của 1 query.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern tối ưu (vd: chuẩn composite index, partition strategy).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu kết quả EXPLAIN tạm thời của 1 query.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern tối ưu (vd: chuẩn composite index, partition strategy).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu kết quả EXPLAIN tạm thời của 1 query.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Slow query log OR specific slow query is provided
-- [ ] Database schema/ORM models accessible
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Cần: slow query log hoặc query cụ thể cần tối ưu."
-```
+Trước khi đề xuất tối ưu, AI BẮT BUỘC xác nhận:
+
+- [ ] Đoạn query cụ thể (SQL thô hoặc câu gọi ORM) đang bị chậm.
+- [ ] Schema định nghĩa bảng và **danh sách index hiện có** trên các cột liên quan.
+- [ ] Output `EXPLAIN` hoặc `EXPLAIN ANALYZE` (nếu môi trường cho phép chạy query).
+- [ ] Quy mô dữ liệu ước tính (e.g. bảng có 1.000 rows hay 50.000.000 rows).
+
+*Nếu user yêu cầu "tối ưu database" mà không cung cấp query cụ thể hoặc slow log:*
+→ **EXIT: BLOCKED**
+→ Phản hồi: "Vui lòng cung cấp câu query bị chậm hoặc output log EXPLAIN để phân tích chính xác."
 
 ---
 
 ## Scope
-- ✅ Analyze EXPLAIN/query plans before adding indexes
-- ✅ Solve N+1 with Data Loaders or explicit Joins
-- ✅ Validate performance improvement
 
-## Non-Goals
-- ❌ Add indexes without slow query evidence
-- ❌ Add overlapping or redundant indexes
-- ❌ Optimize queries not shown in slow query log
+✅ Skill này làm:
+- Phân tích Execution Plan: Xác định `Seq Scan` trên bảng lớn, `Nested Loop` kém hiệu quả, `Temporary disk spill`, hoặc `Filter cost` cao.
+- Phát hiện và giải quyết triệt để **N+1 queries** trong ORM (Prisma, Drizzle, Hibernate, ActiveRecord).
+- Thiết kế Index chính xác: Composite Index (tuân thủ quy tắc Left-to-Right prefix), Partial Index (lọc `WHERE is_deleted = false`), Covering Index (`INCLUDE`).
+- Tái cấu trúc câu truy vấn (Query rewrite): Chuyển `OFFSET` lớn sang Keyset Pagination (Cursor-based), thay `NOT IN` bằng `NOT EXISTS` hoặc `LEFT JOIN ... IS NULL`.
+- Báo cáo định lượng trước và sau (Before / After Cost & Execution Time).
 
----
-
-## Priority Order
-| P | Issue Type | Action | Skip Threshold |
-|---|-----------|--------|----------------|
-| P1 | Sequential scan on large table (> 10k rows) | Add composite index | Never |
-| P2 | N+1 query pattern | Eager load / DataLoader (Ưu tiên theo chuẩn dự án, không tự chế query lồng) | Budget < 30% |
-| P3 | Missing JOIN (multiple queries for related data) | Rewrite with JOIN | Budget < 50% |
-| P4 | SELECT * (over-fetching) | Select specific columns | Budget < 60% |
+❌ Skill này KHÔNG làm:
+- Thêm index bừa bãi vào mọi cột (làm chậm `INSERT`, `UPDATE`, tăng dung lượng đĩa).
+- Tự ý thay đổi cấu trúc bảng hoặc drop cột (thuộc `qk-data-lifecycle`).
+- Can thiệp phần cứng DB hoặc tune memory server nếu không có file cấu hình repo.
 
 ---
 
-## EXPLAIN Decision Tree
+## Execution Steps
 
+### Step 1 — Thu thập Query & Phân tích EXPLAIN Plan
 ```
-Run EXPLAIN ANALYZE on slow query
-
-IF "Seq Scan" on table > 10k rows
-  → Check cardinality of filter column
-  → IF cardinality > 100 → add B-tree index
-  → IF low cardinality → add partial index or reconsider query
-
-IF "Nested Loop" with many iterations
-  → Check: is this N+1?
-  → IF yes → rewrite as single JOIN or use DataLoader
-
-IF "Sort" without index
-  → Add index on ORDER BY column
-
-IF index exists but not used ("Index Scan" missing)
-  → Check: is WHERE clause using non-leading column of composite index?
-  → Reorder composite index columns
+Inputs:  Slow query SQL/ORM, Schema & Existing Indexes
+Actions:
+  - Đọc câu query: xác định predicates (WHERE, JOIN, ORDER BY, GROUP BY).
+  - Đọc EXPLAIN output (nếu có):
+    - Tìm Node có `Cost` cao nhất.
+    - Kiểm tra `Rows Removed by Filter` (dấu hiệu thiếu index).
+    - Kiểm tra Sort method (in-memory quicksort hay external merge on disk).
 ```
 
----
-
-## Workflow
-
-### Phase 1 — Evidence Collection
-1. Read slow query log or provided query
-2. Run EXPLAIN ANALYZE (1 command) — or analyze ORM-generated SQL
-3. Identify bottleneck pattern (seq scan / N+1 / sort / over-fetch)
-
-### Phase 2 — Solution Design
-1. Apply Decision Tree above
-2. Design minimal index or query rewrite
-
-### Phase 3 — Apply & Verify
-1. Apply change (add index migration OR rewrite query via `replace_file_content`)
-2. (Optional) Re-run EXPLAIN to verify improvement (2nd command)
-
-**Decision:**
+### Step 2 — Chẩn đoán Root Cause
 ```
-IF improvement verified → EXIT: SUCCESS
-IF improvement not measurable → EXIT: PARTIAL, note "verify in production"
+Xác định vấn đề cốt lõi:
+  - Missing Index: Cột lọc không có index dẫn tới Full Table Scan.
+  - Sub-optimal Index: Có index nhưng sai thứ tự cột trong Composite Index.
+  - Implicit Type Casting: So sánh varchar với int làm database vô hiệu hóa index.
+  - N+1 Query: Gọi loop query con thay vì batch load.
+  - Expensive Pagination: `OFFSET 100000` quét qua 100.000 dòng rồi vứt bỏ.
+```
+
+### Step 3 — Thiết kế Giải pháp Tối ưu
+```
+Actions:
+  - Chiến lược Index:
+    - Composite Index: Đặt cột equality (`=`) trước, cột range (`<`, `>`, `BETWEEN`) sau.
+    - Partial Index: Khi chỉ query tập con dữ liệu (VD: `WHERE status = 'PENDING'`).
+  - Chiến lược Query Rewrite:
+    - Viết lại sang Cursor Pagination (`WHERE id > :last_id LIMIT 20`).
+    - Dùng CTE hoặc Window functions thay cho multiple subqueries lặp lại.
+  - Chiến lược ORM: Thêm `include`/`select` cụ thể, tránh `SELECT *`, áp dụng batch loader.
+```
+
+### Step 4 — Verification & So sánh định lượng
+```
+Actions:
+  - Đối chiếu Expected Cost trước và sau tối ưu:
+    Before: Seq Scan on orders (cost=0.00..45210.00 rows=1200000)
+    After:  Index Scan using idx_orders_customer_created (cost=0.43..8.45 rows=20)
+  - Đảm bảo câu query sau khi rewrite trả về đúng 100% dữ liệu như câu query cũ.
 ```
 
 ---
 
-## Evidence Format
+## Prompt Template
+
 ```
-[SEVERITY] query in src/repositories/[name].ts:LINE
-Pattern:    [SEQ_SCAN | N+1 | MISSING_JOIN | OVER_FETCH | UNUSED_INDEX]
-Table:      [table_name] (~N rows estimated)
-Confidence: HIGH
-Fix:        [specific index or rewrite]
-Estimated improvement: [X% reduction in scan rows]
-```
-
----
-
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Index added or query rewritten, improvement verified | Post-optimization |
-| PARTIAL | Optimization applied but could not verify via EXPLAIN | DB access blocked |
-| BLOCKED | Log not provided or DB engine unknown | Missing inputs |
-| FAILED | Optimization breaks existing test or query syntax | Logic error |
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | EXPLAIN plan shows SEQ SCAN, user confirms index is missing | Add index / rewrite |
-| MEDIUM | Query looks inefficient but no EXPLAIN available | Ask to run EXPLAIN |
-| LOW | "Make DB faster" with no slow query log | EXIT: BLOCKED |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Query locking table in production | Long running UPDATE |
-| HIGH | Missing index on frequently joined table | Full scan on million rows |
-| MEDIUM | N+1 queries due to missing JOIN | ORM fetching relations in loop |
-| LOW | Over-fetching columns | `SELECT *` instead of specific |
-
----
-
-## Retry Policy
-```
-EXPLAIN query fails
-  └─ Check SQL syntax error vs connection error
-       ├─ Syntax error → correct SQL → retry EXPLAIN
-       └─ Do NOT retry more than 1 time — risk of locking
+DB Engine:    [PostgreSQL / MySQL / SQLite / MongoDB]
+Slow Query:   [Câu SQL hoặc đoạn code ORM cần tối ưu]
+Schema:       [Định nghĩa bảng và index hiện tại]
+Triệu chứng:  [Chạy mất bao lâu / Execution Plan nếu có]
+Volume:       [Số lượng bản ghi trong các bảng liên quan]
 ```
 
----
+### Ví dụ theo Stack:
 
-## Escalation Rules
+**PostgreSQL (Composite Index & Keyset Pagination)**
 ```
-BLOCKED: Slow query log not provided
-Missing:
-  - The actual slow query SQL
-  - Current schema of the involved tables
-Questions:
-  1. Câu query nào đang bị chậm? (Xin SQL / ORM log)
-  2. Bảng này hiện đang có những index nào?
-Recommended Assumptions:
-  - Do NOT assume table size or indexes blindly
+DB Engine:    PostgreSQL 15
+Slow Query:   SELECT * FROM orders WHERE customer_id = 123 AND status = 'COMPLETED' ORDER BY created_at DESC LIMIT 20 OFFSET 50000;
+Volume:       Bảng orders có 10 triệu records. Hiện có index trên (customer_id).
 ```
+→ AI chẩn đoán:
+  1. Offset 50.000 buộc engine quét qua 50.000 index entries.
+  2. Index hiện tại thiếu `status` và `created_at`.
+→ AI giải pháp:
+  1. Đề xuất Composite Index: `CREATE INDEX CONCURRENTLY idx_orders_cust_stat_created ON orders (customer_id, status, created_at DESC);`
+  2. Rewrite sang Cursor Pagination: `SELECT id, total, created_at FROM orders WHERE customer_id = 123 AND status = 'COMPLETED' AND created_at < :last_created_at ORDER BY created_at DESC LIMIT 20;`
 
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["slow_query"],
-  "optional_fields": ["schema", "explain_plan", "db_engine"]
-}
+**Prisma ORM (Khắc phục N+1 Query)**
 ```
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["optimized_query", "migration_file", "explain_diff", "exit_code"]
-}
+ORM:          Prisma
+Code:         
+  const users = await prisma.user.findMany({ take: 50 });
+  for (const user of users) {
+    user.posts = await prisma.post.findMany({ where: { authorId: user.id } });
+  }
 ```
-
----
+→ AI sửa thành single query batching với eager load:
+  `const users = await prisma.user.findMany({ take: 50, include: { posts: { select: { id: true, title: true } } } });`
 

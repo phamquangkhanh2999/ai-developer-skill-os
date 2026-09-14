@@ -1,0 +1,115 @@
+name: skin-governance
+version: 9.2.0
+description: "Workflow tối ưu hóa, kiểm định và nâng cấp AI Skin — observe usage, measure success, improve, validate, promote."
+
+owner:
+  type: engineering
+  maintained_by: qk-team
+
+verification_profile: skill-evolution
+
+triggers:
+  - "improve this skill"
+  - "tối ưu skill"
+  - "why does this skill keep failing"
+  - "optimize this workflow"
+  - "phân tích usage skill"
+  - "nâng cấp skin"
+  - "skin governance"
+
+ide_binding:
+  slash_command: "/skin-tune"
+  aliases: ["/evolve-skill", "/skin-governance"]
+
+steps:
+  - id: observe_usage
+    name: "Observe Usage"
+    purpose: "Thống kê cách skill được gọi, token consumed, exit codes phân bổ"
+    required: true
+    inputs:
+      - skill_logs
+      - evals_traces
+    outputs:
+      - usage_metrics        # trigger_rate, avg_tokens, exit_distribution
+    actions:
+      - "Đọc evals/traces/ của skill target"
+      - "Thống kê trigger rate và token usage per exit code"
+      - "Phát hiện pattern gọi sai skill (routing error)"
+
+  - id: measure_success
+    name: "Measure Success Rate"
+    purpose: "Đánh giá chất lượng thực thi theo scorecard"
+    required: true
+    inputs:
+      - usage_metrics
+      - scorecard_yaml
+    outputs:
+      - success_rate         # % SUCCESS / total runs
+      - weak_areas           # Steps hay fail nhất
+    actions:
+      - "Tính SUCCESS / FAILED / PARTIAL / BLOCKED ratio"
+      - "Xác định bước nào trong workflow hay bị BLOCKED nhất"
+      - "So sánh với threshold trong scorecard.yaml"
+
+  - id: detect_failure
+    name: "Detect Failure Patterns"
+    purpose: "Tìm root cause của các lần fail — không đoán mò"
+    required: true
+    inputs:
+      - execution_results
+      - evals_traces
+    outputs:
+      - failure_patterns     # Categorized: ambiguous_input | hallucination | budget_overrun | wrong_routing
+    actions:
+      - "Phân loại lỗi: ambiguous_input / hallucination / budget_overrun / wrong_routing"
+      - "Tìm ví dụ cụ thể từ traces"
+      - "Ghi root cause evidence cho từng category"
+
+  - id: improve_skill
+    name: "Propose Improvement"
+    purpose: "Đề xuất thay đổi cụ thể — không thay đổi ngầm"
+    required: true
+    inputs:
+      - failure_patterns
+      - skill_body
+    outputs:
+      - improvement_proposal   # Diff: what to add/remove/change + reason
+    actions:
+      - "Giảm noise trong instruction (xóa rule không được enforce)"
+      - "Cập nhật examples với case thực tế từ traces"
+      - "Tinh chỉnh token_budget nếu hay bị overrun"
+      - "Cập nhật triggers nếu routing hay sai"
+      - "KHÔNG tự sửa — trả proposal để human review"
+    human_checkpoint:
+      condition: always
+      message: "Review improvement proposal trước khi apply vào SKILL.md"
+
+  - id: validate
+    name: "Validate Proposal"
+    purpose: "Đảm bảo bản cải tiến không vi phạm governance rules"
+    required: true
+    inputs:
+      - improvement_proposal
+    outputs:
+      - validation_result    # PASS | FAIL với lý do
+    actions:
+      - "Kiểm tra schema compliance (SPEC.md frontmatter)"
+      - "Đảm bảo không tạo scope overlap với skill khác"
+      - "Verify triggers không trùng skill khác trong routing table"
+
+  - id: promote
+    name: "Promote to Stable"
+    purpose: "Đưa bản cải tiến vào production sau khi đã validate"
+    required: true
+    inputs:
+      - validation_result
+    outputs:
+      - promoted_skill       # version bumped SKILL.md
+    actions:
+      - "Bump patch version (9.2.x → 9.2.x+1)"
+      - "Cập nhật registry: node tooling/generate-registry.js"
+      - "Ghi changelog entry"
+
+escalation:
+  max_retries: 1
+  on_failure: "Hủy bỏ bản cải tiến, giữ nguyên version hiện tại, ghi failure reason"

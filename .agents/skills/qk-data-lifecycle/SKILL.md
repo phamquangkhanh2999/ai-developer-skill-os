@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-data-lifecycle
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Quản lý Schema, Migrations an toàn — schema freeze → backward-compat migration → cleanup."
+description: "Quản lý Schema và Migration cơ sở dữ liệu an toàn — schema freeze, backward-compatible migrations, data transformation, zero-downtime deployment. Dùng skill này khi user nhắc đến: sửa schema, migration, database model, db schema, cập nhật database, đổi model, thêm cột, alter table — kể cả khi chỉ nói 'thêm trường phone vào bảng users'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -23,9 +23,14 @@ complexity:
 
 triggers:
   - "sửa schema"
+  - "migration"
+  - "database model"
+  - "db schema"
   - "cập nhật database"
-  - "tạo migration"
   - "đổi model"
+  - "thêm cột"
+  - "alter table"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
@@ -33,6 +38,7 @@ workflow: feature-delivery
 rules:
   - global
   - coding
+  - safety
 
 tools:
   - filesystem
@@ -40,11 +46,13 @@ tools:
 
 related_skills:
   - qk-db-optimizer
+  - qk-api-lifecycle
 
 knowledge_scope:
   owns:
     - schema
     - migrations
+    - data-contracts
   references:
     - architecture
     - security
@@ -72,525 +80,118 @@ produces: [code, schema]
 consumes: [context-graph, user-description]
 
 token_budget:
-  max_files_read: 4
-  max_lines_per_read: 100
-  max_shell_commands: 1
+  max_files_read: 5
+  max_lines_per_read: 150
+  max_shell_commands: 2
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-data-lifecycle — Database Schema & Repository Manager
+# qk-data-lifecycle — Database Schema & Migration Guardian
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm quản lý vòng đời Schema DB và Migration an toàn theo nguyên tắc: **Freeze schema → Backward-compatible migration (Expand & Contract) → Cleanup**. Tuyệt đối không làm đứt gãy runtime hoặc gây mất mát dữ liệu live.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Architecture (vd: chiến lược migration backward-compatible, quy định FK).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: chuẩn index CSDL, quy tắc phân trang mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm trường đơn giản hoặc temporary database fix.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Architecture (vd: chiến lược migration backward-compatible, quy định FK).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: chuẩn index CSDL, quy tắc phân trang mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm trường đơn giản hoặc temporary database fix.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Architecture (vd: chiến lược migration backward-compatible, quy định FK).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: chuẩn index CSDL, quy tắc phân trang mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm trường đơn giản hoặc temporary database fix.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: chuẩn index CSDL, quy tắc phân trang mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm trường đơn giản hoặc temporary database fix.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture quan trọng (vd: chuẩn index CSDL, quy tắc phân trang mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm trường đơn giản hoặc temporary database fix.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Existing schema is identified (ORM model files)
-- [ ] Change intent is clear (add field / modify field / drop field)
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Cần xác định: schema hiện tại + loại thay đổi (add/modify/drop)."
-```
+Trước khi thay đổi bất kỳ file schema hay migration nào, AI BẮT BUỘC kiểm tra:
+
+- [ ] Xác định ORM/Tool đang dùng từ `DEV_PROFILE.md` (Prisma, Drizzle, TypeORM, Alembic, Knex, v.v.).
+- [ ] Xác định Database engine (PostgreSQL, MySQL, SQLite, MongoDB).
+- [ ] **Destructive check**: Thay đổi có chứa thao tác xóa/đổi tên cột (`DROP COLUMN`, `RENAME COLUMN`, thay đổi type thu hẹp dữ liệu) không?
+- [ ] Nếu là thay đổi Destructive:
+  → **EXIT: BLOCKED**
+  → Báo cáo user: Cảnh báo rủi ro downtime và đề xuất áp dụng **Expand & Contract Pattern** thay vì drop/rename trực tiếp.
 
 ---
 
 ## Scope
-- ✅ Define strict schema BEFORE writing repository code
-- ✅ Always backward-compatible migrations (never destructive in first pass)
-- ✅ Separate schema (models) from business logic (services)
 
-## Non-Goals
-- ❌ DROP columns without deprecation phase first
-- ❌ Write complex business logic inside repositories
-- ❌ Dynamic queries without schema definitions
+✅ Skill này làm:
+- Cập nhật file định nghĩa Schema (ví dụ `schema.prisma`, `schema.ts`, model files).
+- Tạo migration scripts (SQL hoặc ORM-generated) có tính lũy tiến, an toàn.
+- Thiết kế chiến lược **Expand & Contract** khi đổi tên cột hoặc tách bảng (Giai đoạn 1: Thêm cột mới + dual write; Giai đoạn 2: Backfill data; Giai đoạn 3: Deprecate & remove cột cũ).
+- Đảm bảo các cột mới có `DEFAULT` value hoặc `NULLABLE` để tránh khóa bảng (table lock) hoặc lỗi insert từ code cũ đang chạy.
+- Cập nhật types/interfaces tương ứng trong ứng dụng.
 
----
-
-## Priority Order
-| P | Task | Skip Threshold |
-|---|------|----------------|
-| P1 | Read existing schema | Never |
-| P2 | Design migration (backward-compat) | Never |
-| P3 | Write migration file | Never |
-| P4 | Update repository layer | Budget < 30% |
-| P5 | Update affected service layer | Budget < 50% |
+❌ Skill này KHÔNG làm:
+- Chạy lệnh phá hủy tự động (`prisma migrate reset`, `drop database`, `truncate table`).
+- Viết câu query phân tích hiệu năng/EXPLAIN (→ `qk-db-optimizer`).
+- Viết API endpoint xử lý request/response (→ `qk-api-lifecycle`).
 
 ---
 
-## Migration Safety Rules
-```yaml
-add_column:
-  strategy: nullable OR has default value (never NOT NULL without default)
-  
-modify_column:
-  strategy: add new column → migrate data → drop old column (3-phase)
-  
-drop_column:
-  strategy: Phase 1 — mark deprecated (keep in schema)
-            Phase 2 — next release — remove from queries
-            Phase 3 — next migration — DROP COLUMN
+## Execution Steps
 
-rename_table:
-  strategy: create new table → migrate → drop old (never ALTER TABLE RENAME in prod)
-  
-pii_data:
-  strategy: Khi add column chứa PII (Personal Identifiable Information), BẮT BUỘC áp dụng cơ chế hashing/encryption tương ứng (tuân thủ R-SEC-04).
+### Step 1 — Phân tích Schema Diff & Đánh giá rủi ro
+```
+Inputs:  Schema hiện tại, Yêu cầu thay đổi từ user
+Actions:
+  - So sánh schema cũ và mới.
+  - Phân loại:
+    - Safe: Thêm bảng mới, thêm nullable column, thêm column có default an toàn.
+    - Caution: Thêm index trên bảng lớn (cần CONCURRENTLY nếu Postgres).
+    - Dangerous: Xóa cột, đổi tên cột, đổi kiểu dữ liệu (Int -> String hoặc ngược lại).
+Exit: BLOCKED nếu gặp Dangerous change mà chưa có kế hoạch Expand & Contract
+```
+
+### Step 2 — Áp dụng Expand & Contract (nếu có Breaking Change)
+```
+Quy trình chuẩn:
+  1. Expand: Thêm cột mới song song (nullable). Code ứng dụng ghi đồng thời cả 2 cột.
+  2. Migrate Data: Chạy batch script chuyển dữ liệu từ cột cũ sang cột mới.
+  3. Contract: Chuyển code đọc từ cột mới. Sau 1 release ổn định mới xóa cột cũ.
+```
+
+### Step 3 — Sinh Migration Script & Cập nhật ORM
+```
+Actions:
+  - Sửa file schema chính (`schema.prisma`, Drizzle `schema.ts`, SQLAlchemy model).
+  - Tạo migration file có timestamp rõ ràng (VD: `20260914_add_phone_to_users.sql`).
+  - Đi kèm cả script Rollback (Down migration) nếu framework hỗ trợ.
+  - Chạy code generation cho types (VD: `npx prisma generate`).
+```
+
+### Step 4 — Verification
+```
+Actions:
+  - Kiểm tra cú pháp SQL của migration file.
+  - Kiểm tra tính tương thích ngược: Code cũ vẫn insert/query được mà không crash.
+  - Kiểm tra Type definitions trong app có bị type error không (chạy tsc/type-check).
 ```
 
 ---
 
-## Workflow
+## Prompt Template
 
-### Phase 1 — Schema Read
-1. `grep_search` for existing model/entity file
-2. Read current schema (targeted, ≤ 100 lines)
-3. Identify impact of proposed change
-
-### Phase 2 — Migration Design
-1. Choose safety strategy (see Migration Safety Rules)
-2. Write migration file (up + down)
-3. Verify down() is always defined (rollback support)
-
-### Phase 3 — Repository Update
-1. Update repository methods to use new schema
-2. Verify no raw queries reference old column names
-
-**Decision:**
 ```
-IF migration is backward-compat AND down() defined → EXIT: SUCCESS
-ELSE IF destructive migration attempted → EXIT: BLOCKED — apply 3-phase strategy
+DB Engine:    [PostgreSQL / MySQL / SQLite / MongoDB]
+ORM/Tool:     [Prisma / Drizzle / TypeORM / Alembic / Knex]
+Thay đổi:     [Thêm bảng mới / Thêm trường / Sửa quan hệ / Đổi kiểu dữ liệu]
+Mục đích:     [Mô tả nghiệp vụ cần lưu trữ]
+Dữ liệu live: [Có dữ liệu production đang chạy không?]
 ```
 
----
+### Ví dụ theo Stack:
 
-## Evidence Format
+**Prisma (PostgreSQL)**
 ```
-[SEVERITY] migration: [filename]
-Issue:      [NOT NULL without default | missing down() | direct DROP]
-Confidence: HIGH
-Fix:        [specific safer strategy]
+DB Engine:    PostgreSQL
+ORM:          Prisma
+Thay đổi:     Thêm trường `phoneNumber` vào model `User`, không bắt buộc nhưng phải unique nếu có.
+Dữ liệu live: Có (hơn 100k users)
 ```
+→ AI cập nhật: `phoneNumber String? @unique` trong `schema.prisma`, sinh migration SQL với `CREATE UNIQUE INDEX CONCURRENTLY` (nếu cần), chạy `prisma generate`.
 
----
-
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Schema, migration, and repository complete | Validated execution |
-| PARTIAL | Migration generated but untested | Missing DB connection |
-| BLOCKED | Fields or relationships ambiguous | Missing entity data |
-| FAILED | Migration involves destructive DROP without backup | Architecture violation |
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Entity schema completely defined by user | Implement immediately |
-| MEDIUM | Schema inferred from JSON or forms | Ask for review before generating migration |
-| LOW | "Add database" request with no schema | EXIT: BLOCKED |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Data loss risk in migration | Direct `DROP TABLE` without data copy |
-| HIGH | Missing index on foreign key | Performance degrade on JOIN |
-| MEDIUM | N+1 query vulnerability in repository | Fetching related entities in a loop |
-| LOW | Naming convention violation | `userId` instead of `user_id` in DB |
-
----
-
-## Retry Policy
+**Drizzle ORM (MySQL)**
 ```
-Migration generation fails
-  └─ Syntax error in SQL/ORM
-       ├─ Fix syntax based on engine (Postgres/MySQL)
-       └─ Do NOT retry more than 1 time — risk of bad migration state
+DB Engine:    MySQL
+ORM:          Drizzle
+Thay đổi:     Tạo bảng `AuditLog` lưu lịch sử hành động người dùng (id, userId, action, metadata JSON, createdAt).
 ```
-
----
-
-## Escalation Rules
-```
-BLOCKED: Entity schema undefined
-Missing:
-  - List of fields (types, constraints)
-  - Relationships (1:1, 1:N, M:N)
-Questions:
-  1. Bảng này cần lưu những trường dữ liệu nào?
-  2. Bảng này có liên kết với bảng nào khác không? (ví dụ User)
-Recommended Assumptions:
-  - Add standard created_at, updated_at timestamps
-  - UUID primary keys
-```
-
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["entity_name", "fields"],
-  "optional_fields": ["relationships", "db_engine"]
-}
-```
-### Produces
-```json
-{
-  "to": "user or db-optimizer",
-  "output_fields": ["schema_file", "migration_file", "repository_file", "exit_code"]
-}
-```
-
----
+→ AI tạo: `auditLogs` table definition trong `src/db/schema.ts`, sinh migration file với Drizzle Kit, export type `AuditLog` và `NewAuditLog`.
 

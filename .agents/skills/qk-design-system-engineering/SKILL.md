@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-design-system-engineering
-version: 9.1.0
+version: 9.2.0
 status: experimental
-description: "Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component)."
+description: "Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component). Dùng skill này khi user nhắc đến: định nghĩa design system, cấu trúc token, quy chuẩn ui, design tokens, component variants, quản trị thiết kế — kể cả khi chỉ nói 'chuẩn hóa lại cách đặt tên tokens và variants của nút'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -27,7 +27,10 @@ triggers:
   - "định nghĩa design system"
   - "cấu trúc token"
   - "quy chuẩn ui"
-  - "variants"
+  - "design tokens"
+  - "component variants"
+  - "quản trị thiết kế"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
@@ -40,7 +43,8 @@ tools:
   - filesystem
 
 related_skills:
-  - qk-frontend-architecture
+  - qk-ui-system-builder
+  - qk-ui-builder
 
 knowledge_scope:
   domain:
@@ -99,480 +103,91 @@ token_budget:
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-design-system-engineering — Design System Governance
+# qk-design-system-engineering — Design System Governance & Architecture
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-## Memory Workflow
+Chịu trách nhiệm quản trị kiến trúc hệ thống thiết kế (Design System Governance), định nghĩa các tầng abstraction của Token (Global → Semantic → Component-scoped), chuẩn hóa Component API (Props, Variants theo CVA - Class Variance Authority) và thiết lập quy tắc mở rộng dài hạn.
 
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention (vd: hợp đồng màu sắc DESIGN.md, spacing, typography token).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: định danh CSS variables mới cho toàn bộ hệ thống).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Sửa đổi CSS cục bộ cho 1 component đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention (vd: hợp đồng màu sắc DESIGN.md, spacing, typography token).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: định danh CSS variables mới cho toàn bộ hệ thống).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Sửa đổi CSS cục bộ cho 1 component đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Convention (vd: hợp đồng màu sắc DESIGN.md, spacing, typography token).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: định danh CSS variables mới cho toàn bộ hệ thống).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Sửa đổi CSS cục bộ cho 1 component đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: định danh CSS variables mới cho toàn bộ hệ thống).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Sửa đổi CSS cục bộ cho 1 component đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới (vd: định danh CSS variables mới cho toàn bộ hệ thống).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Sửa đổi CSS cục bộ cho 1 component đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Brand guidelines hoặc UX heuristics cơ bản đã có.
+
+Trước khi định nghĩa quy chuẩn design system, AI BẮT BUỘC kiểm tra:
+
+- [ ] Xác định triết lý thiết kế và framework UI hiện tại (React, Vue, Web Components) từ `.agents/DEV_PROFILE.md`.
+- [ ] Kiểm tra hệ thống tokens và component library hiện hữu (nếu có).
+- [ ] Xác định phương pháp quản lý variant (CVA, Stitches, Vanilla CSS, Tailwind).
+- [ ] Nếu có sự xung đột giữa các biến thể hoặc phá vỡ tính nhất quán cốt lõi:
+  → **EXIT: BLOCKED**
+  → Báo cáo user ma trận xung đột và đề xuất nguyên tắc chuẩn hóa trước khi ban hành spec.
+
+---
 
 ## Scope
-- Định nghĩa các quy tắc hệ thống cho tokens, khoảng cách (spacing), màu sắc, phông chữ (typography).
-- Xác định quy chuẩn xây dựng component (composition, variants).
-- Thiết lập quy tắc A11y (Accessibility) ở cấp độ token.
-- **Ngăn chặn triệt để UI Slop từ cấp độ Token (Không cung cấp màu tương phản quá thấp, kích thước quá bé).**
-- KHÔNG thay thế việc viết UI code (`qk-ui-system-builder`). Skill này là "governance", không phải "implementation".
 
-## Non-Goals
-- ❌ Provide implementation outside of Design System Governance scope
-- ❌ Override explicit user directives without explanation
-- ❌ Guess ambiguous requirements without asking
+✅ Skill này làm:
+- Thiết kế hệ thống phân cấp Tokens 3 tầng:
+  1. Primitive / Global Tokens: Giá trị thô (`blue-500: #3b82f6`, `spacing-4: 16px`).
+  2. Semantic / System Tokens: Ý nghĩa sử dụng (`color-intent-primary`, `surface-background-elevated`).
+  3. Component Tokens: Riêng cho component (`button-primary-bg`, `card-border-radius`).
+- Định nghĩa Component Variant Matrix (Primary, Secondary, Outline, Ghost, Destructive; Sizes: sm, md, lg).
+- Thiết lập quy tắc kế thừa (Design Governance) và tài liệu hóa `DESIGN.md`.
+- Hướng dẫn cấu trúc props component theo hướng composable (Compound Components).
 
-## Priority Order
+❌ Skill này KHÔNG làm:
+- Tự động dựng giao diện các màn hình nghiệp vụ cụ thể (→ `qk-ui-builder`).
+- Trực tiếp generate các file cấu hình build như tailwind.config (→ `qk-ui-system-builder`).
+- Viết API hoặc truy vấn cơ sở dữ liệu.
 
-| Priority | Task | Skip Threshold |
-|----------|------|----------------|
-| P1 | Core Design System Governance analysis and decision making | Never |
-| P2 | Validation of existing patterns | Budget < 30% |
-| P3 | Detailed documentation generation | Budget < 50% |
-| P4 | Edge case exploration | Budget < 70% |
+---
 
-## Workflow
+## Execution Steps
 
-### Phase 1 — Context Loading
-**Steps:**
-1. Read existing configuration and requirements related to Design System Governance.
-2. Check for missing preconditions.
-
-**Decision:**
+### Step 1 — Token Hierarchy & Taxonomy Design
 ```
-IF context is clear
-  → Confidence: HIGH → go to Phase 2
-ELSE
-  → EXIT: BLOCKED — ask user
+Inputs:  Yêu cầu quy chuẩn, Brand Identity
+Actions:
+  - Thiết lập quy ước đặt tên (Naming convention: category-context-property-variant-state).
+  - Phân tách rạch ròi 3 tầng: Primitive → Semantic → Component.
+  - Đảm bảo tính linh hoạt khi thay đổi chủ đề (Theming / Multi-brand).
+Output: Token Taxonomy Specification
 ```
 
-### Phase 2 — Analysis & Strategy
-**Steps:**
-1. Analyze the current state against Design System Governance best practices.
-2. Formulate strategy or audit report based on findings.
-
-**Decision:**
+### Step 2 — Component Variant & API Matrix
 ```
-IF strategy/audit is complete
-  → Confidence: HIGH → go to Phase 3
-ELSE IF minor gaps exist
-  → Confidence: MEDIUM → proceed with assumptions noted
+Inputs:  Token Taxonomy, Target UI Components (Button, Input, Card, Modal)
+Actions:
+  - Định nghĩa ma trận biến thể (Variants: intent, size, state).
+  - Soạn thảo hợp đồng TypeScript Props cho từng component chuẩn (sử dụng Class Variance Authority).
+Output: Component API Contracts
 ```
 
-### Phase 3 — Finalization
-**Steps:**
-1. Generate final report or configuration.
-2. Prepare handoff data for subsequent skills.
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | All preconditions met, context fully understood | Proceed directly |
-| MEDIUM | Some context missing but safe defaults exist | Proceed and note assumptions |
-| LOW | Core requirements missing | EXIT: BLOCKED |
-
-## Severity (for findings)
-
-| Level | Definition |
-|-------|-----------|
-| CRITICAL | Severe violation of Design System Governance principles |
-| HIGH | Significant risk or technical debt |
-| MEDIUM | Suboptimal pattern but functional |
-| LOW | Minor style or documentation issue |
-
-## Evidence Format
-
+### Step 3 — Governance & Documentation
 ```
-[SEVERITY] Context/File
-Issue:      [what was found]
-Confidence: HIGH
-Recommendation: [actionable advice]
+Inputs:  Taxonomy & Component Contracts
+Actions:
+  - Cập nhật hoặc khởi tạo file `DESIGN.md` ở root dự án.
+  - Viết hướng dẫn sử dụng (Do's and Don'ts) cho các lập trình viên khác tuân theo.
+Output: DESIGN.md & Usage Guide
 ```
 
-## Retry Policy
+### Step 4 — Verification & Peer Review
 ```
-Task fails due to missing context
-  └─ Ask user for clarification
-       ├─ Provided → Retry Phase 1
-       └─ Not provided → EXIT: BLOCKED
-```
-
-## Escalation Rules
-
-```
-BLOCKED: Missing critical context for Design System Governance
-Missing:
-  - [Specific requirement]
-Questions:
-  1. Bạn có thể cung cấp thêm thông tin về yêu cầu này không?
-  2. Mục tiêu chính của bạn là gì?
-Recommended Assumptions: none
+Inputs:  Specification Draft
+Actions:
+  - Kiểm tra tính tương thích ngược với các component cũ đang chạy.
+  - Xác nhận tính khả thi với UI developer.
+Exit: SUCCESS
 ```
 
-## Handoff Contract
+---
 
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["context"],
-  "optional_fields": ["existing_config"]
-}
+## Prompt Template
+
 ```
-
-### Produces
-```json
-{
-  "to": "user or downstream skill",
-  "output_fields": ["strategy_report", "exit_code"]
-}
+Hệ thống thiết kế: [Tên design system hoặc đối tượng cần quy chuẩn]
+Mục tiêu:          [Định nghĩa cấu trúc token 3 tầng / Chuẩn hóa variants cho Button & Input]
+Công nghệ:         [React + Tailwind + CVA / Vue + SCSS / ...]
+Quy tắc hiện tại:  [Tài liệu DESIGN.md cũ hoặc mô tả cách team đang dùng]
 ```
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Design System Governance task completed successfully | Strategy/audit generated |
-| PARTIAL | Task completed with assumptions | Medium confidence |
-| BLOCKED | Missing context | Cannot proceed |
-| FAILED | Critical conflict or error | Unresolvable constraint |

@@ -77,8 +77,8 @@ steps:
       - "Không add functionality mới trong khi refactor"
 
   - id: verify
-    name: "Verify behavior unchanged"
-    purpose: "Xác nhận external behavior giống hệt trước refactor"
+    name: "Verify behavior unchanged + quality gate"
+    purpose: "Xác nhận external behavior giống hệt trước refactor VÀ quality cải thiện"
     required: true
     skip_if: null
     inputs:
@@ -87,10 +87,13 @@ steps:
     outputs:
       - behavior_preserved    # true/false
       - test_results          # pass/fail/na
+      - quality_gate_result   # PASS | FAIL
     actions:
       - "Re-read modified sections"
-      - "So sánh với current_behavior_summary"
+      - "So sánh với current_behavior_summary — behavior PHẢI giống hệt"
       - "Chạy tests nếu có"
+      - "Áp dụng shared quality gate → xem: .agents/workflows/shared/quality-gate.yml"
+      - "  Checklist: universal_checks + refactor specific checks"
       - "Ghi log execution trace vào evals/traces/"
     exit_on_fail: FAILED
 

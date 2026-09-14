@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-access-policy
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau."
+description: "Quản lý và thiết lập chính sách phân quyền RBAC/ABAC, định nghĩa permission matrix, sinh auth middleware bảo vệ endpoint. Dùng skill này khi user nhắc đến: phân quyền, rbac, abac, auth middleware, access control, bảo mật api, quyền truy cập, role permission — kể cả khi chỉ nói 'chỉ admin mới được xóa bài viết'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -22,10 +22,15 @@ complexity:
     has_breaking_change: false
 
 triggers:
-  - "cấu hình rbac"
   - "phân quyền"
-  - "bảo mật api"
+  - "rbac"
+  - "abac"
   - "auth middleware"
+  - "access control"
+  - "bảo mật api"
+  - "quyền truy cập"
+  - "role permission"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: feature-delivery
@@ -33,6 +38,7 @@ workflow: feature-delivery
 rules:
   - global
   - coding
+  - security
 
 tools:
   - filesystem
@@ -40,11 +46,13 @@ tools:
 
 related_skills:
   - qk-api-lifecycle
+  - qk-security-audit
 
 knowledge_scope:
   owns:
     - security-policy
     - role-matrix
+    - permission-middleware
   references:
     - architecture
     - security
@@ -72,510 +80,127 @@ produces: [code, report]
 consumes: [user-description]
 
 token_budget:
-  max_files_read: 3
-  max_lines_per_read: 100
-  max_shell_commands: 0
+  max_files_read: 5
+  max_lines_per_read: 150
+  max_shell_commands: 1
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-access-policy — Access Control Designer
+# qk-access-policy — Access Control & Authorization Designer
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm thiết kế và triển khai cơ chế kiểm soát truy cập (RBAC / ABAC), bảo đảm nguyên tắc Least Privilege và Zero-Trust: **định nghĩa role matrix trước, implement middleware/guard sau**.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: ma trận quyền authz, middleware rbac).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern bảo mật (vd: guard mới, chính sách Zero-Trust).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm 1 route/role thông thường vào bảng quyền đã có.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: ma trận quyền authz, middleware rbac).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern bảo mật (vd: guard mới, chính sách Zero-Trust).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm 1 route/role thông thường vào bảng quyền đã có.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture/Pattern (vd: ma trận quyền authz, middleware rbac).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern bảo mật (vd: guard mới, chính sách Zero-Trust).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm 1 route/role thông thường vào bảng quyền đã có.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern bảo mật (vd: guard mới, chính sách Zero-Trust).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm 1 route/role thông thường vào bảng quyền đã có.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern bảo mật (vd: guard mới, chính sách Zero-Trust).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Thao tác thêm 1 route/role thông thường vào bảng quyền đã có.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] User roles and protected resources are defined
-- [ ] Auth system (JWT, session, OAuth) is identified
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Cần định nghĩa: danh sách roles + resources cần bảo vệ."
-```
+Trước khi bắt đầu code, AI BẮT BUỘC xác nhận các thông tin sau:
+
+- [ ] Danh sách Roles & Entities trong hệ thống (e.g. `guest`, `user`, `editor`, `admin`).
+- [ ] Danh mục tài nguyên (Resources) và thao tác (Actions: create, read, update, delete).
+- [ ] Cơ chế truyền tải identity hiện tại (JWT payload claims, Session cookie, hay Header API Key).
+- [ ] Nếu yêu cầu ABAC: Xác định rõ thuộc tính ngữ cảnh (e.g. `owner_id === user.id`, `tenant_id === org.id`).
+
+*Nếu thiếu thông tin về Role hoặc Auth mechanism:*
+→ **EXIT: BLOCKED**
+→ Thông báo user: "Vui lòng xác nhận danh sách Roles và cơ chế Identity hiện tại trước khi thiết lập phân quyền."
 
 ---
 
 ## Scope
-- ✅ Define explicit Role-Permission Matrix before coding
-- ✅ Implement middleware/guards based strictly on the matrix
-- ✅ Separate auth (who are you?) from authz (what can you do?)
-- ✅ **Bắt buộc tuân thủ R-SEC-04: Mọi kiểm tra phân quyền phải thực hiện ở Backend (Server-side) qua Middleware. Tuyệt đối không tin tưởng JWT Claims thô chưa xác thực từ Client.**
 
-## Non-Goals
-- ❌ Grant wildcard (*) permissions
-- ❌ Mix authentication logic with authorization logic
-- ❌ Hardcode role checks in business logic (use middleware/guards)
+✅ Skill này làm:
+- Thiết lập **Role-Permission Matrix** rõ ràng (dạng bảng Markdown đối chiếu).
+- Tạo Type definitions / Enums cho `Role`, `Permission`, `Resource`, `Action`.
+- Xây dựng Auth Middleware / Guard / Decorator kiểm tra quyền truy cập.
+- Xử lý phân quyền theo ngữ cảnh / sở hữu tài nguyên (Resource Ownership check).
+- Phân tách rõ ràng mã trạng thái HTTP: `401 Unauthorized` (chưa authenticate) vs `403 Forbidden` (đã login nhưng không đủ quyền).
 
----
-
-## Priority Order
-| P | Task | Skip Threshold |
-|---|------|----------------|
-| P1 | Define Role-Permission Matrix | Never |
-| P2 | Implement deny-by-default middleware | Never |
-| P3 | Add role guards to routes/controllers | Budget < 30% |
-| P4 | Add audit logging for auth failures | Budget < 60% |
+❌ Skill này KHÔNG làm:
+- Viết flow đăng ký, đăng nhập, hash password (thuộc auth lifecycle cơ bản).
+- Lưu trữ secret/token vào client-side không an toàn.
+- Chỉ đặt guard ở controller/route mà bỏ qua validation ở service layer đối với logic nhạy cảm.
 
 ---
 
-## Role-Permission Matrix Format (Required)
+## Execution Steps
 
+### Step 1 — Xây dựng Role-Permission Matrix
 ```
-Resource          | admin | manager | user | guest
-─────────────────────────────────────────────────
-GET /resource     |   ✅   |    ✅    |  ✅  |   ✅
-POST /resource    |   ✅   |    ✅    |  ❌  |   ❌
-DELETE /resource  |   ✅   |    ❌    |  ❌  |   ❌
+Inputs:  user_description, DEV_PROFILE.md
+Actions:
+  - Liệt kê bảng ma trận phân quyền Role x Resource x Action:
+    | Role   | Resource | Actions              | Conditions (ABAC)     |
+    |--------|----------|----------------------|-----------------------|
+    | user   | post     | read, create         | isOwner to update/del |
+    | admin  | post     | read, create, delete | any                   |
+Outputs: Markdown table Role Matrix được phê duyệt
+Exit: BLOCKED nếu quyền hạn bị mâu thuẫn hoặc chưa rõ scope
 ```
 
----
-
-## Workflow
-
-### Phase 1 — Matrix Definition
-1. List all roles and resources from requirements
-2. Create Role-Permission Matrix (table format above)
-3. Identify conflicts or contradictions
-
-**Decision:** `IF matrix has contradiction → EXIT: BLOCKED — resolve ambiguity`
-
-### Phase 2 — Implementation
-1. Create deny-by-default guard/middleware
-2. Apply guards to routes using matrix
-3. Add auth failure logging
-
-### Phase 3 — Verification
-1. Read matrix vs implementation — spot check 3 routes
-
----
-
-## Evidence Format
+### Step 2 — Khởi tạo Types & Constants
 ```
-[SEVERITY] src/middleware/auth.ts:LINE
-Rule:       [WILDCARD | MISSING_GUARD | SOC_VIOLATION | HARDCODED_ROLE]
-Reason:     [specific issue]
-Confidence: HIGH
-Fix:        [specific change]
+Actions:
+  - Khai báo enum/type an toàn (TypeScript/Python/Go) cho Role và Permission.
+  - Định nghĩa Policy / Rule registry có type-check chặt chẽ.
+  - Không dùng hardcoded string rải rác trong controller.
+```
+
+### Step 3 — Triển khai Guard / Middleware
+```
+Actions:
+  - Express/Fastify: Tạo middleware `requirePermission(perm)` hoặc `requireRole(role)`.
+  - NestJS: Tạo `@Roles()`, `@Permissions()` decorator + `AuthGuard`, `RolesGuard`.
+  - FastAPI: Tạo security dependency `Security(get_current_active_user, scopes=[...])`.
+  - Next.js: Xử lý middleware.ts (route matching) + Server Action permission assertion.
+Rules:
+  - Kiểm tra 401 trước (chưa đăng nhập hoặc token hết hạn).
+  - Kiểm tra 403 sau (đã đăng nhập nhưng thiếu quyền).
+  - Không bao giờ trả về 500 khi vi phạm authorization.
+```
+
+### Step 4 — Verification & Guard Test
+```
+Actions:
+  - Kiểm tra endpoint được bảo vệ: gọi không có token -> 401.
+  - Gọi với role thường vào endpoint admin -> 403 Forbidden.
+  - Gọi đúng quyền -> 200 OK.
+  - Đảm bảo không có lỗ hổng IDOR (Insecure Direct Object Reference).
 ```
 
 ---
 
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Matrix defined, middleware implemented, deny-by-default applied | Implementation complete |
-| PARTIAL | Implemented but missing audit logging or some routes unguarded | Post-verification minor gaps |
-| BLOCKED | Roles or resources undefined — cannot create matrix | Missing inputs |
-| FAILED | Contradiction in matrix or auth/authz mixed | Architectural violation |
+## Prompt Template
 
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Roles and resources explicitly defined | Build matrix and implement |
-| MEDIUM | Roles inferred from codebase | Build matrix, ask user to verify |
-| LOW | Authentication strategy unknown | EXIT: BLOCKED |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Route unguarded due to missing middleware | Anyone can access DELETE /users |
-| HIGH | Hardcoded roles in business logic | `if (user.role === 'admin')` in service layer |
-| MEDIUM | Wildcard permissions granted | `user` can access `*` |
-| LOW | Audit log missing for auth failure | Unlogged 403 error |
-
----
-
-## Retry Policy
 ```
-Route verification fails
-  └─ Route unguarded
-       ├─ Add missing guard to route
-       └─ Do NOT retry more than 1 time per route
+Hệ thống:     [Tên app / module cần phân quyền]
+Roles:        [Danh sách roles: vd: viewer, editor, admin]
+Resource:     [Tài nguyên cần bảo vệ: vd: documents, orders, users]
+Yêu cầu:      [RBAC đơn giản hay có điều kiện sở hữu ABAC]
+Stack:        [NestJS / Express / FastAPI / Next.js]
 ```
 
----
+### Ví dụ theo Stack:
 
-## Escalation Rules
+**role: be (NestJS + TypeScript)**
 ```
-BLOCKED: Roles or resources undefined
-Missing:
-  - List of user roles
-  - List of protected resources
-Questions:
-  1. Hệ thống có những role nào? (ví dụ: admin, user, manager)
-  2. Những API/Route nào cần bảo vệ?
-Recommended Assumptions:
-  - Deny-by-default for all non-public routes
+Roles:        User, Moderator, Admin
+Resource:     Comment
+Yêu cầu:      User chỉ sửa comment của chính mình; Moderator xóa được mọi comment; Admin toàn quyền.
+Stack:        NestJS (Guards + Decorators)
 ```
+→ AI tạo: `Role` enum, `@Roles()` decorator, `RolesGuard` implements `CanActivate`, `OwnershipGuard` kiểm tra `comment.authorId === request.user.id`.
 
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["roles", "resources"],
-  "optional_fields": ["auth_strategy"]
-}
+**role: fullstack (Next.js 14 App Router)**
 ```
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["role_matrix", "middleware_files", "guarded_routes", "exit_code"]
-}
+Roles:        Member, Owner
+Resource:     Workspace Settings
+Yêu cầu:      Chỉ Owner mới được đổi tên workspace hoặc xóa workspace. Member chỉ xem.
+Stack:        Next.js Server Actions + DAL (Data Access Layer)
 ```
-
----
+→ AI tạo: Hàm assertion `assertWorkspaceOwner(workspaceId, userId)` dùng chung trong Server Actions, redirect/throw `ForbiddenError` chuẩn SEO & UX.
 

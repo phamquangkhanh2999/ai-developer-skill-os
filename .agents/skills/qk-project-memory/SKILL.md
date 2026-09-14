@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-project-memory
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Quản trị Tri thức và Bộ nhớ dự án V1 (Local Private Mode) — Quản lý tại .ai-local/ như source code: tự động khởi tạo, bảo mật gitignore, có thể review, cập nhật và luôn có con người phê duyệt."
+description: "Quản trị Tri thức và Bộ nhớ dự án V1 (Local Private Mode) — Quản lý tại .ai-local/ như source code: tự động khởi tạo, bảo mật gitignore, có thể review, cập nhật và luôn có con người phê duyệt. Dùng skill này khi user nhắc đến: lưu context, project memory, ghi nhớ, /learn, lưu vào bộ nhớ, nhớ lại, tìm lại fact, lưu tri thức dự án — kể cả khi chỉ nói 'nhớ lại lỗi này để sau không mắc lại'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -24,11 +24,13 @@ complexity:
 
 triggers:
   - "lưu context"
-  - "nhớ lại"
   - "project memory"
-  - "lưu vào bộ nhớ"
-  - "tìm lại fact"
+  - "ghi nhớ"
   - "/learn"
+  - "lưu vào bộ nhớ"
+  - "nhớ lại"
+  - "tìm lại fact"
+  - "lưu tri thức dự án"
 
 # ── V9: References ─────────────────────────────────────────
 workflow: documentation
@@ -42,19 +44,19 @@ tools:
 
 related_skills:
   - qk-context-loader
-  - qk-engineering-standard
+  - qk-docs
 
 knowledge_scope:
   owns:
-  - project-facts
-  - verified-context
-  - patterns
-  - hard-bugs
+    - project-facts
+    - verified-context
+    - patterns
+    - hard-bugs
   references:
-  - architecture
-  - convention
-  - pattern
-  - hard-bug
+    - architecture
+    - convention
+    - pattern
+    - hard-bug
 
 # ── V9: Verification ───────────────────────────────────────
 verification:
@@ -78,7 +80,7 @@ produces: [knowledge-update]
 consumes: [source-code, task-outcome]
 
 token_budget:
-  max_files_read: 2
+  max_files_read: 3
   max_lines_per_read: 150
   max_shell_commands: 0
   stop_early: true
@@ -88,13 +90,43 @@ exit_codes: [SUCCESS, BLOCKED, DISMISSED, FAILED]
 
 # qk-project-memory — Project Knowledge Management V1
 
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
+
 > **Kim chỉ nam tối thượng:** *"Knowledge phải được quản lý giống như source code: đơn giản, có thể xem xét (review), có thể cập nhật, có thể loại bỏ và luôn có con người chịu trách nhiệm phê duyệt."*
-> 
-> **Nguyên tắc định hướng:**
-> - **Đơn giản hơn > Thông minh hơn:** Mọi tính năng chỉ phục vụ 2 mục tiêu: giúp AI mở đúng file nhanh hơn, hoặc tránh lặp lại một lỗi đã trả giá đắt.
-> - **Navigator, NOT Source of Truth:** Memory chỉ dùng để giảm thời gian tìm kiếm, không thay thế việc đọc mã nguồn hiện tại.
-> - **Tài liệu Kỹ Thuật:** `AGENTS.md` và `index.yaml` là tài liệu kỹ thuật của dự án, tuyệt đối KHÔNG phải nhật ký hội thoại của AI ("Hôm nay AI đã...", "User bảo...").
-> - **AI Đề xuất -> Con người Phê duyệt:** AI không tự học ngầm, AI tóm tắt và đề xuất để lập trình viên chốt duyệt.
+
+---
+
+## Preconditions
+
+Trước khi đọc hoặc ghi vào bộ nhớ dự án:
+
+- [ ] Kiểm tra xem thư mục `.ai-local/` đã tồn tại chưa:
+  - Nếu **chưa có**: Tự động tạo `.ai-local/AGENTS.md` và `.ai-local/knowledge/index.yaml` (Self-Init Protocol), đồng thời đảm bảo `.ai-local/` đã nằm trong `.gitignore`.
+- [ ] Xác định thao tác: **Tra cứu (Retrieve)** hay **Học/Ghi nhớ (/learn)**.
+- [ ] Với thao tác Ghi nhớ: Tri thức BẮT BUỘC phải thuộc 1 trong 4 danh mục cốt lõi:
+  1. `Architecture` (Cấu trúc nền tảng)
+  2. `Convention` (Quy ước viết code bất di bất dịch)
+  3. `Pattern` (Mẫu giải pháp lặp lại nhiều bước)
+  4. `Hard Bug` (Lỗi tốn nhiều thời gian xử lý)
+- [ ] Nếu là lỗi typo, format CSS vặt vãnh, hoặc CRUD tầm thường:
+  → **EXIT: DISMISSED** (Bỏ qua để giữ sạch bộ nhớ).
+
+---
+
+## Scope
+
+✅ Skill này làm:
+- Khởi tạo và duy trì bộ nhớ cục bộ an toàn tại `.ai-local/` (tách biệt khỏi git commit chung).
+- Tra cứu nhanh các quyết định kiến trúc, patterns và cách fix bug cũ trước khi giải quyết task mới.
+- Đề xuất bản thảo tri thức mới (Draft Proposal) dưới chuẩn YAML súc tích.
+- Xin phê duyệt rõ ràng từ lập trình viên (Human Approval Gate) trước khi lưu vĩnh viễn.
+- Lưu vết lịch sử theo cơ chế Zero-Overwrite (Chuyển trạng thái cũ sang `Archived` thay vì xóa mất dữ liệu).
+
+❌ Skill này KHÔNG làm:
+- Tự động ghi ngầm tri thức mà không có sự đồng ý của con người.
+- Lưu trữ nhật ký hội thoại ("Hôm nay user bảo làm X...").
+- Dùng đường dẫn tuyệt đối máy cá nhân (`C:/...`, `D:/...`).
+- Thay thế mã nguồn thật (Memory chỉ là Navigator hỗ trợ định vị).
 
 ---
 
@@ -208,7 +240,7 @@ knowledge:
 
 ---
 
-## 4. Quy Trình Trò Chuyện & Thao Tác (The `/learn` Lifecycle)
+## Execution Steps — The `/learn` Lifecycle
 
 Bất kỳ lúc nào người dùng gõ `/learn`, `./qk-project-memory`, hoặc sau khi hoàn tất một task phức tạp có tham số yêu cầu ghi nhớ, Agent PHẢI tuân thủ theo 4 bước khép kín:
 
@@ -246,3 +278,26 @@ Trình bày rõ trước người dùng trên chat:
 | BLOCKED | Đề xuất tri thức bị Người dùng từ chối (Hoặc thiếu quyền truy xuất file) | Không thay đổi bộ nhớ |
 | DISMISSED | Thao tác không thỏa mãn 4 tiêu chí lọc V1 (Chỉ là typo, css vặt) | Bỏ qua ghi nhớ nhằm sạch hệ thống |
 | FAILED | File bộ nhớ sai định dạng cú pháp YAML hoặc vi phạm giới hạn 100 dòng | Yêu cầu sửa/reset cấu trúc file |
+
+---
+
+## Prompt Template
+
+```
+Lệnh:         [/learn hoặc tra cứu tri thức]
+Tri thức:     [Tóm tắt pattern, convention, kiến trúc, hoặc hard bug vừa xử lý]
+File liên quan:[Đường dẫn tương đối: vd: src/services/apiClient.ts]
+Mục đích:     [Giúp AI trong tương lai không lặp lại lỗi hoặc mở đúng file]
+```
+
+### Ví dụ thao tác:
+
+**Lưu một Hard Bug vừa xử lý xong**
+```
+Lệnh:         /learn
+Tri thức:     Hard Bug: Lỗi hydration mismatch trong Next.js do dùng new Date() trực tiếp trong component render.
+Khắc phục:    Dùng useEffect để set client date hoặc dùng thư viện suppressHydrationWarning.
+File:         src/components/HeaderClock.tsx
+```
+→ AI chuẩn bị bản draft YAML đề xuất theo chuẩn `index.yaml` và hỏi người dùng phê duyệt trước khi commit vào `.ai-local/knowledge/index.yaml`.
+

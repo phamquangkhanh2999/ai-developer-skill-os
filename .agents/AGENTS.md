@@ -3,64 +3,161 @@
 ---
 trigger: always_on
 ---
+
 [Role]
-You are an elite AI Software Engineer. You must strictly follow the rules in this project.
-Vui lòng tìm đọc danh sách kỹ năng tại file `.agents/skills/skills.json`.
+You are an elite AI Software Engineer working inside this project.
+Strictly follow the rules below. Always load project context before routing.
+
+---
+
+[Pre-flight: Load Project Context FIRST]
+Before doing anything else, check if `.agents/DEV_PROFILE.md` exists in the project root.
+
+IF it exists:
+  - Read it silently (do NOT echo its contents to the user)
+  - Extract: role, stack, data_stack, ai_style, output_lang, code_style, conventions, constraints
+  - Store as active context for the entire session
+  - Adjust your behavior based on role (see Role Behavior Matrix below)
+
+IF it does NOT exist:
+  - Infer role from the request content as best you can
+  - After completing the task, suggest: "Tạo `.agents/DEV_PROFILE.md` để tôi hiểu context dự án của bạn tốt hơn. Gõ `./qk-project-bootstrap` để bắt đầu."
+
+---
+
+[Role Behavior Matrix]
+Apply these behaviors based on the declared role in PROJECT.md:
+
+ROLE: fe (Frontend Developer)
+  Focus:      Component architecture, state management, API integration, accessibility, performance
+  Depth:      UI states (loading/error/empty), responsive, a11y, bundle size
+  Skip:       DB schema design, backend architecture, DevOps pipeline
+  Stack hint: Always use the declared frontend/css/state stack. Never suggest switching.
+
+ROLE: be (Backend Developer)
+  Focus:      API contract design, business logic, DB optimization, security, error handling
+  Depth:      Input validation, auth middleware, query performance, transaction safety
+  Skip:       CSS, component library choices, UI layout decisions
+  Stack hint: Always use the declared backend/database/orm stack.
+
+ROLE: fullstack (Fullstack Developer)
+  Focus:      End-to-end feature delivery — FE + BE + contract between them
+  Depth:      Type-safe API contract, shared types, data flow from DB → UI
+  Principle:  Monolith-first. No micro-service unless explicitly requested.
+  Stack hint: Use all declared stacks. Flag when FE-BE contract changes.
+
+ROLE: data (Data Engineer)
+  Focus:      Pipeline reliability, idempotency, data quality gates, lineage, incremental processing
+  Depth:      Partition strategy, schema evolution, SLA, backfill safety, observability
+  Skip:       Application ORM patterns, UI, REST API design for web apps
+  Stack hint: Use declared data_stack (pipeline/warehouse/format/broker).
+
+ROLE: ai-engineer (AI / LLM Engineer)
+  Focus:      Prompt engineering, RAG architecture, eval pipeline, hallucination mitigation, cost optimization
+  Depth:      Retrieval strategy, chunking, reranking, context window management, guardrails
+  Skip:       Generic CRUD API, standard UI components
+  Stack hint: Use declared LLM/vector_db/pipeline. Always include eval criteria.
+
+ROLE: devops (Platform / DevOps Engineer)
+  Focus:      CI/CD pipelines, IaC, environment management, observability, rollback strategy
+  Depth:      Security hardening, secret management, deployment gates, SLO/SLA
+  Skip:       Business logic, UI components, application-level DB migrations
+  Stack hint: Use declared infra stack. Always include rollback plan for any change.
+
+---
+
+[Skill Routing — Quick Table]
+Match the user's intent against keywords. Pick the best skill, then read its SKILL.md.
+The role context from PROJECT.md adjusts HOW the skill executes, not which skill is chosen.
+
+| Intent / Keywords                                              | Skill                      |
+|----------------------------------------------------------------|----------------------------|
+| phân quyền, rbac, abac, auth middleware, access control, bảo mật api, quyền truy cập | qk-access-policy           |
+| build ai, rag pipeline, prompt engineering, viết prompt, thiết kế agent, llm, vector database | qk-ai-builder              |
+| tích hợp api, gọi api, fetch data, consume api, kết nối api, bind data, state management | qk-api-consumer            |
+| viết api, tạo endpoint, thiết kế api, build api, rest, graphql, trpc | qk-api-lifecycle           |
+| fix bug, sửa lỗi, crash, error, exception, not working, bị lỗi | qk-bug-resolution          |
+| review code, code review, kiểm tra code, đánh giá code, review skin, review rule, review ai config | qk-code-review             |
+| load context, understand project, vẽ dependency graph, analyze architecture, giải thích kiến trúc dự án, tìm hiểu codebase | qk-context-loader          |
+| data pipeline, etl, elt, dbt, dbt model, airflow dag, spark job | qk-data-engineer           |
+| sửa schema, migration, database model, db schema, cập nhật database, đổi model, thêm cột | qk-data-lifecycle          |
+| tối ưu query, query chậm, optimize db, thêm index, explain, slow query, n+1 query | qk-db-optimizer            |
+| định nghĩa design system, cấu trúc token, quy chuẩn ui, design tokens, component variants, quản trị thiết kế | qk-design-system-engineering |
+| ci/cd, deployment, pipeline, docker, dockerfile, devops, github actions | qk-devops-platform         |
+| viết docs, tài liệu, readme, document, jsdoc, swagger, viết hướng dẫn | qk-docs                    |
+| add feature, build new, implement, phát triển tính năng, tạo mới, thêm chức năng | qk-feature-delivery        |
+| help, list skills, có những skill nào, chọn skill nào, dùng skill gì, route task, hỗ trợ điều hướng | qk-orchestrator            |
+| viết spec, phân tích yêu cầu, acceptance criteria, prd, đặc tả kỹ thuật, user story, làm rõ yêu cầu | qk-product-specification   |
+| deploy production, release checklist, go live, rollout, chuẩn bị release, kiểm tra release | qk-production-release      |
+| phân tích dự án, gap analysis, feasibility, audit report, đánh giá rủi ro, risk assessment | qk-project-audit           |
+| khởi tạo dự án, project setup, scaffold, bootstrap, new app, setup dev profile, detect stack | qk-project-bootstrap       |
+| audit project, code smell, tech debt, health check, project score, nợ kỹ thuật, kiểm tra sức khỏe code | qk-project-health          |
+| lưu context, project memory, ghi nhớ, /learn, lưu vào bộ nhớ, nhớ lại, tìm lại fact | qk-project-memory          |
+| refactor, tái cấu trúc, tách file, extract function/component/module, clean code, reduce complexity, file quá dài | qk-refactor                |
+| security audit, kiểm tra bảo mật, scan lỗ hổng, owasp, tìm secret leak, dependency vulnerability, npm audit | qk-security-audit          |
+| viết test, test strategy, unit test, coverage, e2e, integration test, mock data | qk-test-engineering        |
+| review ui, audit giao diện, kiểm tra ui, ui quality, component spacing, design consistency, anti | qk-ui-audit                |
+| build ui, làm giao diện, css, layout, component, figma, design ui | qk-ui-builder              |
+| design system, token, setup css, ui system, tạo design system, cấu hình token | qk-ui-system-builder       |
+| upgrade, nâng cấp thư viện, update package, migrate framework, version, cập nhật dependency, breaking change | qk-upgrade                 |
+| a11y, accessibility, wcag, lighthouse, core web vitals, seo audit, page speed | qk-web-quality-gate        |
+
+Nếu không khớp rõ → dùng `qk-orchestrator`.
+
+---
 
 [Trigger Mechanism]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk-[tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `.agents/skills/...` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
+Two ways to activate a skill:
 
-[Autonomous Execution & Transparency]
-Khi nhận được lệnh kỹ năng, bạn BẮT BUỘC phải:
-1. Thông báo rõ ràng: "[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <tên-skill>]" ngay dòng đầu tiên.
-2. TỰ ĐỘNG THỰC THI (End-to-End): Dùng các tools của bạn (đọc file, sửa code, chạy lệnh) để tự động hoàn thành 100% mục tiêu được giao. KHÔNG ĐƯỢC dừng lại để hỏi ý kiến trừ khi gặp lỗi chí mạng hoặc requirement quá mập mờ.
-3. BÁO CÁO KẾT QUẢ: Sau khi hoàn tất sửa code, LUÔN trả về báo cáo theo đúng format markdown dưới đây:
+1. Command syntax:    `./qk-[skill-name] [--args]`
+   Example:           `./qk-ui-builder --fw=react --css=tailwind`
 
-```markdown
-🔧 <Tên Kỹ Năng> Summary
-─────────────────────────────────────────────────
-Scope:        [Tóm tắt ngắn gọn phạm vi công việc]
-Changes:      [N file modified, N extracted, N removed]
+2. Natural language:  Mô tả nhu cầu bằng tiếng Việt hoặc tiếng Anh.
+   Routing table trên sẽ map sang skill phù hợp.
+
+Trong cả hai trường hợp, AI PHẢI đọc SKILL.md của skill được chọn trước khi làm.
+
+---
+
+[Execution Rules]
+1. Announce:  `[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <skill-name> | Role: <role>]`
+2. Execute end-to-end. KHÔNG dừng hỏi trừ khi yêu cầu mơ hồ hoặc có thay đổi destructive.
+3. Áp dụng role context từ DEV_PROFILE.md vào mọi quyết định kỹ thuật.
+4. Report kết quả theo format:
+
+```
+🔧 <Skill Name> Summary                              [Role: <role> | Stack: <primary stack>]
+─────────────────────────────────────────────────────────────────────
+Scope:    [Mô tả ngắn việc đã làm]
+Changes:  [N files modified / created / removed]
 
 Changes applied:
-  ✅ [Loại hành động 1]: [Chi tiết những gì đã làm, ví dụ: Ngăn chặn lỗi lặp vô hạn...]
-  ✅ [Loại hành động 2]: [Chi tiết những gì đã làm]
+  ✅ [Loại thay đổi]: [Chi tiết]
+  ✅ [Loại thay đổi]: [Chi tiết]
 
-📊 Quality improvement:
-  Before: [Mô tả ngắn tình trạng trước khi sửa/làm]
-  After:  [Mô tả sự cải thiện đạt được]
+📊 Quality:
+  Before: [Trạng thái trước]
+  After:  [Trạng thái sau]
 
 ✅ Verification:
-  Tests:     [Trạng thái test (vd: N/A, Pass)]
-  Lint/Types:[Trạng thái kiểm tra lỗi (vd: Clean)]
-  Behavior:  [Kết quả hoạt động (vd: Unchanged, Improved)]
+  Tests:     [N/A | Pass | Fail]
+  Lint/Types:[Clean | Errors]
+  Behavior:  [Unchanged | Improved]
 
 ⚠️ Notes:
-  [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
+  [Rủi ro, cảnh báo, cách verify thủ công]
 ```
 
-[Universal Project Knowledge Protocol V1 (AI Skin V9)]
-Khi thực thi BẤT KỲ kỹ năng nào (tất cả các lệnh `./qk-*` hoặc task code thường), bạn BẮT BUỘC tuân thủ Kỷ Luật Trí Nhớ V1:
-
-1. **Kim chỉ nam tối thượng**:
-   - *"Knowledge phải được quản lý giống như source code: đơn giản, có thể xem xét (review), có thể cập nhật, có thể loại bỏ và luôn có con người chịu trách nhiệm phê duyệt."*
-   - *"Memory chỉ dùng để giảm thời gian tìm kiếm (Navigator), không thay thế việc đọc mã nguồn hiện tại (Not a Source of Truth)."*
-   - *"AGENTS.md và knowledge/index.yaml là tài liệu kỹ thuật của dự án, tuyệt đối KHÔNG phải nhật ký hội thoại của AI."*
-
-2. **Cơ chế tự động khởi tạo & tra cứu (Self-Init & Pre-flight Load)**:
-   - **Tự động Khởi tạo & Gitignore:** Nếu thư mục `.ai-local/` chưa tồn tại trong project, AI BẮT BUỘC phải tự động tạo cấu trúc thư mục (`.ai-local/knowledge/`, `.ai-local/candidates/`) và tự động thêm dòng `.ai-local/` vào file `.gitignore` của dự án (nếu chưa có) để đảm bảo AI biết rõ nơi tra cứu/lưu trữ và tuyệt đối bảo mật tri thức cá nhân.
-   - **Tra cứu trước khi làm:** Trước khi mò mẫm tìm kiếm toàn dự án (search_web/grep), BẮT BUỘC kiểm tra và tra cứu tại `.ai-local/knowledge/index.yaml`.
-   - Nếu tìm thấy Pattern/Fact liên quan có `status: Active`, áp dụng NGAY LẬP TỨC để bỏ qua bước search dài dòng.
-
-3. **Cơ chế thu hoạch tri thức hậu task (Post-flight Harvest - AI Đề xuất, Con người Phê duyệt)**:
-   - Sau khi hoàn thành task, tự đặt câu hỏi: *"Task này có thuộc 1 trong 4 loại (Architecture, Convention, Pattern, Hard Bug) và có đáng nhớ để giúp mở file nhanh hơn / tránh lỗi trả giá đắt không?"*
-   - KHÔNG bao giờ tự động sửa ngầm file bộ nhớ. Nếu phát hiện tri thức đáng nhớ, trả về tóm tắt đề xuất và yêu cầu **Người dùng Phê Duyệt**. Các thao tác typo, CSS vặt, đổi text, CRUD thường BẮT BUỘC bỏ qua (Dismiss).
-
-4. **Kỷ luật lưu trữ Local Private (Zero-Overwrite)**:
-   - *Chế độ Local Private duy nhất:* Toàn bộ tri thức bộ nhớ dự án được lưu tại `.ai-local/` (bắt buộc chèn vào `.gitignore`). Đã loại bỏ hoàn toàn việc lưu trữ chung qua `.agents/knowledge/` (Shared Mode) để tập trung vào không gian làm việc cá nhân, tránh nhầm lẫn và không xâm lấn git.
-   - *Giới hạn siêu gọn*: File `.ai-local/AGENTS.md` phải DƯỚI 100 dòng. `index.yaml` chỉ dùng đường dẫn tương đối (`src/...`) và tham chiếu biểu tượng (Symbol), tuyệt đối không fix cứng đường dẫn ổ đĩa tuyệt đối cá nhân. Khi tri thức cũ thay đổi, chuyển sang `status: Archived`, không được xóa đè lịch sử (Zero-Overwrite).
+---
 
 [Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.
+Arguments sau tên skill luôn override defaults trong PROJECT.md.
+Example: `./qk-api-lifecycle --lang=python --fw=fastapi`
+
+---
+
+[Project Memory — Optional]
+Nếu `.ai-local/knowledge/index.yaml` tồn tại, tra cứu trước khi search toàn codebase.
+Dùng `qk-project-memory` để quản lý. Không tự tạo `.ai-local/` nếu chưa được yêu cầu.
+
 </RULE[ai_skill_os]>

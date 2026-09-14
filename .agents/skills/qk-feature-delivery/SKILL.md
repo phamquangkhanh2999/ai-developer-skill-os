@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-feature-delivery
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit."
+description: "Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit. Dùng skill này khi user nhắc đến: add feature, build new, implement, phát triển tính năng, tạo mới, thêm chức năng — kể cả khi mô tả bằng ngôn ngữ tự nhiên như \"tôi muốn có tính năng X\" hoặc \"làm cho app có thể Y\"."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -28,6 +28,8 @@ triggers:
   - "implement"
   - "phát triển tính năng"
   - "tạo mới"
+  - "thêm chức năng"
+
 
 selection:
   priority: medium
@@ -47,7 +49,7 @@ tools:
 
 related_skills:
   - qk-context-loader
-  - qk-validation-gate
+  - qk-test-engineering
 
 knowledge_scope:
   owns:
@@ -89,471 +91,161 @@ exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm triển khai tính năng mới end-to-end theo luồng tiêu chuẩn: **Requirements → Context → Design → Implement → Self-audit**. Bảo đảm code viết ra tích hợp mượt mà vào hệ thống hiện hữu, chuẩn theo role và conventions từ `DEV_PROFILE.md`.
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Pattern / Convention liên quan đến luồng tính năng hiện tại.
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern mới hình thành khi làm feature.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu mock phục vụ thử nghiệm tính năng ban đầu.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Pattern / Convention liên quan đến luồng tính năng hiện tại.
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern mới hình thành khi làm feature.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu mock phục vụ thử nghiệm tính năng ban đầu.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Architecture / Pattern / Convention liên quan đến luồng tính năng hiện tại.
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern mới hình thành khi làm feature.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu mock phục vụ thử nghiệm tính năng ban đầu.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern mới hình thành khi làm feature.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu mock phục vụ thử nghiệm tính năng ban đầu.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Quyết định Architecture hoặc Pattern mới hình thành khi làm feature.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Dữ liệu mock phục vụ thử nghiệm tính năng ban đầu.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Feature requirement is specific enough to implement (not just "add something")
-- [ ] `DESIGN.md` exists with required tokens if UI work is involved (colors, spacing, typography)
-- [ ] Context graph available OR `qk-context-loader` run first (for logic work)
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "[Precondition] missing. See Escalation Rules."
-```
+Trước khi bắt đầu implement bất kỳ tính năng nào, AI BẮT BUỘC kiểm tra:
+
+- [ ] Đọc `.agents/DEV_PROFILE.md` để lấy role, primary stack, coding conventions và constraints.
+- [ ] Xác định scope thay đổi (màn hình, module, schema, API liên quan).
+- [ ] Kiểm tra tính rõ ràng của yêu cầu: Có acceptance criteria rõ ràng chưa? Đã rõ input/output chưa?
+- [ ] Nếu yêu cầu mơ hồ hoặc có quyết định kiến trúc lớn chưa thống nhất:
+  → **EXIT: BLOCKED**
+  → Báo cáo user câu hỏi làm rõ trước khi can thiệp vào mã nguồn.
 
 ---
 
 ## Scope
-- ✅ Read requirements and design docs (Context Loading)
-- ✅ Implement feature adhering to R-C-09 (Anti-slop) and R-SEC-04 (Zero-Trust)
-- ✅ Write unit/integration tests as required
-- ✅ Run self-audit using qk-validation-gate before finishing
 
-## Non-Goals
-- ❌ Skip validation gate
-- ❌ Bypass R-SEC-04 (Zero-Trust) input validation
-- ❌ Write 'spaghetti' code or giant God Files
+✅ Skill này làm:
+- Phân tích yêu cầu và định hình kiến trúc tính năng tương thích với codebase.
+- Định nghĩa type-safe contracts, schemas và dữ liệu liên quan.
+- Triển khai code tính năng hoàn chỉnh qua các tầng (FE UI, BE controller/service, routing).
+- Xử lý đầy đủ các trạng thái biên: loading, error, empty data, pagination, boundary conditions.
+- Tự kiểm toán (Self-audit) sau khi implement: linting, typecheck, và format code.
 
----
-
-## Priority Order
-| P | Task | Skip Threshold |
-|---|------|----------------|
-| P1 | Load and read requirements & design | Never |
-| P2 | Context Graph verification (dependencies) | Never |
-| P3 | Implementation (Code) | Never |
-| P4 | Testing & Validation Gate | Never |
-| P5 | Documentation | Budget < 30% |
+❌ Skill này KHÔNG làm:
+- Sửa lỗi crash phát sinh đột xuất không nằm trong phạm vi feature mới (→ `qk-bug-resolution`).
+- Tái cấu trúc quy mô lớn codebase không phục vụ feature (→ `qk-refactor`).
+- Chạy đợt audit bảo mật tổng thể toàn dự án (→ `qk-security-audit`).
 
 ---
 
-## Workflow
+## Execution Steps
 
-### Phase 1 — Context Loading
-1. Read feature spec / requirements.
-2. Read `DESIGN.md` if UI is involved.
-3. Verify dependency graph via `qk-context-loader`.
-
-**Decision:**
-IF context is clear → go to Phase 2
-ELSE → EXIT: BLOCKED — ask user
-
-### Phase 2 — Implementation (Code)
-1. Write code in isolated steps.
-2. **BẮT BUỘC tuân thủ R-C-09 (Zero Slop) và R-SEC-04 (Zero Trust).**
-3. Keep functions < 30 lines, avoid God Files.
-
-### Phase 3 — Testing
-1. Write unit tests / integration tests.
-2. Run test commands to verify.
-
-### Phase 4 — Validation Gate (Self-Audit)
-1. Hand off to `qk-validation-gate` or run linters.
-2. Fix any reported violations immediately.
-
-**Decision:**
-IF validation passes → EXIT: SUCCESS
-IF validation fails → Fix and retry
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Requirements clear, tests pass, validation clean | Report SUCCESS |
-| MEDIUM | Specs ambiguous, some assumptions made | Ask user to review |
-| LOW | Lacking specs or API contracts | EXIT: BLOCKED |
-
----
-
-## Severity
-| Level | Definition |
-|-------|-----------|
-| CRITICAL | Broken functionality, security risk |
-| HIGH | Missing tests, validation gate failed |
-| MEDIUM | Minor UX issues |
-| LOW | Code style issues |
-
----
-
-## Evidence Format
+### Step 1 — Context Loading & Gap Analysis
 ```
-[SEVERITY] path/to/file.ts
-Action:     [What was implemented/fixed]
-Confidence: HIGH
-Validation: [PASS | FAIL]
+Inputs:  Yêu cầu tính năng từ user, DEV_PROFILE.md, mã nguồn hiện tại
+Actions:
+  - Khảo sát các modules, components, services hiện có liên quan đến tính năng.
+  - Lập danh sách các files cần tạo mới và files cần chỉnh sửa.
+  - Xác định dependency mới (nếu có) và đối chiếu với constraints trong DEV_PROFILE.md.
+Output: Feature Implementation Plan
+```
+
+### Step 2 — Contract & Architecture Design
+```
+Inputs:  Feature Implementation Plan
+Actions:
+  - Thiết kế interface/types, DTO, data contracts giữa các tầng.
+  - Xác định state management và data flow (Client state, Server cache, DB model).
+  - Dự phòng các kịch bản ngoại lệ (empty data, network failure, unauthorized).
+Output: Type definitions & Contract drafts
+```
+
+### Step 3 — Incremental Implementation
+```
+Inputs:  Type definitions, Contract drafts
+Actions:
+  - Viết code theo thứ tự từ lõi (Core/Domain/Model) → Service/Logic → Presentation/UI.
+  - Tuân thủ quy ước đặt tên (naming conventions) và design system tokens của dự án.
+  - Không hardcode các giá trị cấu hình, URL hay magic numbers.
+Output: Functional implementation
+```
+
+### Step 4 — Self-Audit & Quality Gate
+```
+Inputs:  Modified & Created files
+Actions:
+  - Kiểm tra lint và type checking.
+  - Rà soát edge cases: null/undefined checks, error boundary handling.
+  - Đảm bảo không làm hỏng các tính năng cũ lân cận (regressions).
+Exit: SUCCESS nếu code pass types/lint và đạt mọi acceptance criteria.
 ```
 
 ---
 
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user or qk-product-specification",
-  "required_fields": ["feature_spec", "acceptance_criteria"]
-}
+## Prompt Template
+
+AI đọc `DEV_PROFILE.md` để lấy role + stack. Bạn chỉ cần mô tả **WHAT**, không cần nhắc lại stack.
+
 ```
-### Produces
-```json
-{
-  "to": "qk-validation-gate",
-  "output_fields": ["implemented_files", "test_status", "exit_code"]
-}
+Tính năng:   [Tên / mục đích tính năng]
+Màn hình:    [Trang / route / component liên quan — hoặc "mới hoàn toàn"]
+Done khi:    [User thấy gì / hệ thống làm gì — tiêu chí cụ thể]
+Edge cases:  [Điều kiện đặc biệt, dữ liệu rỗng, lỗi cần xử lý]
+Không được:  [Ràng buộc — không đổi API này, không xóa field kia]
 ```
 
 ---
 
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Feature completed, tests pass, validation clean | Normal |
-| PARTIAL | Feature mostly done, some minor issues | Budget hit |
-| BLOCKED | Missing requirements or design | Cannot start |
-| FAILED | Implementation fundamentally broken | Tests/Validation failed |
+### Theo Role — AI sẽ phân tích kỹ thuật như sau:
 
----
+**role: fe**
+```
+Tính năng:   Infinite scroll cho danh sách sản phẩm
+Màn hình:    /products — ProductList.tsx đã có
+Done khi:    Scroll đến cuối → tự load thêm 20 sản phẩm, có loading indicator
+Edge cases:  Hết data → hiện "Đã xem tất cả", lỗi API → hiện retry button
+Không được:  Không đổi ProductCard component
+```
+→ AI phân tích: intersection observer vs scroll event, React Query `useInfiniteQuery`,
+  cache invalidation, skeleton vs spinner, bundle impact của thư viện.
+
+**role: be**
+```
+Tính năng:   API pagination cho /products với cursor-based paging
+Màn hình:    GET /api/products — route đã có nhưng chỉ trả toàn bộ
+Done khi:    Trả { data, nextCursor, hasMore }, tối đa 20 items/page
+Edge cases:  cursor không hợp lệ → 400, không có data → { data: [], hasMore: false }
+Không được:  Không đổi response shape của existing fields
+```
+→ AI phân tích: cursor vs offset trade-off, index strategy trên DB,
+  validation middleware, backward compatibility của response schema.
+
+**role: fullstack**
+```
+Tính năng:   Thêm chức năng export danh sách đơn hàng ra CSV
+Màn hình:    /orders — có table hiện tại, cần thêm nút Export
+Done khi:    Click Export → tải file CSV với đúng cột, chỉ export filtered data
+Edge cases:  > 10k rows → stream response, không có data → disable button
+Không được:  Không thêm dependency mới nếu native API đủ dùng
+```
+→ AI phân tích: FE trigger + progress UX, BE streaming response vs buffer,
+  type-safe contract giữa FE-BE, memory safety khi dataset lớn.
+
+**role: data**
+```
+Tính năng:   Pipeline load daily sales data từ PostgreSQL → BigQuery
+Màn hình:    DAG mới trong Airflow — incremental load
+Done khi:    Chạy hàng ngày 2AM, chỉ load data của ngày hôm trước, idempotent
+Edge cases:  Re-run phải cho kết quả giống nhau, source schema thay đổi → alert
+Không được:  Không truncate table, chỉ upsert
+```
+→ AI phân tích: watermark strategy, partition pruning, schema evolution handling,
+  idempotency key design, data quality assertion trước khi load.
+
+**role: ai-engineer**
+```
+Tính năng:   RAG pipeline trả lời câu hỏi từ tài liệu nội bộ
+Màn hình:    Chat UI mới — /chat route
+Done khi:    User hỏi → AI trả lời có citation từ đúng document
+Edge cases:  Câu hỏi ngoài scope → "Tôi không tìm thấy thông tin liên quan"
+Không được:  Không hallucinate khi không có context
+```
+→ AI phân tích: chunking strategy, embedding model choice, retrieval (BM25 vs dense),
+  reranking, context stuffing vs summarization, eval metrics (faithfulness, relevance).
+
+**role: devops**
+```
+Tính năng:   CI pipeline tự động chạy test + deploy lên staging khi merge PR
+Màn hình:    .github/workflows/ — chưa có file nào
+Done khi:    PR merge → test pass → deploy staging → notify Slack
+Edge cases:  Test fail → stop pipeline, notify người tạo PR
+Không được:  Không auto-deploy production
+```
+→ AI phân tích: workflow triggers, secrets management, caching strategy,
+  environment isolation, rollback mechanism, notification integration.

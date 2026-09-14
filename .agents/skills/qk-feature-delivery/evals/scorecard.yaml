@@ -25,4 +25,4 @@ metrics:
     description: Agent có tự kiểm tra lại code thông qua Validation Gate không?
     weight: 30
     criteria:
-      - Bắt buộc gọi qk-validation-gate hoặc chạy linter/tests trước khi kết thúc (30đ)
+      - Bắt buộc chạy quality gate (shared verify step / linter / tests) trước khi kết thúc (30đ)

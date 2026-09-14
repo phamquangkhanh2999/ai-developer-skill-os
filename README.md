@@ -1,99 +1,184 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v9.1.1
+# AI Developer Skill OS v9.2.0
 
-> **v9.1.1 "EDAOS v9.1 — Governed Capability & Universal Project Knowledge V1 Architecture"**
+> **v9.2.0 "EDAOS v9.2 — Role-Aware Execution & Semantic Naming"**
 
-Hệ sinh thái AI Developer Skill OS tiến hóa lên phiên bản **V9.1.1 (EDAOS v9.1.1)** với kiến trúc **Universal Project Knowledge V1 (Local Private & Self-Init Architecture)**, kết hợp cùng mô hình Manifest-First và Eval Pipeline, biến AI từ trợ lý bị động thành Sư phụ Lập trình (Elite AI Engineer) thấu hiểu sâu sắc codebase và tri thức dự án với chi phí tra cứu gần như bằng 0.
-
----
-
-## 🧭 Kiến Trúc Trí Nhớ Dự Án (Universal Project Knowledge V1 - Local Private Mode)
-- **Quản trị như Source Code:** Tri thức dự án đơn giản, minh bạch, có thể xem xét (review) và **luôn có con người phê duyệt** (AI Đề xuất -> Con người Phê duyệt via `/learn` hoặc `./qk-project-memory`).
-- **Chính sách Local Private Duy Nhất & Tự động Khởi tạo (Self-Init Protocol):** 
-  - *Bộ Nhớ Cá Nhân (`.ai-local/`):* Toàn bộ tri thức ghi nhớ của dự án được tập trung lưu tại thư mục `.ai-local/` (bao gồm `AGENTS.md` và `knowledge/index.yaml`). Đã loại bỏ hoàn toàn chế độ dùng chung (`.agents/knowledge/index.yaml` - Shared Mode) để đảm bảo quyền riêng tư và tránh xung đột khi làm việc nhóm.
-  - *Tự động Khởi tạo & Bảo mật Gitignore:* Bất cứ khi nào AI kích hoạt kỹ năng hoặc cần tra cứu/học tri thức mà thư mục `.ai-local/` chưa tồn tại trong gốc dự án, AI **BẮT BUỘC** tự động tạo cấu trúc thư mục này và tự động thêm dòng `.ai-local/` vào file `.gitignore` của dự án ngay lập tức.
-- **Tối Ưu Nhảy Sọt (Navigator):** File `.ai-local/AGENTS.md` giới hạn siêu gọn dưới 100 dòng làm bản đồ chỉ đường, kết hợp cùng `.ai-local/knowledge/index.yaml` (lưu trữ đúng 4 loại: *Architecture, Convention, Pattern, Hard Bug*), triệt tiêu 80% chi phí tìm kiếm mù lòa (zero redundant searches).
+Phiên bản **v9.2.0** tập trung vào 3 nâng cấp cốt lõi:
+1. **Role-Aware Execution** — AI tự động điều chỉnh chiều sâu phân tích theo role khai báo trong `DEV_PROFILE.md`
+2. **Semantic Naming** — Đổi tên skills, workflows theo đúng mục đích thực tế, loại bỏ tên trừu tượng
+3. **Prompt Templates theo Role** — Mỗi skill có examples cụ thể cho từng role (fe/be/fullstack/data/ai-engineer/devops)
 
 ---
 
-## 🏗️ 4 Trụ Cột Kiến Trúc Cốt Lõi (EDAOS v9.0 Architecture)
+## Bắt đầu nhanh
 
-### 1. Manifest-First & O(1) Registry Engine
-Không còn phụ thuộc vào việc đọc/scan toàn bộ markdown mệt mỏi. AI Agent tra cứu siêu dữ liệu từ `.agents/registry/index.yaml` và kiểm duyệt chu trình không lặp (acyclic validation) thông qua O(1) graph JSON (`.agents/registry/graph.json`). Tốc độ hiểu và phân công năng lực đạt ngưỡng sub-second!
+### Bước 1 — Khai báo role và stack một lần
 
-### 2. V8.2 Blueprint Plugins & Universal 4-Folder Architecture
-Khởi tạo dự án (chỉ đạo qua `qk-project-bootstrap`) hỗ trợ sinh file `project.yaml` gốc từ thư viện Blueprint Plugins:
-- **RAG / AI Agents:** Cấu trúc 4 thư mục chuẩn thực chiến: `prompts/`, `data/` (bảo vệ `data/raw` bất biến), `agents/`, và `evals/`.
-- **Standard Software Coding:** Kiến trúc module sạch vững chắc với `DESIGN.md` và rào cản kiểm duyệt tự động.
-- **Automation Workflows:** Các luồng tích hợp n8n và dữ liệu lớn.
+Tạo file `.agents/DEV_PROFILE.md` trong dự án:
 
-### 3. Eval Pipeline Platform (Khép Kín Kiểm Định)
-Chấm dứt việc tin tưởng AI blindly. Mọi Capability đều có thẻ điểm định lượng (`scorecard.yaml`), kết nối log thực thi thực tế từ thư mục `evals/traces/` qua cổng thẩm định sắt đá `qk-validation-gate`. Trách nhiệm định lượng 0–100 với sai số 0% (zero tolerance for fabrication).
+```yaml
+role: fullstack          # fe | be | fullstack | data | ai-engineer | devops
+stack:
+  frontend:  Next.js 14 + TypeScript
+  backend:   tRPC + Prisma
+  database:  PostgreSQL
+  css:       Tailwind CSS
+ai_style: concise        # concise | detailed | teaching
+```
 
-### 4. Domain Patterns Separation (Bảo Vệ Kernel)
-Các hệ thống AI chuyên sâu (như **Xây dựng DDC 192 skills**, bóc tách BIM/IFC, ERP) được tải lập trình viên cấu hình dạng Module dưới `knowledge/domain-patterns/` thay vì phơi bày trực tiếp vào 30 Core Developer Skills, giữ cho đồ thị cốt lõi luôn nhanh bén mượt mà!
+AI sẽ đọc file này trước mọi yêu cầu — không cần nhắc lại stack mỗi lần.
 
----
+### Bước 2 — Gọi skill
 
-## 🧩 Danh sách 30 Master Skills (Core Developer Capabilities)
-
-Các kỹ năng được quản lý bằng **Capability Graph** và được đánh giá liên tục thông qua Evaluation Suite. Bao gồm 7 lĩnh vực:
-1. **Core & Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-project-memory`, `qk-help`
-2. **Product & Architecture:** `qk-product-specification`, `qk-project-bootstrap`, `qk-frontend-architecture`
-3. **Frontend & UI:** `qk-design-system-engineering`, `qk-ui-system-builder`, `qk-ui-builder`, `qk-fe-api-integration`, `qk-ui-audit`
-4. **Backend & Data:** `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-data-engineer`, `qk-access-policy`
-5. **Engineering & Delivery:** `qk-feature-delivery`, `qk-bug-resolution`, `qk-engineering-standard`, `qk-system-evolution`, `qk-docs`
-6. **Quality & Testing:** `qk-test-engineering`, `qk-validation-gate`, `qk-web-quality-gate`, `qk-project-health`
-7. **Security, DevOps & Analytics:** `qk-security-audit`, `qk-db-optimizer`, `qk-devops-platform`, `qk-production-release`, `qk-agent-observability`, `qk-ai-builder`
-
----
-
-## 💻 Cách Cài Đặt (Installation)
-
-### Cách 1: NXP (Không cần cài global) - MỚI
 ```bash
+# Cú pháp command
+./qk-feature-delivery
+./qk-bug-resolution
+./qk-api-lifecycle --fw=fastapi
+
+# Hoặc ngôn ngữ tự nhiên — AI tự route đúng skill
+"fix bug login crash"
+"viết api tạo đơn hàng"
+"refactor file UserService.ts quá dài"
+```
+
+### Cài đặt
+
+```bash
+# NPX (không cần cài global)
 npx ai-developer-skill-os init
-```
 
-### Cách 2: NPM Global (Khuyên dùng cho cá nhân)
-```bash
+# NPM global
 npm i -g ai-developer-skill-os
-```
 
-### Chạy bằng tham số (Command Line Arguments)
-```bash
-# Cài Antigravity Global (toàn máy)
-npx ai-developer-skill-os init --ide=antigravity --scope=2
-
-# Cài Antigravity Local (chỉ dự án này)
-npx ai-developer-skill-os init --ide=antigravity --scope=1
-
-# Cài Cursor Local
+# Với tham số IDE
 npx ai-developer-skill-os init --ide=cursor --scope=1
+npx ai-developer-skill-os init --ide=windsurf --scope=1
+npx ai-developer-skill-os init --ide=antigravity --scope=2
 ```
 
-## 📦 Các IDE/AI Assistant Được Hỗ Trợ
-- (1) Cursor
-- (2) Windsurf
-- (3) Cline / Roo Code
-- (4) Antigravity / Gemini
-- (5) Codex
-- (6) Kilo Code
+**IDE được hỗ trợ:** Cursor · Windsurf · Cline / Roo Code · Antigravity · Kilo Code · Codex
 
 ---
 
-## 🧪 Đánh Giá Tự Động (Agent Evaluation)
+## Kiến trúc v9.2
 
-Hệ thống đi kèm một bộ Runner nội bộ để kiểm toán **Routing Intelligence**. Bất kỳ cập nhật nào vào hệ thống Kỹ năng đều phải vượt qua bài kiểm tra hóc búa (Bypass Security, Boundary Attacks, Ambiguous Prompts):
-
-```bash
-npm run test:agent
-npm run test:graph
-npm run test:registry
+```
+.agents/
+├── DEV_PROFILE.md        ← Khai báo role + stack (đọc đầu mỗi session)
+├── AGENTS.md             ← Entry point: routing table + role behavior matrix
+├── skills/               ← 33 capabilities — mỗi skill có SKILL.md
+├── workflows/            ← 10 execution pipelines
+├── rules/                ← 8 behavior policies
+├── registry/             ← Generated indexes (không sửa tay)
+├── knowledge/            ← Design intelligence + domain patterns
+└── blueprints/           ← Project scaffold templates
 ```
 
-## 🚀 Hướng Dẫn Sử Dụng
-Sau khi cài đặt thành công, hãy gõ lệnh:
+### Role Behavior Matrix
+
+| Role | AI tập trung vào | AI bỏ qua |
+|---|---|---|
+| `fe` | Component arch, state, a11y, bundle size | DB schema, backend arch |
+| `be` | API contract, business logic, DB perf, security | CSS, UI layout |
+| `fullstack` | FE+BE end-to-end, type-safe contract | Over-engineering |
+| `data` | Idempotency, data quality, lineage, SLA | Application ORM, UI |
+| `ai-engineer` | Prompt eng, RAG arch, eval pipeline, hallucination | Standard CRUD |
+| `devops` | CI/CD, IaC, observability, rollback | Business logic, UI |
+
+---
+
+## 33 Skills (v9.2.0)
+
+### Core & Orchestration
+| Skill | Mô tả |
+|---|---|
+| `qk-orchestrator` | Route yêu cầu đến đúng skill, kiểm tra preconditions |
+| `qk-context-loader` | Load context, vẽ dependency graph trước khi code |
+| `qk-project-memory` | Lưu/tra cứu project knowledge (Architecture, Convention, Pattern, Hard Bug) |
+| `qk-project-bootstrap` | Khởi tạo dự án mới với Blueprint Plugins (RAG/Coding/Workflow) |
+
+### Product & Architecture
+| Skill | Mô tả |
+|---|---|
+| `qk-product-specification` | Idea → Requirement → Acceptance Criteria → Technical Spec |
+| `qk-frontend-architecture` | Quyết định kiến trúc FE: component strategy, state, routing |
+| `qk-project-audit` | Gap Analysis, Feasibility, Risk Assessment — báo cáo trước khi code |
+
+### Frontend & UI
+| Skill | Mô tả |
+|---|---|
+| `qk-ui-builder` | Build/edit/audit/redesign UI từ Figma/ảnh/design reference |
+| `qk-ui-system-builder` | Build Design System và token library từ DESIGN.md |
+| `qk-design-system-engineering` | Quản trị design system: tokens, component variants, governance |
+| `qk-api-consumer` | Consume API (REST/GraphQL/tRPC), manage state, bind vào UI |
+| `qk-ui-audit` | Audit UI với 57-check Anti-Slop checklist |
+| `qk-web-quality-gate` | A11y, SEO, Web Performance, Security, UX Heuristics |
+
+### Backend & Data
+| Skill | Mô tả |
+|---|---|
+| `qk-api-lifecycle` | Design + implement API với Zero-Trust — contract trước, code sau |
+| `qk-data-lifecycle` | Schema management + safe migrations (freeze → compat → cleanup) |
+| `qk-data-engineer` | Data pipelines: dbt, Spark, Airflow, Delta Lake — idempotency first |
+| `qk-access-policy` | RBAC/ABAC — định nghĩa role matrix trước, implement middleware sau |
+| `qk-db-optimizer` | Evidence-based DB optimization: EXPLAIN → analyze → index |
+
+### Engineering & Delivery
+| Skill | Mô tả |
+|---|---|
+| `qk-feature-delivery` | End-to-end feature: Requirements → Context → Design → Implement |
+| `qk-bug-resolution` | Closed-loop bug fix: Observe → Hypothesis → Evidence → Fix |
+| `qk-refactor` | Tái cấu trúc code không đổi behavior — extract, simplify, decouple |
+| `qk-upgrade` | Nâng cấp library/framework an toàn — incremental, rollback bắt buộc |
+| `qk-docs` | Viết/cập nhật docs chính xác tuyệt đối — match code thực tế |
+
+### Quality & Testing
+| Skill | Mô tả |
+|---|---|
+| `qk-test-engineering` | Test strategy: pyramid, coverage, regression, mock |
+| `qk-validation-gate` | Quality gate: linters, tests, scorecard.yaml (0–100) |
+| `qk-project-health` | Audit: Code Smells, Tech Debt, Architecture (0–100 score) |
+| `qk-code-review` | 4-Phase elite code review với Architect mindset |
+| `qk-engineering-standard` | Enforce SOLID, DRY, Clean Code với ngưỡng metric cụ thể |
+
+### Security, DevOps & AI
+| Skill | Mô tả |
+|---|---|
+| `qk-security-audit` | OWASP, dependency risk, secret detection, permission model |
+| `qk-devops-platform` | CI/CD strategy, deployment architecture, environment management |
+| `qk-production-release` | 8-gate mandatory checklist trước khi deploy production |
+| `qk-ai-builder` | Governed AI Agent & RAG pipeline design — eval pipeline included |
+| `qk-agent-observability` | Monitor AI skin routing decisions, failure patterns |
+
+---
+
+## Changelog
+
+### v9.2.0 (2026-09-11)
+- **Thêm:** `DEV_PROFILE.md` — role + stack context file, AI đọc đầu mỗi session
+- **Thêm:** Role Behavior Matrix trong `AGENTS.md` — 6 roles với focus/depth/skip
+- **Thêm:** Prompt templates theo role trong 7 key skills
+- **Đổi tên:** `qk-fe-api-integration` → `qk-api-consumer` (rõ hơn, không FE-only)
+- **Đổi tên:** `qk-system-evolution` → `qk-upgrade` (đúng mục đích thực tế)
+- **Đổi tên:** `qk-project-analyst` → `qk-project-audit` (rõ output là audit report)
+- **Đổi tên workflow:** `skill-evolution.yml` → `skin-governance.yml`
+- **Đổi tên workflow:** `research.yml` → `context-discovery.yml`
+- **Xóa:** `qk-help` (deprecated từ v8.0, superseded bởi `qk-orchestrator`)
+- **Xóa:** `.ai-local/` Self-Init Protocol khỏi tất cả SKILL.md (giảm token overhead)
+- **Fix:** Compact routing table trong `AGENTS.md` — không cần đọc `skills-index.yml`
+
+### v9.1.x (2026-08-03)
+- O(1) registry engine, Universal Project Knowledge V1
+
+### v9.0.0 (2026-07-01)
+- V9 schema migration, manifest-first architecture
+
+---
+
+## Đánh giá tự động
+
 ```bash
-./qk-help
+npm run test:agent      # Routing intelligence tests
+npm run test:graph      # Capability graph validation
+npm run test:registry   # Registry consistency check
 ```
-để kích hoạt AI Orchestrator và khám phá sức mạnh của hệ điều hành!

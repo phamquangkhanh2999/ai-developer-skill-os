@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-production-release
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy."
+description: "Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy. Dùng skill này khi user nhắc đến: deploy production, release checklist, go live, rollout, chuẩn bị release, kiểm tra release — kể cả khi chỉ hỏi 'đã đủ điều kiện đưa lên production chưa'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -22,10 +22,13 @@ complexity:
     has_breaking_change: false
 
 triggers:
-  - "release production"
   - "deploy production"
+  - "release checklist"
+  - "go live"
+  - "rollout"
   - "chuẩn bị release"
   - "kiểm tra release"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: production-release
@@ -39,7 +42,8 @@ tools:
   - terminal
 
 related_skills:
-  - qk-validation-gate
+  - qk-devops-platform
+  - qk-security-audit
 
 knowledge_scope:
   owns:
@@ -79,567 +83,106 @@ latency: slow
 risk: high
 side_effects: run_commands
 produces: [report, plan]
-consumes: [validation-gate-result, source-code]
+consumes: [source-code, test-results]
 
 token_budget:
-  max_files_read: 3
-  max_lines_per_read: 100
+  max_files_read: 5
+  max_lines_per_read: 150
   max_shell_commands: 2
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-production-release — Release Gate
+# qk-production-release — Production Release Gate & Readiness Auditor
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-## Memory Workflow
+Chịu trách nhiệm thẩm tra toàn diện sự sẵn sàng của hệ thống trước khi đưa lên môi trường Production thông qua **8-Gate Checklist bắt buộc**. Nguyên tắc bất di bất dịch: **1 Gate không đạt = DỪNG DEPLOY**.
 
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Hard Bug (vd: 8-gate checklist release, rủi ro production cũ).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Checklist hoặc Gate bảo vệ Production mới được đưa ra từ post-mortem.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Log deploy staging tạm thời.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Hard Bug (vd: 8-gate checklist release, rủi ro production cũ).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Checklist hoặc Gate bảo vệ Production mới được đưa ra từ post-mortem.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Log deploy staging tạm thời.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention / Hard Bug (vd: 8-gate checklist release, rủi ro production cũ).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Checklist hoặc Gate bảo vệ Production mới được đưa ra từ post-mortem.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Log deploy staging tạm thời.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Checklist hoặc Gate bảo vệ Production mới được đưa ra từ post-mortem.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Log deploy staging tạm thời.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Checklist hoặc Gate bảo vệ Production mới được đưa ra từ post-mortem.
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Log deploy staging tạm thời.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] `qk-validation-gate` has been run and returned SUCCESS or PARTIAL
-- [ ] All HIGH priority bugs are resolved
-- [ ] Production environment variables are configured (not dev)
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "qk-validation-gate must pass before release. Run it first."
-```
+Trước khi cấp quyền release, AI BẮT BUỘC kiểm tra:
+
+- [ ] Xác định commit hash hoặc release tag chuẩn bị deploy.
+- [ ] Xác định môi trường đích (Production) và biến môi trường cần thiết.
+- [ ] Đảm bảo có kế hoạch Rollback khẩn cấp (Rollback Runbook) đã được xác nhận.
+- [ ] Nếu có bất kỳ test suite nào thất bại hoặc phát hiện secret leak:
+  → **EXIT: BLOCKED**
+  → Từ chối release và lập báo cáo chi tiết các lỗi cần khắc phục.
+
+---
 
 ## Scope
-- ✅ Run 8-gate release checklist
-- ✅ Verify no dev artifacts in production build
-- ✅ Verify environment configuration
 
-## Non-Goals
-- ❌ Fix bugs — that's `qk-bug-resolution`
-- ❌ Deploy to infrastructure — that's DevOps/CI system
-- ❌ Skip any gate unless user explicitly overrides
+✅ Skill này làm:
+- Thẩm định 8 Cổng An toàn (8-Gate Checklist):
+  1. Build & Compile Gate (Build pass 100%, không type errors).
+  2. Test Suite Gate (Unit + Integration tests pass).
+  3. Security Gate (Không có critical CVE, không leak secrets trong code).
+  4. Database Migration Gate (Migration an toàn, backward-compatible).
+  5. Environment Config Gate (.env.production đầy đủ keys, không thiếu config).
+  6. Performance & Health Check Gate (Có endpoint /healthz, /readyz).
+  7. Rollback Plan Gate (Có lệnh hoặc pipeline rollback rõ ràng).
+  8. Observability Gate (Logging, Error monitoring Sentry/Datadog đã sẵn sàng).
+- Lập Báo cáo Thẩm định Sẵn sàng (Production Readiness Report).
+- Khuyến nghị quyết định: **GO** (Cho phép deploy) hoặc **NO-GO** (Chặn deploy).
 
-## Priority Order
+❌ Skill này KHÔNG làm:
+- Trực tiếp chạy lệnh deploy phá hủy môi trường live nếu chưa có xác nhận từ người dùng.
+- Thiết kế hạ tầng CI/CD pipeline từ đầu (→ `qk-devops-platform`).
+- Sửa lỗi code trực tiếp (→ `qk-bug-resolution`).
 
-| Priority | Gate | Block Release? |
-|----------|------|---------------|
-| P1 | Validation gate result (from qk-validation-gate) | YES — hard block |
-| P2 | No unresolved HIGH/CRITICAL bugs | YES — hard block |
-| P3 | No `console.log` / debug artifacts in src/ | YES — hard block |
-| P4 | .env.production exists (not .env.development) | YES — hard block |
-| P5 | Build succeeds in production mode | YES — hard block |
-| P6 | Bundle size within limit (< 500KB gzipped) | WARN only |
-| P7 | No dev dependencies in production build. Check vulnerabilities (`npm audit`) | YES — hard block (Nếu có CRITICAL, báo gọi `qk-security-audit`) |
-| P8 | CHANGELOG.md updated with release notes | WARN only |
+---
 
-## Release Checklist (Mandatory)
+## Execution Steps
 
+### Step 1 — Artifact & Build Verification
 ```
-[ ] P1: qk-validation-gate: SUCCESS
-[ ] P2: 0 unresolved HIGH/CRITICAL bugs
-[ ] P3: grep -r "console.log\|debugger" src/ → empty
-[ ] P4: .env.production configured, NODE_ENV=production
-[ ] P5: npm run build (production mode) → exit 0
-[ ] P6: Bundle size ≤ 500KB gzipped (warn if exceeded)
-[ ] P7: npm audit --production → 0 critical/high
-[ ] P8: CHANGELOG.md has entry for this release
+Inputs:  Commit hash/tag, Build scripts
+Actions:
+  - Kiểm tra trạng thái build và artifact tĩnh.
+  - Xác thực không có file nhạy cảm lọt vào distribution build (.map files nhạy cảm, dev configs).
+Output: Build status verdict
 ```
 
-## Workflow
-
-### Phase 1 — Pre-flight Checks (P1–P4)
-
-**Steps:**
-1. Verify validation-gate result (check previous output or re-read)
-2. `grep_search` for `console.log`, `debugger`, `TODO:`, `FIXME:`
-3. Check for `.env.production` vs `.env.development` configuration
-
-**Decision:**
+### Step 2 — 8-Gate Audit Execution
 ```
-IF any P1–P4 check fails
-  → EXIT: FAILED immediately
-  → Report which gate failed and exact fix required
-
-IF all P1–P4 pass
-  → go to Phase 2
+Inputs:  Source code, Config manifests, Test logs
+Actions:
+  - Kiểm tra lần lượt 8 cổng theo checklist.
+  - Ghi nhận chi tiết trạng thái (PASS / FAIL / WARN) cho từng cổng.
+Exit: BLOCKED ngay khi phát hiện Gate mang tính chặn (Security, Build, Test) bị FAIL.
 ```
 
-### Phase 2 — Build & Size Gate (P5–P7)
-
-**Steps:**
-1. (If allowed) `npm run build` — 1 command used
-2. Check bundle size if measurable
-3. `npm audit --production` — 2nd command
-
-**Decision:**
+### Step 3 — Rollback & Contingency Assessment
 ```
-IF build fails
-  → EXIT: FAILED
-
-IF bundle size > 500KB
-  → Note as WARNING, do not block
-
-IF production audit has critical/high
-  → EXIT: FAILED
+Inputs:  Deployment strategy (Blue/Green, Rolling, Canary)
+Actions:
+  - Xác nhận thời gian phục hồi tối đa (RTO) và kịch bản revert DB nếu migration lỗi.
+  - Soạn sẵn câu lệnh khôi phục trạng thái cũ.
+Output: Rollback verification checklist
 ```
 
-### Phase 3 — Release Report
-
-Generate signed release report with all gate results.
-
-**Decision:**
+### Step 4 — Readiness Verdict Delivery
 ```
-IF all hard-block gates pass
-  → EXIT: SUCCESS — safe to deploy
-
-IF only WARN gates failed (P6, P8)
-  → EXIT: PARTIAL — deploy with noted caveats
-
-IF any hard-block gate failed
-  → EXIT: FAILED — do NOT deploy
-```
-
-## Evidence Format
-
-```
-[SEVERITY] Gate: [P1-P8 name]
-Check:      [what was checked]
-Result:     [PASS | FAIL | WARN]
-Threshold:  [what the rule is]
-Actual:     [what was found]
-Fix:        [what must be done before release]
-```
-
-## Escalation Rules
-
-```
-BLOCKED: qk-validation-gate not run
-Missing:
-  - Run qk-validation-gate first and share the result
-Questions:
-  1. Validation gate đã chạy chưa?
-  2. Có bug nào HIGH/CRITICAL chưa fix không?
-```
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "qk-validation-gate",
-  "required_fields": ["gate_result", "coverage_percent"],
-  "optional_fields": ["bundle_size", "changelog_entry"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "CI/CD system or user",
-  "output_fields": ["release_checklist_result", "gates_passed", "gates_failed", "exit_code"]
-}
-```
-
-## Output Format
-
-```
-🚀 Production Release Gate
-─────────────────────────────────────────────────
-Version:    [vX.Y.Z]
-Date:       [YYYY-MM-DD]
-
-Gate Results:
-  P1 Validation:    [✅ PASS | ❌ FAIL]
-  P2 Open Bugs:     [✅ 0 HIGH/CRITICAL | ❌ N unresolved]
-  P3 Debug Cleanup: [✅ Clean | ❌ N artifacts found]
-  P4 Environment:   [✅ Production config | ❌ Dev config detected]
-  P5 Build:         [✅ SUCCESS | ❌ FAILED]
-  P6 Bundle Size:   [✅ NKB | ⚠️ NKB > 500KB]
-  P7 Security:      [✅ Clean | ❌ N critical/high]
-  P8 Changelog:     [✅ Updated | ⚠️ Missing]
-
-Verdict:    [✅ SAFE TO DEPLOY | ❌ DO NOT DEPLOY — fix: list]
-Exit Code:  [SUCCESS | PARTIAL | BLOCKED | FAILED]
+Inputs:  Audit results
+Actions:
+  - Xuất bảng tổng kết 8-Gate với kết luận rõ ràng GO / NO-GO.
+  - Bàn giao hướng dẫn các bước release thủ công hoặc qua pipeline cho kỹ sư vận hành.
+Exit: SUCCESS
 ```
 
 ---
 
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | validation-gate result confirmed + all 8 gates checked directly | Deploy approved |
-| MEDIUM | some gates inferred from partial CI output | Deploy with caution |
-| LOW | validation-gate not run / gate results stale | EXIT: BLOCKED |
-
----
-
-## Severity
-
-| Level | Definition |
-|-------|-----------|
-| CRITICAL | deploying with unresolved P1–P5 hard-block gate failure |
-| HIGH | P6/P7 warning ignored without user override |
-| MEDIUM | CHANGELOG missing |
-| LOW | minor formatting in release report |
-
----
-
-## Retry Policy
+## Prompt Template
 
 ```
-Build fails during Phase 2
-  └─ check syntax vs. environment error
-       ├─ fix and retry once
-       └─ do not retry more than 1 time (risk of masking a real failure)
+Phiên bản / Tag: [Release version — ví dụ: v2.4.0 hoặc commit hash]
+Môi trường:      [Production / Staging-to-Production]
+Thay đổi chính:  [Tóm tắt tính năng / bugfix trong đợt release này]
+DB Migration:    [Có migration không? Có thay đổi bảng dữ liệu nào?]
+Kế hoạch Rollback: [Đã có phương án revert chưa?]
 ```
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | All hard-block gates pass | Deploy approved |
-| PARTIAL | Hard gates pass, warnings exist | Deploy with noted caveats |
-| BLOCKED | Prerequisites missing | Run validation-gate first |
-| FAILED | Any hard gate failed | Do NOT deploy |
-
----
-

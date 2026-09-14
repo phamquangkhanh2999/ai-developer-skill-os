@@ -20,7 +20,8 @@ const GRAPH_JSON = path.join(REGISTRY_DIR, 'graph.json');
 
 function parseYamlFile(filePath) {
   try {
-    const content = fs.readFileSync(filePath, 'utf8');
+    let content = fs.readFileSync(filePath, 'utf8');
+    if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
     const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (match) {
       return yaml.load(match[1]);
@@ -57,18 +58,24 @@ function buildRegistry() {
     let meta = null;
     let fromCapabilityYaml = false;
 
+    let skillMdMeta = null;
+    if (fs.existsSync(skillMdPath)) {
+      skillMdMeta = parseYamlFile(skillMdPath);
+    }
+
     if (fs.existsSync(capYamlPath)) {
       meta = parseYamlFile(capYamlPath);
       fromCapabilityYaml = true;
-    } else if (fs.existsSync(skillMdPath)) {
-      meta = parseYamlFile(skillMdPath);
+    } else if (skillMdMeta) {
+      meta = skillMdMeta;
     }
 
     if (!meta) continue;
 
     const id = meta.id || meta.name || dir;
-    const version = meta.version || '8.2.0';
-    const description = meta.description || '';
+    const version = meta.version || skillMdMeta?.version || '8.2.0';
+    const status = meta.status || skillMdMeta?.status || 'stable';
+    const description = meta.description || skillMdMeta?.description || '';
     
     // Normalize tags
     let tags = meta.tags || meta.keywords || [];
@@ -92,6 +99,7 @@ function buildRegistry() {
     capabilities[id] = {
       path: `.agents/skills/${dir}`,
       version,
+      status,
       tags,
       dependencies
     };
@@ -155,6 +163,11 @@ function buildRegistry() {
     };
   }
 
+  const allIds = Object.keys(capabilities);
+  const activeSkills = allIds.filter(id => capabilities[id].status === 'stable' || capabilities[id].status === 'experimental');
+  const archivedSkills = allIds.filter(id => capabilities[id].status === 'archived');
+  const relocatedSkills = allIds.filter(id => capabilities[id].status === 'relocated');
+
   const graphJsonData = {
     schema_version: 1,
     manifest_version: '8.2',
@@ -162,7 +175,10 @@ function buildRegistry() {
     nodes: graphNodes,
     adjacency,
     stats: {
-      total_capabilities: Object.keys(capabilities).length,
+      total_scanned: allIds.length,
+      active: activeSkills.length,
+      archived: archivedSkills.length,
+      relocated: relocatedSkills.length,
       has_cycles: hasCycles
     }
   };
@@ -173,14 +189,20 @@ function buildRegistry() {
       schema_version: 1,
       manifest_version: '8.2',
       generated_at: new Date().toISOString(),
+      stats: {
+        total_scanned: allIds.length,
+        active: activeSkills.length,
+        archived: archivedSkills.length,
+        relocated: relocatedSkills.length
+      },
       capabilities
     }, { indent: 2 });
 
   fs.writeFileSync(INDEX_YAML, indexYamlContent, 'utf8');
   fs.writeFileSync(GRAPH_JSON, JSON.stringify(graphJsonData, null, 2), 'utf8');
 
-  console.log(`✅ Generated lightweight registry index at .agents/registry/index.yaml (${Object.keys(capabilities).length} capabilities)`);
-  console.log(`✅ Generated O(1) adjacency graph at .agents/registry/graph.json (has_cycles: ${hasCycles})`);
+  console.log(`✅ Generated lightweight registry index at .agents/registry/index.yaml (${allIds.length} scanned: ${activeSkills.length} active, ${archivedSkills.length} archived, ${relocatedSkills.length} relocated)`);
+  console.log(`✅ Generated O(1) adjacency graph at .agents/registry/graph.json (active: ${activeSkills.length}, has_cycles: ${hasCycles})`);
 }
 
 buildRegistry();

@@ -1,0 +1,94 @@
+name: context-discovery
+version: 9.2.0
+description: "Pipeline load context dự án và vẽ dependency graph trước khi thực hiện task — ngăn hallucination kiến trúc."
+
+owner:
+  type: engineering
+  maintained_by: qk-team
+
+verification_profile: review
+
+triggers:
+  - "load context"
+  - "tìm hiểu codebase"
+  - "explore architecture"
+  - "explain the codebase"
+  - "trace dependency"
+  - "hiểu project"
+  - "which skill should i use"
+  - "help me choose"
+
+ide_binding:
+  slash_command: "/discover"
+  aliases: ["/context", "/explore", "/research"]
+
+steps:
+  - id: define_scope
+    name: "Xác định phạm vi cần khám phá"
+    purpose: "Biết chính xác cần tìm hiểu gì để phục vụ task tiếp theo"
+    required: true
+    inputs:
+      - task_goal            # Task người dùng muốn làm sau context load
+    outputs:
+      - discovery_questions  # Các câu hỏi cụ thể cần trả lời
+      - entry_points         # Files/folders bắt đầu đọc
+    actions:
+      - "Đặt 3-5 câu hỏi cụ thể cần trả lời (không đọc mọi thứ)"
+      - "Ưu tiên: package.json / go.mod / pyproject.toml → biết stack"
+      - "Sau đó: src/ structure → biết architecture pattern"
+    exit_on_fail: BLOCKED
+
+  - id: detect_stack
+    name: "Phát hiện Stack & Architecture"
+    purpose: "Xác định tech stack, project type, và conventions đang dùng"
+    required: true
+    inputs:
+      - entry_points
+    outputs:
+      - detected_stack       # language, framework, DB, CSS, test runner...
+      - project_type         # web-app / api / data-pipeline / monorepo / ai-agent
+      - architecture_pattern # feature-based / domain / layered / atomic
+    actions:
+      - "Đọc package.json / requirements.txt / go.mod / Cargo.toml"
+      - "Đọc cấu trúc thư mục src/ (1 level sâu)"
+      - "Tìm config files: tsconfig, prisma/schema, docker-compose, .env.example"
+      - "Đọc tối đa 2-3 file entry point để xác nhận pattern"
+
+  - id: map_dependencies
+    name: "Vẽ Dependency Map"
+    purpose: "Hiểu component nào phụ thuộc vào component nào"
+    required: false
+    skip_if: "Task không cần hiểu cross-component dependencies"
+    inputs:
+      - detected_stack
+      - entry_points
+    outputs:
+      - dependency_map       # Key components + their relationships
+      - critical_paths       # Paths hay bị ảnh hưởng khi thay đổi
+    context_budget: 100
+    actions:
+      - "Dùng grep_search để trace imports, không đọc toàn bộ file"
+      - "Đọc targeted sections (≤ 100 lines per read)"
+      - "Ghi lại circular deps hay God File nếu phát hiện"
+
+  - id: synthesize
+    name: "Tổng hợp Context"
+    purpose: "Đóng gói kết quả sẵn sàng inject vào skill thực thi tiếp theo"
+    required: true
+    inputs:
+      - detected_stack
+      - dependency_map
+      - discovery_questions
+    outputs:
+      - context_summary      # Stack + Architecture + Key files
+      - skill_recommendation # Skill phù hợp nhất cho task hiện tại
+      - warnings             # Deprecated patterns, risks, anti-patterns phát hiện
+    actions:
+      - "Viết summary dạng bullet (không dài hơn 10 dòng)"
+      - "Đề xuất skill phù hợp nhất nếu chưa được chọn"
+      - "Flag pattern cũ hoặc vi phạm convention"
+      - "Ghi log execution trace vào evals/traces/ nếu có"
+
+escalation:
+  max_retries: 1
+  on_failure: "Report partial findings với confidence level, list files chưa đọc được"

@@ -1,9 +1,9 @@
 ---
 # ── Identity ───────────────────────────────────────────────
 name: qk-docs
-version: 9.1.0
+version: 9.2.0
 status: stable
-description: "Viết và duy trì tài liệu chính xác tuyệt đối — phải match code thực tế, cấm bịa đặt."
+description: "Khởi tạo và duy trì tài liệu kỹ thuật chuẩn xác — README, API docs, architecture guides, JSDoc/Docstrings — cam kết đồng bộ 100% với code thực tế, không bịa đặt. Dùng skill này khi user nhắc đến: viết docs, tài liệu, readme, document, jsdoc, swagger, viết hướng dẫn, tài liệu api — kể cả khi chỉ nói 'viết hướng dẫn cài đặt và chạy project này'."
 platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
 
 # ── V9: Classification ─────────────────────────────────────
@@ -23,32 +23,37 @@ complexity:
 
 triggers:
   - "viết docs"
-  - "viết tài liệu"
-  - "document this"
-  - "generate docs"
-  - "cập nhật readme"
+  - "tài liệu"
+  - "readme"
+  - "document"
+  - "jsdoc"
+  - "swagger"
+  - "viết hướng dẫn"
+  - "tài liệu api"
+
 
 # ── V8: References ─────────────────────────────────────────
 workflow: documentation
 
 rules:
   - global
+  - coding
 
 tools:
   - filesystem
   - terminal
 
 related_skills:
-  - qk-engineering-standard
+  - qk-project-memory
+  - qk-api-lifecycle
 
 knowledge_scope:
   owns:
     - code-documentation
     - architecture-docs
+    - api-documentation
   references:
     - source-code
-    - security
-    - anti-patterns
 
 # ── V8: Verification ───────────────────────────────────────
 verification:
@@ -68,532 +73,121 @@ cost: low
 latency: fast
 risk: low
 side_effects: edit_files
-produces: [report]
+produces: [docs, report]
 consumes: [source-code]
 
 token_budget:
-  max_files_read: 3
-  max_lines_per_read: 100
-  max_shell_commands: 0
+  max_files_read: 6
+  max_lines_per_read: 150
+  max_shell_commands: 1
   stop_early: true
 
 exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
 ---
 
-# qk-docs — Technical Writer & Documentation Maintainer
+# qk-docs — Technical Writer & Documentation Guardian
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
----
+Chịu trách nhiệm khởi tạo, nâng cấp và đồng bộ tài liệu kỹ thuật trong dự án. **Nguyên tắc cốt lõi: Tài liệu PHẢI phản ánh chính xác 100% code thực tế — cấm bịa đặt, cấm suy đoán tham số hay lệnh chạy.**
 
-## Memory Workflow
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention (vd: chuẩn cấu trúc tài liệu, ngôn ngữ giải thích Tiếng Việt / Code Tiếng Anh).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
-- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
-  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
-  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
-
----
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention (vd: chuẩn cấu trúc tài liệu, ngôn ngữ giải thích Tiếng Việt / Code Tiếng Anh).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
-
-
-
-### Pre-flight Retrieve (Trước khi thực thi)
-- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
-  bắt buộc tra cứu:
-  - `.agents/knowledge/index.yaml` (Shared Project Knowledge)
-  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
-
-- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
-  - Architecture
-  - Hard Bug
-  - Convention
-  - Pattern
-  - Tech Debt Pattern
-  - 👉 *Domain Focus:* Convention (vd: chuẩn cấu trúc tài liệu, ngôn ngữ giải thích Tiếng Việt / Code Tiếng Anh).
-
-- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
-  Không được xem Memory là Source of Truth.
-  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
-
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
-
-### Learning Flow (AI tự học có kiểm soát)
-- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
-  - Hard Bug có khả năng tái diễn.
-  - Pattern làm việc lặp lại trong dự án.
-  - Convention hoặc quy tắc kiến trúc mới.
-  - Quyết định Architecture quan trọng.
-  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
-  - 👉 *Domain Harvest:* Pattern hoặc Convention mới của dự án (vd: quy chuẩn viết ADR hoặc tài liệu kiến trúc mới).
-
-- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
-- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
-- AI không được tự động Promote Candidate Memory thành Project Knowledge.
-
----
-
-### Post-flight Harvest (Đề xuất → Phê duyệt)
-Sau khi hoàn thành task:
-- AI đánh giá các Candidate Memory đã tạo.
-- Nếu phát hiện tri thức có giá trị tái sử dụng:
-  - Đề xuất người dùng xem xét.
-  - Gửi yêu cầu phê duyệt thông qua:
-    - `/learn`
-    - `qk-project-memory`
-- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
-
-```
-.ai-local/candidates/  ──(Approve)──>  .agents/knowledge/index.yaml
-```
-
-- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
-  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
-
----
-
-### Ignore (Không đưa vào Memory)
-Không lưu:
-- Trace log của một session đơn lẻ.
-- Temporary debugging data.
-- Output của một lần chạy test/scan.
-- Report health tạm thời của một đợt kiểm tra.
-- Lỗi nhỏ chỉ xảy ra một lần.
-- Thông tin không có khả năng tái sử dụng.
-- 👉 *Domain Ignore:* Các lần sửa chính tả, ngữ pháp đơn lẻ.
-
----
-
-### Golden Rule
-> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
-> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
-
----
----
----
 ---
 
 ## Preconditions
-- [ ] Target code file or module is specified
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Chỉ định file cần viết docs."
-```
+Trước khi viết hoặc sửa tài liệu, AI BẮT BUỘC:
+
+- [ ] Xác định rõ đối tượng độc giả và mục đích tài liệu:
+  - Developer Onboarding → `README.md`
+  - Client / Frontend Consumer → `API docs` / OpenAPI / Swagger
+  - Kỹ sư nội bộ → Architecture Decision Records (ADR) hoặc Code Docstrings
+- [ ] Đọc trực tiếp file mã nguồn liên quan (đọc `package.json` để lấy scripts thật, đọc `.env.example` để lấy biến môi trường thật, đọc interface/DTO để lấy payload thật).
+- [ ] Nếu mã nguồn chưa được triển khai hoặc thông tin nghiệp vụ chưa rõ:
+  → **EXIT: BLOCKED**
+  → Yêu cầu: "Vui lòng implement code hoặc cung cấp đặc tả trước khi lập tài liệu."
 
 ---
 
 ## Scope
-- ✅ Document ONLY what exists in code — never invent params/behavior
-- ✅ Update docs whenever corresponding code changes
-- ✅ Use living documentation (JSDoc/TSDoc/Swagger) over isolated Markdown
 
-## Non-Goals
-- ❌ Guess API params not in the code
-- ❌ Write generic/useless comments (`// gets the user`)
-- ❌ Write docs for code that hasn't been read yet
+✅ Skill này làm:
+- Viết/cập nhật `README.md` chuẩn công nghiệp: Giới thiệu ngắn gọn, Architecture overview, Yêu cầu môi trường (Node, Go, Python, Docker), Hướng dẫn cài đặt, Cấu hình biến môi trường, Các lệnh chạy thường dùng (dev, test, build, lint).
+- Viết tài liệu API: Bảng endpoints, Headers, Request Body, Response Shapes (200, 400, 401, 403, 500) và Curl examples có thể copy-paste chạy thật.
+- Bổ sung JSDoc / TSDoc / Docstrings cho các hàm xử lý nghiệp vụ phức tạp, public SDK methods hoặc utility functions.
+- Soạn thảo Architecture Decision Records (ADR) khi có quyết định kỹ thuật lớn.
 
----
-
-## Priority Order
-| P | Task | Skip Threshold |
-|---|------|----------------|
-| P1 | Read source code first (never write before reading) | Never |
-| P2 | Document public API (exported functions/classes) | Never |
-| P3 | Document complex logic with WHY (not WHAT) | Budget < 40% |
-| P4 | Update README if public interface changed | Budget < 60% |
+❌ Skill này KHÔNG làm:
+- Thay đổi logic thực thi của mã nguồn (`side_effects: edit_files` chỉ áp dụng cho files `.md` hoặc docstrings comments).
+- Viết tài liệu dài dòng dạng lý thuyết suông không áp dụng được.
+- Bịa đặt các endpoints, env vars hoặc test credentials không tồn tại.
 
 ---
 
-## Workflow
+## Execution Steps
 
-### Phase 1 — Read Code
-1. `view_file[targeted]` — read function/class signatures
-2. Identify: params, return type, side effects, error cases
-
-**Decision:** `IF code is not readable → EXIT: BLOCKED — read code first`
-
-### Phase 2 — Write Documentation
-1. JSDoc/TSDoc format for functions: `@param`, `@returns`, `@throws`
-2. Comment: WHY (not WHAT) — code already shows what
-3. Example usage for complex APIs
-
-### Phase 3 — Verify Accuracy
-1. Re-read written docs vs code → spot check each param name
-
-**Decision:**
+### Step 1 — Khảo sát Mã nguồn Thật (Source of Truth Audit)
 ```
-IF docs match code exactly → EXIT: SUCCESS
-IF any param name or type mismatch → fix immediately
+Inputs:  Source files, manifest, config files
+Actions:
+  - Nếu viết README: Đọc `package.json` (dependencies, scripts), đọc `.env.example`, đọc Dockerfile.
+  - Nếu viết API docs: Đọc route handlers, schema validators (Zod/Joi/Pydantic/DTOs).
+  - Trích xuất: Port mặc định, Auth headers, format ngày tháng, error responses.
+Outputs: Bảng thông số kỹ thuật đã kiểm chứng
 ```
 
----
-
-## Documentation Templates
-
-### Function (JSDoc)
-```typescript
-/**
- * [One sentence — what it does and WHY it exists]
- *
- * @param {Type} paramName - [description]
- * @returns {Type} [description of return value]
- * @throws {ErrorType} [when this error is thrown]
- * @example
- * const result = functionName(arg);
- */
+### Step 2 — Lập cấu trúc tài liệu theo tiêu chuẩn
+```
+Tiêu chuẩn trình bày:
+  - Heading phân cấp rõ ràng (`#`, `##`, `###`).
+  - Dùng bảng (Markdown tables) cho env vars, API params, status codes.
+  - Code block luôn có tag ngôn ngữ (`bash`, `ts`, `json`, `yaml`).
+  - Cung cấp lệnh CLI cụ thể và kết quả mong đợi.
 ```
 
-### README Section
-```markdown
-## [Feature Name]
-[What it does — user-facing description]
+### Step 3 — Soạn thảo nội dung (Drafting)
+```
+Quy tắc hành văn:
+  - Ngắn gọn, trực diện, hướng hành động (action-oriented).
+  - Định dạng cảnh báo theo GitHub Alerts (`> [!IMPORTANT]`, `> [!WARNING]`).
+  - Hướng dẫn troubleshooting cho các lỗi cài đặt thường gặp.
+```
 
-### Usage
-[Code example]
-
-### Configuration
-| Option | Type | Default | Description |
+### Step 4 — Verification & Fact-check
+```
+Actions:
+  - Đối chiếu từng biến môi trường trong tài liệu với code thực tế.
+  - Chạy thử lệnh build/test (dry-run) nếu cần xác nhận.
+  - Kiểm tra các link nội bộ trong repo (không để link chết).
 ```
 
 ---
 
-## Evidence Format
+## Prompt Template
+
 ```
-[SEVERITY] path/to/file.ts:LINE
-Issue:      [MISSING_PARAM | WRONG_TYPE | STALE_DOC | GENERIC_COMMENT]
-Confidence: HIGH
-Fix:        [specific correction]
-```
-
----
-
-## Exit Codes
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Docs written and verified against source code | Execution complete |
-| PARTIAL | Docs written but some parts inferred (not verified) | MEDIUM confidence |
-| BLOCKED | Target source file missing or inaccessible | Cannot read source |
-| FAILED | Documentation fundamentally misrepresents the code | Gross error |
-
----
-
-## Confidence Model
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Target code read, behavior understood | Write docs definitively |
-| MEDIUM | Target code too large, inferred from types/tests | Write with disclaimer |
-| LOW | "Write docs for this feature" without pointing to code | EXIT: BLOCKED |
-
----
-
-## Severity
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Docs instruct user to do something dangerous, bypass auth, or expose secrets | Documenting destructive API without warnings, or writing guides to call internal APIs unauthenticated |
-| HIGH | API params documented incorrectly | Says string instead of object |
-| MEDIUM | Missing docs for edge cases | Doesn't explain error throws |
-| LOW | Typo or poor formatting | Misaligned markdown table |
-
----
-
-## Retry Policy
-```
-Doc verification fails
-  └─ Target code changed during doc writing
-       ├─ Re-read target code
-       └─ Do NOT retry more than 1 time
+Loại tài liệu:  [README / API Reference / Architecture Doc / JSDoc]
+Scope:          [Toàn bộ repo / Module payments / Component Button]
+Độc giả:        [New developer / Frontend dev / External partner]
+Yêu cầu đặc biệt:[Kèm curl mẫu / giải thích env vars / sơ đồ luồng]
 ```
 
----
+### Ví dụ theo nhu cầu:
 
-## Escalation Rules
+**Viết README cho Fullstack Web App**
 ```
-BLOCKED: Target source file missing
-Missing:
-  - Exact path to the code that needs documenting
-Questions:
-  1. File code nào bạn muốn viết doc? (Xin đường dẫn)
-  2. Mục tiêu của doc này là cho user hay cho developer nội bộ?
-Recommended Assumptions:
-  - Developer-facing JSDoc if inside source files
+Loại tài liệu:  README.md
+Scope:          Toàn bộ repo (Next.js + Prisma + PostgreSQL)
+Độc giả:        Developer mới vào dự án
 ```
+→ AI đọc `package.json`, `.env.example`, `schema.prisma`.
+→ AI tạo `README.md` gồm: Quickstart 3 bước (install, migrate, dev), bảng biến môi trường bắt buộc, tài liệu các lệnh test/lint, kiến trúc thư mục.
 
----
-
-## Handoff Contract
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["target_file", "doc_type"],
-  "optional_fields": ["context"]
-}
+**Viết API Docs cho Endpoint Đặt hàng**
 ```
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["updated_files", "exit_code"]
-}
+Loại tài liệu:  API Reference
+Scope:          POST /api/v1/orders
+Độc giả:        Mobile App Developer
 ```
-
----
+→ AI đọc controller + validation schema.
+→ AI tạo Markdown: Headers (`Authorization: Bearer <token>`), Request JSON schema kèm chú thích kiểu dữ liệu, Bảng response codes (201 Created, 400 Bad Request kèm chi tiết lỗi validation, 401 Unauthorized), Curl command mẫu hoàn chỉnh.
 
