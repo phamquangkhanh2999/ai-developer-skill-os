@@ -79,3 +79,12 @@ Sau khi hoàn thành, report theo format trong `.agents/AGENTS.md` — không th
 - Antigravity 2.0 IDE: đọc `.agents/rules/*.md` tại workspace root + `~/.gemini/GEMINI.md` global
 - Nếu cần rule mới → tạo file `.md` trong `.agents/rules/` (không nhét vào `AGENTS.md` của skin)
 - Sau khi sửa rule: bắt đầu hội thoại mới (`/clear`) để Antigravity nạp lại
+
+---
+
+## Terminal Visual Rendering (Diagrams & Flowcharts)
+
+Khi user yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc trực quan hóa luồng:
+- **BẮT BUỘC** render trực tiếp thành biểu đồ khối ký tự **ASCII / Unicode Box Drawing** ngay trong response của terminal.
+- **KHÔNG** chỉ trả về mã code Mermaid thô hoặc điều hướng mở trình duyệt ngoài trừ khi user yêu cầu xuất file.
+
