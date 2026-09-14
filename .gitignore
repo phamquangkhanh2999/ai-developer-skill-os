@@ -29,3 +29,7 @@ node_modules/
 # Generated reports and traces
 .agents/reports/
 evals/traces/
+
+# Kilo and local worktrees
+.kilo/
+
