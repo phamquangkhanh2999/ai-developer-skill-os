@@ -1,6 +1,6 @@
-# AI Developer Skill OS v9.3.0
+# AI Developer Skill OS v9.3.1
 
-> **v9.3.0 "EDAOS v9.3 — SSOT Trigger Discipline, 4-Tier Execution & Visual Terminal Rendering"**
+> **v9.3.1 "EDAOS v9.3 — SSOT Trigger Discipline, 4-Tier Execution & Visual Terminal Rendering"**
 
 Phiên bản **v9.3.0** mang đến 5 nâng cấp chuẩn mực kỹ thuật toàn diện cho hệ điều hành AI coding agent:
 1. **SSOT 2-Clause Trigger Standard (Anthropic Standard)** — Đồng bộ 100% mô tả kích hoạt theo cấu trúc 2 vế (Năng lực cốt lõi + Cụm từ/ngữ cảnh kích hoạt thực tế) trên cả Frontmatter `SKILL.md`, danh sách `triggers` và Quick Table routing trong `.agents/AGENTS.md`.
@@ -161,7 +161,8 @@ npx ai-developer-skill-os init --ide=antigravity --scope=2
 
 ## Changelog
 
-### v9.3.0 (2026-09-14) — EDAOS v9.3
+### v9.3.1 (2026-09-14) — EDAOS v9.3: Documentation & Governance Release
+- **Đồng bộ toàn diện tài liệu:** Cập nhật `README.md` và `CHANGELOG.md` đầy đủ chuẩn mực v9.3.
 - **SSOT 2-Clause Trigger Standard:** Áp dụng chuẩn Anthropic 2-vế cho toàn bộ 29 active skills, đồng bộ hoàn toàn giữa frontmatter `description`, `triggers` array và Quick Table trong `.agents/AGENTS.md`.
 - **Closed-Loop 4-Tier Execution Body:** Xóa bỏ toàn bộ 22 empty stubs, hoàn thiện đủ 4 phần (Preconditions, Scope, Steps, Prompt Templates).
 - **Boundary Disambiguation:** Phân định ranh giới rõ ràng giữa các cặp skill dễ nhầm lẫn (`qk-project-audit` vs `qk-project-health`, `qk-ui-audit` vs `qk-web-quality-gate`, `qk-access-policy` vs `qk-security-audit`).

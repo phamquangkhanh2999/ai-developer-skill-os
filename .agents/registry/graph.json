@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_version": "8.2",
-  "generated_at": "2026-09-14T04:58:02.842Z",
+  "generated_at": "2026-09-14T04:59:07.120Z",
   "nodes": {
     "qk-access-policy": {
       "path": ".agents/skills/qk-access-policy",

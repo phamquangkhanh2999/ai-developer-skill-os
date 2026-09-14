@@ -5,9 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
-## [9.3.0] — 2026-09-14 — EDAOS v9.3: SSOT Trigger Discipline, Full-Body Execution & Terminal Visual Rendering
+## [9.3.1] — 2026-09-14 — EDAOS v9.3: SSOT Trigger Discipline, Full-Body Execution & Complete Documentation
 
 ### Added
+- **Complete v9.3 Documentation Sync**: Updated `README.md` and `CHANGELOG.md` with comprehensive architectural documentation, active skill breakdown, and governance notes.
 - **SSOT 2-Clause Trigger Standard**: Implemented Anthropic 2-clause standard across all 29 active skills (`qk-*`). Clause 1 defines primary responsibility; Clause 2 defines explicit trigger intents including colloquial Vietnamese triggers ("kể cả khi chỉ nói...").
 - **Closed-Loop 4-Tier Body Architecture**: Completed full execution body across all 29 active skills (Preconditions, In/Out-of-Scope boundaries, Step-by-step pipeline, Role-aware Prompt Templates & Command argument specs).
 - **Direct Terminal Visual Rendering**: Enforced Unicode/ASCII Box Drawing for architectural diagrams, sequence flows, and decision trees directly in terminal output (GEMINI.md).
