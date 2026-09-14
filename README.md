@@ -1,11 +1,13 @@
-# AI Developer Skill OS v9.2.0
+# AI Developer Skill OS v9.3.0
 
-> **v9.2.0 "EDAOS v9.2 — Role-Aware Execution & Semantic Naming"**
+> **v9.3.0 "EDAOS v9.3 — SSOT Trigger Discipline, 4-Tier Execution & Visual Terminal Rendering"**
 
-Phiên bản **v9.2.0** tập trung vào 3 nâng cấp cốt lõi:
-1. **Role-Aware Execution** — AI tự động điều chỉnh chiều sâu phân tích theo role khai báo trong `DEV_PROFILE.md`
-2. **Semantic Naming** — Đổi tên skills, workflows theo đúng mục đích thực tế, loại bỏ tên trừu tượng
-3. **Prompt Templates theo Role** — Mỗi skill có examples cụ thể cho từng role (fe/be/fullstack/data/ai-engineer/devops)
+Phiên bản **v9.3.0** mang đến 5 nâng cấp chuẩn mực kỹ thuật toàn diện cho hệ điều hành AI coding agent:
+1. **SSOT 2-Clause Trigger Standard (Anthropic Standard)** — Đồng bộ 100% mô tả kích hoạt theo cấu trúc 2 vế (Năng lực cốt lõi + Cụm từ/ngữ cảnh kích hoạt thực tế) trên cả Frontmatter `SKILL.md`, danh sách `triggers` và Quick Table routing trong `.agents/AGENTS.md`.
+2. **Full-Body 4 Tầng Khép Kín (Closed-loop Body Structure)** — Toàn bộ 29 active skills được trang bị đầy đủ 4 tầng nội dung: Preconditions, Scope (In/Out-of-scope), Pipeline thực thi từng bước, và Prompt Templates theo Role.
+3. **Phân định ranh giới kỹ thuật (Boundary Disambiguation)** — Loại bỏ hoàn toàn sự chồng lấn/mơ hồ giữa các cặp kỹ năng (`qk-project-audit` vs `qk-project-health`, `qk-ui-audit` vs `qk-web-quality-gate`, `qk-access-policy` vs `qk-security-audit`).
+4. **Governed Skill Restructuring (29 Active, 2 Archived, 2 Relocated)** — Quy hoạch 29 Active skills, Archive 2 skills (`qk-frontend-architecture`, `qk-agent-observability`), Relocate 2 skills (`qk-engineering-standard` sang rules, `qk-validation-gate` sang eval runner), và bảo toàn 3 legacy skills v9.1.
+5. **Direct Terminal Visual Rendering (Unicode/ASCII Box Drawing)** — Chuẩn hóa hiển thị trực quan sơ đồ kiến trúc, flowchart trực tiếp ngay trong giao diện terminal.
 
 ---
 
@@ -60,16 +62,17 @@ npx ai-developer-skill-os init --ide=antigravity --scope=2
 
 ---
 
-## Kiến trúc v9.2
+## Kiến trúc v9.3
 
 ```
 .agents/
 ├── DEV_PROFILE.md        ← Khai báo role + stack (đọc đầu mỗi session)
-├── AGENTS.md             ← Entry point: routing table + role behavior matrix
-├── skills/               ← 33 capabilities — mỗi skill có SKILL.md
+├── AGENTS.md             ← Entry point: SSOT routing table + role behavior matrix
+├── GEMINI.md             ← Quy định riêng cho Antigravity (Terminal ASCII Diagrams, etc.)
+├── skills/               ← 29 active skills (mỗi skill có SKILL.md 4 tầng chuẩn mực)
 ├── workflows/            ← 10 execution pipelines
-├── rules/                ← 8 behavior policies
-├── registry/             ← Generated indexes (không sửa tay)
+├── rules/                ← Behavior policies (coding, safety, security, anti-patterns...)
+├── registry/             ← Generated indexes (index.yaml, graph.json — sinh tự động)
 ├── knowledge/            ← Design intelligence + domain patterns
 └── blueprints/           ← Project scaffold templates
 ```
@@ -80,79 +83,95 @@ npx ai-developer-skill-os init --ide=antigravity --scope=2
 |---|---|---|
 | `fe` | Component arch, state, a11y, bundle size | DB schema, backend arch |
 | `be` | API contract, business logic, DB perf, security | CSS, UI layout |
-| `fullstack` | FE+BE end-to-end, type-safe contract | Over-engineering |
+| `fullstack` | FE+BE end-to-end, type-safe contract | Over-engineering, microservices không cần thiết |
 | `data` | Idempotency, data quality, lineage, SLA | Application ORM, UI |
 | `ai-engineer` | Prompt eng, RAG arch, eval pipeline, hallucination | Standard CRUD |
-| `devops` | CI/CD, IaC, observability, rollback | Business logic, UI |
+| `devops` | CI/CD, IaC, observability, rollback plan | Business logic, UI |
 
 ---
 
-## 33 Skills (v9.2.0)
+## Danh mục 29 Active Skills (v9.3.0)
 
-### Core & Orchestration
-| Skill | Mô tả |
+### 1. Core & Orchestration (4 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-orchestrator` | Route yêu cầu đến đúng skill, kiểm tra preconditions |
-| `qk-context-loader` | Load context, vẽ dependency graph trước khi code |
-| `qk-project-memory` | Lưu/tra cứu project knowledge (Architecture, Convention, Pattern, Hard Bug) |
-| `qk-project-bootstrap` | Khởi tạo dự án mới với Blueprint Plugins (RAG/Coding/Workflow) |
+| `qk-orchestrator` | Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — phân tích intent, kiểm tra preconditions và routing table. |
+| `qk-context-loader` | Khảo sát kiến trúc codebase, phân tích import graph, lập bản đồ phụ thuộc và tải context chính xác trước khi code — ngăn hallucination kiến trúc. |
+| `qk-project-memory` | Quản trị Tri thức và Bộ nhớ dự án (Local Private Mode) — Quản lý tại `.ai-local/` như source code: tự động khởi tạo, bảo mật gitignore, có thể review. |
+| `qk-project-bootstrap` | Khởi tạo dự án mới HOẶC setup `DEV_PROFILE.md` cho dự án đang chạy — auto-detect stack từ manifest files, không hỏi lại những gì đã đọc được. |
 
-### Product & Architecture
-| Skill | Mô tả |
+### 2. Product & Analysis (2 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-product-specification` | Idea → Requirement → Acceptance Criteria → Technical Spec |
-| `qk-frontend-architecture` | Quyết định kiến trúc FE: component strategy, state, routing |
-| `qk-project-audit` | Gap Analysis, Feasibility, Risk Assessment — báo cáo trước khi code |
+| `qk-product-specification` | Tư duy phát triển sản phẩm: biến ý tưởng sơ khai thành yêu cầu kỹ thuật chi tiết (Idea → Requirement → Acceptance Criteria → Technical Spec). |
+| `qk-project-audit` | Phân tích toàn diện dự án: Gap Analysis, Feasibility, Risk Assessment — báo cáo trước khi code. *(Không dùng cho đo lường code smell của code đang chạy)* |
 
-### Frontend & UI
-| Skill | Mô tả |
-|---|---|
-| `qk-ui-builder` | Build/edit/audit/redesign UI từ Figma/ảnh/design reference |
-| `qk-ui-system-builder` | Build Design System và token library từ DESIGN.md |
-| `qk-design-system-engineering` | Quản trị design system: tokens, component variants, governance |
-| `qk-api-consumer` | Consume API (REST/GraphQL/tRPC), manage state, bind vào UI |
-| `qk-ui-audit` | Audit UI với 57-check Anti-Slop checklist |
-| `qk-web-quality-gate` | A11y, SEO, Web Performance, Security, UX Heuristics |
+> *Ghi chú:* `qk-frontend-architecture` đã được lưu trữ (Archived) — quy hoạch vào `qk-design-system-engineering` và `qk-ui-builder`.
 
-### Backend & Data
-| Skill | Mô tả |
+### 3. Frontend & UI (5 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-api-lifecycle` | Design + implement API với Zero-Trust — contract trước, code sau |
-| `qk-data-lifecycle` | Schema management + safe migrations (freeze → compat → cleanup) |
-| `qk-data-engineer` | Data pipelines: dbt, Spark, Airflow, Delta Lake — idempotency first |
-| `qk-access-policy` | RBAC/ABAC — định nghĩa role matrix trước, implement middleware sau |
-| `qk-db-optimizer` | Evidence-based DB optimization: EXPLAIN → analyze → index |
+| `qk-ui-builder` | Xây dựng, sửa, audit, và hoàn thiện UI component từ Figma/ảnh/mô tả layout — responsive, chuẩn token, đầy đủ hover/active/loading states. |
+| `qk-ui-system-builder` | Xây dựng Design System và token library từ `DESIGN.md` — không tự đặt ra token ngoài contract. |
+| `qk-design-system-engineering` | Quản trị hệ thống thiết kế (Định nghĩa quy tắc hệ thống, tokens, các biến thể component, governance). |
+| `qk-api-consumer` | Consume API (REST/GraphQL/tRPC), quản lý State, xử lý loading/error/empty states, bind vào UI — tuân thủ kiến trúc dự án. |
+| `qk-ui-audit` | Kiểm toán chất lượng thiết kế UI với 57-check Anti-Slop checklist: spacing nhất quán, contrast ratio, component polish, interaction states. *(Không dùng cho WCAG a11y hay SEO)* |
 
-### Engineering & Delivery
-| Skill | Mô tả |
+### 4. Backend & Data (5 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-feature-delivery` | End-to-end feature: Requirements → Context → Design → Implement |
-| `qk-bug-resolution` | Closed-loop bug fix: Observe → Hypothesis → Evidence → Fix |
-| `qk-refactor` | Tái cấu trúc code không đổi behavior — extract, simplify, decouple |
-| `qk-upgrade` | Nâng cấp library/framework an toàn — incremental, rollback bắt buộc |
-| `qk-docs` | Viết/cập nhật docs chính xác tuyệt đối — match code thực tế |
+| `qk-api-lifecycle` | Thiết kế và implement API endpoint mới với Zero-Trust — contract trước, code sau. |
+| `qk-data-lifecycle` | Quản lý Schema và Migration cơ sở dữ liệu an toàn — schema freeze, backward-compatible migrations, zero-downtime deployment. |
+| `qk-data-engineer` | Thiết kế và implement data pipeline với best practices: idempotency, data quality gate, lineage, incremental processing. |
+| `qk-access-policy` | Quản lý và thiết lập chính sách phân quyền RBAC/ABAC, định nghĩa permission matrix, sinh auth middleware bảo vệ endpoint. |
+| `qk-db-optimizer` | Tối ưu hiệu năng Database dựa trên bằng chứng kỹ thuật: phân tích EXPLAIN/ANALYZE, phát hiện N+1 queries, thiết kế Index, refactor slow query. |
 
-### Quality & Testing
-| Skill | Mô tả |
+### 5. Engineering & Delivery (5 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-test-engineering` | Test strategy: pyramid, coverage, regression, mock |
-| `qk-validation-gate` | Quality gate: linters, tests, scorecard.yaml (0–100) |
-| `qk-project-health` | Audit: Code Smells, Tech Debt, Architecture (0–100 score) |
-| `qk-code-review` | 4-Phase elite code review với Architect mindset |
-| `qk-engineering-standard` | Enforce SOLID, DRY, Clean Code với ngưỡng metric cụ thể |
+| `qk-feature-delivery` | Phát triển tính năng mới end-to-end: Requirements → Context → Design → Implement → Self-audit. |
+| `qk-bug-resolution` | Sửa lỗi bằng chu trình khép kín: Observe → Hypothesize → Evidence → Fix → Verify. |
+| `qk-refactor` | Tái cấu trúc code để dễ bảo trì, dễ test hơn — không thay đổi external behavior (extract, simplify, decouple). |
+| `qk-upgrade` | Nâng cấp library/framework an toàn — incremental strategy, audit breaking changes, rollback plan bắt buộc. |
+| `qk-docs` | Khởi tạo và duy trì tài liệu kỹ thuật chuẩn xác (README, API docs, architecture guides, JSDoc) — cam kết đồng bộ 100% với code thực tế. |
 
-### Security, DevOps & AI
-| Skill | Mô tả |
+### 6. Quality & Testing (4 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
 |---|---|
-| `qk-security-audit` | OWASP, dependency risk, secret detection, permission model |
-| `qk-devops-platform` | CI/CD strategy, deployment architecture, environment management |
-| `qk-production-release` | 8-gate mandatory checklist trước khi deploy production |
-| `qk-ai-builder` | Governed AI Agent & RAG pipeline design — eval pipeline included |
-| `qk-agent-observability` | Monitor AI skin routing decisions, failure patterns |
+| `qk-test-engineering` | Thiết kế chiến lược kiểm thử toàn diện và viết bộ test tự động: Test Pyramid (Unit, Integration, E2E), Mocking, Edge cases. |
+| `qk-project-health` | Kiểm toán toàn diện sức khỏe dự án: đo lường Code Smells, Technical Debt, độ phức tạp Cyclomatic, God files, vi phạm SOLID — chấm điểm Health Score (0–100). |
+| `qk-code-review` | Review code, AI config, hoặc skin rules theo 4 phases với Architect mindset — phát hiện bug, security issue, architecture smell. |
+| `qk-web-quality-gate` | Đo lường chất lượng kỹ thuật Web: Accessibility violations (WCAG), Core Web Vitals, Lighthouse score, SEO tags, security headers. |
+
+> *Ghi chú:*
+> - `qk-engineering-standard` đã được chuyển vị trí (Relocated) thành **Behavior Policy Rule** tại `.agents/rules/coding.md`.
+> - `qk-validation-gate` đã được chuyển vị trí (Relocated) thành **Eval Pipeline Script** tại `evals/runner.js`.
+
+### 7. Security, DevOps & AI (4 skills)
+| Skill | Mô tả theo chuẩn SSOT (2-clause) |
+|---|---|
+| `qk-security-audit` | Audit bảo mật ứng dụng theo OWASP: phát hiện lỗ hổng, secret leak, dependency risk, permission model — xuất report + remediation plan. |
+| `qk-devops-platform` | Kỹ sư nền tảng: Chiến lược CI/CD, kiến trúc triển khai, quản lý môi trường và chiến lược rollback. |
+| `qk-production-release` | Chuẩn bị release production với 8-gate checklist bắt buộc — không pass gate = không deploy. |
+| `qk-ai-builder` | Thiết kế và implement AI Agent hoặc RAG pipeline với eval criteria bắt buộc. |
+
+> *Ghi chú:* `qk-agent-observability` đã được lưu trữ (Archived) — tích hợp theo dõi vào test runner & runtime telemetry.
 
 ---
 
 ## Changelog
+
+### v9.3.0 (2026-09-14) — EDAOS v9.3
+- **SSOT 2-Clause Trigger Standard:** Áp dụng chuẩn Anthropic 2-vế cho toàn bộ 29 active skills, đồng bộ hoàn toàn giữa frontmatter `description`, `triggers` array và Quick Table trong `.agents/AGENTS.md`.
+- **Closed-Loop 4-Tier Execution Body:** Xóa bỏ toàn bộ 22 empty stubs, hoàn thiện đủ 4 phần (Preconditions, Scope, Steps, Prompt Templates).
+- **Boundary Disambiguation:** Phân định ranh giới rõ ràng giữa các cặp skill dễ nhầm lẫn (`qk-project-audit` vs `qk-project-health`, `qk-ui-audit` vs `qk-web-quality-gate`, `qk-access-policy` vs `qk-security-audit`).
+- **Skill Restructuring & Governance:**
+  - Quy hoạch 29 Active Skills chính thức.
+  - Archive 2 skills: `qk-frontend-architecture`, `qk-agent-observability`.
+  - Relocate 2 skills: `qk-engineering-standard` (thành Policy Rule `.agents/rules/coding.md`), `qk-validation-gate` (thành Eval Script `evals/runner.js`).
+  - Bảo toàn 3 legacy skills v9.1 (`qk-fe-api-integration`, `qk-help`, `qk-system-evolution`).
+- **Terminal Visual Rendering:** Quy định trong `GEMINI.md` về việc bắt buộc render sơ đồ/kiến trúc trực tiếp bằng Unicode/ASCII box drawing trong terminal.
+- **Vitest Isolation:** Thêm `vitest.config.js`, cô lập runner khỏi IDE worktrees (`.kilo/`), đảm bảo 10/10 test suites pass trong <1s.
 
 ### v9.2.0 (2026-09-11)
 - **Thêm:** `DEV_PROFILE.md` — role + stack context file, AI đọc đầu mỗi session
@@ -178,7 +197,8 @@ npx ai-developer-skill-os init --ide=antigravity --scope=2
 ## Đánh giá tự động
 
 ```bash
-npm run test:agent      # Routing intelligence tests
-npm run test:graph      # Capability graph validation
+npm test                # Vitest runner (10/10 suites pass isolated)
 npm run test:registry   # Registry consistency check
+npm run test:graph      # Capability graph validation
+npm run eval:all        # Toàn bộ AI capability eval scorecards
 ```

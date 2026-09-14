@@ -5,6 +5,43 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [9.3.0] — 2026-09-14 — EDAOS v9.3: SSOT Trigger Discipline, Full-Body Execution & Terminal Visual Rendering
+
+### Added
+- **SSOT 2-Clause Trigger Standard**: Implemented Anthropic 2-clause standard across all 29 active skills (`qk-*`). Clause 1 defines primary responsibility; Clause 2 defines explicit trigger intents including colloquial Vietnamese triggers ("kể cả khi chỉ nói...").
+- **Closed-Loop 4-Tier Body Architecture**: Completed full execution body across all 29 active skills (Preconditions, In/Out-of-Scope boundaries, Step-by-step pipeline, Role-aware Prompt Templates & Command argument specs).
+- **Direct Terminal Visual Rendering**: Enforced Unicode/ASCII Box Drawing for architectural diagrams, sequence flows, and decision trees directly in terminal output (GEMINI.md).
+- **Vitest Isolation Engine**: Added isolated `vitest.config.js` ignoring external IDE worktrees (`.kilo/`) for fast (<1s) 10/10 test suite execution.
+
+### Changed
+- **Boundary Disambiguation**: Resolved trigger overlaps between paired skills:
+  - `qk-project-audit` (pre-code gap analysis & feasibility) vs `qk-project-health` (code smells & technical debt audit of running codebase).
+  - `qk-ui-audit` (visual consistency & 57-check anti-slop) vs `qk-web-quality-gate` (WCAG a11y, performance, lighthouse).
+  - `qk-access-policy` (RBAC/ABAC & auth middleware) vs `qk-security-audit` (OWASP scan & vulnerability detection).
+- **Skill Restructuring & Governance**:
+  - Archived `qk-frontend-architecture` and `qk-agent-observability` with deprecation paths.
+  - Relocated `qk-engineering-standard` to Behavior Policy Rule (`.agents/rules/coding.md`).
+  - Relocated `qk-validation-gate` to Eval Pipeline Engine (`evals/runner.js`).
+  - Preserved 3 legacy v9.1 skills (`qk-fe-api-integration`, `qk-help`, `qk-system-evolution`) for zero-breaking backward compatibility.
+
+---
+
+## [9.2.0] — 2026-09-11 — EDAOS v9.2: Role-Aware Execution & Semantic Naming
+
+### Added
+- **DEV_PROFILE.md**: Project-level role and stack context file automatically loaded at session start.
+- **Role Behavior Matrix**: Added 6 developer profiles (`fe`, `be`, `fullstack`, `data`, `ai-engineer`, `devops`) with focus, depth, and skip guidance.
+- **Role-Aware Prompt Templates**: Integrated role-specific templates in key skills.
+
+### Changed
+- Renamed `qk-fe-api-integration` → `qk-api-consumer`.
+- Renamed `qk-system-evolution` → `qk-upgrade`.
+- Renamed `qk-project-analyst` → `qk-project-audit`.
+- Renamed workflows: `skill-evolution.yml` → `skin-governance.yml`, `research.yml` → `context-discovery.yml`.
+- Deprecated and removed legacy `qk-help` in favor of `qk-orchestrator`.
+
+---
+
 ## [9.0.0] — 2026-08 — EDAOS v9.0: Universal Project Knowledge V1 & Dual-Mode Memory Architecture
 
 ### Added
