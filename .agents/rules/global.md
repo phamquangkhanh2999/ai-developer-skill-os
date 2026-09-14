@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 9.2.0
 description: "Agent behavior policies applied globally across all capabilities."
 domain: rules
 applies_to: all
@@ -49,7 +49,7 @@ Verify each step before next
 
 - Do NOT refactor code outside the task scope.
 - Do NOT "improve" unrelated files while working.
-- Do NOT run commands with broad side effects (e.g., `rm -rf`, `git reset --hard`) without explicit user confirmation.
+- Do NOT run commands with broad side effects (`rm -rf`, `git reset --hard`) without explicit user confirmation.
 
 ---
 
@@ -57,26 +57,31 @@ Verify each step before next
 
 **MUST** respect the `token_budget` defined in each skill's frontmatter.
 
-- Read files in targeted chunks (`view_file[start:end]`), never entire large files.
+- Read files in targeted chunks, never entire large files.
 - Use `grep_search` for pattern discovery, not full-file reads.
 - Stop reading when sufficient evidence is found (`stop_early: true`).
 - Never read: `node_modules/`, `dist/`, `.git/`, binary files.
 
 ---
 
-## R-G-05: Retrieval Path (AI-Native)
+## R-G-05: Retrieval Path (Compact — v9.2)
 
-When starting a task, the agent MUST follow this retrieval sequence:
+When starting a task, follow this sequence:
 
 ```
-1. Read registry/skills-index.yml → identify candidate skills
-2. Read candidate SKILL.md(s) → confirm intent + preconditions
-3. Load referenced workflow → understand execution steps
-4. Load referenced rules (this file + coding.md if needed)
-5. Execute
+1. Read .agents/DEV_PROFILE.md     → get role + stack
+2. Match intent against routing table in .agents/AGENTS.md
+3. Read the matching SKILL.md      → confirm intent + preconditions
+4. Load referenced workflow YAML   → understand execution steps
+5. Load rules/global.md + coding.md (if edit_files task)
+6. Execute step by step
+7. Exit with: SUCCESS | BLOCKED | FAILED | PARTIAL
 ```
 
-Do NOT load all skills. Do NOT scan the entire repository.
+**Do NOT:**
+- Read `registry/skills-index.yml` to route — use the inline routing table in `.agents/AGENTS.md`
+- Load all skills at once
+- Scan entire repository before starting
 
 ---
 
@@ -100,6 +105,7 @@ Never silently terminate. Always report exit code and reason.
 - **Code, identifiers, filenames, YAML keys:** English only.
 - **Explanations, summaries, reports to user:** Vietnamese (match user's language).
 - **SKILL.md body headings:** English.
+- **Commit messages:** English (Conventional Commits format).
 
 ---
 
@@ -107,42 +113,50 @@ Never silently terminate. Always report exit code and reason.
 
 **NEVER** use `?.`, `!`, `try/catch {}` (empty catch), or type casting to suppress errors.
 
-Fix root cause. If root cause is unclear → report as BLOCKED with evidence.
+Fix root cause. If root cause is unclear → report as `BLOCKED` with evidence.
 
 ---
 
 ## R-G-09: Legacy Skill Handling
 
-Agent **MUST** prefer stable skills.
+Agent **MUST** prefer stable skills over experimental or deprecated ones.
 
-Legacy skills **MAY** be selected only when:
-1. No stable candidate exists
-2. User explicitly requests legacy behavior
-3. Migration incomplete
-
-Legacy skills **MUST NOT** outrank stable skills.
+Deprecated skills **MUST NOT** be selected. If a user asks for a deprecated skill, explain the replacement.
 
 ---
 
 ## R-G-10: Ambiguity Resolution
 
-Agent **MUST NOT** execute when:
-`selection confidence < threshold`
+Agent **MUST NOT** execute when selection confidence < threshold.
 
 Agent **SHOULD**:
 1. Ask clarification
-2. Present top candidates
-3. Explain missing information
+2. Present top 2-3 candidate skills with brief descriptions
+3. Explain what information is missing
 
 ---
 
-## R-G-11: Knowledge & Memory Discipline (V1 / AI Skin V9)
+## R-G-11: SKILL.md Description Standard (Anthropic-aligned)
 
-**MUST** govern project memory like source code: simple, reviewable, updatable, and always human-approved.
+Every SKILL.md `description` field **MUST** satisfy both:
 
-- **Self-Init & Local Private Mode:** Always use `.ai-local/` (Private Mode, gitignored) as the sole storage for learned knowledge and memory. If `.ai-local/` does not exist in the project root, the agent **MUST** automatically create the folder structure (`.ai-local/knowledge/`, `.ai-local/candidates/`) and add `.ai-local/` to the project's `.gitignore` file immediately before proceeding. Shared Mode (`.agents/knowledge/index.yaml`) is explicitly disabled and prohibited for dynamic project memory.
-- **Navigator ONLY:** Memory reduces discovery time; it is NOT a replacement for checking live source code.
-- **Strict Content Bounds:** Only store 4 categories in `knowledge/index.yaml`: `Architecture`, `Convention`, `Pattern`, and `Hard Bug`. Discard routine typos, trivial CSS, and standard CRUD.
-- **Zero-Overwrite & Portable:** Mark outdated facts as `status: Archived` (never overwrite history). Always use workspace-relative paths (`src/...`) and AST symbol names instead of hardcoded disk paths or rigid line numbers.
-- **No Silent Mutate:** Never edit memory files automatically without proposing to the developer and receiving affirmative confirmation via `/learn` or explicit instructions.
+**(a) What it does** — concrete action the skill performs
+**(b) When to use** — trigger context, keywords, situations
 
+**Bad:** `"Xử lý dữ liệu."`
+**Good:** `"Thiết kế và implement API endpoint mới (REST/GraphQL/tRPC). Dùng skill này khi user nhắc đến: viết api, tạo endpoint, thiết kế api, build api, route handler, controller — kể cả khi chỉ hỏi về request/response schema."`
+
+Description phải đủ mạnh để AI **không under-trigger** (bỏ qua skill khi lẽ ra nên dùng).
+
+---
+
+## R-G-12: Progressive Disclosure — SKILL.md Size Limit
+
+SKILL.md body (không tính frontmatter) **MUST** be < 500 lines.
+
+Nếu gần chạm 500 dòng:
+- Tách phần chi tiết ra `references/*.md`
+- Ghi rõ trong SKILL.md: *"Khi cần X → đọc `references/X.md`"*
+- Layer 1 (frontmatter) luôn trong context
+- Layer 2 (SKILL.md body) nạp khi skill active
+- Layer 3 (references/, scripts/, assets/) nạp on-demand

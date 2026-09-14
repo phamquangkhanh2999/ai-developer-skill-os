@@ -110,3 +110,26 @@ Ngoài R-C-01 đến R-C-08 ở trên, Agent **MUST** tuân thủ đầy đủ d
 - `references/anti-patterns.md` là phần **mở rộng chi tiết** của rule này, không thay thế các rule R-C-01–08.
 - Khi viết component UI, đối chiếu thêm với `references/component-cookbook.md` để đảm bảo đúng cấu trúc giải phẫu (Types → Hook → JSX).
 - Nếu 2 nguồn mâu thuẫn nhau, `coding.md` (rule cấp cao) được ưu tiên; báo cáo mâu thuẫn để cập nhật `anti-patterns.md`.
+
+---
+
+## R-C-10: Engineering Standards Checklist (Absorbed from qk-engineering-standard)
+
+> Áp dụng cho mọi skill có `side_effects: edit_files`. Đây là checklist tự động — không cần gọi skill riêng.
+
+Trước khi báo cáo task hoàn thành, **MUST** verify từng điểm:
+
+| # | Tiêu chí | Threshold |
+|---|---|---|
+| 1 | Function length | ≤ 40 lines |
+| 2 | File length | ≤ 300 lines |
+| 3 | Function params | ≤ 4 |
+| 4 | Nesting depth | ≤ 3 levels |
+| 5 | Cyclomatic complexity | ≤ 10 |
+| 6 | No magic numbers | Dùng named constants |
+| 7 | No silent errors | Không empty catch, không `!`, không `any` |
+| 8 | DRY | Extract khi logic lặp ≥ 2 lần |
+| 9 | Naming conventions | camelCase fn, PascalCase class, UPPER_SNAKE constant |
+| 10 | No `console.log` in production code | Dùng logger hoặc xóa trước commit |
+
+**Violation:** Nếu bất kỳ điểm nào không đạt → sửa trước khi report SUCCESS. Không report PARTIAL chỉ vì threshold bị vi phạm.
