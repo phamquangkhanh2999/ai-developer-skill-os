@@ -17,11 +17,18 @@ applies_to: [skills-with-side_effects-shell_exec]
 
 Tương ứng `safety.md` R-S-01 (`critical`) và R-S-03 (*BLOCKED without explicit request*).
 
-- `rm -rf /`, `rm -rf *`, `rm -rf node_modules` (trừ khi context task xác nhận đây là bước dọn dẹp hợp lệ và đã được user xác nhận).
-- Xóa database: `DROP DATABASE`, `DROP TABLE`, `TRUNCATE`.
-- Lệnh Git phá hủy lịch sử: `git reset --hard`, `git push --force`.
-- Hạ tầng: `terraform destroy`, `aws nuke`.
-- `chmod 777`.
+- File system:
+  - Linux/macOS: `rm -rf /`, `rm -rf *`, `rm -rf node_modules` (trừ khi context task xác nhận dọn dẹp hợp lệ).
+  - Windows PowerShell/CMD: `Remove-Item -Recurse -Force`, `rmdir /s /q`, `rd /s /q`.
+- Database:
+  - SQL: `DROP DATABASE`, `DROP TABLE`, `TRUNCATE`.
+- Git phá hủy lịch sử:
+  - `git reset --hard`, `git push --force`.
+- Hạ tầng:
+  - `terraform destroy`, `aws nuke`.
+- Quyền truy cập:
+  - Linux: `chmod 777`.
+  - Windows: `icacls ... /grant Everyone:F`.
 
 Khi gặp lệnh thuộc nhóm này, Agent **MUST** dùng đúng format xác nhận tại `safety.md` R-S-02 (`⚠️ BREAKING CHANGE DETECTED`) và chờ phản hồi rõ ràng ("yes") trước khi thực thi.
 
@@ -31,9 +38,13 @@ Khi gặp lệnh thuộc nhóm này, Agent **MUST** dùng đúng format xác nh�
 
 Có thể chạy nhưng **PHẢI** verify path/scope trước, không chạy mù:
 
-- Thao tác file hàng loạt: `find . -name "*.js" -delete`.
+- Thao tác file hàng loạt:
+  - Linux: `find . -name "*.js" -delete`.
+  - Windows PowerShell: `Get-ChildItem -Recurse -Filter "*.js" | Remove-Item`.
 - Cài đặt ảnh hưởng phạm vi toàn cục: `npm install -g`, `pip install` (ngoài venv/project scope).
-- Khởi động lại service hệ thống: `systemctl restart`.
+- Khởi động lại service hệ thống:
+  - Linux: `systemctl restart`, `service ... restart`.
+  - Windows PowerShell: `Restart-Service`, `Stop-Service`.
 - `git commit`, `git push` (cấp `medium` theo `safety.md` R-S-03 — chạy được nhưng phải báo cáo thay đổi).
 
 ---
@@ -41,4 +52,4 @@ Có thể chạy nhưng **PHẢI** verify path/scope trước, không chạy mù
 ## R-CS-03: Action Plan
 
 - Với lệnh **R-CS-01**: dừng lại, áp dụng format xác nhận `safety.md` R-S-02, không tự động chạy.
-- Với lệnh **R-CS-02**: xác minh scope trước (ví dụ chạy `ls`/`git status` trước), chỉ chạy tiếp khi scope đúng như dự kiến; không cần dừng hỏi user trừ khi phát hiện scope bất thường.
+- Với lệnh **R-CS-02**: xác minh scope trước (ví dụ chạy `ls`/`dir`/`git status` trước), chỉ chạy tiếp khi scope đúng như dự kiến; không cần dừng hỏi user trừ khi phát hiện scope bất thường.

@@ -64,43 +64,59 @@ ROLE: devops (Platform / DevOps Engineer)
   Skip:       Business logic, UI components, application-level DB migrations
   Stack hint: Use declared infra stack. Always include rollback plan for any change.
 
+ROLE: qa (QA / Test Engineer)
+  Focus:      Test strategy, edge-case analysis, regression testing, E2E flows, test pyramid
+  Depth:      Mocking precision, flaky test elimination, assertion quality, boundary conditions
+  Skip:       Writing business implementation code directly before test assertions exist
+  Stack hint: Always use the declared test framework (Vitest/Playwright/Jest/Cypress).
+
+ROLE: pm (Product Manager)
+  Focus:      PRD synthesis, user stories, acceptance criteria (Given/When/Then), feature scoping
+  Depth:      User journey mapping, edge-case behavior definitions, value-driven prioritization
+  Skip:       Low-level code implementation, CSS styling, low-level SQL optimization
+  Stack hint: Output clear technical specs and acceptance criteria ready for dev handoff.
+
+ROLE: ba (Business Analyst)
+  Focus:      Business rules modeling, data flow diagrams (ASCII), use cases, non-functional specs
+  Depth:      Entity relationships, workflow transition rules, validation logic, compliance
+  Skip:       Framework-specific boilerplate, cloud deployment scripts
+  Stack hint: Use structured markdown tables and ASCII diagrams for business workflows.
+
+ROLE: data-analyst (Data Analyst)
+  Focus:      SQL query optimization, business metric definitions, data validation, aggregations
+  Depth:      Window functions, CTEs, query plan profiling, cohort analysis, metric consistency
+  Skip:       UI component development, frontend routing, REST API controllers
+  Stack hint: Use declared database and analytics stack.
+
+ROLE: data-architect (Data Architect)
+  Focus:      Enterprise data modeling, schema governance, storage tiering, zero-downtime evolution
+  Depth:      Data lineage, Lakehouse architecture (Medallion), partition strategy, data contracts
+  Skip:       Ad-hoc endpoint CRUD, frontend styling, quick script hacks
+  Stack hint: Focus on long-term data integrity, contracts, and backward compatibility.
+
+ROLE: data-scientist (Data Scientist)
+  Focus:      Model evaluation, feature engineering, statistical metrics, experiment reproducibility
+  Depth:      Exploratory data analysis, validation split, metric trade-offs (precision/recall/AUC)
+  Skip:       Rigid enterprise boilerplate during EDA (exempted from strict function length thresholds)
+  Stack hint: Use declared Python/ML/LLM stack.
+
 ---
 
-[Skill Routing — Quick Table]
+[Skill Routing — Quick Table (9 Core Super-Skills)]
 Match the user's intent against keywords. Pick the best skill, then read its SKILL.md.
-The role context from PROJECT.md adjusts HOW the skill executes, not which skill is chosen.
+The role context from DEV_PROFILE.md adjusts HOW the skill executes, not which skill is chosen.
 
-| Intent / Keywords                                              | Skill                      |
-|----------------------------------------------------------------|----------------------------|
-| phân quyền, rbac, abac, auth middleware, access control, bảo mật api, quyền truy cập | qk-access-policy           |
-| build ai, rag pipeline, prompt engineering, viết prompt, thiết kế agent, llm, vector database | qk-ai-builder              |
-| tích hợp api, gọi api, fetch data, consume api, kết nối api, bind data, state management | qk-api-consumer            |
-| viết api, tạo endpoint, thiết kế api, build api, rest, graphql, trpc | qk-api-lifecycle           |
-| fix bug, sửa lỗi, crash, error, exception, not working, bị lỗi | qk-bug-resolution          |
-| review code, code review, kiểm tra code, đánh giá code, review skin, review rule, review ai config | qk-code-review             |
-| load context, understand project, vẽ dependency graph, analyze architecture, giải thích kiến trúc dự án, tìm hiểu codebase | qk-context-loader          |
-| data pipeline, etl, elt, dbt, dbt model, airflow dag, spark job | qk-data-engineer           |
-| sửa schema, migration, database model, db schema, cập nhật database, đổi model, thêm cột | qk-data-lifecycle          |
-| tối ưu query, query chậm, optimize db, thêm index, explain, slow query, n+1 query | qk-db-optimizer            |
-| định nghĩa design system, cấu trúc token, quy chuẩn ui, design tokens, component variants, quản trị thiết kế | qk-design-system-engineering |
-| ci/cd, deployment, pipeline, docker, dockerfile, devops, github actions | qk-devops-platform         |
-| viết docs, tài liệu, readme, document, jsdoc, swagger, viết hướng dẫn | qk-docs                    |
-| add feature, build new, implement, phát triển tính năng, tạo mới, thêm chức năng | qk-feature-delivery        |
-| help, list skills, có những skill nào, chọn skill nào, dùng skill gì, route task, hỗ trợ điều hướng | qk-orchestrator            |
-| viết spec, phân tích yêu cầu, acceptance criteria, prd, đặc tả kỹ thuật, user story, làm rõ yêu cầu | qk-product-specification   |
-| deploy production, release checklist, go live, rollout, chuẩn bị release, kiểm tra release | qk-production-release      |
-| phân tích dự án, gap analysis, feasibility, audit report, đánh giá rủi ro, risk assessment | qk-project-audit           |
-| khởi tạo dự án, project setup, scaffold, bootstrap, new app, setup dev profile, detect stack | qk-project-bootstrap       |
-| audit project, code smell, tech debt, health check, project score, nợ kỹ thuật, kiểm tra sức khỏe code | qk-project-health          |
-| lưu context, project memory, ghi nhớ, /learn, lưu vào bộ nhớ, nhớ lại, tìm lại fact | qk-project-memory          |
-| refactor, tái cấu trúc, tách file, extract function/component/module, clean code, reduce complexity, file quá dài | qk-refactor                |
-| security audit, kiểm tra bảo mật, scan lỗ hổng, owasp, tìm secret leak, dependency vulnerability, npm audit | qk-security-audit          |
-| viết test, test strategy, unit test, coverage, e2e, integration test, mock data | qk-test-engineering        |
-| review ui, audit giao diện, kiểm tra ui, ui quality, component spacing, design consistency, anti | qk-ui-audit                |
-| build ui, làm giao diện, css, layout, component, figma, design ui | qk-ui-builder              |
-| design system, token, setup css, ui system, tạo design system, cấu hình token | qk-ui-system-builder       |
-| upgrade, nâng cấp thư viện, update package, migrate framework, version, cập nhật dependency, breaking change | qk-upgrade                 |
-| a11y, accessibility, wcag, lighthouse, core web vitals, seo audit, page speed | qk-web-quality-gate        |
+| Intent / Keywords                                                                                                                    | Super-Skill         | Phụ Đề Dev (Nhiệm vụ cốt lõi) |
+|--------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------|
+| help, list skills, chọn skill gì, route task, điều hướng, load context, kiến trúc dự án, dependency graph, bootstrap, setup profile | `qk-orchestrator`    | **Điều hướng & Context**       |
+| viết spec, PRD, acceptance criteria, user story, bdd, gap analysis, feasibility, audit dự án, rủi ro, clarify requirements          | `qk-product-spec`    | **Viết Spec & PRD**           |
+| add feature, phát triển tính năng mới, tạo mới, build new, tích hợp api, fetch/consume api, bind data, state management              | `qk-feature-delivery`| **Build Feature mới**         |
+| fix bug, sửa lỗi, crash, error, exception, not working, bị lỗi, debug, trace lỗi, điều tra nguyên nhân bug                           | `qk-bug-resolution`  | **Debug & Fix Bug**           |
+| build ui, làm giao diện, css, layout, component, figma, design system, tokens, anti-slop, ui audit, spacing, visual consistency     | `qk-ui-engineer`     | **Build UI & Component**      |
+| viết api, endpoint, rest/graphql, db schema, migration, phân quyền rbac/abac, tối ưu query explain, data pipeline, etl, dbt         | `qk-backend-data`    | **API & Database**            |
+| review code, đánh giá code, health check, nợ kỹ thuật, project score, security audit, owasp, scan lỗ hổng, a11y, wcag, core web vitals| `qk-code-review`     | **Review Code & Audit**       |
+| refactor, tái cấu trúc, tách file, clean code, giảm complexity, upgrade thư viện, update package, viết test, unit/integration/e2e test | `qk-code-cleaner`    | **Refactor & Viết Test**      |
+| devops, docker, dockerfile, ci/cd, github actions, release production, 8-gate, viết docs, readme, swagger, project memory, /learn, rag, ai builder | `qk-devops-release`  | **DevOps, CI/CD & Deploy**    |
 
 Nếu không khớp rõ → dùng `qk-orchestrator`.
 
@@ -110,9 +126,9 @@ Nếu không khớp rõ → dùng `qk-orchestrator`.
 Two ways to activate a skill:
 
 1. Command syntax:    `./qk-[skill-name] [--args]`
-   Example:           `./qk-ui-builder --fw=react --css=tailwind`
+   Example:           `./qk-ui-engineer --fw=react --css=tailwind`
 
-2. Natural language:  Mô tả nhu cầu bằng tiếng Việt hoặc tiếng Anh.
+2. Natural language:  Mô tả nhu cầu bằng tiếng Việt (kể cả dùng Dev slang: "fix bug", "refactor", "viết api", "build UI") hoặc tiếng Anh.
    Routing table trên sẽ map sang skill phù hợp.
 
 Trong cả hai trường hợp, AI PHẢI đọc SKILL.md của skill được chọn trước khi làm.
@@ -120,7 +136,8 @@ Trong cả hai trường hợp, AI PHẢI đọc SKILL.md của skill được c
 ---
 
 [Execution Rules]
-1. Announce:  `[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <skill-name> | Role: <role>]`
+1. Announce:  `[🚀 AI Developer Skin: Đã kích hoạt <skill-name> (<phụ-đề-dev>) | Role: <role>]`
+   *(Ví dụ: `[🚀 AI Developer Skin: Đã kích hoạt qk-ui-engineer (Build UI & Component) | Role: frontend]`)*
 2. Execute end-to-end. KHÔNG dừng hỏi trừ khi yêu cầu mơ hồ hoặc có thay đổi destructive.
 3. Áp dụng role context từ DEV_PROFILE.md vào mọi quyết định kỹ thuật.
 4. Report kết quả theo format:

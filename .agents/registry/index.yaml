@@ -2,285 +2,90 @@
 # DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.
 schema_version: 1
 manifest_version: '8.2'
-generated_at: '2026-09-14T04:59:07.121Z'
+generated_at: '2026-09-15T02:41:18.517Z'
 stats:
-  total_scanned: 34
-  active: 29
-  archived: 2
-  relocated: 2
+  total_scanned: 9
+  active: 9
+  archived: 0
+  relocated: 0
 capabilities:
-  qk-access-policy:
-    path: .agents/skills/qk-access-policy
-    version: 9.1.0
+  qk-backend-data:
+    path: .agents/skills/qk-backend-data
+    version: 10.1.0
     status: stable
     tags:
-      - access
-      - policy
-    dependencies: []
-  qk-agent-observability:
-    path: .agents/skills/qk-agent-observability
-    version: 9.1.0
-    status: archived
-    tags:
-      - agent
-      - observability
-    dependencies: []
-  qk-ai-builder:
-    path: .agents/skills/qk-ai-builder
-    version: 9.1.0
-    status: stable
-    tags:
-      - ai
-      - builder
-    dependencies: []
-  qk-fe-api-integration:
-    path: .agents/skills/qk-fe-api-integration
-    version: 9.1.0
-    status: stable
-    tags:
-      - fe
-      - api
-      - integration
-    dependencies: []
-  qk-api-lifecycle:
-    path: .agents/skills/qk-api-lifecycle
-    version: 9.1.0
-    status: stable
-    tags:
-      - api
-      - lifecycle
-    dependencies: []
+      - backend
+      - data
+    dependencies:
+      - feature-delivery
   qk-bug-resolution:
     path: .agents/skills/qk-bug-resolution
-    version: 9.1.0
+    version: 10.1.0
     status: stable
     tags:
       - bug
       - resolution
-    dependencies: []
+    dependencies:
+      - bug-resolution
+  qk-code-cleaner:
+    path: .agents/skills/qk-code-cleaner
+    version: 10.1.0
+    status: stable
+    tags:
+      - code
+      - cleaner
+    dependencies:
+      - refactor
   qk-code-review:
     path: .agents/skills/qk-code-review
-    version: 9.1.0
+    version: 10.1.0
     status: stable
     tags:
       - code
       - review
-    dependencies: []
-  qk-context-loader:
-    path: .agents/skills/qk-context-loader
-    version: 9.1.0
-    status: stable
-    tags:
-      - context
-      - loader
-    dependencies: []
-  qk-data-engineer:
-    path: .agents/skills/qk-data-engineer
-    version: 9.2.0
-    status: stable
-    tags:
-      - data
-      - engineer
     dependencies:
-      - feature-delivery
-  qk-data-lifecycle:
-    path: .agents/skills/qk-data-lifecycle
-    version: 9.1.0
+      - code-review
+  qk-devops-release:
+    path: .agents/skills/qk-devops-release
+    version: 10.1.0
     status: stable
-    tags:
-      - data
-      - lifecycle
-    dependencies: []
-  qk-db-optimizer:
-    path: .agents/skills/qk-db-optimizer
-    version: 9.1.0
-    status: stable
-    tags:
-      - db
-      - optimizer
-    dependencies: []
-  qk-design-system-engineering:
-    path: .agents/skills/qk-design-system-engineering
-    version: 9.1.0
-    status: experimental
-    tags:
-      - design
-      - system
-      - engineering
-    dependencies: []
-  qk-devops-platform:
-    path: .agents/skills/qk-devops-platform
-    version: 9.1.0
-    status: experimental
     tags:
       - devops
-      - platform
-    dependencies: []
-  qk-docs:
-    path: .agents/skills/qk-docs
-    version: 9.1.0
-    status: stable
-    tags:
-      - docs
-    dependencies: []
-  qk-engineering-standard:
-    path: .agents/skills/qk-engineering-standard
-    version: 9.1.0
-    status: relocated
-    tags:
-      - engineering
-      - standard
-    dependencies: []
+      - release
+    dependencies:
+      - production-release
   qk-feature-delivery:
     path: .agents/skills/qk-feature-delivery
-    version: 9.1.0
+    version: 10.1.0
     status: stable
     tags:
       - feature
       - delivery
-    dependencies: []
-  qk-frontend-architecture:
-    path: .agents/skills/qk-frontend-architecture
-    version: 9.1.0
-    status: archived
-    tags:
-      - frontend
-      - architecture
-    dependencies: []
-  qk-help:
-    path: .agents/skills/qk-help
-    version: 9.1.0
-    status: deprecated
-    tags:
-      - help
-    dependencies: []
+    dependencies:
+      - feature-delivery
   qk-orchestrator:
     path: .agents/skills/qk-orchestrator
-    version: 9.1.0
+    version: 10.1.0
     status: stable
     tags:
       - orchestrator
-    dependencies: []
-  qk-product-specification:
-    path: .agents/skills/qk-product-specification
-    version: 9.1.0
-    status: experimental
+    dependencies:
+      - context-discovery
+  qk-product-spec:
+    path: .agents/skills/qk-product-spec
+    version: 10.1.0
+    status: stable
     tags:
       - product
-      - specification
-    dependencies: []
-  qk-production-release:
-    path: .agents/skills/qk-production-release
-    version: 9.1.0
+      - spec
+    dependencies:
+      - spec-driven-development
+  qk-ui-engineer:
+    path: .agents/skills/qk-ui-engineer
+    version: 10.1.0
     status: stable
     tags:
-      - production
-      - release
-    dependencies: []
-  qk-project-audit:
-    path: .agents/skills/qk-project-audit
-    version: 9.2.0
-    status: stable
-    tags:
-      - project
-      - audit
+      - ui
+      - engineer
     dependencies:
       - feature-delivery
-  qk-project-bootstrap:
-    path: .agents/skills/qk-project-bootstrap
-    version: 9.1.0
-    status: stable
-    tags:
-      - project
-      - bootstrap
-    dependencies: []
-  qk-project-health:
-    path: .agents/skills/qk-project-health
-    version: 9.1.0
-    status: stable
-    tags:
-      - project
-      - health
-    dependencies: []
-  qk-project-memory:
-    path: .agents/skills/qk-project-memory
-    version: 9.1.0
-    status: stable
-    tags:
-      - project
-      - memory
-    dependencies: []
-  qk-refactor:
-    path: .agents/skills/qk-refactor
-    version: 9.1.0
-    status: stable
-    tags:
-      - refactor
-    dependencies:
-      - refactor
-  qk-security-audit:
-    path: .agents/skills/qk-security-audit
-    version: 9.1.0
-    status: experimental
-    tags:
-      - security
-      - audit
-    dependencies: []
-  qk-system-evolution:
-    path: .agents/skills/qk-upgrade
-    version: 9.1.0
-    status: stable
-    tags:
-      - upgrade
-    dependencies: []
-  qk-test-engineering:
-    path: .agents/skills/qk-test-engineering
-    version: 9.1.0
-    status: stable
-    tags:
-      - test
-      - engineering
-    dependencies: []
-  qk-ui-audit:
-    path: .agents/skills/qk-ui-audit
-    version: 9.1.0
-    status: stable
-    tags:
-      - ui
-      - audit
-    dependencies: []
-  qk-ui-builder:
-    path: .agents/skills/qk-ui-builder
-    version: 9.1.0
-    status: stable
-    tags:
-      - ui
-      - builder
-    dependencies:
-      - feature-delivery
-  qk-ui-system-builder:
-    path: .agents/skills/qk-ui-system-builder
-    version: 9.1.0
-    status: stable
-    tags:
-      - ui
-      - system
-      - builder
-    dependencies: []
-  qk-validation-gate:
-    path: .agents/skills/qk-validation-gate
-    version: 9.1.0
-    status: relocated
-    tags:
-      - validation
-      - gate
-    dependencies: []
-  qk-web-quality-gate:
-    path: .agents/skills/qk-web-quality-gate
-    version: 9.1.0
-    status: experimental
-    tags:
-      - web
-      - quality
-      - gate
-    dependencies: []

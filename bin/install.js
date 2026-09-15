@@ -144,12 +144,12 @@ function rewriteAbsolutePaths(targetDir) {
         for (const d of DIRS_TO_REWRITE) {
           const re = new RegExp(`\\.agents/${d}`, 'g');
           if (re.test(content)) {
-            content = content.replace(re, `${targetPosix}/${d}`);
+            content = content.replace(re, () => `${targetPosix}/${d}`);
             changed = true;
           }
         }
         if (content.includes('.agents/skills.json')) {
-          content = content.replace(/\.agents\/skills\.json/g, `${targetPosix}/skills.json`);
+          content = content.replace(/\.agents\/skills\.json/g, () => `${targetPosix}/skills.json`);
           changed = true;
         }
         if (changed) fs.writeFileSync(fullPath, content, 'utf8');
@@ -273,12 +273,20 @@ async function runInstall(ideKey, scopeKey, rl) {
     } else {
       copyRecursiveSync(sourceDir, targetDir);
       console.log(`  ✅ Copied .agents/ → ${targetDir}`);
-
       if (isGlobal && config.postInstall === 'rewriteAbsolutePaths') {
         rewriteAbsolutePaths(targetDir);
       }
       if (config.postInstall === 'renameToClaude') {
         renameToClaude(targetDir);
+      }
+      if (ide === 'antigravity') {
+        const geminiSource = path.resolve(__dirname, '..', 'GEMINI.md');
+        if (fs.existsSync(geminiSource)) {
+          const geminiDest = isGlobal ? path.join(homeDir, '.gemini', 'GEMINI.md') : path.join(cwd, 'GEMINI.md');
+          fs.mkdirSync(path.dirname(geminiDest), { recursive: true });
+          fs.copyFileSync(geminiSource, geminiDest);
+          console.log(`  ✅ Copied GEMINI.md → ${geminiDest}`);
+        }
       }
     }
 

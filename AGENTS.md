@@ -15,7 +15,7 @@ Cấu trúc quan trọng:
 .agents/
 ├── AGENTS.md          ← Entry point của skin system (không phải file này)
 ├── DEV_PROFILE.md     ← Khai báo role + stack của developer
-├── skills/            ← 33 skill definitions (mỗi skill có SKILL.md)
+├── skills/            ← 9 Core Super-Skills (mỗi skill có SKILL.md)
 ├── workflows/         ← 10 execution pipelines (YAML)
 ├── rules/             ← Behavior policies (global, coding, safety, security...)
 └── registry/          ← Generated indexes — KHÔNG sửa tay
@@ -32,7 +32,7 @@ Khi làm việc trong repo này, ưu tiên dùng skin system thay vì làm trự
 3. Đọc SKILL.md tương ứng trước khi thực thi
 4. Report kết quả theo format trong `.agents/AGENTS.md`
 
-Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` hoặc `qk-refactor`.
+Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` hoặc `qk-code-cleaner`.
 
 ---
 
@@ -42,18 +42,17 @@ Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` 
 - **YAML:** 2-space indent, quote strings có special chars, comment giải thích mục đích
 - **Naming:** kebab-case cho file/folder, UPPER_CASE cho constant YAML keys
 - **SKILL.md:** Frontmatter có `name` + `description` đầy đủ — description PHẢI nêu trigger keywords
-- Không sửa file trong `registry/` bằng tay — chỉ regenerate qua `node tooling/generate-registry.js`
+- Không sửa file trong `registry/` bằng tay — chỉ regenerate qua `node tooling/build-registry.js`
 
 ---
 
 ## Guardrails (Critical — không được bỏ qua)
 
 - **KHÔNG** xóa hoặc rename skill folder mà không cập nhật routing table trong `.agents/AGENTS.md`
-- **KHÔNG** sửa `registry/` files bằng tay — luôn regenerate
+- **KHÔNG** sửa `registry/` files bằng tay — luôn regenerate qua `node tooling/build-registry.js`
 - **KHÔNG** thêm `.ai-local/` vào repo — đã gitignore, là private workspace memory
 - **KHÔNG** hardcode đường dẫn tuyệt đối trong bất kỳ SKILL.md hay workflow YAML nào
 - **PHẢI** bump version trong SKILL.md khi thay đổi behavior (patch cho fix nhỏ, minor cho feature mới)
-- **PHẢI** cập nhật `skills-index.yml` khi thêm/xóa/đổi tên skill
 
 ---
 

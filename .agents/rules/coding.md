@@ -43,13 +43,19 @@ view_file[StartLine:EndLine] → read only that section
 
 ---
 
-## R-C-04: Naming Conventions
+## R-C-04: Naming Conventions (Language-Aware)
 
-- **Functions/methods:** `camelCase`, verb prefix (`getUser`, `buildPayload`, `validateInput`)
-- **Classes/types:** `PascalCase`
-- **Constants:** `UPPER_SNAKE_CASE`
-- **Files:** `kebab-case` (e.g., `user-service.ts`)
-- **Booleans:** `is`, `has`, `can` prefix (`isLoading`, `hasError`)
+- **Functions/methods:**
+  - TypeScript/JavaScript/Java/Go: `camelCase`, verb prefix (`getUser`, `buildPayload`, `validateInput`).
+  - Python (PEP 8): `snake_case`, verb prefix (`get_user`, `build_payload`, `validate_input`).
+- **Classes/types:** `PascalCase` (mọi ngôn ngữ).
+- **Constants:** `UPPER_SNAKE_CASE`.
+- **Files:**
+  - TypeScript/JavaScript utilities: `kebab-case` (e.g., `user-service.ts`).
+  - React/UI Components: `PascalCase` (e.g., `UserCard.tsx`, `SidebarNav.vue`).
+  - Python: `snake_case` (e.g., `user_service.py`, `auth_middleware.py`).
+  - Java/C#: `PascalCase` (e.g., `UserService.java`, `OrderController.cs`).
+- **Booleans:** `is`, `has`, `can` prefix (`isLoading` / `is_loading`, `hasError` / `has_error`).
 
 ---
 
@@ -72,11 +78,14 @@ if (retryCount > MAX_RETRIES) { ... }
 
 ```typescript
 // ❌ Never
-try { ... } catch (_) {}
-const value = data!.field;
-const value = data?.field ?? defaultValue; // OK only if intentional
+try { ... } catch (_) {}              // Suppressing errors silently
+const value = data!.field;            // Non-null assertion (!) bypasses type safety
+const value = (data as any).field;    // Bypassing compiler checks with 'any'
 
-// ✅ Always
+// ✅ Safe Navigation (Allowed & Recommended)
+const value = data?.field ?? defaultValue; // Optional chaining is SAFE for nullable/optional properties
+
+// ✅ Always handle errors explicitly
 try { ... } catch (err) { 
   logger.error(err); 
   throw new AppError('Context message', { cause: err }); 
@@ -129,7 +138,16 @@ Trước khi báo cáo task hoàn thành, **MUST** verify từng điểm:
 | 6 | No magic numbers | Dùng named constants |
 | 7 | No silent errors | Không empty catch, không `!`, không `any` |
 | 8 | DRY | Extract khi logic lặp ≥ 2 lần |
-| 9 | Naming conventions | camelCase fn, PascalCase class, UPPER_SNAKE constant |
+| 9 | Naming conventions | Tuân thủ R-C-04 theo ngôn ngữ |
 | 10 | No `console.log` in production code | Dùng logger hoặc xóa trước commit |
 
 **Violation:** Nếu bất kỳ điểm nào không đạt → sửa trước khi report SUCCESS. Không report PARTIAL chỉ vì threshold bị vi phạm.
+
+---
+
+## R-C-11: Data Science & Exploratory Notebooks Exemption
+
+> Áp dụng cho: Files `.ipynb` (Jupyter Notebooks), thư mục `notebooks/`, hoặc scripts phân tích dữ liệu thử nghiệm (EDA).
+
+- **Miễn trừ:** Các cell thử nghiệm dữ liệu trong Notebooks được miễn trừ khỏi ngưỡng cứng R-C-03 (Function length ≤ 40 dòng, Cyclomatic complexity ≤ 10) để bảo toàn sự liền mạch trong nghiên cứu mô hình.
+- **Quy chuẩn chuyển giao (Handoff):** Khi chuyển đổi code phân tích/model từ Notebook thành Pipeline chính thức (`dbt`, `Airflow`, API inference service), code hoàn chỉnh **PHẢI** tuân thủ đầy đủ R-C-01 đến R-C-10.

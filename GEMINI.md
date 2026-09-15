@@ -1,90 +1,115 @@
-# GEMINI.md — Rule riêng cho Antigravity
+# GEMINI.md — Quy Chuẩn Tối Ưu Hóa Riêng Cho Antigravity IDE
 
-> Override hoặc bổ sung cho `AGENTS.md` — chỉ áp dụng khi chạy qua Antigravity.
-> Không lặp lại nội dung đã có trong `AGENTS.md`.
+> Override và bổ sung chuyên sâu cho `AGENTS.md` — chỉ áp dụng khi chạy trên Antigravity (Google Gemini).
+> Biến Antigravity thành một AI Cockpit hoàn chỉnh: tận dụng Artifacts, Interactive Modal, Clickable Links và Slash Commands.
 
 ---
 
-## Pre-flight: Đọc DEV_PROFILE trước mọi thứ
+## 1. Pre-flight: Đọc DEV_PROFILE Trước Mọi Thứ
 
 Khi bắt đầu session làm việc trong repo này:
 1. Đọc `.agents/DEV_PROFILE.md` — lấy `role`, `stack`, `ai_style`, `constraints`
-2. Đọc `.agents/AGENTS.md` — load routing table và Role Behavior Matrix
+2. Đọc `.agents/AGENTS.md` — load routing table và Role Behavior Matrix (hỗ trợ 14 roles)
 3. Sau đó mới xử lý yêu cầu của user
 
 Nếu `.agents/DEV_PROFILE.md` chưa có hoặc stack trống → gợi ý: `./qk-project-bootstrap`
 
 ---
 
-## Skin Activation — Cách kích hoạt skill trong Antigravity
+## 2. Interactive Planning Mode (Nút Phê Duyệt Modal Tự Động)
 
-Hai cách:
+Với mọi task có complexity ≥ Medium (thay đổi ≥ 2 files hoặc ảnh hưởng kiến trúc/database):
 
-**1. Command syntax** — gõ trực tiếp:
-```
-./qk-feature-delivery
-./qk-bug-resolution
-./qk-api-lifecycle --lang=python --fw=fastapi
-```
-
-**2. Natural language** — mô tả nhu cầu bằng tiếng Việt hoặc English:
-```
-"fix bug login crash"
-"viết api tạo đơn hàng"
-"refactor UserService.ts — quá dài"
-```
-→ Antigravity tự map sang skill đúng qua routing table trong `.agents/AGENTS.md`
-
-Sau khi chọn skill: **BẮT BUỘC đọc SKILL.md** của skill đó trước khi làm.
+1. **Khởi tạo Artifact Kế hoạch:** Tạo artifact `implementation_plan.md` với metadata:
+   ```json
+   {
+     "RequestFeedback": true,
+     "UserFacing": true,
+     "Summary": "Mô tả ngắn về kế hoạch"
+   }
+   ```
+2. **Kích hoạt Modal:** Thuộc tính `RequestFeedback: true` sẽ kích hoạt giao diện phê duyệt tương tác của Antigravity, cung cấp nút **[Proceed]** trực quan cho người dùng.
+3. **Chốt chặn an toàn:** **BẮT BUỘC DỪNG LẠI** và chờ người dùng bấm **Proceed** hoặc phản hồi xác nhận trước khi bắt đầu sửa đổi mã nguồn.
+4. **Báo cáo nghiệm thu:** Sau khi hoàn thành thực thi, cập nhật artifact `walkthrough.md` tổng kết kết quả kèm các thay đổi đã kiểm thử.
 
 ---
 
-## Planning Mode (Task > 1 file)
+## 3. Artifact Dual-Stream Reporting (Tiết Kiệm Context Window)
 
-Với task có complexity ≥ medium (thay đổi ≥ 2 file hoặc ảnh hưởng nhiều component):
-1. Tạo Plan dạng task list trước — mô tả từng bước
-2. Hiển thị plan cho user, chờ xác nhận
-3. Sau khi user duyệt → chuyển sang Autopilot thực thi từng bước
+Với các kỹ năng xuất báo cáo lớn (`qk-code-review`, `qk-project-health`, `qk-project-audit`, `qk-security-audit`, `qk-ui-audit`, `qk-web-quality-gate`):
 
-**KHÔNG** bắt đầu edit code trước khi plan được duyệt với task phức tạp.
-
----
-
-## Manager View — Chạy song song
-
-Tasks **độc lập** (không share file, không có dependency) → có thể chạy song song trong Manager view.
-
-Tasks **có dependency** → chạy tuần tự trong 1 agent, theo thứ tự trong plan.
-
-Ví dụ:
-- ✅ Song song: "viết SKILL.md cho qk-upgrade" và "viết SKILL.md cho qk-api-consumer"
-- ❌ Tuần tự: "detect stack" → "viết DEV_PROFILE.md" (phải có output bước 1 mới làm bước 2)
+- **Stream 1 (Tài liệu chuyên sâu):** Ghi toàn bộ báo cáo chi tiết vào file Artifact markdown (`review_report.md`, `health_scorecard.md`, `security_audit.md`) trong thư mục brain của phiên làm việc. Tận dụng đầy đủ định dạng cao cấp:
+  - GitHub Alerts (`> [!NOTE]`, `> [!IMPORTANT]`, `> [!WARNING]`)
+  - Bảng ma trận định lượng (Tables)
+  - Đoạn mã mẫu đối chiếu (Diffs)
+- **Stream 2 (Cửa sổ Chat):** **KHÔNG** xả toàn bộ 300–500 dòng báo cáo vào chat. Chỉ in bản **Tóm tắt điều hành (Executive Summary)** ngắn gọn từ 15–25 dòng, bao gồm:
+  - Điểm số chất lượng / Mức độ nghiêm trọng
+  - Top 3 vấn đề then chốt cần khắc phục ngay
+  - Đường dẫn trỏ tới file Artifact chi tiết
 
 ---
 
-## Announce Format
+## 4. Chuẩn Hóa Clickable File Links (Dynamic Workspace Path)
 
-Khi kích hoạt skill, announce ngay dòng đầu:
-```
-[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <skill-name> | Role: <role>]
-```
-
-Sau khi hoàn thành, report theo format trong `.agents/AGENTS.md` — không thay đổi format.
-
----
-
-## Antigravity-specific: Đọc file quy tắc theo đúng path
-
-- Antigravity CLI: đọc `AGENTS.md` hoặc `GEMINI.md` tại thư mục **đang chạy lệnh** (`pwd`)
-- Antigravity 2.0 IDE: đọc `.agents/rules/*.md` tại workspace root + `~/.gemini/GEMINI.md` global
-- Nếu cần rule mới → tạo file `.md` trong `.agents/rules/` (không nhét vào `AGENTS.md` của skin)
-- Sau khi sửa rule: bắt đầu hội thoại mới (`/clear`) để Antigravity nạp lại
+Để người dùng click mở file tức thì trong editor của Antigravity IDE:
+- **BẮT BUỘC** định dạng mọi đường dẫn file và symbol mã nguồn dưới dạng link markdown giao thức `file:///`.
+- **ĐƯỜNG DẪN ĐỘNG (Dynamic Resolution):** AI phải tự động nối thư mục gốc của workspace hiện tại (`<workspace-root>`) với đường dẫn tương đối của file, **TUYỆT ĐỐI KHÔNG** hardcode ổ đĩa hay đường dẫn tĩnh:
+  - Cú pháp chuẩn: `[<filename>](file:///<workspace-root>/<relative-path>)`
+  - Ví dụ liên kết file: `[UserService.ts](file:///<workspace-root>/src/services/UserService.ts)`
+  - Ví dụ liên kết dòng/hàm: `[handleAuth](file:///<workspace-root>/src/controllers/auth.ts#L45-L60)`
+- Trên Windows, **BẮT BUỘC** chuẩn hóa dấu gạch chéo xuôi `/` cho URL (ví dụ: `C:/Users/...`), không dùng dấu gạch chéo ngược `\`.
+- Không in đường dẫn file dạng text trần trụi (như `src/app.ts`), luôn bọc trong link `file:///`.
 
 ---
 
-## Terminal Visual Rendering (Diagrams & Flowcharts)
+## 5. Tích Hợp Slash Commands Độc Quyền Của Antigravity
 
-Khi user yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc trực quan hóa luồng:
+Chủ động gợi ý người dùng kích hoạt 4 slash commands bản địa trong các ngữ cảnh phù hợp:
+
+1. **/grill-me:** Gợi ý khi người dùng bắt đầu tính năng mới hoặc dùng `qk-product-spec` (Viết Spec & PRD), giúp phỏng vấn sâu người dùng để chốt chặt chẽ các quyết định thiết kế còn mơ hồ.
+2. **/goal:** Gợi ý khi thực hiện task quy mô lớn xuyên suốt nhiều module hoặc chạy tái cấu trúc dài với `qk-feature-delivery` (Build Feature mới) để AI kiên trì thực thi đến cùng mà không dừng giữa chừng.
+3. **/learn:** Gợi ý khi người dùng vừa chỉnh sửa hoặc hướng dẫn AI xử lý một setup phức tạp, giúp ghi nhớ tri thức vĩnh viễn vào `qk-devops-release` (DevOps, CI/CD & Deploy).
+4. **/schedule:** Gợi ý khi cần đặt lịch chạy kiểm tra sức khỏe hệ thống hoặc telemetry định kỳ.
+
+---
+
+## 6. Manager View & Reactive Task Execution
+
+- **Chạy song song (Manager View):** Các tác vụ độc lập (không share file, không phụ thuộc nhau) có thể chạy song song trong các agent con. Các tác vụ có quan hệ phụ thuộc phải chạy tuần tự.
+- **Thực thi phản ứng (Reactive - Không Polling):** Antigravity tự động kích hoạt lại agent khi background command hoàn tất qua hệ thống tin nhắn. **TUYỆT ĐỐI KHÔNG** chạy vòng lặp sleep hay polling kiểm tra status.
+
+---
+
+## 7. Terminal Visual Rendering (Diagrams & Flowcharts)
+
+Khi người dùng yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc trực quan hóa luồng:
 - **BẮT BUỘC** render trực tiếp thành biểu đồ khối ký tự **ASCII / Unicode Box Drawing** ngay trong response của terminal.
-- **KHÔNG** chỉ trả về mã code Mermaid thô hoặc điều hướng mở trình duyệt ngoài trừ khi user yêu cầu xuất file.
+- **KHÔNG** chỉ trả về mã code Mermaid thô hoặc điều hướng mở trình duyệt ngoài trừ khi người dùng yêu cầu xuất file.
+
+---
+
+## 8. Cú Pháp Kích Hoạt Kỹ Năng
+
+- **Lệnh trực tiếp:** `./qk-[skill-name] [--args]`
+- **Ngôn ngữ tự nhiên:** Mô tả nhu cầu → Antigravity tự map sang skill đúng qua bảng Quick Table trong `.agents/AGENTS.md`.
+- **Dòng thông báo chuẩn (kèm phụ đề Dev):**
+  ```
+  [🚀 AI Developer Skin: Đã kích hoạt kỹ năng <skill-name> (<phụ-đề-dev>) | Role: <role>]
+  ```
+  *Ví dụ:* `[🚀 AI Developer Skin: Đã kích hoạt qk-ui-engineer (Build UI & Component) | Role: frontend]`
+
+---
+
+## 9. Kỷ Luật Tập Trung & Chống Ép Pass Ảo (Laser Focus & Zero-Faked Pass)
+
+AI chạy trên Antigravity IDE **TUYỆT ĐỐI TUÂN THỦ 5 ĐIỀU RĂN KỸ THUẬT**:
+1. **Tập trung phẫu thuật (Laser Focus):** Chỉ sửa đúng điểm cần sửa, chỉ thêm đúng file cần thêm. Tuyệt đối KHÔNG quét toàn bộ thư mục bừa bãi, KHÔNG tự ý sinh ra hàng loạt file helper/wrapper/adapter rác, KHÔNG "tiện tay" sửa các file ngoài phạm vi yêu cầu.
+2. **Phân tích bản chất mới được kết luận:** Mọi giải pháp phải dựa trên việc đọc hiểu mã nguồn thực tế và call-stack. Cấm phỏng đoán mò, cấm dùng giải pháp bề mặt che đậy lỗi gốc.
+3. **Cấm "hack bẩn" để cố ép pass:**
+   - CẤM ép kiểu `as any` hoặc `@ts-ignore` để giấu lỗi type.
+   - CẤM dùng `try/catch` rỗng để nuốt lỗi cho code khỏi crash.
+   - CẤM hardcode dữ liệu giả tạo để lừa test case.
+4. **Post-Implementation Self-Review:** Làm xong không được tuyên bố hoàn tất ngay. BẮT BUỘC review lại requirement, scope diff (những file đã sửa), và chất lượng code trước khi verify và báo cáo. `Implementation complete ≠ Task complete`.
+5. **Xác minh thật trước khi tuyên bố (Truth-First Reporting):** Chưa chạy lệnh test/build thực tế trong terminal thì **CẤM TUYỆT ĐỐI** ghi "Pass 100%" hay "All Green". Phải ghi rõ: `"Trạng thái: NOT VERIFIED — Đã kiểm tra tĩnh. Chưa chạy test tự động trong môi trường này (Cần user test tay)"`.
+
 

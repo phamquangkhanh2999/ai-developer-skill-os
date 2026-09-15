@@ -5,7 +5,7 @@
 # ─────────────────────────────────────────────────
 
 ## Role
-# Chọn một trong: fe | be | fullstack | data | devops | ai-engineer
+# Chọn một trong: fe | be | fullstack | data | devops | ai-engineer | qa | pm | ba | data-analyst | data-architect | data-scientist
 role: fullstack
 
 ## Stack
@@ -21,7 +21,7 @@ stack:
   infra:      ""          # Docker / GitHub Actions / Vercel / AWS / GCP
   language:   ""          # TypeScript / JavaScript / Python / Go / Java
 
-## Data Stack (điền nếu role = data hoặc ai-engineer)
+## Data Stack (điền nếu role = data, data-analyst, data-architect, data-scientist hoặc ai-engineer)
 data_stack:
   pipeline:   ""          # dbt / Spark / Airflow / Prefect / Dagster
   warehouse:  ""          # BigQuery / Snowflake / Redshift / ClickHouse
@@ -93,3 +93,37 @@ constraints:
 #   stack: { infra: "GitHub Actions + AWS ECS", language: "Python + Bash" }
 #   → AI sẽ: tập trung CI/CD, IaC, observability, rollback strategy, security hardening
 #   → AI sẽ KHÔNG: viết business logic, thiết kế API
+#
+# 👤 QA / Test Engineer (qa):
+#   role: qa
+#   stack: { test_framework: "Vitest / Playwright / Jest", language: "TypeScript" }
+#   → AI sẽ: tập trung Test Pyramid, mocking strategy, edge cases, E2E flows, regression testing
+#   → AI sẽ KHÔNG: tự ý sửa business logic khi chưa có test assertion rõ ràng
+#
+# 👤 Product Manager (pm):
+#   role: pm
+#   → AI sẽ: tập trung PRD, User Stories, Acceptance Criteria (Given/When/Then), Feature Scoping, Risk Analysis
+#   → AI sẽ KHÔNG: sa đà vào viết mã nguồn chi tiết hay tranh luận CSS/SQL
+#
+# 👤 Business Analyst (ba):
+#   role: ba
+#   → AI sẽ: tập trung Use Cases, Data Flow Diagrams (ASCII), Business Rules Matrix, Non-Functional Specs
+#   → AI sẽ KHÔNG: can thiệp vào low-level framework implementation
+#
+# 👤 Data Analyst (data-analyst):
+#   role: data-analyst
+#   stack: { database: "PostgreSQL / BigQuery", language: "SQL + Python" }
+#   → AI sẽ: tập trung tối ưu SQL queries, Aggregations, Window Functions, Business Metrics, Data Quality
+#   → AI sẽ KHÔNG: thiết kế frontend components hay REST controllers
+#
+# 👤 Data Architect (data-architect):
+#   role: data-architect
+#   data_stack: { warehouse: "Snowflake / BigQuery", format: "Delta / Iceberg", pipeline: "dbt" }
+#   → AI sẽ: tập trung Enterprise Data Modeling, Schema Governance, Zero-Downtime Migration, Storage Layer
+#   → AI sẽ KHÔNG: viết ad-hoc CRUD endpoints
+#
+# 👤 Data Scientist (data-scientist):
+#   role: data-scientist
+#   data_stack: { llm: "Gemini / OpenAI", vector_db: "pgvector", pipeline: "Python + Pandas / PyTorch" }
+#   → AI sẽ: tập trung Model Evaluation, Feature Engineering, linh hoạt trong Notebooks (miễn trừ ngưỡng SOLID)
+#   → AI sẽ KHÔNG: áp đặt boilerplate doanh nghiệp cứng nhắc lên code thử nghiệm nghiên cứu

@@ -1,159 +1,108 @@
 ---
-# ── Identity ───────────────────────────────────────────────
 name: qk-orchestrator
-version: 9.2.0
+version: 10.1.0
 status: stable
-description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — phân tích intent, kiểm tra preconditions và routing table. Dùng skill này khi user nhắc đến: help, list skills, có những skill nào, chọn skill nào, dùng skill gì, route task, hỗ trợ điều hướng — kể cả khi yêu cầu mơ hồ không rõ nên làm gì."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-
-# ── V9: Classification ─────────────────────────────────────
-type: orchestrator
-
-intent:
-  - task-routing
-  - skill-selection
-  - precondition-checking
-
-complexity:
-  level: low
-  criteria:
-    files_affected: "1"
-    has_behavior_change: false
-    has_external_dependency: false
-    has_breaking_change: false
-
+subtitle: "Điều hướng & Context"
+description: "Cổng điều phối trung tâm: Nạp kiến trúc dự án (Context Graph), tự động khởi tạo hồ sơ (Bootstrap DEV_PROFILE.md) và định tuyến chính xác đến 1 trong 9 Super-Skills. Dùng khi: help, list skills, chọn skill gì, route task, load context, tìm hiểu codebase, giải thích kiến trúc dự án, setup dev profile, bootstrap dự án mới — TUYỆT ĐỐI KHÔNG trực tiếp code hay sửa file dự án."
+tools:
+  - filesystem
+  - terminal
+rules:
+  - global
+  - coding-standards
+workflow: context-discovery
 triggers:
   - "help"
   - "list skills"
-  - "có những skill nào"
   - "chọn skill nào"
   - "dùng skill gì"
   - "route task"
-  - "hỗ trợ điều hướng"
-
-
-selection:
-  priority: high
-  confidence_threshold: 0.80
-
-# ── V8: References ─────────────────────────────────────────
-workflow: research                  # Uses research workflow to understand request
-
-rules:
-  - global
-
-tools:
-  - filesystem
-
-related_skills:
-  - qk-context-loader
-
-knowledge_scope:
-  owns:
-    - task-routing
-    - skill-selection
-    - precondition-validation
-  references:
-    - all-skills                    # References registry to make decisions
-    - architecture
-
-# ── V8: Verification ───────────────────────────────────────
-verification:
-  required: true
-  strategy: review
-
-examples: []
-learnings: []
-
-# ── V7 Runtime ─────────────────────────────────────────────
-execution_mode: deterministic
-cost: low
-latency: fast
-risk: low
-side_effects: none
-produces: [plan]
-consumes: [user-request]
-
-token_budget:
-  max_files_read: 2
-  max_lines_per_read: 100
-  max_shell_commands: 0
-  stop_early: true
-
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
+  - "điều hướng"
+  - "load context"
+  - "tìm hiểu codebase"
+  - "giải thích kiến trúc"
+  - "kiến trúc dự án"
+  - "project bootstrap"
+  - "setup profile"
 ---
 
-# qk-orchestrator — Request Routing & Skill Dispatcher
+# qk-orchestrator — Điều hướng & Context (Dispatcher & Context Engine)
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
-Chịu trách nhiệm phân tích ý định (Intent) của người dùng, đối chiếu với bối cảnh dự án (`DEV_PROFILE.md`) và bảng điều hướng trung tâm (`AGENTS.md`) để chọn đúng skill kỹ thuật phù hợp nhất.
+---
+
+## 1. Nguyên Tắc Cốt Lõi & Luật Chống Over-Engineering
+
+> **Core Principle:** The dispatcher routes; it does not implement. Load just enough context to make precise technical decisions without overwhelming the conversation window.
+> **Dispatch Principle:** Routing must be evidence-based from manifest files, never from guesses.
+
+### 🛡️ Anti-Overengineering Rule (CẤM ÔM ĐỒM & CẤM XẢ CONTEXT RÁC)
+- **Tuyệt đối không tự ý viết code:** Orchestrator là cổng điều hướng. Tuyệt đối KHÔNG tự ý sửa file logic, fix bug, hay tạo component. Sau khi nạp context xong, BẮT BUỘC chuyển giao quyền sang đúng Super-Skill chuyên trách.
+- **Không xả đồ thị dependency khổng lồ:** Tránh quét và in ra hàng trăm dependencies không cần thiết. Chỉ tập trung vào cấu trúc phân tầng chính và các điểm kết nối cốt lõi.
+
+### 🔒 Laser Focus & Repository Inspection Rule (R-G-13)
+- Chỉ đọc các tệp manifest và entry point chính (`package.json`, `tsconfig.json`, `src/index`, router).
+- **CẤM** quét toàn bộ thư mục sâu hoặc đọc nội dung các file implementation khi chỉ làm nhiệm vụ điều phối.
+
+### ⚖️ Verify Before Claim Rule (XÁC MINH TRƯỚC KHI BÁO CÁO - R-G-14.7)
+- **Đọc manifest thực tế:** Phải đọc trực tiếp các file manifest (`package.json`, `go.mod`, `pyproject.toml`) trước khi công bố tech stack. Không tự suy diễn hay phỏng đoán framework.
 
 ---
 
-## Preconditions
+## 2. Ranh Giới & Phạm Vi Kỹ Thuật (Hard Boundaries)
 
-Trước khi đề xuất hoặc kích hoạt skill, AI BẮT BUỘC kiểm tra:
+### ✅ Việc skill này BẮT BUỘC làm:
+- **Auto-Bootstrapper:** Kiểm tra và khởi tạo `.agents/DEV_PROFILE.md` nếu chưa có từ việc phân tích manifest thực tế.
+- **Architectural Context Graph:** Nhận diện các ranh giới module (Presentation, Domain, Data, Infra) để định hướng thực thi.
+- **Strict Dispatching:** Ánh xạ chính xác yêu cầu của người dùng vào 1 trong 9 Super-Skills và kích hoạt kèm thông báo chuẩn.
+- **Unicode Box Drawing:** Vẽ sơ đồ luồng/kiến trúc trực quan bằng Unicode Box Drawing trong terminal khi người dùng yêu cầu trực quan hóa.
 
-- [ ] Đọc `.agents/DEV_PROFILE.md` nếu có để xác định vai trò (`role`) và `stack`.
-- [ ] Phân tích từ khóa và hành động mong muốn từ câu lệnh của người dùng.
-- [ ] Kiểm tra xem yêu cầu là đơn nhiệm (Single task) hay đa nhiệm phức tạp (Compound task).
-- [ ] Nếu yêu cầu hoàn toàn mơ hồ, không có manh mối kỹ thuật:
-  → **EXIT: PARTIAL**
-  → Đặt tối đa 2 câu hỏi trắc nghiệm ngắn để làm rõ mục tiêu.
-
----
-
-## Scope
-
-✅ Skill này làm:
-- Phân loại intent của user vào 1 trong 29 active skills của hệ thống.
-- Cung cấp cú pháp kích hoạt skill chính xác (`./qk-<skill-name>`).
-- Lập lộ trình chuỗi kỹ năng (Skill Pipeline) cho các tác vụ lớn gồm nhiều bước.
-- Trả về danh mục tra cứu nhanh các kỹ năng khả dụng trong hệ thống.
-
-❌ Skill này KHÔNG làm:
-- Trực tiếp sửa code, chạy lệnh phá hủy hoặc can thiệp file hệ thống.
-- Thay thế các kỹ năng chuyên biệt khi user đã chỉ định rõ ràng mục tiêu.
+### ❌ Việc skill này TUYỆT ĐỐI KHÔNG làm:
+- Tự tay sửa bug hay viết tính năng → Phải chuyển giao ngay cho skill tương ứng.
 
 ---
 
-## Execution Steps
+## 3. Quy Trình Điều Phối Tuần Tự (Sequential Procedure)
 
-### Step 1 — Intent Extraction & Context Alignment
 ```
-Inputs:  Prompt từ user, DEV_PROFILE.md (role, stack)
-Actions:
-  - Nhận diện động từ hành động chính (tạo mới, sửa lỗi, tối ưu, đo lường, review, tài liệu).
-  - Đối chiếu với Role Behavior Matrix trong AGENTS.md để áp dụng góc nhìn phù hợp.
-Output: Primary Intent & Constraints
-```
-
-### Step 2 — Quick Table Matching & Disambiguation
-```
-Inputs:  Primary Intent, AGENTS.md Routing Table
-Actions:
-  - Tra cứu từ khóa đối khớp trong Quick Table.
-  - Xử lý xung đột nếu có 2 skill liên quan (ví dụ: qk-refactor vs qk-feature-delivery; qk-ui-builder vs qk-ui-audit).
-  - Chọn skill có độ đặc hiệu (specificity) cao nhất.
-Output: Target Skill Recommendation
-```
-
-### Step 3 — Plan & Dispatch
-```
-Inputs:  Target Skill Recommendation
-Actions:
-  - Nếu là tác vụ đơn: Hướng dẫn người dùng hoặc tự động kích hoạt skill qua cú pháp `./qk-<name>`.
-  - Nếu là tác vụ đa bước: Lập danh sách thứ tự thực hiện (Pipeline), ví dụ: qk-context-loader → qk-feature-delivery → qk-test-engineering.
-Exit: SUCCESS
+[Bước 1: Pre-flight Check]  ── Đọc/Tạo DEV_PROFILE.md, nhận diện role và primary stack
+            │
+            ▼
+[Bước 2: Context Mapping]   ── Xác định module liên quan (chỉ quét trong phạm vi cần thiết)
+            │
+            ▼
+[Bước 3: Strict Dispatch]   ── Kích hoạt đúng Super-Skill kèm thông báo chuẩn
 ```
 
 ---
 
-## Prompt Template
+## 4. Thích Ứng Theo Role Kỹ Thuật (Role Adaptation)
 
-```
-Yêu cầu:    [Mô tả nhu cầu cần làm của bạn — ví dụ: "tôi muốn tối ưu trang danh sách sản phẩm"]
-Bối cảnh:   [Đang gặp khó khăn gì / file nào liên quan]
-Mong muốn:  [Cần gợi ý skill đơn lẻ hay một quy trình nhiều bước]
+| Role | Trọng tâm khi khởi tạo & nạp Context | Thông tin nạp ưu tiên |
+|---|---|---|
+| `frontend` | Component hierarchy, client state (Zustand/Redux), styling setup | Next/Vite config, UI library, token files |
+| `backend` | API gateway, auth guards, service layer, ORM models | Database connection, router definitions, middleware |
+| `fullstack` | Hợp đồng giao tiếp (Contracts), type sharing, migration, UI binding | Prisma/Drizzle schema, OpenAPI specs, client API SDK |
+| `data` | Ingestion pipelines, warehouse connections, data transformations | dbt models, Airflow DAGs, SQL seeds |
+| `devops` | Container configs, CI workflows, environment secrets, deployment | Dockerfile, docker-compose, .github/workflows |
+| `qa` | Testing pyramid, fixture setups, mock environments, test runners | vitest.config, playwright.config, mocks directory |
+
+---
+
+## 5. Báo Cáo Nghiệm Thu Chuẩn Xác (Truth-First Report)
+
+```markdown
+🧭 Orchestrator Context Summary                     [Role: <role> | Stack: <primary stack>]
+─────────────────────────────────────────────────────────────────────
+Trạng thái dự án:   [Đã nhận diện hồ sơ | Auto-bootstrapped DEV_PROFILE.md]
+Cấu trúc phát hiện: [Monolith / Monorepo / Microservices]
+Định tuyến tiếp:    [Tên Super-Skill được kích hoạt]
+
+Bản đồ kiến trúc nhanh:
+  📁 [Source Code](file:///<workspace-root>/src): [Mô tả ngắn phân tầng]
+  📄 [Cấu hình chính](file:///<workspace-root>/package.json): [Dependencies chính đã xác thực]
+
+⚡ Chuyển giao thực thi:
+  Đang kích hoạt [<Super-Skill>](file:///<workspace-root>/.agents/skills/<super-skill>/SKILL.md) để xử lý yêu cầu.
 ```

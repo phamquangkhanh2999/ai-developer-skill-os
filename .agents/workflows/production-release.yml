@@ -21,7 +21,7 @@ ide_binding:
 steps:
   - id: gate_1_validation
     name: "Gate 1: Validation Gate"
-    purpose: "Đảm bảo qk-validation-gate đã pass trước khi release"
+    purpose: "Đảm bảo qk-code-review đã pass trước khi release"
     required: true
     skip_if: null
     inputs: []

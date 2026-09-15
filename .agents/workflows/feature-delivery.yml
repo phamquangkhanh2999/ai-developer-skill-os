@@ -44,7 +44,7 @@ steps:
     name: "Load context"
     purpose: "Hiểu codebase hiện tại đủ để implement đúng cách"
     required: true
-    skip_if: "Context graph đã có từ qk-context-loader"
+    skip_if: "Context graph đã có từ qk-orchestrator"
     inputs:
       - affected_areas
     outputs:

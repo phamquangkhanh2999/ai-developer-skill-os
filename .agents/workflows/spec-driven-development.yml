@@ -1,6 +1,6 @@
 name: spec-driven-development
-version: 8.0.0
-description: "Workflow phát triển dựa trên đặc tả (Specification-Driven Development)."
+version: 9.3.0
+description: "Workflow phát triển sản phẩm dựa trên đặc tả kỹ thuật (Specification-Driven Development): Idea → Requirements → Acceptance Criteria (BDD) → Technical Spec → Plan → Verify."
 
 owner:
   type: engineering
@@ -12,76 +12,98 @@ triggers:
   - "write a spec"
   - "viết đặc tả"
   - "spec this out"
+  - "acceptance criteria"
+  - "prd"
+  - "technical spec"
+  - "user story"
   - "design before implementing"
-  - "technical spec for"
 
 ide_binding:
   slash_command: "/spec"
-  aliases: ["/spec-driven"]
+  aliases: ["/grill-me", "/prd", "/spec-driven"]
 
 steps:
-  - id: clarify_requirement
-    name: "Clarify Requirements"
-    purpose: "Làm rõ yêu cầu từ ý tưởng ban đầu"
+  - id: clarify_requirements
+    name: "Làm rõ yêu cầu & Bóc tách ý tưởng"
+    purpose: "Biến ý tưởng thô sơ thành mục tiêu sản phẩm rõ ràng, không mơ hồ"
     required: true
     inputs:
       - user_idea
+      - dev_profile
     outputs:
-      - clarified_requirement
+      - problem_statement    # Vấn đề cần giải quyết
+      - target_actors        # Ai sử dụng tính năng này
+      - scope_boundary       # In-scope vs Out-of-scope rõ ràng
     actions:
-      - "Hỏi các câu hỏi làm rõ scope và constraints"
-      - "Xác định rõ outcome mong muốn"
+      - "Gợi ý người dùng chạy lệnh slash /grill-me để phỏng vấn sâu nếu yêu cầu còn nhiều giả định chưa rõ"
+      - "Xác định rõ vấn đề cốt lõi (Core Problem) và giá trị kinh doanh (Value)"
+      - "Vạch rõ ranh giới: Làm gì (In-scope) và KHÔNG làm gì (Out-of-scope)"
+    exit_on_fail: BLOCKED
 
-  - id: create_spec
-    name: "Create Specification"
-    purpose: "Viết tài liệu đặc tả kỹ thuật"
+  - id: acceptance_criteria
+    name: "Xây dựng Acceptance Criteria (BDD)"
+    purpose: "Định nghĩa định lượng tiêu chí hoàn thành theo chuẩn Given / When / Then"
     required: true
     inputs:
-      - clarified_requirement
+      - problem_statement
+      - target_actors
+      - scope_boundary
     outputs:
-      - technical_spec
+      - criteria_matrix      # Bảng Given / When / Then cho từng use-case
+      - edge_cases           # Kịch bản biên, lỗi, rớt mạng, mất quyền
     actions:
-      - "Thiết kế API contracts, data models"
-      - "Xác định UI/UX heuristics"
-      - "Spec phải quy định rõ boundary validation (R-SEC-04)"
-      - "Xác định edge cases"
+      - "Viết kịch bản theo chuẩn BDD (Given / When / Then) cho từng User Story"
+      - "Liệt kê ít nhất 3 edge cases (dữ liệu rỗng, timeout, quyền truy cập không hợp lệ)"
+      - "Xác định rõ HTTP status code mong đợi cho từng kịch bản lỗi"
+
+  - id: technical_specification
+    name: "Thiết kế Đặc tả Kỹ thuật (Technical Spec)"
+    purpose: "Xác định kiến trúc hệ thống, API contracts, và Data schema trước khi code"
+    required: true
+    inputs:
+      - criteria_matrix
+      - edge_cases
+    outputs:
+      - data_models          # Entities, Interfaces, DB Schema migrations
+      - api_contracts        # Endpoint, Method, Request/Response JSON schemas
+      - architecture_diagram # Sơ đồ luồng ASCII Unicode Box Drawing
+    actions:
+      - "Vẽ sơ đồ luồng dữ liệu (Data Flow) bằng Unicode/ASCII Box Drawing (chuẩn GEMINI.md)"
+      - "Thiết kế Type contracts (TypeScript interfaces / Pydantic models / Protobuf)"
+      - "Xác định rõ các điểm chốt chặn bảo mật (Boundary Validation R-SEC-04)"
+      - "Đảm bảo contract giữa Frontend và Backend đồng bộ 100%"
 
   - id: create_plan
-    name: "Create Plan"
-    purpose: "Lên kế hoạch triển khai"
+    name: "Lập Kế hoạch Triển khai (Implementation Plan)"
+    purpose: "Phân rã spec thành các task cụ thể và kích hoạt phê duyệt tương tác"
     required: true
     inputs:
-      - technical_spec
+      - technical_specification
     outputs:
-      - implementation_plan
+      - implementation_plan  # File implementation_plan.md
     actions:
-      - "Chia nhỏ spec thành các task cụ thể"
-      - "Đánh giá rủi ro và thứ tự ưu tiên"
+      - "Phân chia task theo thứ tự an toàn: Types/Schema → Business Logic/Service → UI/Route → Tests"
+      - "Ước lượng rủi ro và blast radius cho từng file"
+      - "Trên Antigravity IDE: Tạo implementation_plan.md kèm RequestFeedback: true để kích hoạt Modal phê duyệt"
+    human_checkpoint:
+      condition: "Task có độ phức tạp medium/high (≥ 2 files hoặc sửa schema DB)"
+      message: "Bản đặc tả và kế hoạch kỹ thuật đã sẵn sàng. Xác nhận để chuyển sang bước thực thi."
 
-  - id: implement
-    name: "Implement"
-    purpose: "Triển khai mã nguồn"
-    required: true
-    inputs:
-      - implementation_plan
-      - technical_spec
-    outputs:
-      - source_code
-    actions:
-      - "Code theo đúng spec"
-
-  - id: verify
-    name: "Verify Implementation"
-    purpose: "Kiểm tra mã nguồn với đặc tả"
+  - id: verify_compliance
+    name: "Kiểm định Tuân thủ Đặc tả"
+    purpose: "Đối chiếu mã nguồn sau khi code với 100% Acceptance Criteria ban đầu"
     required: true
     inputs:
       - source_code
-      - technical_spec
+      - criteria_matrix
     outputs:
-      - verification_result
+      - compliance_report    # Pass rate, tiêu chí chưa đạt (nếu có)
     actions:
-      - "Đối chiếu kết quả code với acceptance criteria"
+      - "Kiểm tra từng tiêu chí Given/When/Then — đánh dấu ✅ hoặc ❌"
+      - "Chạy automated tests nếu có để chứng minh tiêu chí đã đạt"
+      - "Không cho phép đóng task nếu còn bất kỳ acceptance criterion nào chưa thỏa mãn"
+    exit_on_fail: PARTIAL
 
 escalation:
   max_retries: 2
-  on_failure: "Báo cáo lệch spec và xin chỉ thị"
+  on_failure: "Báo cáo độ lệch so với spec, chỉ ra blocker và yêu cầu chỉ thị từ Tech Lead / User"
