@@ -341,3 +341,28 @@ Status: NOT VERIFIED
 Reason: <concrete reason>
 ```
 Do not infer PASS from code inspection alone.
+
+---
+
+## R-G-15: Prompt Interpretation & Control Plane Gate (Risk Gate, Change Budget, Scope Expansion & Evidence Gate)
+
+**MUST** translate raw or concise user requests into an explicit, reviewable **Compiled Execution Prompt**, expose **Prompt Delta**, and enforce 4 control gates before and during execution.
+
+```text
+RAW REQUEST ──► COMPILE & DELTA ──► RISK & BUDGET GATE ──► DECIDE MODE (AUTO/CONFIRM/ASK) ──► EXECUTE ──► SCOPE EXPANSION GATE? ──► EVIDENCE GATE ──► REPORT
+```
+
+### 15.1. Core Maxim
+> `AI MUST NEVER INCREASE THE USER'S INTENDED SCOPE SILENTLY.`  
+> *(The AI may increase implementation detail, but must never silently increase business scope, behavioral scope, architectural scope, security scope, data scope, or change budget).*
+
+### 15.2. Mandatory Gates
+1. **Risk Gate (`Complexity ≠ Risk`):** Đánh giá độc lập Complexity (`L0–L4`) và Risk (`R0–R4`). Nếu `Risk >= R2` hoặc `Complexity >= L3` hoặc đụng đến Auth/DB/Production → BẮT BUỘC chọn chế độ `CONFIRM`.
+2. **Change Budget Gate:** Khóa giới hạn thay đổi (Kỳ vọng 1–3 files, tối đa 5 files; 0 new dependencies; không đổi API/DB trừ khi được yêu cầu).
+3. **Scope Expansion Gate:** Trong khi code, nếu phát hiện phạm vi thực tế vượt Compiled Scope → **STOP EXPANSION NGAY LẬP TỨC**, báo cáo nguyên nhân và recompile để chờ người dùng duyệt (`CONFIRM`).
+4. **Evidence Gate:** `CLAIM LEVEL <= EVIDENCE LEVEL`. Không được khẳng định pass khi chỉ đọc code. Phải phân biệt rõ `VERIFIED`, `PARTIALLY VERIFIED`, và `UNVERIFIED`.
+
+- **Reference:** Detailed policies in [PROMPT_RULES.md](./PROMPT_RULES.md) and [.agents/rules/prompt-compiler.md](.agents/rules/prompt-compiler.md).
+
+
+

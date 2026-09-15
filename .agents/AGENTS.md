@@ -102,13 +102,14 @@ ROLE: data-scientist (Data Scientist)
 
 ---
 
-[Skill Routing — Quick Table (9 Core Super-Skills)]
+[Skill Routing — Quick Table (10 Super-Skills)]
 Match the user's intent against keywords. Pick the best skill, then read its SKILL.md.
 The role context from DEV_PROFILE.md adjusts HOW the skill executes, not which skill is chosen.
 
 | Intent / Keywords                                                                                                                    | Super-Skill         | Phụ Đề Dev (Nhiệm vụ cốt lõi) |
 |--------------------------------------------------------------------------------------------------------------------------------------|----------------------|-------------------------------|
 | help, list skills, chọn skill gì, route task, điều hướng, load context, kiến trúc dự án, dependency graph, bootstrap, setup profile | `qk-orchestrator`    | **Điều hướng & Context**       |
+| viết prompt, compile prompt, viết lại prompt, chuẩn hóa prompt, prompt compiler, tối ưu prompt, prompt rulebook                      | `qk-prompt-compiler` | **Biên Dịch & Chuẩn Hóa Prompt**|
 | viết spec, PRD, acceptance criteria, user story, bdd, gap analysis, feasibility, audit dự án, rủi ro, clarify requirements          | `qk-product-spec`    | **Viết Spec & PRD**           |
 | add feature, phát triển tính năng mới, tạo mới, build new, tích hợp api, fetch/consume api, bind data, state management              | `qk-feature-delivery`| **Build Feature mới**         |
 | fix bug, sửa lỗi, crash, error, exception, not working, bị lỗi, debug, trace lỗi, điều tra nguyên nhân bug                           | `qk-bug-resolution`  | **Debug & Fix Bug**           |
@@ -138,9 +139,10 @@ Trong cả hai trường hợp, AI PHẢI đọc SKILL.md của skill được c
 [Execution Rules]
 1. Announce:  `[🚀 AI Developer Skin: Đã kích hoạt <skill-name> (<phụ-đề-dev>) | Role: <role>]`
    *(Ví dụ: `[🚀 AI Developer Skin: Đã kích hoạt qk-ui-engineer (Build UI & Component) | Role: frontend]`)*
-2. Execute end-to-end. KHÔNG dừng hỏi trừ khi yêu cầu mơ hồ hoặc có thay đổi destructive.
-3. Áp dụng role context từ DEV_PROFILE.md vào mọi quyết định kỹ thuật.
-4. Report kết quả theo format:
+2. Prompt Compiler Alignment (R-G-15): Khi nhận câu lệnh thô (fix bug, thêm tính năng, phân tích dữ liệu...), AI BẮT BUỘC hiển thị khối **Prompt đã chuyển hóa (Compiled Execution Prompt)** công khai (nêu rõ Role, Objective, Scope In/Out, Constraints, và Acceptance Criteria) trước hoặc ngay khi thực thi để người dùng giám sát.
+3. Execute end-to-end. KHÔNG dừng hỏi trừ khi yêu cầu mơ hồ hoặc có thay đổi destructive.
+4. Áp dụng role context từ DEV_PROFILE.md vào mọi quyết định kỹ thuật.
+5. Report kết quả theo format:
 
 ```
 🔧 <Skill Name> Summary                              [Role: <role> | Stack: <primary stack>]

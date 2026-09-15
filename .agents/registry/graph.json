@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_version": "8.2",
-  "generated_at": "2026-09-15T02:41:18.516Z",
+  "generated_at": "2026-09-15T03:23:54.272Z",
   "nodes": {
     "qk-backend-data": {
       "path": ".agents/skills/qk-backend-data",
@@ -106,6 +106,19 @@
       "dependents": [],
       "is_orphan": false
     },
+    "qk-prompt-compiler": {
+      "path": ".agents/skills/qk-prompt-compiler",
+      "version": "11.1.0",
+      "tags": [
+        "prompt",
+        "compiler"
+      ],
+      "dependencies": [
+        "prompt-compilation"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
     "qk-ui-engineer": {
       "path": ".agents/skills/qk-ui-engineer",
       "version": "10.1.0",
@@ -145,13 +158,16 @@
     "qk-product-spec": [
       "spec-driven-development"
     ],
+    "qk-prompt-compiler": [
+      "prompt-compilation"
+    ],
     "qk-ui-engineer": [
       "feature-delivery"
     ]
   },
   "stats": {
-    "total_scanned": 9,
-    "active": 9,
+    "total_scanned": 10,
+    "active": 10,
     "archived": 0,
     "relocated": 0,
     "has_cycles": false

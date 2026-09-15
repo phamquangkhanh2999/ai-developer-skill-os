@@ -72,6 +72,7 @@ ai_style: concise        # concise | detailed | teaching
 ```bash
 # Kích hoạt bằng lệnh trực tiếp:
 ./qk-orchestrator              # Điều phối, nạp ngữ cảnh dự án
+./qk-prompt-compiler           # Biên dịch & chuẩn hóa prompt (hiển thị trước khi code)
 ./qk-product-spec              # Viết PRD, user stories, acceptance criteria
 ./qk-feature-delivery          # Phát triển tính năng mới end-to-end
 ./qk-bug-resolution            # Sửa bug và điều tra nguyên nhân gốc
@@ -82,6 +83,7 @@ ai_style: concise        # concise | detailed | teaching
 ./qk-devops-release            # Docker, CI/CD, 8-gate release, docs, RAG
 
 # Hoặc dùng ngôn ngữ tự nhiên — AI tự động nhận diện:
+"biên dịch lại prompt cho task này"        → qk-prompt-compiler
 "fix bug crash màn hình checkout"         → qk-bug-resolution
 "thiết kế api đặt hàng và migration db"   → qk-backend-data
 "review bảo mật và đo nợ kỹ thuật dự án"  → qk-code-review
@@ -91,11 +93,12 @@ ai_style: concise        # concise | detailed | teaching
 
 ---
 
-## Danh Mục 9 Core Super-Skills
+## Danh Mục 10 Core Super-Skills
 
 | Super-Skill | Phụ Đề Dev (Nhiệm vụ cốt lõi) | Phạm vi & Năng lực thực chiến | Các kỹ năng cũ đã hợp nhất |
 |---|---|---|---|
 | `qk-orchestrator` | **Điều hướng & Context** | Điều phối tổng thể, nạp context đồ thị phụ thuộc (Context Graph), khởi tạo cấu hình dự án (Bootstrap) | `qk-orchestrator`, `qk-context-loader`, `qk-project-bootstrap`, `qk-help` |
+| `qk-prompt-compiler` | **Biên Dịch & Chuẩn Hóa Prompt** | Bộ biên dịch câu lệnh thô (Raw Request) thành Execution Prompt 9 thành phần kỹ thuật, công khai minh bạch trước khi thực thi | *Mới* (tích hợp [PROMPT_RULES.md](./PROMPT_RULES.md)) |
 | `qk-product-spec` | **Viết Spec & PRD** | Đặc tả sản phẩm, phân tích PRD, Acceptance Criteria (BDD/Gherkin), Gap Analysis và Đánh giá tính khả thi | `qk-product-specification`, `qk-project-audit` |
 | `qk-feature-delivery` | **Build Feature mới** | Phát triển tính năng mới trọn gói, tích hợp API Client, xử lý loading/error states, quản lý State | `qk-feature-delivery`, `qk-api-consumer`, `qk-fe-api-integration` |
 | `qk-bug-resolution` | **Debug & Fix Bug** | Chẩn đoán và dập lỗi theo chu trình khép kín 5 bước, loại bỏ giả định mù quáng | `qk-bug-resolution` |
@@ -110,6 +113,6 @@ ai_style: concise        # concise | detailed | teaching
 ## Công Cụ & Scripts Quản Trị
 
 ```bash
-# Tái tạo runtime registry O(1) từ 9 Super-Skills:
+# Tái tạo runtime registry O(1) từ 10 Super-Skills:
 node tooling/build-registry.js
 ```

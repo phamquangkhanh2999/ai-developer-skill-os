@@ -15,7 +15,7 @@ Cấu trúc quan trọng:
 .agents/
 ├── AGENTS.md          ← Entry point của skin system (không phải file này)
 ├── DEV_PROFILE.md     ← Khai báo role + stack của developer
-├── skills/            ← 9 Core Super-Skills (mỗi skill có SKILL.md)
+├── skills/            ← 10 Core Super-Skills (mỗi skill có SKILL.md)
 ├── workflows/         ← 10 execution pipelines (YAML)
 ├── rules/             ← Behavior policies (global, coding, safety, security...)
 └── registry/          ← Generated indexes — KHÔNG sửa tay

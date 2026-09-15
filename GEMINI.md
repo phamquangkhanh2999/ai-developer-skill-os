@@ -112,4 +112,27 @@ AI chạy trên Antigravity IDE **TUYỆT ĐỐI TUÂN THỦ 5 ĐIỀU RĂN KỸ
 4. **Post-Implementation Self-Review:** Làm xong không được tuyên bố hoàn tất ngay. BẮT BUỘC review lại requirement, scope diff (những file đã sửa), và chất lượng code trước khi verify và báo cáo. `Implementation complete ≠ Task complete`.
 5. **Xác minh thật trước khi tuyên bố (Truth-First Reporting):** Chưa chạy lệnh test/build thực tế trong terminal thì **CẤM TUYỆT ĐỐI** ghi "Pass 100%" hay "All Green". Phải ghi rõ: `"Trạng thái: NOT VERIFIED — Đã kiểm tra tĩnh. Chưa chạy test tự động trong môi trường này (Cần user test tay)"`.
 
+---
+
+## 10. AI Prompt Compiler v11.1 — Control Plane & Behavioral Gate
+
+Khi nhận được yêu cầu ngắn gọn hoặc tự nhiên từ người dùng (`"fix bug"`, `"làm cái này"`, `"phân tích dữ liệu Y"`):
+1. **Biên dịch & Công khai Prompt (Compiled Execution Prompt):** BẮT BUỘC hiển thị khối Prompt đã chuyển hóa ngay trong phản hồi (Role, Objective, In-Scope, Out-of-Scope, Constraints, Acceptance Criteria) theo chuẩn [PROMPT_RULES.md](./PROMPT_RULES.md) và [qk-prompt-compiler](.agents/skills/qk-prompt-compiler/SKILL.md).
+2. **Bóc tách Prompt Delta Động (Dynamic Delta):** Không fix cứng nội dung, mà phân tích biến thiên linh hoạt theo từng task thực tế:
+   - *User đã yêu cầu:* Ý chính nguyên bản của người dùng.
+   - *AI suy luận từ context:* Các điểm kỹ thuật AI bổ sung từ việc inspect codebase thực tế.
+   - *AI KHÔNG tự giả định:* Các ranh giới cấm AI tự khóa lại (không rewrite, không đổi DB, không sửa lan man).
+3. **Thực thi 4 Cổng Kiểm Soát (Control Plane Gates):**
+   - **Risk Gate:** Phân định độc lập Complexity `L0-L4` và Risk `R0-R4`. Nếu `Risk >= R2` hoặc đụng Auth/DB → BẮT BUỘC `CONFIRM`.
+   - **Change Budget Gate:** Khóa giới hạn (Expected 1–3 files, max 5 files; 0 dependencies mới).
+   - **Scope Expansion Gate:** Đang code nếu phát hiện lan tầng → **STOP EXPANSION NGAY**, recompile và hỏi lại user.
+   - **Evidence Gate:** `CLAIM LEVEL <= EVIDENCE LEVEL`. Chỉ ghi PASS khi test thật. Chưa test thì ghi rõ `NOT VERIFIED`.
+4. **Phân định 3 Execution Modes trong Antigravity:**
+   - **`AUTO`:** Yêu cầu cực rõ + rủi ro thấp (`R0/R1`) → Hiển thị prompt và tự động thực thi ngay.
+   - **`CONFIRM`:** Có assumption kỹ thuật hoặc tác động rủi ro (`R2+`) / DB / kiến trúc → Kích hoạt Interactive Planning Mode (`RequestFeedback: true`) hiển thị nút **[Proceed]** để người dùng phê duyệt trước khi code.
+   - **`ASK`:** Yêu cầu mơ hồ hoặc thiếu dữ liệu sống còn → DỪNG LẠI đặt câu hỏi làm rõ, cấm đoán mò hoặc bịa requirement.
+
+
+
+
 
