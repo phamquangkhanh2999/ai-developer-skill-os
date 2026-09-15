@@ -1,20 +1,22 @@
-# AI Developer Skill OS v9.4.0 — Lean Core Edition
+# AI Developer Skill OS v10.1.0 — Lean Core Edition
 
-> **v9.4.0 "Lean Core Revolution & Antigravity Cockpit Integration"**
+> **v10.1.0 "Lean Core Revolution & API-to-Data Discovery Integration"**
 
-Phiên bản **v9.4.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **9 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tối ưu hóa toàn diện cho IDE Antigravity.
+Phiên bản **v10.1.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **11 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tích hợp toàn diện cỗ máy biên dịch Prompt Compiler v11.1 và Discovery Engine cho Antigravity IDE.
 
 ---
 
-## Điểm Nổi Bật Của v9.4.0
+## Điểm Nổi Bật Của v10.1.0
 
-1. **Quy Hoạch 9 Core Super-Skills**: Hợp nhất logic toàn diện từ 37 thư mục cũ vào 9 khối năng lực domain chuyên sâu:
+1. **Quy Hoạch 11 Core Super-Skills**: Hợp nhất logic toàn diện từ 37 thư mục cũ vào 11 khối năng lực domain chuyên sâu:
    - `qk-orchestrator`: Điều phối, nạp ngữ cảnh kiến trúc (Context Graph) và khởi tạo dự án (Bootstrap).
+   - `qk-prompt-compiler`: Biên dịch & chuẩn hóa prompt (Control Plane, Prompt Delta, 4 Cổng Kiểm Soát).
    - `qk-product-spec`: Phân tích yêu cầu, PRD, BDD/Gherkin acceptance criteria và Gap Analysis/Khả thi.
    - `qk-feature-delivery`: Phát triển tính năng end-to-end, tích hợp API client, state management và giao tiếp FE-BE.
    - `qk-bug-resolution`: Chẩn đoán và xử lý bug bằng chu trình khép kín 5 bước (Observe → Hypothesize → Evidence → Fix → Verify).
    - `qk-ui-engineer`: Xây dựng UI chuẩn Design Tokens, tối ưu hoá tương tác, responsive và kiểm toán 57 tiêu chí Anti-Slop.
    - `qk-backend-data`: Thiết kế REST/tRPC API, Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN database và Data Pipeline (ETL/dbt).
+   - `qk-api-data-discovery`: Khám phá API, thu thập Real Evidence, Schema Discovery, đánh giá tầng Bronze Medallion và Checkpoint Handoff Contract.
    - `qk-code-review`: Kiểm toán mã nguồn kiến trúc, chấm điểm sức khỏe Codebase Health Score (0–100), bảo mật OWASP Top 10 và chất lượng Web (WCAG 2.1 AA, Core Web Vitals).
    - `qk-code-cleaner`: Tái cấu trúc sạch sẽ (SOLID, giải phóng God files >300L), nâng cấp thư viện an toàn (có Rollback plan) và kỹ nghệ kiểm thử tự động (Test Pyramid).
    - `qk-devops-release`: Vận hành Platform (Docker, CI/CD GitHub Actions), cổng kiểm soát phát hành 8-Gate Production, đồng bộ tài liệu (README/OpenAPI), bộ nhớ dự án (`.ai-local/`, `/learn`) và kiến trúc AI/RAG.
@@ -34,17 +36,19 @@ Phiên bản **v9.4.0** giải quyết triệt để vấn đề phân mảnh qu
 ├── DEV_PROFILE.md        ← Khai báo role + stack của bạn (AI đọc đầu mỗi session)
 ├── AGENTS.md             ← Entry point: Quick Routing Table 9 Super-Skills + 14 Roles Matrix
 ├── GEMINI.md             ← Quy chuẩn cockpit riêng cho Antigravity IDE
-├── skills/               ← 9 Core Super-Skills (mỗi skill có SKILL.md độc lập)
+├── skills/               ← 11 Core Super-Skills (mỗi skill có SKILL.md độc lập)
 │   ├── qk-orchestrator/
+│   ├── qk-prompt-compiler/
 │   ├── qk-product-spec/
 │   ├── qk-feature-delivery/
 │   ├── qk-bug-resolution/
 │   ├── qk-ui-engineer/
 │   ├── qk-backend-data/
+│   ├── qk-api-data-discovery/
 │   ├── qk-code-review/
 │   ├── qk-code-cleaner/
 │   └── qk-devops-release/
-├── workflows/            ← 9 execution pipelines liên kết trực tiếp
+├── workflows/            ← 10 execution pipelines liên kết trực tiếp
 ├── rules/                ← Behavior policies (global, coding, safety, security...)
 └── registry/             ← Index O(1) sinh tự động (index.yaml, graph.json)
 ```
@@ -78,6 +82,7 @@ ai_style: concise        # concise | detailed | teaching
 ./qk-bug-resolution            # Sửa bug và điều tra nguyên nhân gốc
 ./qk-ui-engineer               # Thiết kế UI, tokens, audit anti-slop
 ./qk-backend-data              # Viết API, schema migration, tối ưu DB, pipeline
+./qk-api-data-discovery        # Khám phá API, Schema Discovery, Data Contract & Bronze
 ./qk-code-review               # Review code, health score (0-100), OWASP, WCAG
 ./qk-code-cleaner              # Refactor God files, nâng cấp library, viết test
 ./qk-devops-release            # Docker, CI/CD, 8-gate release, docs, RAG
@@ -86,6 +91,7 @@ ai_style: concise        # concise | detailed | teaching
 "biên dịch lại prompt cho task này"        → qk-prompt-compiler
 "fix bug crash màn hình checkout"         → qk-bug-resolution
 "thiết kế api đặt hàng và migration db"   → qk-backend-data
+"phân tích postman và lấy schema bronze"  → qk-api-data-discovery
 "review bảo mật và đo nợ kỹ thuật dự án"  → qk-code-review
 "tách file UserService.ts bị quá dài"     → qk-code-cleaner
 "chuẩn bị release lên production"         → qk-devops-release
@@ -93,7 +99,7 @@ ai_style: concise        # concise | detailed | teaching
 
 ---
 
-## Danh Mục 10 Core Super-Skills
+## Danh Mục 11 Core Super-Skills
 
 | Super-Skill | Phụ Đề Dev (Nhiệm vụ cốt lõi) | Phạm vi & Năng lực thực chiến | Các kỹ năng cũ đã hợp nhất |
 |---|---|---|---|
@@ -104,6 +110,7 @@ ai_style: concise        # concise | detailed | teaching
 | `qk-bug-resolution` | **Debug & Fix Bug** | Chẩn đoán và dập lỗi theo chu trình khép kín 5 bước, loại bỏ giả định mù quáng | `qk-bug-resolution` |
 | `qk-ui-engineer` | **Build UI & Component** | Xây dựng UI component chuẩn Design Tokens, tương tác micro-animations, kiểm toán 57 tiêu chí Anti-Slop | `qk-ui-builder`, `qk-design-system-engineering`, `qk-ui-system-builder`, `qk-ui-audit`, `qk-frontend-architecture` |
 | `qk-backend-data` | **API & Database** | Kiến trúc REST/tRPC API, Database Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN query, Data Pipeline (ETL/dbt) | `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-access-policy`, `qk-db-optimizer`, `qk-data-engineer` |
+| `qk-api-data-discovery` | **Khám Phá API & Data Contract** | Phân tích Postman, thu thập Real Evidence, khám phá Schema & Data Dictionary, đánh giá tầng Bronze Medallion, Checkpoint dừng trước khi code | *Mới* (API-to-Data Engine & Contract Discovery) |
 | `qk-code-review` | **Review Code & Audit** | Đánh giá mã nguồn kiến trúc, đo lường chỉ số nợ kỹ thuật (Health Score 0–100), quét bảo mật OWASP Top 10, kiểm toán chất lượng Web WCAG AA | `qk-code-review`, `qk-project-health`, `qk-security-audit`, `qk-web-quality-gate`, `qk-validation-gate` |
 | `qk-code-cleaner` | **Refactor & Viết Test** | Tái cấu trúc sạch (SOLID, phân tách God files >300L), nâng cấp thư viện tiệm tiến (kèm Rollback plan), kỹ nghệ kiểm thử tự động (Test Pyramid) | `qk-refactor`, `qk-upgrade`, `qk-system-evolution`, `qk-test-engineering`, `qk-engineering-standard` |
 | `qk-devops-release` | **DevOps, CI/CD & Deploy** | Nền tảng CI/CD (Docker, GitHub Actions), cổng kiểm soát phát hành 8-Gate Release, đồng bộ tài liệu (README, OpenAPI), bộ nhớ dự án (`.ai-local/`), AI/RAG Pipeline | `qk-devops-platform`, `qk-production-release`, `qk-docs`, `qk-project-memory`, `qk-ai-builder`, `qk-agent-observability` |
@@ -113,6 +120,6 @@ ai_style: concise        # concise | detailed | teaching
 ## Công Cụ & Scripts Quản Trị
 
 ```bash
-# Tái tạo runtime registry O(1) từ 10 Super-Skills:
+# Tái tạo runtime registry O(1) từ 11 Super-Skills:
 node tooling/build-registry.js
 ```

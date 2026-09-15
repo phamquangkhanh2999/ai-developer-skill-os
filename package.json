@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "9.3.1",
-  "description": "EDAOS v9.3 — SSOT Governed Capability Platform with 2-Clause Triggers & Full Technical Lifecycle.",
+  "version": "10.1.0",
+  "description": "AI Developer Skill OS v10.1 — 11 Governed Core Super-Skills with API Data Discovery Engine, Prompt Compiler Control Plane & Antigravity Cockpit Integration.",
   "main": "bin/install.js",
   "files": [
     "bin",

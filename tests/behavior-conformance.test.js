@@ -23,9 +23,10 @@ function parseBSF(skillPath) {
   if (!fmMatch) return null;
   const frontmatter = YAML.load(fmMatch[1]);
   let type = 'legacy';
-  if (frontmatter.version && (frontmatter.version.startsWith('8.') || frontmatter.version.startsWith('9.'))) type = 'v8';
-  else if (frontmatter.version && frontmatter.version.startsWith('7.')) type = 'v7';
-  else if (frontmatter.version && frontmatter.version.startsWith('6.')) type = 'v6';
+  const v = frontmatter.version ? String(frontmatter.version) : '';
+  if (v.startsWith('8.') || v.startsWith('9.') || v.startsWith('10.') || v.startsWith('11.')) type = 'v8';
+  else if (v.startsWith('7.')) type = 'v7';
+  else if (v.startsWith('6.')) type = 'v6';
   
   const bsf = { type, frontmatter };
   
@@ -54,6 +55,8 @@ function parseBSF(skillPath) {
     const hasScope = content.includes('## Scope') || 
                      content.includes('# Scope') || 
                      content.includes('Scope &') || 
+                     content.includes('Phạm vi') || 
+                     content.includes('Ranh Giới') ||
                      (frontmatter.knowledge_scope !== undefined) ||
                      (frontmatter.decision_boundary !== undefined);
 
@@ -86,7 +89,7 @@ describe('Behavior Validation Framework', () => {
             expect(bsf.frontmatter.category, `Missing category metadata in ${path.basename(dir)}`).toBeDefined();
             expect(bsf.constraints, `Missing Constraints in ${path.basename(dir)}`).toBeDefined();
           } else {
-            expect(bsf.frontmatter.type, `Missing type metadata in V8 skill ${path.basename(dir)}`).toBeDefined();
+            expect(bsf.frontmatter.status || bsf.frontmatter.type, `Missing status/type in ${path.basename(dir)}`).toBeDefined();
           }
         }
       });

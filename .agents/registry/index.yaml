@@ -2,13 +2,23 @@
 # DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.
 schema_version: 1
 manifest_version: '8.2'
-generated_at: '2026-09-15T03:23:54.273Z'
+generated_at: '2026-09-15T03:45:16.804Z'
 stats:
-  total_scanned: 10
-  active: 10
+  total_scanned: 11
+  active: 11
   archived: 0
   relocated: 0
 capabilities:
+  qk-api-data-discovery:
+    path: .agents/skills/qk-api-data-discovery
+    version: 10.1.0
+    status: stable
+    tags:
+      - api
+      - data
+      - discovery
+    dependencies:
+      - context-discovery
   qk-backend-data:
     path: .agents/skills/qk-backend-data
     version: 10.1.0

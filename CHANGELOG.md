@@ -5,6 +5,22 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [10.1.0] — 2026-09-15 — AI Developer Skill OS v10.1: 11 Super-Skills, API-to-Data Discovery & Prompt Compiler v11.1
+
+### Added
+- **`qk-api-data-discovery` (Super-Skill thứ 11)**: Kỹ nghệ Khám phá API & Hợp đồng Dữ liệu thực nghiệm (API Discovery → Real Evidence → Schema Discovery → Data Contract → Bronze Medallion Assessment).
+  - Tôn chỉ vàng: *"Never infer an API contract from endpoint names alone. Observe the real API response first, preserve raw evidence, then derive the schema and standardized collection from observed evidence."*
+  - Mô hình 2 Pha với **Checkpoint STOP**: Pha A (Khám phá & xuất báo cáo Checkpoint `docs/api-discovery/<collection>-analysis.md`) → Dừng lại chờ người dùng quyết định → Pha B (Triển khai đúng Option được chọn).
+  - Quy tắc Handoff Contract: Báo cáo checkpoint chứa 3 tầng thông tin độc lập (FACT, ANALYSIS, DECISION OPTIONS) để chuyển giao quyền kiểm soát cho người dùng.
+- **`qk-prompt-compiler` v11.1**: Tích hợp Control Plane & Behavioral Gate với 4 chốt chặn kiểm soát: Risk Gate (`Complexity ≠ Risk`), Change Budget Gate (1–5 files, 0 deps), Scope Expansion Gate (chặn lan tầng), và Evidence Gate (`CLAIM LEVEL <= EVIDENCE LEVEL`).
+- **Nâng cấp Antigravity Cockpit**: Hỗ trợ 14 Senior Developer Roles, Interactive Planning Mode tự động (`RequestFeedback: true`), Dual-Stream Reporting và Unicode Box Drawing Diagrams.
+
+### Changed
+- **Quy hoạch 11 Core Super-Skills**: Đồng bộ hóa toàn bộ registry O(1), routing table và tài liệu hướng dẫn về chuẩn 11 Super-Skills tập trung, xóa bỏ hoàn toàn phân mảnh.
+- **Test Suite v10+**: Nâng cấp test suite tự động nhận diện các phiên bản Super-Skills v10+ và v11+, đạt 10/10 test cases passed (<1s).
+
+---
+
 ## [9.3.1] — 2026-09-14 — EDAOS v9.3: SSOT Trigger Discipline, Full-Body Execution & Complete Documentation
 
 ### Added

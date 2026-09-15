@@ -102,7 +102,7 @@ ROLE: data-scientist (Data Scientist)
 
 ---
 
-[Skill Routing — Quick Table (10 Super-Skills)]
+[Skill Routing — Quick Table (11 Super-Skills)]
 Match the user's intent against keywords. Pick the best skill, then read its SKILL.md.
 The role context from DEV_PROFILE.md adjusts HOW the skill executes, not which skill is chosen.
 
@@ -115,6 +115,7 @@ The role context from DEV_PROFILE.md adjusts HOW the skill executes, not which s
 | fix bug, sửa lỗi, crash, error, exception, not working, bị lỗi, debug, trace lỗi, điều tra nguyên nhân bug                           | `qk-bug-resolution`  | **Debug & Fix Bug**           |
 | build ui, làm giao diện, css, layout, component, figma, design system, tokens, anti-slop, ui audit, spacing, visual consistency     | `qk-ui-engineer`     | **Build UI & Component**      |
 | viết api, endpoint, rest/graphql, db schema, migration, phân quyền rbac/abac, tối ưu query explain, data pipeline, etl, dbt         | `qk-backend-data`    | **API & Database**            |
+| postman, api discovery, api evidence, schema discovery, data contract, data dictionary, bronze ingestion, chuẩn hóa postman, phân tích postman | `qk-api-data-discovery` | **Khám Phá API & Data Contract** |
 | review code, đánh giá code, health check, nợ kỹ thuật, project score, security audit, owasp, scan lỗ hổng, a11y, wcag, core web vitals| `qk-code-review`     | **Review Code & Audit**       |
 | refactor, tái cấu trúc, tách file, clean code, giảm complexity, upgrade thư viện, update package, viết test, unit/integration/e2e test | `qk-code-cleaner`    | **Refactor & Viết Test**      |
 | devops, docker, dockerfile, ci/cd, github actions, release production, 8-gate, viết docs, readme, swagger, project memory, /learn, rag, ai builder | `qk-devops-release`  | **DevOps, CI/CD & Deploy**    |
