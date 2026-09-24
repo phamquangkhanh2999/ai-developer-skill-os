@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const targetVersion = "9.1.0";
+const targetVersion = "10.2.0";
 const rootDir = process.cwd();
 const skillsDir = path.join(rootDir, '.agents', 'skills');
 
@@ -253,7 +253,7 @@ skills.forEach(skill => {
   if (fs.existsSync(skillMdPath)) {
     let content = fs.readFileSync(skillMdPath, 'utf8');
     let newContent = content.replace(/^version:\s*["']?[\d.]+["']?/m, `version: ${targetVersion}`);
-    newContent = newContent.replace(/^# ── V[\d]+: Classification/m, `# ── V9: Classification`);
+    newContent = newContent.replace(/^# ── V[\d]+: Classification/m, `# ── V10: Classification`);
     
     // Inject or update Memory Workflow (except qk-project-memory which manages memory itself)
     if (skill !== 'qk-project-memory' && skill !== 'qk-help') {

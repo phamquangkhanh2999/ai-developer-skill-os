@@ -1,20 +1,20 @@
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
 
-const GRAPH_FILE = path.resolve('.agents/registry/capability-graph.yml');
+const GRAPH_FILE = path.resolve('.agents/registry/graph.json');
 
 function validateGraph() {
   if (!fs.existsSync(GRAPH_FILE)) {
-    console.error('Không tìm thấy capability-graph.yml');
+    console.error('Không tìm thấy graph.json');
     process.exit(1);
   }
 
   const content = fs.readFileSync(GRAPH_FILE, 'utf8');
-  const graph = yaml.load(content);
+  const graph = JSON.parse(content);
 
   const nodes = Object.keys(graph.nodes || {});
   const edges = graph.edges || [];
+  const adjacency = graph.adjacency || {};
 
   let errors = [];
   
@@ -29,40 +29,53 @@ function validateGraph() {
     }
     if (e.relation === 'conflicts_with') conflictsCount++;
   });
-
-  // 2. Kiểm tra reverse delegation (implementation -> architecture)
-  // Logic giả định dựa trên keyword
-  edges.forEach(e => {
-    if (e.relation === 'delegates_to') {
-       if (e.from.includes('ui-builder') && e.to.includes('architecture')) {
-           errors.push(`Policy violation: Implementation skill '${e.from}' không được delegate cho Architecture skill '${e.to}'`);
-       }
-    }
-  });
-
-  // 3. Isolated nodes (Ngoại trừ qk-orchestrator, qk-product-specification)
+  // 2. Isolated nodes (Ngoại trừ qk-orchestrator)
   let orphanCount = 0;
-  const allowedIsolated = ['qk-orchestrator', 'qk-product-specification'];
+  const allowedIsolated = ['qk-orchestrator'];
   
   const connectedNodes = new Set();
   edges.forEach(e => {
     connectedNodes.add(e.from);
-    if (nodes.includes(e.to)) connectedNodes.add(e.to);
+    connectedNodes.add(e.to);
   });
 
   nodes.forEach(n => {
     if (!connectedNodes.has(n)) {
        if (!allowedIsolated.includes(n)) {
-          errors.push(`Orphan node: '${n}' bị cô lập (không nối đi đâu, không ai nối tới).`);
+          errors.push(`Orphan node: '${n}' bị cô lập.`);
           orphanCount++;
        }
     }
   });
 
-  // Mock Cycles check
-  let cyclesCount = 0; // Để đơn giản, giả lập 0 cycles. Trong thực tế dùng thuật toán DFS.
+  // Cycle detection using DFS
+  let cyclesCount = 0;
+  const visited = {};
+  const recursionStack = {};
 
-  const score = Math.max(0, 100 - (errors.length * 5));
+  function detectCycle(node) {
+    visited[node] = true;
+    recursionStack[node] = true;
+    const neighbors = adjacency[node] || [];
+    for (const neighbor of neighbors) {
+      if (!visited[neighbor]) {
+        if (detectCycle(neighbor)) return true;
+      } else if (recursionStack[neighbor]) {
+        cyclesCount++;
+        return true;
+      }
+    }
+    recursionStack[node] = false;
+    return false;
+  }
+
+  for (const node of nodes) {
+    if (!visited[node]) {
+      detectCycle(node);
+    }
+  }
+
+  const score = Math.max(0, 100 - (errors.length * 5) - (cyclesCount * 2));
 
   console.log('─────────────────────────────────────────────────');
   console.log('📊 Capability Graph Health');

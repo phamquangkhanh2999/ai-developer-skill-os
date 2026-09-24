@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 10.2.0
 description: "Rules preventing security vulnerabilities introduced during development and agent operation."
 domain: rules
 applies_to: [skills-with-side_effects-edit_files, skills-with-network_access, skills-with-external_input]

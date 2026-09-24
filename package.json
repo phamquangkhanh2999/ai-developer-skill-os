@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "10.1.0",
-  "description": "AI Developer Skill OS v10.1 — 11 Governed Core Super-Skills with API Data Discovery Engine, Prompt Compiler Control Plane & Antigravity Cockpit Integration.",
+  "version": "10.2.0",
+  "description": "AI Developer Skill OS v10.2 — 11 Governed Core Super-Skills with API Data Discovery Engine, Prompt Compiler Control Plane & Antigravity Cockpit Integration.",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -20,25 +20,19 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "sync:v9": "node tooling/sync-versions.js",
+    "sync:v10": "node tooling/sync-versions.js",
     "build:registry": "node tooling/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:registry": "vitest run && node tooling/build-registry.js",
     "test:graph": "node tooling/validate-graph.js",
     "lint": "node tooling/validate-skills.js",
-    "eval": "node evals/runner.js",
-    "eval:all": "node evals/runner.js --all",
-    "test:agent": "node tests/agent-evaluation/runner/evaluate-routing.js",
-    "generate:evaluation": "node tooling/generate-evaluation-cases.cjs",
     "install:antigravity": "node bin/install.js --ide=antigravity --scope=2",
     "install:antigravity:local": "node bin/install.js --ide=antigravity --scope=1",
-    "install:cursor": "node bin/install.js --ide=cursor --scope=2",
-    "install:cursor:local": "node bin/install.js --ide=cursor --scope=1",
-    "install:windsurf": "node bin/install.js --ide=windsurf --scope=2",
     "install:claude": "node bin/install.js --ide=claude --scope=2",
-    "install:kilo": "node bin/install.js --ide=kilo --scope=2",
-    "install:multi": "node bin/install.js --ide=multi-ide --scope=2"
+    "install:claude:local": "node bin/install.js --ide=claude --scope=1",
+    "install:opencode": "node bin/install.js --ide=opencode --scope=2",
+    "install:opencode:local": "node bin/install.js --ide=opencode --scope=1"
   },
   "repository": {
     "type": "git",
@@ -47,9 +41,9 @@
   "keywords": [
     "ai",
     "claude",
-    "cursor",
-    "windsurf",
-    "skills",
+    "antigravity",
+    "opencode",
+    "skill-os",
     "developer",
     "agent",
     "prompts",
@@ -66,9 +60,9 @@
   },
   "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os#readme",
   "devDependencies": {
-    "vitest": "^2.1.0",
     "fast-glob": "^3.3.0",
     "gray-matter": "^4.0.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.3.2",
+    "vitest": "^2.1.0"
   }
 }

@@ -16,9 +16,9 @@ Cấu trúc quan trọng:
 ├── AGENTS.md          ← Entry point của skin system (không phải file này)
 ├── DEV_PROFILE.md     ← Khai báo role + stack của developer
 ├── skills/            ← 11 Core Super-Skills (mỗi skill có SKILL.md)
-├── workflows/         ← 10 execution pipelines (YAML)
+├── workflows/         ← 12 execution pipelines (YAML)
 ├── rules/             ← Behavior policies (global, coding, safety, security...)
-└── registry/          ← Generated indexes — KHÔNG sửa tay
+└── registry/          ← Generated indexes — KHÔNG sửa tay (graph.json, index.yaml)
 ```
 
 ---
@@ -49,7 +49,7 @@ Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` 
 ## Guardrails (Critical — không được bỏ qua)
 
 - **KHÔNG** xóa hoặc rename skill folder mà không cập nhật routing table trong `.agents/AGENTS.md`
-- **KHÔNG** sửa `registry/` files bằng tay — luôn regenerate qua `node tooling/build-registry.js`
+- **KHÔNG** sửa `registry/` files bằng tay — luôn regenerate qua `node tooling/build-registry.js` (cập nhật `graph.json` và `index.yaml`)
 - **KHÔNG** thêm `.ai-local/` vào repo — đã gitignore, là private workspace memory
 - **KHÔNG** hardcode đường dẫn tuyệt đối trong bất kỳ SKILL.md hay workflow YAML nào
 - **PHẢI** bump version trong SKILL.md khi thay đổi behavior (patch cho fix nhỏ, minor cho feature mới)

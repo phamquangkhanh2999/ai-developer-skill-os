@@ -1,0 +1,126 @@
+name: prompt-compilation
+version: 10.2.0
+platforms: [antigravity, claude, opencode]
+runtime_version: 1
+description: "Pipeline biên dịch prompt tự nhiên thành Compiled Execution Prompt với 4 cổng kiểm soát."
+
+owner:
+  type: engineering
+  maintained_by: qk-team
+
+verification_profile: spec-driven
+
+triggers:
+  - "viết prompt"
+  - "compile prompt"
+  - "chuẩn hóa prompt"
+  - "prompt compiler"
+
+ide_binding:
+  slash_command: "/compile-prompt"
+  aliases: ["/prompt", "/cp"]
+
+steps:
+  - id: understand
+    name: "Hiểu yêu cầu"
+    purpose: "Nhận diện mục tiêu cốt lõi từ câu lệnh tự nhiên"
+    required: true
+    outputs:
+      - actual_goal
+      - implied_requirements
+    actions:
+      - "Phân tích câu lệnh user để xác định Actual Goal"
+      - "Xác định scope ban đầu"
+    min_confidence: HIGH
+
+  - id: compile
+    name: "Biên dịch Compiled Prompt"
+    purpose: "Tạo Execution Prompt minh bạch với 9 thành phần"
+    required: true
+    outputs:
+      - compiled_prompt
+      - prompt_delta
+      - change_budget
+    actions:
+      - "Sinh Role, Objective, Context, Source of Truth"
+      - "Xác định IN-SCOPE và OUT-OF-SCOPE"
+      - "Tính Complexity (L0-L4) và Risk (R0-R4)"
+    human_checkpoint:
+      condition: "Complexity >= L3 hoặc Risk >= R2"
+      message: "Compiled Prompt có complexity/risk cao. Xác nhận trước khi thực thi."
+
+  - id: gate_check
+    name: "Gateway Check"
+    purpose: "Xác nhận qua 4 cổng kiểm soát"
+    required: true
+    outputs:
+      - quality_gate_result
+      - risk_gate_result
+      - budget_gate_result
+      - scope_gate_result
+    actions:
+      - "Prompt Quality Gate: 8 tiêu chí hợp đồng"
+      - "Risk Gate: Complexity + Risk assessment"
+      - "Change Budget: Files ≤ 5, Dependencies = 0"
+      - "Scope Expansion Gate: Không có bành trướng"
+    exit_on_fail: BLOCKED
+
+  - id: execute
+    name: "Thực thi"
+    purpose: "Chạy theo Compiled Prompt đã approved"
+    required: true
+    outputs:
+      - execution_results
+      - changed_files
+    actions:
+      - "Thực thi theo compiled prompt"
+      - "Monitor scope expansion trong quá trình thực thi"
+    exit_on_fail: PARTIAL
+
+  - id: evidence_report
+    name: "Evidence Gate & Report"
+    purpose: "Xác minh bằng chứng và báo cáo kết quả"
+    required: true
+    outputs:
+      - claim_level
+      - execution_report
+    actions:
+      - "CLAIM LEVEL <= EVIDENCE LEVEL check"
+      - "Generate Execution Report"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 2
+  on_failure: "Recompile prompt with expanded scope and ask user CONFIRM"
+
+# ── V10.2 Additions ──────────────────────────────
+# Confidence Model
+# | Level  | Condition              | Action       |
+# |--------|------------------------|--------------|
+# | HIGH   | Step inputs provided   | Proceed      |
+# | MEDIUM | Some assumptions needed | Note assumptions |
+# | LOW    | Insufficient evidence  | EXIT: BLOCKED|
+#
+# Exit Codes
+# | Code    | Meaning                       | When                    |
+# |---------|-------------------------------|-------------------------|
+# | SUCCESS | Step completed and verified   | All criteria met        |
+# | PARTIAL | Step done with minor gaps    | Some checks skipped     |
+# | BLOCKED | Missing precondition         | Ask user                |
+# | FAILED  | Step failed after max retries | Report error            |
+#
+# Evidence Format:
+#   [SEVERITY] step_id: [step-name]
+#   Reason:     [why this matters]
+#   Confidence: [HIGH|MEDIUM|LOW]
+#   Fix:        [suggestion]
+#
+# Compliance:
+#   Runtime Standard: 11/11
+#   Frontmatter Complete: yes
+#   References Valid: yes
+#   Decision Trees: PASS
+#   Thresholds Defined: PASS
+#   schema_version: 10.2.0
+#   runtime_version: 1
+#   platforms: [antigravity, claude, opencode]

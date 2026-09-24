@@ -1,8 +1,8 @@
 # Workflow Schema — V8 Standard
 # Every workflow YAML file MUST conform to this schema.
-# Version: 8.3.0
+# Version: 10.2.0
 
-schema_version: 8.3.0
+schema_version: 10.2.0
 
 # ── Required top-level fields ──────────────────────────────
 required:

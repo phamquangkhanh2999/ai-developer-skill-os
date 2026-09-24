@@ -1,186 +1,280 @@
 {
   "schema_version": 1,
-  "manifest_version": "8.2",
-  "generated_at": "2026-09-15T03:45:16.804Z",
+  "manifest_version": "10.2",
+  "generated_at": "2026-09-24T06:26:56.070Z",
   "nodes": {
     "qk-api-data-discovery": {
       "path": ".agents/skills/qk-api-data-discovery",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "api",
         "data",
         "discovery"
       ],
-      "dependencies": [
-        "context-discovery"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-backend-data": {
       "path": ".agents/skills/qk-backend-data",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "backend",
         "data"
       ],
-      "dependencies": [
-        "feature-delivery"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-bug-resolution": {
       "path": ".agents/skills/qk-bug-resolution",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "bug",
         "resolution"
       ],
-      "dependencies": [
-        "bug-resolution"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-code-cleaner": {
       "path": ".agents/skills/qk-code-cleaner",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "code",
         "cleaner"
       ],
-      "dependencies": [
-        "refactor"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-code-review": {
       "path": ".agents/skills/qk-code-review",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "code",
         "review"
       ],
-      "dependencies": [
-        "code-review"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-devops-release": {
       "path": ".agents/skills/qk-devops-release",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "devops",
         "release"
       ],
-      "dependencies": [
-        "production-release"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-feature-delivery": {
       "path": ".agents/skills/qk-feature-delivery",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "feature",
         "delivery"
       ],
-      "dependencies": [
-        "feature-delivery"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-orchestrator": {
       "path": ".agents/skills/qk-orchestrator",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "orchestrator"
       ],
-      "dependencies": [
-        "context-discovery"
-      ],
+      "dependencies": [],
       "dependents": [],
       "is_orphan": false
     },
     "qk-product-spec": {
       "path": ".agents/skills/qk-product-spec",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "product",
         "spec"
       ],
-      "dependencies": [
-        "spec-driven-development"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-prompt-compiler": {
       "path": ".agents/skills/qk-prompt-compiler",
-      "version": "11.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "prompt",
         "compiler"
       ],
-      "dependencies": [
-        "prompt-compilation"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     },
     "qk-ui-engineer": {
       "path": ".agents/skills/qk-ui-engineer",
-      "version": "10.1.0",
+      "version": "10.2.0",
+      "platforms": [
+        "antigravity",
+        "claude",
+        "opencode"
+      ],
       "tags": [
         "ui",
         "engineer"
       ],
-      "dependencies": [
-        "feature-delivery"
+      "dependencies": [],
+      "dependents": [
+        "qk-orchestrator"
       ],
-      "dependents": [],
       "is_orphan": false
     }
   },
+  "edges": [
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-prompt-compiler",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-product-spec",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-feature-delivery",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-bug-resolution",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-code-cleaner",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-code-review",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-ui-engineer",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-backend-data",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-devops-release",
+      "relation": "depends_on"
+    },
+    {
+      "from": "qk-orchestrator",
+      "to": "qk-api-data-discovery",
+      "relation": "depends_on"
+    }
+  ],
   "adjacency": {
-    "qk-api-data-discovery": [
-      "context-discovery"
-    ],
-    "qk-backend-data": [
-      "feature-delivery"
-    ],
-    "qk-bug-resolution": [
-      "bug-resolution"
-    ],
-    "qk-code-cleaner": [
-      "refactor"
-    ],
-    "qk-code-review": [
-      "code-review"
-    ],
-    "qk-devops-release": [
-      "production-release"
-    ],
-    "qk-feature-delivery": [
-      "feature-delivery"
-    ],
+    "qk-api-data-discovery": [],
+    "qk-backend-data": [],
+    "qk-bug-resolution": [],
+    "qk-code-cleaner": [],
+    "qk-code-review": [],
+    "qk-devops-release": [],
+    "qk-feature-delivery": [],
     "qk-orchestrator": [
-      "context-discovery"
+      "qk-prompt-compiler",
+      "qk-product-spec",
+      "qk-feature-delivery",
+      "qk-bug-resolution",
+      "qk-code-cleaner",
+      "qk-code-review",
+      "qk-ui-engineer",
+      "qk-backend-data",
+      "qk-devops-release",
+      "qk-api-data-discovery"
     ],
-    "qk-product-spec": [
-      "spec-driven-development"
-    ],
-    "qk-prompt-compiler": [
-      "prompt-compilation"
-    ],
-    "qk-ui-engineer": [
-      "feature-delivery"
-    ]
+    "qk-product-spec": [],
+    "qk-prompt-compiler": [],
+    "qk-ui-engineer": []
   },
   "stats": {
     "total_scanned": 11,

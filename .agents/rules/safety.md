@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 10.2.0
 description: "Risk management rules for agent actions with side effects."
 domain: rules
 applies_to: [skills-with-risk-medium, skills-with-risk-high]

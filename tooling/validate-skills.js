@@ -28,10 +28,12 @@ function parseFrontmatter(content) {
   };
 
   const name = extract('name');
-  const version = extract('version') || '7.5.0';
+  const version = extract('version') || '10.2.0';
   let status = extract('status');
   
   if (!status && (version.startsWith('8.') || version.startsWith('9.'))) {
+      status = 'stable';
+  } else if (!status && version.startsWith('10.')) {
       status = 'stable';
   } else if (!status) {
       status = 'legacy';
@@ -41,10 +43,16 @@ function parseFrontmatter(content) {
     name,
     version,
     status,
-    hasIntent: yamlString.includes('intent:'),
     hasWorkflow: yamlString.includes('workflow:'),
-    hasVerification: yamlString.includes('verification:'),
-    hasSelection: yamlString.includes('selection:')
+    hasTriggers: yamlString.includes('triggers:'),
+    hasRules: yamlString.includes('rules:'),
+    hasClassification: yamlString.includes('classification:'),
+    hasReferences: yamlString.includes('references:'),
+    isV10Frontmatter: yamlString.includes('classification:'),
+    isLegacyFrontmatter: yamlString.includes('workflow:') && !yamlString.includes('classification:'),
+    isV10Format: (yamlString.includes('classification:') && yamlString.includes('references:')) ||
+                 (yamlString.includes('workflow:') && !yamlString.includes('classification:')),
+    hasPlatforms: yamlString.includes('platforms:')
   };
 }
 
@@ -58,8 +66,8 @@ function validate() {
     .filter(d => !d.startsWith('_') && fs.statSync(path.join(SKILLS_DIR, d)).isDirectory());
 
   let totalScanned = 0;
-  let stableValid = 0;
-  let stableTotal = 0;
+  let v10Valid = 0;
+  let v10Total = 0;
   let legacyIgnored = 0;
   let missingRequiredCount = 0;
 
@@ -73,13 +81,23 @@ function validate() {
 
     totalScanned++;
 
-    if (meta.status === 'stable' || meta.status === 'experimental') {
-      stableTotal++;
-      if (meta.hasIntent && meta.hasWorkflow && meta.hasVerification && meta.hasSelection) {
-        stableValid++;
+    if (meta.version && meta.version.startsWith('10.')) {
+      v10Total++;
+      const hasExitCodes = content.includes('Thoái Ra Mã') || content.includes('Exit Codes');
+      const hasCompliance = content.includes('Compliance');
+      const hasConfidence = content.includes('Confidence Model') || content.includes('Độ Tin Cậy');
+      const hasEvidence = content.includes('Bằng Chứng') || content.includes('Evidence Format');
+      const hasAllV10Sections = hasExitCodes && hasCompliance && hasConfidence && hasEvidence && meta.hasPlatforms;
+      if (hasAllV10Sections) {
+        v10Valid++;
       } else {
         missingRequiredCount++;
-        console.warn(`[WARN] ${meta.name} is missing required V8 fields`);
+        const missing = [];
+        if (!hasExitCodes) missing.push('Exit Codes');
+        if (!hasCompliance) missing.push('Compliance');
+        if (!hasConfidence) missing.push('Confidence Model');
+        if (!hasEvidence) missing.push('Evidence Format');
+        console.warn(`[WARN] ${meta.name} is missing V10 sections: ${missing.join(', ')}`);
       }
     } else {
       legacyIgnored++;
@@ -87,9 +105,9 @@ function validate() {
   }
 
   console.log(`\nSkills scanned: ${totalScanned}`);
-  console.log(`\nStable/Experimental:`);
-  console.log(`${stableValid}/${stableTotal} valid`);
-  console.log(`\nLegacy:`);
+  console.log(`\nV10 Format:`);
+  console.log(`${v10Valid}/${v10Total} valid`);
+  console.log(`\nLegacy (pre-V10):`);
   console.log(`${legacyIgnored}/${legacyIgnored} ignored`);
   console.log(`\nMissing required:`);
   console.log(`${missingRequiredCount}`);

@@ -1,5 +1,5 @@
 ---
-version: 10.1.0
+version: 10.2.0
 description: "Agent behavior policies applied globally across all capabilities."
 domain: rules
 applies_to: all

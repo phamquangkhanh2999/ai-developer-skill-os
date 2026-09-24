@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-describe('V8 Install Script Logic', () => {
+describe('V10 Install Script Logic', () => {
   const scriptPath = path.join(rootDir, 'bin', 'install.js');
   const content = fs.readFileSync(scriptPath, 'utf8');
 
@@ -21,12 +21,11 @@ describe('V8 Install Script Logic', () => {
   });
 
   it('should handle IDE selections with correct mapping', () => {
-    // IDE map: 1=antigravity, 2=claude, 3=cursor, 4=codex
+    // IDE map: 1=antigravity, 2=claude, 3=opencode
     expect(content).toContain("'1': 'antigravity'");
     expect(content).toContain("'2': 'claude'");
-    expect(content).toContain("'3': 'cursor'");
-    expect(content).toContain("'4': 'codex'");
-  });
+    expect(content).toContain("'3': 'opencode'");
+    });
 
   it('should support version detection and upgrade prompt', () => {
     expect(content).toContain('getInstalledVersion');

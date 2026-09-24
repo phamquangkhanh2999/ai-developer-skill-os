@@ -1,5 +1,7 @@
 name: quality-gate
-version: 9.2.0
+version: 10.2.0
+platforms: [antigravity, claude, opencode]
+runtime_version: 1
 description: "Shared quality gate — embedded vào bước verify của feature-delivery, bug-resolution, refactor. Source of truth duy nhất cho R-C-10 checklist."
 type: shared-step
 

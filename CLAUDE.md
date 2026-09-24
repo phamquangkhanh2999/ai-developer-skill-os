@@ -21,7 +21,7 @@ Khi bắt đầu làm việc trong repo này:
 # Đọc/tìm kiếm
 cat, grep, find, ls, head, tail
 # Build & validate
-node tooling/generate-registry.js
+node tooling/build-registry.js
 node tooling/validate-skills.js
 npm run test:registry
 npm run test:graph
@@ -37,7 +37,7 @@ git log --oneline -10
 git add / git commit / git push   # Thay đổi git history
 npm install / pip install          # Thay đổi dependencies
 rm / rmdir                         # Xóa file
-node tooling/generate-registry.js  # Nếu sẽ overwrite registry
+node tooling/build-registry.js  # Nếu sẽ overwrite registry
 ```
 
 **KHÔNG bao giờ chạy:**
@@ -63,7 +63,7 @@ npm run test:graph
 npm run test:agent
 
 # Regenerate registry sau khi sửa SKILL.md
-node tooling/generate-registry.js
+node tooling/build-registry.js
 ```
 
 Sau khi sửa bất kỳ SKILL.md nào → **bắt buộc** chạy `test:registry` trước khi báo xong.

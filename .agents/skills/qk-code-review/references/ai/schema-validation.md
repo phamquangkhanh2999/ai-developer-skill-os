@@ -1,6 +1,6 @@
-# V8 Schema Validation Guide
+# V10 Schema Validation Guide
 
-Tài liệu này dùng để đối chiếu khi review các file `SKILL.md` hoặc các file cấu hình AI khác trong dự án. Đảm bảo mọi cấu hình tuân thủ chặt chẽ định dạng và kiến trúc của V8 Skin.
+Tài liệu này dùng để đối chiếu khi review các file `SKILL.md` hoặc các file cấu hình AI khác trong dự án. Đảm bảo mọi cấu hình tuân thủ chặt chẽ định dạng và kiến trúc của V10 Skin.
 
 ## 1. Frontmatter (YAML Metadata) Bắt buộc
 

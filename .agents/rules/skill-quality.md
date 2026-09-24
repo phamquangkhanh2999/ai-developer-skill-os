@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 10.2.0
 description: "Standards for defining, maintaining, and retiring skills in V8."
 domain: rules
 applies_to: [skill-authoring, skill-governance]
@@ -34,5 +34,20 @@ Các skill sẽ được rà soát để đảm bảo không bị phình (bloat)
 ### R-SQ-05: Phát Hiện Trùng Lặp
 Nếu phát hiện 2 skill có chung mục đích, cần tiến hành gộp (merge) lại và phân định ranh giới (ví dụ: chia implementation và governance).
 
-### R-SQ-06: Loại Bỏ Có Kiểm Soát
-Nếu skill không còn giá trị sử dụng hoặc đã được cover bởi core logic, đánh dấu `status: deprecated`. Không xóa ngay lập tức để giữ backward compatibility.
+---
+
+## R-SQ-07: Version Standardization (V10.2)
+
+Tất cả skill files, rule files, và workflow files MUST có version `10.2.0` trong frontmatter YAML.
+
+### Quản lý Version:
+- **Patch bump** (`10.2.0` → `10.2.1`): Fix nhỏ, không đổi behavior
+- **Minor bump** (`10.2.0` → `10.3.0`): Thêm capability mới
+- **Major bump** (`10.2.0` → `11.0.0`): Kiến trúc thay đổi
+
+### Quy tắc Bump Version:
+- Khi thay đổi behavior của skill → bump version trong SKILL.md frontmatter
+- Khi thay đổi rule → bump version trong rules/*.md frontmatter
+- Khi thay đổi workflow → bump version trong workflows/*.yml
+- Bump version phải đi kèm với commit message: `chore: bump version to X.Y.Z`
+

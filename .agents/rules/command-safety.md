@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 10.2.0
 description: "Detailed shell-command threat reference, mapped to the risk matrix defined in safety.md."
 domain: rules
 applies_to: [skills-with-side_effects-shell_exec]

@@ -1,9 +1,11 @@
 ---
 name: qk-api-data-discovery
-version: 10.1.0
+version: 10.2.0
 status: stable
 subtitle: "API & Data Discovery"
 description: "Kỹ sư Khám phá API & Hợp đồng Dữ liệu: Phân tích Postman collection, thu thập phản hồi thực tế (Real API Evidence), khám phá Schema & Data Dictionary, đánh giá tầng Bronze Medallion, đối chiếu kiến trúc dự án và xuất báo cáo Checkpoint. Tuân thủ nguyên tắc: Discovery First, Implementation Only on User Direction. Dùng khi: postman, api discovery, api evidence, schema discovery, data contract, data dictionary, bronze ingestion, chuẩn hóa postman, phân tích postman collection."
+platforms: [antigravity, claude, opencode]
+runtime_version: 1
 tools:
   - filesystem
   - terminal
@@ -33,23 +35,100 @@ triggers:
 
 ---
 
+## Memory Workflow
+
+### 0. Self-Init Protocol (Khởi Tạo Bộ Nhớ Local & Gitignore)
+- Trước khi tra cứu hoặc lưu trữ tri thức, BẮT BUỘC kiểm tra sự tồn tại của thư mục `.ai-local/` tại gốc dự án:
+  - **Tự động tạo mới:** Nếu `.ai-local/` chưa tồn tại, AI phải tự động tạo cấu trúc thư mục `.ai-local/knowledge/` (và file `index.yaml` nếu cần thiết) cùng `.ai-local/candidates/`. Tuyệt đối không ngưng chạy hay hỏi ý kiến người dùng về thao tác khởi tạo tiêu chuẩn này.
+  - **Bảo mật Gitignore:** BẮT BUỘC kiểm tra file `.gitignore` của dự án, nếu chưa có dòng `.ai-local/` thì phải tự động thêm vào để tuyệt đối bảo mật tri thức cá nhân và tránh lộ lọt lên Git.
+
+---
+
+### Pre-flight Retrieve (Trước khi thực thi)
+- Trước các task có tính lặp lại, debug, refactor, kiến trúc hoặc rủi ro cao:
+  bắt buộc tra cứu:
+  - `.ai-local/knowledge/index.yaml` (Private Local Knowledge)
+
+- Ưu tiên sử dụng các Knowledge đang có trạng thái `Active` thuộc:
+  - Architecture
+  - Hard Bug
+  - Convention
+  - Pattern
+  - Tech Debt Pattern
+
+- Memory chỉ đóng vai trò **Navigator (bản đồ chỉ đường)**.
+  Không được xem Memory là Source of Truth.
+  Luôn xác minh lại bằng source code, configuration và trạng thái hiện tại của dự án trước khi áp dụng.
+
+---
+
+### Learning Flow (AI tự học có kiểm soát)
+- Trong quá trình làm việc, AI được phép tự phát hiện và tạo **Candidate Memory** khi nhận thấy:
+  - Hard Bug có khả năng tái diễn.
+  - Pattern làm việc lặp lại trong dự án.
+  - Convention hoặc quy tắc kiến trúc mới.
+  - Quyết định Architecture quan trọng.
+  - Tech Debt Pattern hoặc Code Smell có tính hệ thống.
+
+- Candidate Memory chỉ là bản nháp quan sát, chưa phải tri thức chính thức.
+- Candidate Memory có thể lưu tạm tại: `.ai-local/candidates/`
+- AI không được tự động Promote Candidate Memory thành Project Knowledge.
+
+---
+
+### Post-flight Harvest (Đề xuất → Phê duyệt)
+Sau khi hoàn thành task:
+- AI đánh giá các Candidate Memory đã tạo.
+- Nếu phát hiện tri thức có giá trị tái sử dụng:
+  - Đề xuất người dùng xem xét.
+  - Gửi yêu cầu phê duyệt thông qua:
+    - `/learn`
+    - `qk-project-memory`
+- Chỉ sau khi được phê duyệt, Candidate Memory mới được chuyển thành Knowledge chính thức:
+
+```
+.ai-local/candidates/  ──(Approve)──>  .ai-local/knowledge/index.yaml
+```
+
+- Project Knowledge phải được xem như tài sản kỹ thuật của dự án:
+  - Có thể review, cập nhật, loại bỏ và có lịch sử thay đổi.
+
+---
+
+### Ignore (Không đưa vào Memory)
+Không lưu:
+- Trace log của một session đơn lẻ.
+- Temporary debugging data.
+- Output của một lần chạy test/scan.
+- Report health tạm thời của một đợt kiểm tra.
+- Lỗi nhỏ chỉ xảy ra một lần.
+- Thông tin không có khả năng tái sử dụng.
+
+---
+
+### Golden Rule
+> **AI được phép học, nhưng không được tự quyết định tri thức chính thức.**
+> **AI quan sát → Đề xuất → Con người phê duyệt → Dự án tiến hóa.**
+
+---
+
 ## 1. Nguyên Tắc Cốt Lõi & Tôn Chỉ Bất Di Bất Dịch
 
 > 🎯 **Core Identity:** Đây KHÔNG PHẢI là một công cụ định dạng Postman đơn thuần ("Postman Formatter"). Đây là hệ thống **API-to-Data Discovery Engine**: Biến Postman collection từ một tập hợp request thô thành nguồn tri thức có bằng chứng thực tế phục vụ đồng thời Backend, QA, Data Engineer, Data Analyst và AI Agent.
 
 ### 🌟 4 Nguyên Tắc Vàng (Golden Principles)
 1. **Evidence Over Inference (Bằng chứng trên suy đoán):**
-   > *"Never infer an API contract from endpoint names alone. Observe the real API response first, preserve raw evidence, then derive the schema and standardized collection from observed evidence."*
-   *(Không bao giờ suy diễn hợp đồng API chỉ từ tên endpoint. Luôn quan sát phản hồi thật trước, bảo toàn bằng chứng thô, rồi mới suy ra schema và bộ collection chuẩn hóa).*
+    > *"Never infer an API contract from endpoint names alone. Observe the real API response first, preserve raw evidence, then derive the schema and standardized collection from observed evidence."*
+    *(Không bao giờ suy diễn hợp đồng API chỉ từ tên endpoint. Luôn quan sát phản hồi thật trước, bảo toàn bằng chứng thô, rồi mới suy ra schema và bộ collection chuẩn hóa).*
 2. **Hypothesis vs Truth (Giả thuyết vs Sự thật):**
-   > *"Observed API behavior is evidence; inferred schema is a hypothesis until validated by sufficient executions."*
-   *(Hành vi API quan sát được là bằng chứng; schema suy luận chỉ là giả thuyết cho đến khi được kiểm chứng qua đủ số lần chạy).*
+    > *"Observed API behavior is evidence; inferred schema is a hypothesis until validated by sufficient executions."*
+    *(Hành vi API quan sát được là bằng chứng; schema suy luận chỉ là giả thuyết cho đến khi được kiểm chứng qua đủ số lần chạy).*
 3. **Discovery First, Implementation Upon Direction (Khám phá trước, làm sau):**
-   > *"DISCOVERY FIRST, IMPLEMENTATION ONLY ON EXPLICIT USER DIRECTION."*
-   *(Luôn ưu tiên khám phá, đánh giá và lập báo cáo checkpoint. TUYỆT ĐỐI KHÔNG tự động triển khai code, pipeline hay migration nếu chưa có chỉ đạo tường minh từ người dùng).*
+    > *"DISCOVERY FIRST, IMPLEMENTATION ONLY ON EXPLICIT USER DIRECTION."*
+    *(Luôn ưu tiên khám phá, đánh giá và lập báo cáo checkpoint. TUYỆT ĐỐI KHÔNG tự động triển khai code, pipeline hay migration nếu chưa có chỉ đạo tường minh từ người dùng).*
 4. **No Premature Architecture Mutation (Không tự ý biến đổi hệ thống):**
-   > *"The discovery agent MUST NOT create production code, Bronze pipelines, database schemas, or modify project architecture merely because those actions appear to be logical next steps."*
-   *(Agent cấm tự tiện tạo mã nguồn production, pipeline Bronze, hay sửa schema cơ sở dữ liệu chỉ vì thấy đó là bước tiếp theo hợp lý).*
+    > *"The discovery agent MUST NOT create production code, Bronze pipelines, database schemas, or modify project architecture merely because those actions appear to be logical next steps."*
+    *(Agent cấm tự tiện tạo mã nguồn production, pipeline Bronze, hay sửa schema cơ sở dữ liệu chỉ vì thấy đó là bước tiếp theo hợp lý).*
 
 ### 📜 Quy Tắc Bàn Giao Quyền Quyết Định (The Handoff Contract Rule)
 ```text
@@ -223,120 +302,9 @@ Báo cáo phân tích `docs/api-discovery/<collection>-analysis.md` đóng vai t
 
 ---
 
-### Mẫu Báo Cáo 10 Mục Hoàn Chỉnh (`docs/api-discovery/<collection>-analysis.md`)
+### Mẫu Báo Cáo 10 Mục Hoàn Chỉnh
 
-```markdown
-# API Discovery & Evidence Report: [<collection_name>]
-
-> **Status:** DISCOVERY_COMPLETED (Awaiting User Decision)
-> **Execution Date:** <ISO_TIMESTAMP>
-> **Environment:** <Staging / Production / Offline Logs>
-
----
-
-## 1. Executive Summary
-- **Collection Name:** `<name>`
-- **Total Requests Analyzed:** `<total>`
-- **Requests Executed (Evidence Collected):** `<executed_count>` (Success: `<success>`, Failed: `<failed>`)
-- **Requests Not Executed:** `<skipped_count>` (Do phân loại rủi ro hoặc thiếu thông tin)
-- **Average Response Latency:** `<avg_ms> ms` (Min: `<min_ms>`, Max: `<max_ms>`)
-
----
-
-## 2. Project Context & Detected Architecture
-- **Backend Stack:** `<stack hoặc None>`
-- **Data Pipeline Stack:** `<dbt / Airflow / Python scripts / Không có>`
-- **Existing Storage Zones:** `<Bronze/Silver/Gold folders hiện có>`
-- **Relevant Existing Modules:**
-  - `<file_link_1>`
-  - `<file_link_2>`
-
----
-
-## 3. API Inventory & Risk Classification
-| # | Method | Endpoint Path | Risk Gate | Execution Status | HTTP Status | Response Time | Domain / Module |
-|---|---|---|---|---|---|---|---|
-| 1 | GET | `/api/v1/users` | AUTO | EXECUTED | 200 OK | 184 ms | User Management |
-| 2 | POST | `/api/v1/users` | CONFIRM | NOT_EXECUTED | — | — | User Management |
-| 3 | GET | `/api/v1/orders` | AUTO | EXECUTED | 200 OK | 340 ms | Order Processing |
-
----
-
-## 4. Real API Evidence (Observed Responses)
-### Endpoint: `GET /api/v1/users`
-- **Execution Status:** EXECUTED
-- **HTTP Code:** `200 OK` | **Latency:** `184 ms`
-- **Observed Response Body (Raw Snippet):**
-```json
-{
-  "data": [
-    { "id": 1024, "name": "Nguyen Van A", "createdAt": "2026-09-15T10:20:00Z" }
-  ],
-  "pagination": { "page": 1, "pageSize": 20, "total": 128 }
-}
-```
-
----
-
-## 5. Schema Discovery & API Data Dictionary
-### Entity: `users` (Derived from `GET /api/v1/users`)
-| Field Path | Data Type | Nullable | Sample Value | Evidence Confidence |
-|---|---|---|---|---|
-| `data[].id` | integer | No | `1024` | 100% (Observed) |
-| `data[].name` | string | No | `"Nguyen Van A"` | 100% (Observed) |
-| `data[].createdAt` | datetime | No | `"2026-09-15T10:20:00Z"` | 100% (Observed) |
-| `pagination.total` | integer | No | `128` | 100% (Observed) |
-
----
-
-## 6. Data Engineering Assessment (Medallion Bronze Layer)
-- **Candidate Bronze Sources:**
-  - `GET /api/v1/users` → Bảng Bronze: `bronze_raw_users`
-  - `GET /api/v1/orders` → Bảng Bronze: `bronze_raw_orders`
-- **Khuyến nghị Chiến lược Ingestion:**
-  - Lưu trữ dưới dạng `NDJSON` (Newline Delimited JSON) theo từng batch chạy.
-  - Bổ sung Ingestion Metadata Header (`ingestion_id`, `ingested_at`, `status_code`, `latency_ms`).
-  - Không bóc tách mảng `data[]` ở Bronze; giữ nguyên toàn bộ payload để đảm bảo tính toàn vẹn (Immutability).
-
----
-
-## 7. Existing Project Alignment
-- Codebase hiện đã có cấu trúc: `<liệt kê>`
-- **Phương án tích hợp khả thi:**
-  - Phương án 1: Tích hợp vào pipeline ingest sẵn có tại `<path>`.
-  - Phương án 2: Tạo module API ingestion độc lập tại `<path>`.
-
----
-
-## 8. Key Findings & Anomalies
-- **F-001 (Pagination):** Endpoint `GET /api/v1/orders` dùng phân trang `page` & `pageSize`. Cần vòng lặp loop khi ingest toàn bộ.
-- **F-002 (Nested Structures):** Trường `customer.profile` trả về object lồng nhau 3 cấp. Khuyến nghị chuẩn hóa tại tầng Silver.
-- **F-003 (Rate Limiting):** API trả về header `X-RateLimit-Remaining: 60`. Cần cơ chế throttle delay 500ms giữa các batch.
-
----
-
-## 9. Identified Risks
-- ⚠️ **R-01 (Token Expiration):** Bearer token hết hạn sau 30 phút. Cần cơ chế refresh token nếu crawl dữ liệu lớn.
-- ⚠️ **R-02 (Inconsistent Error Schema):** Endpoint trả về HTTP 404 có format khác với HTTP 500.
-
----
-
-## 10. Recommended Next Actions & DECISION REQUIRED
-
-> ⛔ **AI ACTION STOPPED HERE — WAITING FOR USER INSTRUCTION**
-> AI **CHƯA THỰC HIỆN BẤT KỲ THAY ĐỔI MÃ NGUỒN HOẶC TẠO PIPELINE NÀO**. Xin vui lòng chọn 1 trong các định hướng sau:
-
-- **Option A — Bronze Ingestion Pipeline:**
-  Xây dựng pipeline thu thập và sinh file dữ liệu thô `api_responses.ndjson` + `ingestion_manifest.json` sẵn sàng nạp vào hồ dữ liệu.
-- **Option B — Postman Collection Standardization:**
-  Chuẩn hóa lại toàn bộ collection: gom nhóm folders theo Resource, gắn response mẫu thật, thiết lập biến môi trường và bổ sung bộ test scripts `pm.test`.
-- **Option C — Formal Data Contract:**
-  Sinh file đặc tả hợp đồng dữ liệu `api_schema.json` + `data_dictionary.md` + file contract YAML làm căn cứ kiểm định cho tầng Silver.
-- **Option D — Data Quality & Anomaly Assertions:**
-  Thiết lập bộ quy tắc kiểm tra chất lượng dữ liệu (Null checks, Uniqueness, Type assertions) cho các endpoint quan trọng.
-- **Option E — Deep Scenario Execution:**
-  Tiếp tục chạy thêm các kịch bản biên (Empty Result, Invalid Params, Unauthorized) để hoàn thiện bức tranh hành vi của API.
-```
+→ Xem chi tiết tại `references/discovery-report-template.md`
 
 ---
 
@@ -360,75 +328,11 @@ api-discovery/
     └── execution_report.json           # Log chi tiết kỹ thuật từng lần gọi mạng
 ```
 
-### Cấu Trúc Bản Ghi Raw Bronze (`api_responses.ndjson`)
-Mỗi dòng là một đối tượng JSON độc lập, bảo tồn trọn vẹn dữ liệu gốc và dữ liệu truy vết:
+### Cấu Trúc Raw Bronze & Data Contract
 
-```json
-{
-  "ingestion_metadata": {
-    "ingestion_id": "b7a2d481-9f33-4a11-8e02-4876211c1209",
-    "ingested_at": "2026-09-15T10:20:31.402Z",
-    "source_type": "postman_collection",
-    "collection_name": "ECommerce-Core-API",
-    "endpoint": "GET /api/v1/orders",
-    "environment": "staging",
-    "status_code": 200,
-    "response_time_ms": 184
-  },
-  "raw_request": {
-    "method": "GET",
-    "url": "https://staging.api.example.com/api/v1/orders?page=1&pageSize=20",
-    "headers": {
-      "Accept": "application/json",
-      "Authorization": "Bearer [REDACTED_SECRET]"
-    }
-  },
-  "raw_response": {
-    "status": 200,
-    "status_text": "OK",
-    "headers": {
-      "content-type": "application/json; charset=utf-8",
-      "x-ratelimit-remaining": "59"
-    },
-    "body": {
-      "data": [
-        { "id": 501, "order_number": "ORD-2026-001", "total_amount": 1250000, "status": "COMPLETED" }
-      ],
-      "pagination": { "page": 1, "pageSize": 20, "total": 1 }
-    }
-  }
-}
-```
+→ Xem chi tiết tại `references/bronze-record-format.md`
 
-### Cấu Trúc Data Contract YAML (`schema/data_contract.yaml`)
-```yaml
-contract_version: "1.0.0"
-dataset: "orders"
-source_endpoint: "GET /api/v1/orders"
-schema:
-  fields:
-    - name: "id"
-      type: "integer"
-      nullable: false
-      description: "Primary key của đơn hàng"
-    - name: "order_number"
-      type: "string"
-      nullable: false
-      format: "^ORD-[0-9]{4}-[0-9]+$"
-    - name: "total_amount"
-      type: "numeric"
-      nullable: false
-    - name: "status"
-      type: "string"
-      allowed_values: ["PENDING", "PROCESSING", "COMPLETED", "CANCELLED"]
-quality_rules:
-  - rule: "id must be unique"
-    level: "critical"
-  - rule: "total_amount must be greater than or equal to 0"
-    level: "critical"
-  - rule: "order_number must not be null"
-    level: "critical"
-```
+→ Xem chi tiết tại `references/data-contract-yaml.md`
 
 ---
 
@@ -468,3 +372,85 @@ Vui lòng xem báo cáo chi tiết và chọn bước đi tiếp theo:
   👉 Option D: Cấu hình bộ Quality Assertion Rules
   👉 Option E: Tiếp tục khám phá các kịch bản ngoại lệ sâu hơn
 ```
+
+---
+
+## 8. Mô Hình Độ Tin Cậy (Confidence Model)
+
+| Level | Condition | Action |
+|-------|-----------|--------|
+| HIGH | Real API response observed with HTTP status code | Report evidence as FACT |
+| MEDIUM | Schema inferred from response structure | Note as HYPOTHESIS requiring validation |
+| LOW | No API executed, only Postman collection parsed | Report as NOT_EXECUTED |
+
+---
+
+## 9. Thoái Ra Mã (Exit Codes)
+
+| Code | Meaning | When |
+|------|---------|------|
+| SUCCESS | Phase A complete, checkpoint report generated, user reviewing | Report saved at docs/api-discovery/ |
+| PARTIAL | Some endpoints could not be executed | NOT_EXECUTED entries in report |
+| BLOCKED | Missing Postman collection, credentials, or network access | Cannot proceed with Phase A |
+| FAILED | Critical error during discovery or report generation | Abort and report error |
+
+---
+
+## Platform-Specific Instructions
+
+### Antigravity (Google Gemini)
+- Uses `.agents/AGENTS.md` as entry point
+- Supports Cockpit integration
+- Rewrite absolute paths for global mode
+- `GEMINI.md` copied for global installs
+
+### Claude Code (Anthropic)
+- Reads `.claude/CLAUDE.md` automatically
+- Large context window (~200K tokens)
+- Can handle full skill files without trimming
+- Uses native tool format (Read, Write, Edit, Bash)
+
+### OpenCode (Open Source)
+- Reads `.opencode/config.yaml`
+- Context window ~128K tokens
+- Keep skill files lean when possible
+- Supports custom tool format
+
+---
+
+## Evidence Format
+
+Every evidence claim must follow this format:
+
+```
+[SEVERITY] discovery-phase: [phase-name]
+Reason:     [why this evidence matters]
+Confidence: [HIGH|MEDIUM|LOW]
+Fix:        [suggestion if evidence points to a bug]
+```
+
+### Evidence Types
+
+| Type | Example | Severity |
+|------|---------|----------|
+| API Response | HTTP 200 + JSON body | HIGH |
+| Schema Match | Response matches OpenAPI spec | HIGH |
+| Error Pattern | Stack trace + error code | MEDIUM |
+| Missing Endpoint | 404 on discovered route | MEDIUM |
+| Schema Mismatch | Field type differs | HIGH |
+
+---
+
+## Compliance
+
+| Check | Status |
+|-------|--------|
+| Runtime Standard | 11/11 |
+| Frontmatter Complete | ✅ |
+| Platforms Field | ✅ |
+| References Valid | ✅ |
+| Decision Trees | PASS |
+| Thresholds Defined | PASS |
+| schema_version | 10.2.0 |
+| runtime_version | 1 |
+| platforms | [antigravity, claude, opencode] |

@@ -5,6 +5,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [10.2.0] — 2026-09-24 — AI Developer Skill OS v10.2: 3 IDEs (Antigravity, Claude, OpenCode), Platform-Specific Sections, graph.json edges
+
+### Added
+- 3 IDE support: Antigravity, Claude, OpenCode
+- Platform-Specific Instructions section in every SKILL.md
+- `platforms` and `runtime_version` fields in all frontmatters
+- `.claude/CLAUDE.md`, `.opencode/config.yaml` created
+- CI workflow updated to ubuntu-latest
+
+### Changed
+- Removed Cursor, Windsurf, Kilo, Codex support
+- Removed old `/skills/` directory and `capability-graph.yml`
+- Removed stale worktree `.kilo/worktrees/stealth-octagon`
+
+### Fixed
+- `copyOpenCodeConfig` order fix in install.js
+- `validate-skills.js` V10 status default
+- `build-registry.js` dependency mapping with crossEdges
+- `sync-versions.js` V9→V10 fix
+
 ## [10.1.0] — 2026-09-15 — AI Developer Skill OS v10.1: 11 Super-Skills, API-to-Data Discovery & Prompt Compiler v11.1
 
 ### Added
@@ -228,3 +248,44 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [7.0.0] — 2026
 
 - V7 release: 22 skills, YAML frontmatter, token budget system
+
+---
+
+## [10.2.0] — 2026-09-24 — AI Developer Skill OS v10.2: Clean Architecture & Full Validation
+
+### Upgraded
+- All 11 SKILL.md files version bumped to 10.2.0
+- All 9 rule files version bumped to 10.2.0
+- All 12 workflow YAML files version bumped to 10.2.0
+- _template/SKILL.md upgraded from V9.2 to V10.2
+
+### Added — Every Skill Now Has:
+- **Confidence Model** — HIGH/MEDIUM/LOW routing confidence
+- **Exit Codes** — SUCCESS/PARTIAL/BLOCKED/FAILED
+- **Evidence Format** — Structured evidence with severity + confidence
+- **Compliance** — schema_version 10.2.0, runtime_version 1
+
+### Enhanced
+- **qk-orchestrator**: Added Role Adaptation, Failure Path, Retry Policy (108→187 lines)
+- **qk-code-review**: Added Role Adaptation, Failure Path, Evidence Format (132→220 lines)
+- **qk-api-data-discovery**: Reduced 470→330 lines, split report templates to references/
+- **qk-prompt-compiler**: Added Core Principles, Role Adaptation, Evidence Gate (321→408 lines)
+- **7 other skills**: Added missing Exit Codes + Confidence Model + Evidence Format
+
+### Removed
+- Deleted old `/skills/` directory (22-file legacy system)
+- Deleted `capability-graph.yml` and `skills-index.yml` (old registry)
+- Deleted `.kilo/worktrees/stealth-octagon` (stale git worktree)
+- Deleted `_template/capability.yaml` (old system manifest)
+- Deleted `_template/evals/scorecard.yaml` (old V8 format)
+
+### Fixed Tooling
+- `validate-skills.js`: Updated to check V10 sections instead of V8 fields
+- `build-registry.js`: Updated from V8.2 to V10.2, added edges array to graph.json
+- `validate-graph.js`: Updated to read graph.json, fixed orphan detection
+- `sync-versions.js`: Updated targetVersion from 9.1.0 to 10.2.0
+
+### Validation
+- `npm run test:registry`: 10/10 tests passed
+- `node tooling/validate-skills.js`: 11/11 valid
+- `node tooling/validate-graph.js`: **Score 100/100** (0 orphans, 0 cycles, 11 edges)

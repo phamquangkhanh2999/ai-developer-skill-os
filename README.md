@@ -1,8 +1,8 @@
-# AI Developer Skill OS v10.1.0 — Lean Core Edition
+# AI Developer Skill OS v10.2.0 — Lean Core Edition
 
-> **v10.1.0 "Lean Core Revolution & API-to-Data Discovery Integration"**
+> **v10.2.0 "Lean Core Revolution & API-to-Data Discovery Integration"**
 
-Phiên bản **v10.1.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **11 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tích hợp toàn diện cỗ máy biên dịch Prompt Compiler v11.1 và Discovery Engine cho Antigravity IDE.
+Phiên bản **v10.2.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **11 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tích hợp toàn diện cỗ máy biên dịch Prompt Compiler v10.2 và Discovery Engine cho Antigravity IDE.
 
 ---
 

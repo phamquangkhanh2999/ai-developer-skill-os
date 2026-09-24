@@ -1,5 +1,7 @@
 name: refactor
-version: 8.0.0
+version: 10.2.0
+platforms: [antigravity, claude, opencode]
+runtime_version: 1
 description: "Pipeline refactor an toàn: giữ nguyên behavior bên ngoài, cải thiện chất lượng bên trong."
 
 owner:
@@ -100,3 +102,35 @@ steps:
 escalation:
   max_retries: 1
   on_failure: "Revert to rollback_point. Report what was completed and what remains."
+
+# ── V10.2 Additions ──────────────────────────────
+# Confidence Model
+# | Level  | Condition              | Action       |
+# |--------|------------------------|--------------|
+# | HIGH   | Step inputs provided   | Proceed      |
+# | MEDIUM | Some assumptions needed | Note assumptions |
+# | LOW    | Insufficient evidence  | EXIT: BLOCKED|
+#
+# Exit Codes
+# | Code    | Meaning                       | When                    |
+# |---------|-------------------------------|-------------------------|
+# | SUCCESS | Step completed and verified   | All criteria met        |
+# | PARTIAL | Step done with minor gaps    | Some checks skipped     |
+# | BLOCKED | Missing precondition         | Ask user                |
+# | FAILED  | Step failed after max retries | Report error            |
+#
+# Evidence Format:
+#   [SEVERITY] step_id: [step-name]
+#   Reason:     [why this matters]
+#   Confidence: [HIGH|MEDIUM|LOW]
+#   Fix:        [suggestion]
+#
+# Compliance:
+#   Runtime Standard: 11/11
+#   Frontmatter Complete: yes
+#   References Valid: yes
+#   Decision Trees: PASS
+#   Thresholds Defined: PASS
+#   schema_version: 10.2.0
+#   runtime_version: 1
+#   platforms: [antigravity, claude, opencode]

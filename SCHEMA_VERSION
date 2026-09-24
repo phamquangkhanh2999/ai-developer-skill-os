@@ -1,15 +1,14 @@
 {
-  "platform_version": "9.1.0",
-  "schema_version": "9.1.0",
-  "description": "AI Developer Skill OS V9.1 - Governed Capability & Candidate Memory Knowledge Platform",
-  "last_updated": "2026-08-03",
-  "compatible_skill_versions": "9.x.x",
+  "platform_version": "10.2.0",
+  "schema_version": "10.2.0",
+  "description": "AI Developer Skill OS V10.2 - 11 Governed Core Super-Skills with API Data Discovery Engine, Prompt Compiler Control Plane & Antigravity Cockpit Integration.",
+  "last_updated": "2026-09-24",
+  "compatible_skill_versions": "10.x.x",
   "registry_schema": {
     "index_yaml": "1",
     "graph_json": "1",
-    "capability_graph_yml": "9.0.0",
-    "skills_index_yml": "9.0.0"
+    "skills_index_yml": "REMOVED_V10"
   },
-  "workflow_schema": "9.0.0",
-  "rules_schema": "9.0.0"
+  "workflow_schema": "10.2.0",
+  "rules_schema": "10.2.0"
 }

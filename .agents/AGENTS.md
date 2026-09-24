@@ -124,6 +124,19 @@ Nếu không khớp rõ → dùng `qk-orchestrator`.
 
 ---
 
+[Platform-Specific Instructions]
+Each IDE has a different entry point and context window:
+
+| IDE | Entry Point | Context | Tool Format |
+|---|---|---|---|
+| **Antigravity** |  | Large | Custom Cockpit |
+| **Claude** |  | ~200K tokens | Read/Write/Edit/Bash |
+| **OpenCode** |  | ~128K tokens | Custom |
+
+Each skill has  in frontmatter and a  section.
+
+---
+
 [Trigger Mechanism]
 Two ways to activate a skill:
 

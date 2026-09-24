@@ -1,33 +1,58 @@
-# Workflow Schema Reference
+# Workflow Schema — V10.2
 # See workflows/_schema.yml for the full machine-readable schema.
 # This file is for human reference.
 
-schema_version: 8.0.0
+schema_version: 10.2.0
 
-top_level_required:
-  name:        "string, kebab-case"
-  version:     "semver 8.x.x"
-  description: "string, one sentence"
-  steps:       "array, minimum 2"
-  escalation:  "object: {max_retries, on_failure}"
+# ── Required top-level fields ──────────────────────
+required:
+  - name          # string: workflow identifier (kebab-case)
+  - version       # semver: 10.x.x
+  - description   # string: what this pipeline does
+  - owner
+  - steps
 
-step_required:
-  id:       "string, snake_case, unique within workflow"
-  name:     "string, human-readable"
-  purpose:  "string — WHAT the step achieves"
-  inputs:   "array — what this step needs to start"
-  outputs:  "array — what this step produces when done"
-  required: "bool — true = cannot be skipped without skip_if condition"
+# ── Owner ──────────────────────────────────────────
+owner:
+  type: engineering
+  maintained_by: qk-team
 
-step_optional:
-  skip_if:        "string — condition under which step can be skipped"
-  exit_on_fail:   "BLOCKED | PARTIAL | FAILED"
-  min_confidence: "HIGH | MEDIUM"
-  actions:        "array — hints for HOW (not mandatory for agent)"
+# ── Steps ──────────────────────────────────────────
+steps:
+  - id: string          # Unique step identifier
+    name: string        # Display name
+    purpose: string     # What this step achieves
+    required: boolean   # Whether step is mandatory
+    outputs:            # Array of output names
+      - string
+    actions:            # Array of action descriptions
+      - string
+    human_checkpoint:   # Optional human approval
+      condition: string
+      message: string
+    exit_on_fail:       # What to do on failure
+      - PARTIAL
+      - BLOCKED
+      - FAILED
 
-verification_profiles:
-  bug-fix:      [regression_check, root_cause_fixed, lint_clean, test_if_available]
-  refactor:     [behavior_unchanged, test_pass, lint_clean, no_new_complexity]
-  feature:      [acceptance_criteria, test_coverage, integration_check, lint_clean]
-  documentation:[accuracy, completeness, no_broken_links]
-  review:       [findings_have_evidence, severity_justified, actionable_suggestions]
+# ── Escalation ─────────────────────────────────────
+escalation:
+  max_retries: integer
+  on_failure: string
+
+# ── Example ────────────────────────────────────────
+example: |
+  name: bug-resolution
+  version: 10.2.0
+  description: "Pipeline chuẩn để diagnose và fix bugs."
+  owner:
+    type: engineering
+    maintained_by: qk-team
+  steps:
+    - id: understand
+      name: "Hiểu yêu cầu"
+      purpose: "Nhận diện mục tiêu cốt lõi"
+      required: true
+  escalation:
+    max_retries: 2
+    on_failure: "Report error and ask user"

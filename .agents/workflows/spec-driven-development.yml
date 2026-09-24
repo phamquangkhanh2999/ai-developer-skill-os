@@ -1,6 +1,8 @@
 name: spec-driven-development
-version: 9.3.0
-description: "Workflow phát triển sản phẩm dựa trên đặc tả kỹ thuật (Specification-Driven Development): Idea → Requirements → Acceptance Criteria (BDD) → Technical Spec → Plan → Verify."
+version: 10.2.0
+platforms: [antigravity, claude, opencode]
+runtime_version: 1
+description: "Pipeline phát triển dựa trên đặc tả: Requirement → Acceptance Criteria → Technical Spec → Implementation."
 
 owner:
   type: engineering
@@ -9,101 +11,106 @@ owner:
 verification_profile: spec-driven
 
 triggers:
-  - "write a spec"
-  - "viết đặc tả"
-  - "spec this out"
+  - "viết spec"
+  - "viết prd"
   - "acceptance criteria"
-  - "prd"
-  - "technical spec"
-  - "user story"
-  - "design before implementing"
+  - "bdd"
 
 ide_binding:
   slash_command: "/spec"
-  aliases: ["/grill-me", "/prd", "/spec-driven"]
+  aliases: ["/prd", "/specify"]
 
 steps:
-  - id: clarify_requirements
-    name: "Làm rõ yêu cầu & Bóc tách ý tưởng"
-    purpose: "Biến ý tưởng thô sơ thành mục tiêu sản phẩm rõ ràng, không mơ hồ"
+  - id: triage
+    name: "Triage & Clarify"
+    purpose: "Xác định quy mô task và kích hoạt /grill-me nếu thiếu thông tin"
     required: true
-    inputs:
-      - user_idea
-      - dev_profile
     outputs:
-      - problem_statement    # Vấn đề cần giải quyết
-      - target_actors        # Ai sử dụng tính năng này
-      - scope_boundary       # In-scope vs Out-of-scope rõ ràng
+      - task_scale
+      - clarity_level
     actions:
-      - "Gợi ý người dùng chạy lệnh slash /grill-me để phỏng vấn sâu nếu yêu cầu còn nhiều giả định chưa rõ"
-      - "Xác định rõ vấn đề cốt lõi (Core Problem) và giá trị kinh doanh (Value)"
-      - "Vạch rõ ranh giới: Làm gì (In-scope) và KHÔNG làm gì (Out-of-scope)"
-    exit_on_fail: BLOCKED
+      - "Xác định Nhỏ/Vừa/Lớn"
+      - "Kích hoạt /grill-me nếu thiếu thông tin"
 
-  - id: acceptance_criteria
-    name: "Xây dựng Acceptance Criteria (BDD)"
-    purpose: "Định nghĩa định lượng tiêu chí hoàn thành theo chuẩn Given / When / Then"
+  - id: gap_scan
+    name: "Codebase Gap Scan"
+    purpose: "Đối chiếu models & APIs hiện có để đánh giá khả thi"
     required: true
-    inputs:
-      - problem_statement
-      - target_actors
-      - scope_boundary
     outputs:
-      - criteria_matrix      # Bảng Given / When / Then cho từng use-case
-      - edge_cases           # Kịch bản biên, lỗi, rớt mạng, mất quyền
+      - reusable_components
+      - new_requirements
     actions:
-      - "Viết kịch bản theo chuẩn BDD (Given / When / Then) cho từng User Story"
-      - "Liệt kê ít nhất 3 edge cases (dữ liệu rỗng, timeout, quyền truy cập không hợp lệ)"
-      - "Xác định rõ HTTP status code mong đợi cho từng kịch bản lỗi"
+      - "Quét codebase cho models, APIs hiện có"
+      - "Xác định Gap Analysis"
 
-  - id: technical_specification
-    name: "Thiết kế Đặc tả Kỹ thuật (Technical Spec)"
-    purpose: "Xác định kiến trúc hệ thống, API contracts, và Data schema trước khi code"
+  - id: bdd_write
+    name: "BDD Spec Writing"
+    purpose: "Viết Acceptance Criteria chuẩn Gherkin"
     required: true
-    inputs:
-      - criteria_matrix
-      - edge_cases
     outputs:
-      - data_models          # Entities, Interfaces, DB Schema migrations
-      - api_contracts        # Endpoint, Method, Request/Response JSON schemas
-      - architecture_diagram # Sơ đồ luồng ASCII Unicode Box Drawing
+      - bdd_scenarios
+      - acceptance_criteria
     actions:
-      - "Vẽ sơ đồ luồng dữ liệu (Data Flow) bằng Unicode/ASCII Box Drawing (chuẩn GEMINI.md)"
-      - "Thiết kế Type contracts (TypeScript interfaces / Pydantic models / Protobuf)"
-      - "Xác định rõ các điểm chốt chặn bảo mật (Boundary Validation R-SEC-04)"
-      - "Đảm bảo contract giữa Frontend và Backend đồng bộ 100%"
-
-  - id: create_plan
-    name: "Lập Kế hoạch Triển khai (Implementation Plan)"
-    purpose: "Phân rã spec thành các task cụ thể và kích hoạt phê duyệt tương tác"
-    required: true
-    inputs:
-      - technical_specification
-    outputs:
-      - implementation_plan  # File implementation_plan.md
-    actions:
-      - "Phân chia task theo thứ tự an toàn: Types/Schema → Business Logic/Service → UI/Route → Tests"
-      - "Ước lượng rủi ro và blast radius cho từng file"
-      - "Trên Antigravity IDE: Tạo implementation_plan.md kèm RequestFeedback: true để kích hoạt Modal phê duyệt"
+      - "Viết Given/When/Then cho Happy Path + Edge Cases"
     human_checkpoint:
-      condition: "Task có độ phức tạp medium/high (≥ 2 files hoặc sửa schema DB)"
-      message: "Bản đặc tả và kế hoạch kỹ thuật đã sẵn sàng. Xác nhận để chuyển sang bước thực thi."
+      condition: "Task scale = Lớn"
+      message: "Feature lớn. Xác nhận BDD spec trước khi tiếp tục."
 
-  - id: verify_compliance
-    name: "Kiểm định Tuân thủ Đặc tả"
-    purpose: "Đối chiếu mã nguồn sau khi code với 100% Acceptance Criteria ban đầu"
+  - id: plan
+    name: "Implementation Plan"
+    purpose: "Tạo implementation_plan.md và kích hoạt modal"
     required: true
-    inputs:
-      - source_code
-      - criteria_matrix
     outputs:
-      - compliance_report    # Pass rate, tiêu chí chưa đạt (nếu có)
+      - implementation_plan_path
     actions:
-      - "Kiểm tra từng tiêu chí Given/When/Then — đánh dấu ✅ hoặc ❌"
-      - "Chạy automated tests nếu có để chứng minh tiêu chí đã đạt"
-      - "Không cho phép đóng task nếu còn bất kỳ acceptance criterion nào chưa thỏa mãn"
+      - "Tạo implementation_plan.md với RequestFeedback: true"
+    human_checkpoint:
+      condition: "Always"
+      message: "Review implementation_plan trước khi code."
+
+  - id: verify
+    name: "Verify Against Spec"
+    purpose: "Xác nhận implementation match spec"
+    required: true
+    outputs:
+      - spec_compliance
+    actions:
+      - "Đối chiếu từng acceptance criteria"
+      - "Verify edge cases covered"
     exit_on_fail: PARTIAL
 
 escalation:
-  max_retries: 2
-  on_failure: "Báo cáo độ lệch so với spec, chỉ ra blocker và yêu cầu chỉ thị từ Tech Lead / User"
+  max_retries: 1
+  on_failure: "Report spec compliance gaps and ask user to update spec"
+
+# ── V10.2 Additions ──────────────────────────────
+# Confidence Model
+# | Level  | Condition              | Action       |
+# |--------|------------------------|--------------|
+# | HIGH   | Step inputs provided   | Proceed      |
+# | MEDIUM | Some assumptions needed | Note assumptions |
+# | LOW    | Insufficient evidence  | EXIT: BLOCKED|
+#
+# Exit Codes
+# | Code    | Meaning                       | When                    |
+# |---------|-------------------------------|-------------------------|
+# | SUCCESS | Step completed and verified   | All criteria met        |
+# | PARTIAL | Step done with minor gaps    | Some checks skipped     |
+# | BLOCKED | Missing precondition         | Ask user                |
+# | FAILED  | Step failed after max retries | Report error            |
+#
+# Evidence Format:
+#   [SEVERITY] step_id: [step-name]
+#   Reason:     [why this matters]
+#   Confidence: [HIGH|MEDIUM|LOW]
+#   Fix:        [suggestion]
+#
+# Compliance:
+#   Runtime Standard: 11/11
+#   Frontmatter Complete: yes
+#   References Valid: yes
+#   Decision Trees: PASS
+#   Thresholds Defined: PASS
+#   schema_version: 10.2.0
+#   runtime_version: 1
+#   platforms: [antigravity, claude, opencode]

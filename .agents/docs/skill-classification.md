@@ -5,7 +5,7 @@ Skills are classified into behavioral groups that define their **Primary Objecti
 *Note: Actual verification depth is NOT determined by the skill itself, but must strictly follow the **Risk-based Verification Policy** defined in `AGENTS.md`.*
 
 ## 1. Static Analysis Skills
-*e.g., Code Review, Project Health, Architecture, Documentation*
+*e.g., qk-code-review, qk-product-spec, qk-orchestrator*
 - **Primary Goal:** Audit, analyze, or document without altering system behavior.
 - **Preferred Behavior:** Prefer static analysis (`read_file`, `grep_search`). Do not execute code or run test suites unless explicitly requested to validate the audit.
 

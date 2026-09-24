@@ -1,5 +1,5 @@
 ---
-version: 8.0.0
+version: 10.2.0
 description: "Rules governing code writing, editing, and review tasks."
 domain: rules
 applies_to: [skills-with-side_effects-edit_files]

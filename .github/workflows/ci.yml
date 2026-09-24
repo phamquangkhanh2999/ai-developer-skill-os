@@ -1,5 +1,4 @@
 name: CI / Spec Compliance & Registry Validation
-
 on:
   pull_request:
     paths:
@@ -7,6 +6,7 @@ on:
       - '.agents/registry/**'
       - 'README.md'
       - 'bin/**'
+      - 'tooling/**'
   push:
     branches: [ main ]
     paths:
@@ -14,43 +14,42 @@ on:
       - '.agents/registry/**'
       - 'README.md'
       - 'bin/**'
-
+      - 'tooling/**'
 jobs:
   lint-and-validate:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-
       - name: Install dependencies
         run: npm install
-
       - name: Validate Skills Registry vs Filesystem
         run: npm run test:registry
-
       - name: Validate SKILL.md Spec Compliance
         run: npm run lint
-
+      - name: Validate Graph Integrity
+        run: npm run test:graph
   snapshot:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: lint-and-validate
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-
       - name: Install dependencies
         run: npm install
-
       - name: Generate Registry Snapshot
-        run: node bin/** --ide=7 --scope=2
+        run: node bin/install.js --ide=claude --scope=2
+      - name: Upload Registry Snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: registry-snapshot
+          path: .agents/registry/

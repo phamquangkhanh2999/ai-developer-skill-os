@@ -7,8 +7,11 @@ export default defineConfig({
       '**/dist/**',
       '**/.kilo/**',
       '**/.git/**',
+      '**/node_modules/**',
       '**/.agents_cache/**'
-    ]
+    ],
+    globals: true,
+    runOnServer: true,
+    pool: 'forks'
   }
 });
-
