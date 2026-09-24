@@ -1,0 +1,188 @@
+# Skill Schema — V8
+
+# This file defines the required and optional fields for all SKILL.md frontmatter.
+# Every skill MUST conform to this schema. Validator: tooling/validate-skills.js
+
+schema_version: 8.0.0
+
+# ── Required fields ────────────────────────────────────────
+required:
+  name:
+    type: string
+    pattern: "^qk-[a-z-]+$"
+    example: "qk-bug-resolution"
+
+  version:
+    type: semver
+    example: "8.0.0"
+
+  status:
+    type: enum
+    values: [draft, experimental, stable, legacy, deprecated]
+
+  description:
+    type: string
+    maxLength: 120
+    example: "Sửa lỗi bằng chu trình khép kín: Observe → Hypothesize → Evidence → Fix."
+
+  platforms:
+    type: array
+    items: [antigravity, claude-code, cursor, windsurf, kilo-code]
+
+  type:
+    type: enum
+    values: [capability, utility, orchestrator]
+    example: "capability"
+
+  intent:
+    type: array
+    minItems: 1
+    example: [bug-fixing, debugging]
+
+  complexity:
+    type: object
+    required_fields: [level]
+    optional_fields: [criteria]
+    levels: [low, medium, high, critical]
+
+  triggers:
+    type: array
+    minItems: 2
+    description: "Keywords that cause AI to select this skill"
+    example: ["fix bug", "lỗi", "crash"]
+
+  workflow:
+    type: string
+    description: "References workflows/<name>.yml"
+    example: "bug-resolution"
+
+  selection:
+    type: object
+    required_fields: [priority]
+    optional_fields: [confidence_threshold, fallback_skill]
+    priority:
+      type: enum
+      values: [high, medium, low]
+    confidence_threshold:
+      type: number
+      default: 0.75
+      range:
+        min: 0.0
+        max: 1.0
+    fallback_skill:
+      type: string
+      optional: true
+
+  verification:
+    type: object
+    required_fields: [required, strategy]
+    strategies: [bug-fix, refactor, feature, documentation, review, api-change, migration-safety, performance-regression, release-safety, bootstrap-validation, none]
+
+  execution_mode:
+    type: enum
+    values: [deterministic]
+
+  token_budget:
+    type: object
+    required_fields: [max_files_read, max_lines_per_read, max_shell_commands, stop_early]
+
+  exit_codes:
+    type: array
+    items: [SUCCESS, BLOCKED, FAILED, PARTIAL]
+
+# ── Optional fields ─────────────────────────────────────────
+optional:
+  rules:
+    type: array
+    description: "References rules/<name>.md"
+    example: [global, coding]
+
+  tools:
+    type: array
+    example: [filesystem, git, browser]
+
+  related_skills:
+    type: array
+    description: "Skills often used together"
+    example: [qk-engineering-standard]
+
+  examples:
+    type: array
+    description: "References examples/good/*.md"
+
+  learnings:
+    type: array
+    description: "References learnings/validated/*.md"
+
+  cost:
+    type: enum
+    values: [low, medium, high]
+
+  latency:
+    type: enum
+    values: [fast, medium, slow]
+
+  risk:
+    type: enum
+    values: [low, medium, high]
+
+  side_effects:
+    type: enum
+    values: [edit_files, run_commands, read_only, none]
+
+  produces:
+    type: array
+    items: [code, report, schema, plan, tokens]
+
+  consumes:
+    type: array
+
+  knowledge_scope:
+    type: object
+    description: "Defines what knowledge this skill knows vs. references"
+    fields:
+      domain:
+        type: array
+      concepts:
+        type: array
+      references:
+        type: array
+
+  decision_boundary:
+    type: object
+    description: "Defines what decisions this skill is authorized to make"
+    fields:
+      owns:
+        type: array
+      does_not_own:
+        type: array
+      conflicts_with:
+        type: array
+      delegates_to:
+        type: array
+        description: "Other skills this skill can delegate implementation to"
+
+  lifecycle:
+    type: object
+    description: "Lifecycle governance for promotion and demotion"
+    fields:
+      promotion_gate:
+        type: object
+        fields:
+          requirements:
+            type: object
+            fields:
+              tests:
+                type: object
+              usage:
+                type: object
+              conflicts:
+                type: object
+              evidence:
+                type: object
+                fields:
+                  required:
+                    type: array
+      demotion_gate:
+        type: object
+

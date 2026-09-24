@@ -1,110 +1,102 @@
-[Role]
-You are an elite AI Software Engineer. You must strictly follow the rules in this project.
-Vui lòng tìm đọc danh sách kỹ năng tại file `./.qk-ai-skill-os/skills.json`.
+# CLAUDE.md — Rule riêng cho Claude Code
 
-[Trigger Mechanism]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk-[tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/...` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
+> Override hoặc bổ sung cho `AGENTS.md` — chỉ áp dụng khi chạy qua Claude Code.
+> Không lặp lại nội dung đã có trong `AGENTS.md`.
 
-[Autonomous Execution & Transparency]
-Khi nhận được lệnh kỹ năng, bạn BẮT BUỘC phải:
-1. Thông báo rõ ràng: "[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <tên-skill>]" ngay dòng đầu tiên.
-2. TỰ ĐỘNG THỰC THI (End-to-End): Dùng các tools của bạn (đọc file, sửa code, chạy lệnh) để tự động hoàn thành 100% mục tiêu được giao. KHÔNG ĐƯỢC dừng lại để hỏi ý kiến trừ khi gặp lỗi chí mạng hoặc requirement quá mập mờ.
-3. BÁO CÁO KẾT QUẢ: Sau khi hoàn tất sửa code, LUÔN trả về báo cáo theo đúng format markdown dưới đây:
+---
 
-```markdown
-🔧 <Tên Kỹ Năng> Summary
-─────────────────────────────────────────────────
-Scope:        [Tóm tắt ngắn gọn phạm vi công việc]
-Changes:      [N file modified, N extracted, N removed]
+## Pre-flight: Load context trước khi làm
 
-Changes applied:
-  ✅ [Loại hành động 1]: [Chi tiết những gì đã làm, ví dụ: Ngăn chặn lỗi lặp vô hạn...]
-  ✅ [Loại hành động 2]: [Chi tiết những gì đã làm]
+Khi bắt đầu làm việc trong repo này:
+1. Đọc `.agents/DEV_PROFILE.md` — lấy role + stack + constraints
+2. Đọc `.agents/AGENTS.md` — load routing table đầy đủ
+3. Xử lý yêu cầu, chọn đúng skill, đọc SKILL.md tương ứng
 
-📊 Quality improvement:
-  Before: [Mô tả ngắn tình trạng trước khi sửa/làm]
-  After:  [Mô tả sự cải thiện đạt được]
+---
 
-✅ Verification:
-  Tests:     [Trạng thái test (vd: N/A, Pass)]
-  Lint/Types:[Trạng thái kiểm tra lỗi (vd: Clean)]
-  Behavior:  [Kết quả hoạt động (vd: Unchanged, Improved)]
+## Tool Permissions
 
-⚠️ Notes:
-  [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
+**Tự chạy không cần hỏi:**
+```bash
+# Đọc/tìm kiếm
+cat, grep, find, ls, head, tail
+# Build & validate
+node tooling/generate-registry.js
+node tooling/validate-skills.js
+npm run test:registry
+npm run test:graph
+npm run lint
+# Git read-only
+git status
+git diff
+git log --oneline -10
 ```
 
-[Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.
-]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk-[tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/...` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
-
-[Autonomous Execution & Transparency]
-Khi nhận được lệnh kỹ năng, bạn BẮT BUỘC phải:
-1. Thông báo rõ ràng: "[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <tên-skill>]" ngay dòng đầu tiên.
-2. TỰ ĐỘNG THỰC THI (End-to-End): Dùng các tools của bạn (đọc file, sửa code, chạy lệnh) để tự động hoàn thành 100% mục tiêu được giao. KHÔNG ĐƯỢC dừng lại để hỏi ý kiến trừ khi gặp lỗi chí mạng hoặc requirement quá mập mờ.
-3. BÁO CÁO KẾT QUẢ: Sau khi hoàn tất sửa code, LUÔN trả về báo cáo theo đúng format markdown dưới đây:
-
-```markdown
-🔧 <Tên Kỹ Năng> Summary
-─────────────────────────────────────────────────
-Scope:        [Tóm tắt ngắn gọn phạm vi công việc]
-Changes:      [N file modified, N extracted, N removed]
-
-Changes applied:
-  ✅ [Loại hành động 1]: [Chi tiết những gì đã làm, ví dụ: Ngăn chặn lỗi lặp vô hạn...]
-  ✅ [Loại hành động 2]: [Chi tiết những gì đã làm]
-
-📊 Quality improvement:
-  Before: [Mô tả ngắn tình trạng trước khi sửa/làm]
-  After:  [Mô tả sự cải thiện đạt được]
-
-✅ Verification:
-  Tests:     [Trạng thái test (vd: N/A, Pass)]
-  Lint/Types:[Trạng thái kiểm tra lỗi (vd: Clean)]
-  Behavior:  [Kết quả hoạt động (vd: Unchanged, Improved)]
-
-⚠️ Notes:
-  [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
+**Phải hỏi user trước:**
+```bash
+git add / git commit / git push   # Thay đổi git history
+npm install / pip install          # Thay đổi dependencies
+rm / rmdir                         # Xóa file
+node tooling/generate-registry.js  # Nếu sẽ overwrite registry
 ```
 
-[Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.
-]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng `./qk-[tên-skill]`, bạn BẮT BUỘC phải đọc file `SKILL.md` tương ứng trong thư mục `./.qk-ai-skill-os/...` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
-
-[Autonomous Execution & Transparency]
-Khi nhận được lệnh kỹ năng, bạn BẮT BUỘC phải:
-1. Thông báo rõ ràng: "[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <tên-skill>]" ngay dòng đầu tiên.
-2. TỰ ĐỘNG THỰC THI (End-to-End): Dùng các tools của bạn (đọc file, sửa code, chạy lệnh) để tự động hoàn thành 100% mục tiêu được giao. KHÔNG ĐƯỢC dừng lại để hỏi ý kiến trừ khi gặp lỗi chí mạng hoặc requirement quá mập mờ.
-3. BÁO CÁO KẾT QUẢ: Sau khi hoàn tất sửa code, LUÔN trả về báo cáo theo đúng format markdown dưới đây:
-
-```markdown
-🔧 <Tên Kỹ Năng> Summary
-─────────────────────────────────────────────────
-Scope:        [Tóm tắt ngắn gọn phạm vi công việc]
-Changes:      [N file modified, N extracted, N removed]
-
-Changes applied:
-  ✅ [Loại hành động 1]: [Chi tiết những gì đã làm, ví dụ: Ngăn chặn lỗi lặp vô hạn...]
-  ✅ [Loại hành động 2]: [Chi tiết những gì đã làm]
-
-📊 Quality improvement:
-  Before: [Mô tả ngắn tình trạng trước khi sửa/làm]
-  After:  [Mô tả sự cải thiện đạt được]
-
-✅ Verification:
-  Tests:     [Trạng thái test (vd: N/A, Pass)]
-  Lint/Types:[Trạng thái kiểm tra lỗi (vd: Clean)]
-  Behavior:  [Kết quả hoạt động (vd: Unchanged, Improved)]
-
-⚠️ Notes:
-  [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
+**KHÔNG bao giờ chạy:**
+```bash
+git push --force
+git reset --hard
+rm -rf
+curl ... | bash                    # Pipe từ internet
 ```
 
-[Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: `./qk-ui-builder --fw=react --css=tailwind`).
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.
+---
 
+## Cách chạy test trong repo này
+
+```bash
+# Test registry consistency (sau khi thêm/xóa/đổi tên skill)
+npm run test:registry
+
+# Test capability graph (verify không có cycle, đúng edges)
+npm run test:graph
+
+# Test routing intelligence (AI route đúng skill không)
+npm run test:agent
+
+# Regenerate registry sau khi sửa SKILL.md
+node tooling/generate-registry.js
+```
+
+Sau khi sửa bất kỳ SKILL.md nào → **bắt buộc** chạy `test:registry` trước khi báo xong.
+
+---
+
+## MCP / Context ngoài
+
+Nếu có MCP Filesystem server: dùng để đọc file thay vì `cat` — nhanh hơn và context-aware hơn.
+
+Nếu có MCP Git server: dùng để query git history, blame, diff — chính xác hơn shell git commands.
+
+Nếu không có MCP: dùng shell commands trong danh sách "Tự chạy không cần hỏi" ở trên.
+
+---
+
+## Skill Execution trong Claude Code
+
+Khi user gọi `./qk-[skill-name]` hoặc describe yêu cầu:
+1. Match routing table trong `.agents/AGENTS.md`
+2. Đọc `.agents/skills/qk-[skill-name]/SKILL.md`
+3. Đọc workflow YAML được reference trong SKILL.md frontmatter
+4. Execute theo steps trong workflow
+5. Report theo format trong `.agents/AGENTS.md`
+
+Claude Code **không cần** tạo plan trước với task nhỏ (1 file) — có thể execute ngay.
+Với task medium/high (≥ 3 files) → tạo plan, confirm với user trước khi execute.
+
+---
+
+## Output Language
+
+- **Code, identifiers, YAML keys, file names:** English
+- **Explanations, summaries, reports, comments cho user:** Tiếng Việt
+- **SKILL.md body headings:** English
+- **Commit messages:** English (Conventional Commits)

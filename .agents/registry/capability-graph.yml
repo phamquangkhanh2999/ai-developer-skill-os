@@ -1,0 +1,390 @@
+# registry/capability-graph.yml
+# GENERATED FILE - DO NOT EDIT MANUALLY.
+version: 9.2.0
+generated_at: '2026-09-11T08:00:00.000Z'
+nodes:
+  qk-access-policy:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-agent-observability:
+    type: capability
+    maturity: archived
+    owns:
+      - agent_decision_trace
+      - routing_accuracy_metrics
+      - skill_success_rate
+      - failure_pattern_detection
+    does_not_own:
+      - application_monitoring
+      - infrastructure_monitoring
+      - log_aggregation
+    conflicts: []
+    workflow: skin-governance
+
+  qk-ai-builder:
+    type: capability
+    maturity: stable
+    owns:
+      - rag-pipeline-design
+      - agent-architecture
+      - prompt-engineering
+      - eval-pipeline
+    does_not_own:
+      - application-business-logic
+      - standard-crud-api
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-api-consumer:
+    type: capability
+    maturity: stable
+    owns:
+      - api-integration
+      - state-management
+      - data-binding
+    does_not_own:
+      - api-contract-design
+      - backend-implementation
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-api-lifecycle:
+    type: capability
+    maturity: stable
+    owns:
+      - api-contracts
+      - endpoint-implementation
+    does_not_own:
+      - frontend-state-management
+      - UI-rendering
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-bug-resolution:
+    type: capability
+    maturity: stable
+    owns:
+      - bug-diagnosis
+      - root-cause-analysis
+    does_not_own: []
+    conflicts: []
+    workflow: bug-resolution
+
+  qk-code-review:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+
+  qk-context-loader:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: context-discovery
+
+  qk-data-engineer:
+    type: capability
+    maturity: stable
+    owns:
+      - data-pipeline-architecture
+      - data-contracts
+      - data-quality-gate
+      - incremental-processing
+    does_not_own:
+      - application-orm
+      - standard-web-api
+      - ui-components
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-data-lifecycle:
+    type: capability
+    maturity: stable
+    owns:
+      - schema-management
+      - migration-strategy
+    does_not_own:
+      - data-pipeline-design
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-db-optimizer:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: refactor
+
+  qk-design-system-engineering:
+    type: capability
+    maturity: experimental
+    owns:
+      - design-governance
+      - component-variants
+    does_not_own:
+      - page-implementation
+      - business-logic
+    conflicts:
+      - qk-ui-system-builder
+    workflow: feature-delivery
+
+  qk-devops-platform:
+    type: capability
+    maturity: experimental
+    owns:
+      - cicd-strategy
+      - deployment-architecture
+      - environment-management
+    does_not_own:
+      - application-code
+      - feature-release
+    conflicts:
+      - qk-production-release
+    workflow: feature-delivery
+
+  qk-docs:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: documentation
+
+  qk-engineering-standard:
+    type: utility
+    maturity: relocated
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+
+  qk-feature-delivery:
+    type: capability
+    maturity: stable
+    owns:
+      - feature-implementation
+      - requirement-analysis
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-frontend-architecture:
+    type: capability
+    maturity: archived
+    owns:
+      - architecture-decisions
+      - state-strategy
+    does_not_own:
+      - component-implementation
+      - pixel-styling
+    conflicts:
+      - qk-ui-builder
+    workflow: feature-delivery
+
+  qk-orchestrator:
+    type: orchestrator
+    maturity: stable
+    owns:
+      - task-routing
+      - skill-selection
+    does_not_own: []
+    conflicts: []
+    workflow: context-discovery
+
+  qk-product-specification:
+    type: capability
+    maturity: experimental
+    owns:
+      - technical-specification
+      - acceptance-criteria
+    does_not_own:
+      - market-research
+      - roadmap
+    conflicts: []
+    workflow: spec-driven-development
+
+  qk-production-release:
+    type: capability
+    maturity: stable
+    owns:
+      - release-gate-checklist
+      - deployment-readiness-verdict
+    does_not_own:
+      - cicd-pipeline-design
+    conflicts:
+      - qk-devops-platform
+    workflow: production-release
+
+  qk-project-audit:
+    type: capability
+    maturity: stable
+    owns:
+      - gap-analysis
+      - feasibility-assessment
+      - risk-report
+    does_not_own:
+      - implementation
+      - code-changes
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-project-bootstrap:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-project-health:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+
+  qk-project-memory:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: documentation
+
+  qk-refactor:
+    type: capability
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: refactor
+
+  qk-security-audit:
+    type: capability
+    maturity: experimental
+    owns:
+      - application-security
+      - prompt-injection-detection
+      - dependency-risk
+    does_not_own:
+      - penetration-testing
+      - compliance-certification
+    conflicts: []
+    workflow: security-audit
+
+  qk-test-engineering:
+    type: capability
+    maturity: experimental
+    owns:
+      - test-pyramid
+      - coverage-strategy
+    does_not_own:
+      - writing-tests
+      - business-logic
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-ui-audit:
+    type: utility
+    maturity: stable
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: code-review
+
+  qk-ui-builder:
+    type: capability
+    maturity: stable
+    owns:
+      - ui-components
+      - styling-execution
+    does_not_own:
+      - design-system-rules
+      - brand-identity
+    conflicts:
+      - qk-frontend-architecture
+    workflow: feature-delivery
+
+  qk-ui-system-builder:
+    type: capability
+    maturity: stable
+    owns:
+      - design-tokens
+      - token-library
+    does_not_own:
+      - page-implementation
+    conflicts:
+      - qk-design-system-engineering
+    workflow: feature-delivery
+
+  qk-upgrade:
+    type: capability
+    maturity: stable
+    owns:
+      - upgrade-strategy
+      - rollback-plan
+      - migration-path
+    does_not_own:
+      - business-logic-changes
+    conflicts: []
+    workflow: refactor
+
+  qk-validation-gate:
+    type: utility
+    maturity: relocated
+    owns: []
+    does_not_own: []
+    conflicts: []
+    workflow: feature-delivery
+
+  qk-web-quality-gate:
+    type: capability
+    maturity: experimental
+    owns:
+      - a11y-audit
+      - seo-audit
+      - performance-audit
+    does_not_own:
+      - implementation
+    conflicts: []
+    workflow: feature-delivery
+
+edges:
+  - from: qk-context-loader
+    to: qk-feature-delivery
+    relation: feeds
+  - from: qk-context-loader
+    to: qk-orchestrator
+    relation: feeds
+  - from: qk-orchestrator
+    to: qk-context-loader
+    relation: delegates_to
+  - from: qk-api-consumer
+    to: qk-api-lifecycle
+    relation: depends_on
+  - from: qk-frontend-architecture
+    to: qk-ui-builder
+    relation: delegates_to
+  - from: qk-project-audit
+    to: qk-feature-delivery
+    relation: feeds
+
+stats:
+  total_capabilities: 29
+  stable: 22
+  experimental: 5
+  archived: 2       # skill removed entirely: qk-frontend-architecture, qk-agent-observability
+  relocated: 2      # logic moved to rules/coding.md + workflow steps: qk-engineering-standard, qk-validation-gate
+  has_cycles: false
+  last_validated: '2026-09-11T12:00:00.000Z'

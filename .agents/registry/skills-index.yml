@@ -1,0 +1,305 @@
+# registry/skills-index.yml
+# GENERATED FILE - DO NOT EDIT MANUALLY.
+# Regenerate: node tooling/generate-registry.js
+version: 9.2.0
+generated_at: '2026-09-11T12:00:00.000Z'
+total_active_skills: 29
+archived: 2      # qk-frontend-architecture, qk-agent-observability
+relocated: 2     # qk-engineering-standard (→ rules/coding.md), qk-validation-gate (→ workflow quality gate)
+skills:
+  - name: qk-access-policy
+    version: 9.2.0
+    status: stable
+    description: Quản lý RBAC, ABAC — định nghĩa role matrix trước, implement middleware sau.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [cấu hình rbac, phân quyền, bảo mật api, auth middleware, access control]
+    intent: [access-control, security-policy]
+
+  - name: qk-agent-observability
+    version: 9.2.1
+    status: archived
+    description: Monitor AI skin routing decisions, failure patterns, skill success rate.
+    complexity: medium
+    workflow: skin-governance
+    triggers: [agent observability, routing logs, skin monitor, skill failure]
+    intent: [observability, agent-metrics, decision-trace]
+
+  - name: qk-ai-builder
+    version: 9.2.0
+    status: stable
+    description: Governed AI Agent & RAG pipeline design — capability.yaml, 4-folder data discipline, Eval Pipeline.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [build ai, viết prompt, thiết kế bot, ai logic, rag pipeline, llm, vector]
+    intent: [ai-integration, agent-behavior, prompt-engineering]
+
+  - name: qk-api-consumer
+    version: 9.2.0
+    status: stable
+    description: Consume API (REST/GraphQL/tRPC), quản lý State, bind vào UI — bất kể FE framework nào.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [tích hợp api, gọi api, fetch data, consume api, kết nối api, api consumer]
+    intent: [api-integration, state-management, data-binding]
+
+  - name: qk-api-lifecycle
+    version: 9.2.0
+    status: stable
+    description: Thiết kế, triển khai API endpoints với Zero-Trust — contract trước, code sau.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [viết api, tạo endpoint, build api, thiết kế api, rest, graphql, trpc]
+    intent: [api-design, backend-development]
+
+  - name: qk-bug-resolution
+    version: 9.2.0
+    status: stable
+    description: Sửa lỗi bằng chu trình khép kín — Observe → Hypothesis → Evidence → Fix.
+    complexity: medium
+    workflow: bug-resolution
+    triggers: [fix bug, sửa lỗi, crash, error, not working, debug]
+    intent: [bug-fixing, debugging, error-resolution]
+
+  - name: qk-code-review
+    version: 9.2.0
+    status: stable
+    description: 4-Phase elite code review với Architect mindset — code, AI config, skin.
+    complexity: high
+    workflow: code-review
+    triggers: [review code, code review, kiểm tra code, review skin, review ai]
+    intent: [code-review, quality-assurance, architecture-review]
+
+  - name: qk-context-loader
+    version: 9.2.0
+    status: stable
+    description: Load project context, vẽ dependency graph — ngăn hallucination kiến trúc.
+    complexity: low
+    workflow: context-discovery
+    triggers: [load context, understand project, vẽ dependency graph, analyze architecture]
+    intent: [context-loading, project-understanding]
+
+  - name: qk-data-engineer
+    version: 9.2.0
+    status: stable
+    description: Universal Data Engineering — pipelines, idempotency, data quality, lineage (dbt/Spark/Airflow/Delta).
+    complexity: high
+    workflow: feature-delivery
+    triggers: [data pipeline, etl, elt, dbt, spark, airflow, medallion, data quality]
+    intent: [data-pipeline, data-modeling, data-quality]
+
+  - name: qk-data-lifecycle
+    version: 9.2.0
+    status: stable
+    description: Schema management + safe migrations — freeze → backward-compat → cleanup.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [sửa schema, cập nhật database, tạo migration, đổi model, db schema]
+    intent: [schema-management, database-migration]
+
+  - name: qk-db-optimizer
+    version: 9.2.0
+    status: stable
+    description: Evidence-based DB optimization — EXPLAIN → analyze → index/join, không đoán mò.
+    complexity: high
+    workflow: refactor
+    triggers: [tối ưu query, query chậm, optimize db, thêm index, explain]
+    intent: [database-optimization, performance-tuning]
+
+  - name: qk-design-system-engineering
+    version: 9.2.0
+    status: experimental
+    description: Quản trị design system — tokens, component variants, governance rules.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [định nghĩa design system, cấu trúc token, quy chuẩn ui, variants]
+    intent: [design-system, tokens, component-library]
+
+  - name: qk-devops-platform
+    version: 9.2.0
+    status: experimental
+    description: CI/CD strategy, deployment architecture, environment management, rollback strategy.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [cấu hình ci/cd, deployment strategy, dockerize, devops platform]
+    intent: [devops-strategy, cicd-pipeline, deployment-architecture]
+
+  - name: qk-docs
+    version: 9.2.0
+    status: stable
+    description: Viết/cập nhật tài liệu chính xác tuyệt đối — match code thực tế, không bịa đặt.
+    complexity: low
+    workflow: documentation
+    triggers: [viết docs, viết tài liệu, document this, generate docs, readme]
+    intent: [documentation, technical-writing]
+
+  - name: qk-engineering-standard
+    version: 9.2.1
+    status: relocated
+    description: Enforce SOLID, DRY, Clean Code với ngưỡng metric cụ thể — không rule mơ hồ.
+    complexity: medium
+    workflow: code-review
+    triggers: [clean code, check standard, kiểm tra chuẩn, solid, dry]
+    intent: [code-quality, standards-enforcement]
+
+  - name: qk-feature-delivery
+    version: 9.2.0
+    status: stable
+    description: End-to-end feature delivery — Requirements → Context → Design → Implement → Audit.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [add feature, build new, implement, phát triển tính năng, tạo mới]
+    intent: [feature-building, end-to-end-development]
+
+  - name: qk-frontend-architecture
+    version: 9.2.1
+    status: archived
+    description: Quyết định kiến trúc FE — component strategy, state management, routing.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [cấu trúc frontend, thiết kế component, quản lý state, kiến trúc react]
+    intent: [frontend-architecture, component-strategy, state-management]
+
+  - name: qk-orchestrator
+    version: 9.2.0
+    status: stable
+    description: Route yêu cầu đến đúng skill — kiểm tra preconditions, resolve ambiguity.
+    complexity: low
+    workflow: context-discovery
+    triggers: [help, list skills, có những skill nào, chọn skill nào, what can you do]
+    intent: [task-routing, skill-selection]
+
+  - name: qk-product-specification
+    version: 9.2.0
+    status: experimental
+    description: Idea → Requirement → Acceptance Criteria → Technical Spec.
+    complexity: medium
+    workflow: spec-driven-development
+    triggers: [viết spec, phân tích yêu cầu, acceptance criteria, prd]
+    intent: [product-thinking, specification]
+
+  - name: qk-production-release
+    version: 9.2.0
+    status: stable
+    description: 8-gate mandatory checklist trước khi deploy production — không skip.
+    complexity: high
+    workflow: production-release
+    triggers: [deploy production, release checklist, go live, rollout]
+    intent: [release-management, deployment-gate]
+
+  - name: qk-project-audit
+    version: 9.2.0
+    status: stable
+    description: Gap Analysis, Feasibility, Risk Assessment — báo cáo đầy đủ trước khi code.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [phân tích dự án, project audit, gap analysis, feasibility, risk assessment]
+    intent: [project-analysis, gap-analysis, feasibility-study]
+
+  - name: qk-project-bootstrap
+    version: 9.2.0
+    status: stable
+    description: Khởi tạo dự án mới với Blueprint Plugins — RAG/AI, Coding, Workflow.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [khởi tạo dự án, project setup, scaffold, bootstrap, new app]
+    intent: [project-initialization, scaffolding]
+
+  - name: qk-project-health
+    version: 9.2.0
+    status: stable
+    description: Audit toàn diện — Code Smells, Tech Debt, Architecture (0–100 score).
+    complexity: high
+    workflow: code-review
+    triggers: [audit project, code smell, tech debt, health check, project score]
+    intent: [project-audit, technical-debt, architecture-review]
+
+  - name: qk-project-memory
+    version: 9.2.0
+    status: stable
+    description: Lưu/tra cứu project knowledge tại .ai-local/ — Architecture, Convention, Pattern, Hard Bug.
+    complexity: low
+    workflow: documentation
+    triggers: [lưu context, project memory, ghi nhớ, /learn]
+    intent: [knowledge-management, project-memory]
+
+  - name: qk-refactor
+    version: 9.2.0
+    status: stable
+    description: Tái cấu trúc code không đổi external behavior — extract, simplify, decouple.
+    complexity: medium
+    workflow: refactor
+    triggers: [refactor, tái cấu trúc, clean code, tách file, extract]
+    intent: [refactoring, code-quality]
+
+  - name: qk-security-audit
+    version: 9.2.0
+    status: experimental
+    description: OWASP, dependency risk, secret detection, permission model audit.
+    complexity: high
+    workflow: security-audit
+    triggers: [security audit, owasp, lỗ hổng bảo mật, dependency risk, secret]
+    intent: [security, vulnerability-detection]
+
+  - name: qk-test-engineering
+    version: 9.2.0
+    status: experimental
+    description: Test strategy decisions — pyramid, coverage, regression, mock, E2E.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [viết test, test strategy, unit test, coverage, e2e]
+    intent: [testing-strategy, quality-assurance]
+
+  - name: qk-ui-audit
+    version: 9.2.0
+    status: stable
+    description: Audit UI với 57-check Anti-Slop checklist (fail nếu < 76/85).
+    complexity: medium
+    workflow: code-review
+    triggers: [review ui, audit giao diện, kiểm tra ui, anti-slop]
+    intent: [ui-audit, design-quality]
+
+  - name: qk-ui-builder
+    version: 9.2.0
+    status: stable
+    description: Build/edit/audit/redesign UI từ Figma/ảnh/design reference — token-strict.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [build ui, làm giao diện, css, layout, component, figma]
+    intent: [ui-development, frontend-design]
+
+  - name: qk-ui-system-builder
+    version: 9.2.0
+    status: stable
+    description: Build Design System và token library từ DESIGN.md.
+    complexity: high
+    workflow: feature-delivery
+    triggers: [design system, token, setup css, ui system]
+    intent: [design-system, token-library]
+
+  - name: qk-upgrade
+    version: 9.2.0
+    status: stable
+    description: Nâng cấp library/framework an toàn — incremental, rollback bắt buộc, không big-bang.
+    complexity: high
+    workflow: refactor
+    triggers: [upgrade, nâng cấp, update package, migrate framework, breaking change]
+    intent: [library-upgrade, framework-migration]
+
+  - name: qk-validation-gate
+    version: 9.2.1
+    status: relocated
+    description: Quality gate — linters, tests, scorecard.yaml quantitative (0–100).
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [chạy kiểm định, quality gate, validate build, scorecard]
+    intent: [quality-gate, validation]
+
+  - name: qk-web-quality-gate
+    version: 9.2.0
+    status: experimental
+    description: A11y, SEO, Web Performance, Security, UX Heuristics audit.
+    complexity: medium
+    workflow: feature-delivery
+    triggers: [a11y, seo, web performance, lighthouse, quality gate]
+    intent: [web-quality, accessibility, performance]

@@ -1,0 +1,12 @@
+case:
+  id: design-intel-02
+  description: User requests modifying a component styling
+input: Tạo button màu đỏ đẹp hơn
+candidates:
+  - skill: qk-ui-builder
+    score: 0.95
+decision:
+  selected: qk-ui-builder
+  rejected:
+    - skill: qk-design-system-engineering
+      reason: does not own component implementation

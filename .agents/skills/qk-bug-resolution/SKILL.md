@@ -1,307 +1,185 @@
 ---
 name: qk-bug-resolution
-category: maintenance
-version: 7.5.0
-description: "Sửa lỗi (bugs) bằng chu trình khép kín: Quan sát → Giả thuyết → Bằng chứng → Sửa."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
-
-cost: medium
-latency: medium
-risk: medium
-side_effects: edit_files
-produces: [code, report]
-consumes: [stack-trace, error-message, user-description, context-graph]
-
-token_budget:
-  max_files_read: 3
-  max_lines_per_read: 150
-  max_shell_commands: 2
-  stop_early: true
-
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+version: 10.1.0
+status: stable
+subtitle: "Debug & Fix Bug"
+description: "Chẩn đoán nguyên nhân gốc rễ và khắc phục lỗi mã nguồn theo chu trình khép kín 4 bước (Triangulate → Root-Cause → Surgical Fix → Regression Shield). Dùng khi: fix bug, sửa lỗi, crash, error, exception, trace lỗi, điều tra nguyên nhân bug, not working, màn hình trắng, lỗi logic — TUYỆT ĐỐI KHÔNG dùng khi cần tái cấu trúc lớn (dùng qk-code-cleaner) hoặc làm tính năng mới (dùng qk-feature-delivery)."
+tools:
+  - filesystem
+  - terminal
+rules:
+  - global
+  - coding-standards
+  - safety
+workflow: bug-resolution
+triggers:
+  - "fix bug"
+  - "sửa lỗi"
+  - "crash"
+  - "error"
+  - "exception"
+  - "trace lỗi"
+  - "điều tra nguyên nhân bug"
+  - "debug lỗi"
+  - "not working"
+  - "bị lỗi"
+  - "màn hình trắng"
+  - "lỗi 500"
 ---
 
-# qk-bug-resolution — Diagnose & Repair
+# qk-bug-resolution — Debug & Fix Bug (Surgical Root-Cause Engine)
 
 > **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
-## Preconditions
-- [ ] A specific symptom is provided (error message, wrong behavior, crash)
-- [ ] The affected file or feature area is identifiable
-- [ ] Reproduction steps or stack trace provided
+## 1. Nguyên Tắc Cốt Lõi & Luật Chống Over-Engineering
 
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Cần thêm thông tin: [error message / stack trace / bước tái hiện lỗi]"
-```
+> **Core Principle:** A bug fix must be surgical, evidence-based, and minimal. Never guess. Never refactor surrounding code during a bug fix.
+> **Verification Principle:** PASS is a verified conclusion, never a target. Zero workarounds.
 
----
+### 🛡️ Anti-Overengineering Rule (CẤM SỬA LAN MAN)
+- **Tối thiểu hóa Diff (Minimal Diff):** Chỉ sửa đúng dòng code hoặc biểu thức gây ra lỗi. Tuyệt đối KHÔNG nhân cơ hội sửa bug để "tiện tay" đổi tên biến xung quanh, format lại cả file, hay viết lại cả hàm.
+- **Không thay đổi kiến trúc trong bản vá:** Nếu phát hiện kiến trúc cũ xấu, giải quyết dứt điểm bug trước bằng một bản vá an toàn (Surgical Guard), sau đó đề xuất người dùng chạy `qk-code-cleaner` sau. Cấm trộn lẫn việc fix bug và việc refactor vào cùng một lần sửa.
 
-## Scope
-- ✅ Diagnose existing defects with concrete evidence
-- ✅ Apply minimal targeted patches directly to source files
-- ✅ Verify fix with evidence (static or runtime)
+### 🔒 No Unrelated Changes Rule (CẤM CHẠM CODE NGOÀI)
+- Tuyệt đối không sửa các file ngoài call-path của bug.
+- Tuyệt đối không tự tiện nâng cấp thư viện lân cận.
+- Nếu phát hiện code smell hoặc vấn đề ngoài scope: **Chỉ ghi nhận vào báo cáo**, tuyệt đối không tự sửa.
 
-## Non-Goals
-- ❌ Refactor code outside the buggy area
-- ❌ Create Node.js/Python/shell scripts to apply patches — edit source files directly
-- ❌ Read entire files > 150 lines — use `grep_search` or targeted `view_file[StartLine:EndLine]`
-- ❌ Run shell commands > 2 times per cycle
-- ❌ Guess root cause without concrete evidence
-- ❌ Mark as done without verifying the fix
-- ❌ Proceed with MEDIUM confidence — only HIGH confidence is acceptable for fix
-- ❌ Use `?.` or `!` to silence errors instead of fixing root cause
+### 🛡️ Anti-Fake-Pass Rule (CẤM ÉP PASS ẢO - R-G-14.5)
+- **CẤM** dùng `as any`, `@ts-ignore`, `@ts-expect-error` để che giấu crash hoặc lỗi type.
+- **CẤM** dùng `catch (e) {}` rỗng nuốt exception để code không crash bề mặt.
+- **CẤM** sửa expected assertions trong unit test để lừa test runner chuyển từ đỏ sang xanh.
+
+### ⚖️ Verify Before Claim Rule (XÁC MINH TRƯỚC KHI TUYÊN BỐ)
+- **Cấm tuyên bố đã sửa xong nếu chưa kiểm chứng:** Nếu có test runner hoặc script tái hiện, BẮT BUỘC phải chạy lệnh để chứng minh lỗi đã biến mất.
+- **Báo cáo trung thực:** Nếu không thể chạy môi trường (thiếu DB, thiếu API 3rd party), AI phải ghi rõ: `"Trạng thái: NOT VERIFIED — Đã vá theo bằng chứng tĩnh, chưa thể chạy test tự động. Cần user test tay theo kịch bản dưới đây"`.
 
 ---
 
-## Priority Order
+## 2. Ranh Giới & Phạm Vi Kỹ Thuật (Hard Boundaries)
 
-| Priority | Check | Skip Threshold |
-|----------|-------|----------------|
-| P1 | Identify exact file:line of failure | Never |
-| P2 | Trace data flow to root cause | Budget < 30% → EXIT: BLOCKED |
-| P3 | Check adjacent code for similar bugs | Budget < 50% |
-| P4 | Suggest regression test | Budget < 70% |
+### ✅ Việc skill này BẮT BUỘC làm:
+- Thu thập và phân tích trực tiếp stack trace, logs, và file mã nguồn xung quanh call-stack.
+- Tìm ra nguyên nhân gốc (Root Cause) bằng chứng cứ trong code thực tế, không dừng ở triệu chứng bề mặt.
+- Phân loại chính xác: Logic Error, State Mutation, Boundary Condition, Type/Schema Mismatch, Race Condition, hoặc Unhandled Exception.
+- Viết bản vá phẫu thuật (Surgical Fix) có tính phòng thủ (null-safety, boundary guard).
+- Tạo hoặc cập nhật regression test để khóa lỗi vĩnh viễn (nếu repo có test framework).
 
----
-
-## Workflow
-
-### Phase 1 — Triage (Read Only)
-
-**Steps:**
-1. `grep_search` — search for error message, function name, or symptom keyword
-2. `view_file[StartLine:EndLine]` — read ONLY the relevant section (≤ 150 lines)
-3. Identify the exact file and approximate line of failure
-
-**Exit When:**
-- Exact file:line identified → go to Phase 2
-- `max_files_read` (3) reached without exact identification → EXIT: BLOCKED
-
-**Decision:**
-```
-IF stack trace provided
-  → Parse top frame inside project code → go to Phase 2
-
-ELSE IF error message provided
-  → grep_search for error string → go to Phase 2
-
-ELSE
-  → EXIT: BLOCKED — ask for reproduction steps
-```
-
-**On Blocked:**
-```
-EXIT: BLOCKED
-Missing: Reproduction steps or error output
-Questions:
-  1. Lỗi xảy ra ở bước nào? (URL / action / input)
-  2. Error message hoặc stack trace cụ thể là gì?
-Recommended Assumptions: none — cannot proceed without this
-```
+### ❌ Việc skill này TUYỆT ĐỐI KHÔNG làm (Chuyển giao quyền):
+- Tái cấu trúc cả module vì chê code xấu → Chuyển sang `qk-code-cleaner`.
+- Thêm tính năng mới chưa từng có trong spec → Chuyển sang `qk-feature-delivery`.
+- Thay đổi cấu trúc cơ sở dữ liệu lớn → Chuyển sang `qk-backend-data`.
 
 ---
 
-### Phase 2 — Root Cause Analysis
+## 3. Quy Trình Khép Kín 4 Bước (Sequential Procedure)
 
-**Steps:**
-1. Read the identified file section (`view_file[StartLine:EndLine]`, ≤ 150 lines)
-2. Trace: What condition triggers the failure?
-3. Check context graph for blast radius assessment
-4. Assign confidence level
-
-**Common Root Cause Categories:**
-- Logic error (wrong condition, wrong operator)
-- Null / undefined / missing data
-- Async timing or race condition
-- Type mismatch or stale state
-- API contract change
-
-**Decision:**
 ```
-IF root cause found with direct evidence (file:line + stack trace confirms)
-  → Confidence: HIGH → go to Phase 3
-
-ELSE IF root cause still unclear after reading identified file
-  → Read 1 more file (budget check)
-  → Still unclear → EXIT: BLOCKED
-
-ELSE IF root cause inferred from pattern (no direct evidence)
-  → EXIT: BLOCKED — cannot fix without concrete evidence
+[Bước 1: Triangulate]   ── Đọc log/trace, mở file thực tế quanh điểm crash, khoanh vùng phạm vi
+            │
+            ▼
+[Bước 2: Root-Cause]    ── Trả lời 5 câu hỏi gốc rễ (R-G-14.1). Nếu thiếu chứng cứ ──► BLOCKED
+            │
+            ▼
+[Bước 3: Surgical Fix]  ── Viết bản vá tối thiểu, defensive programming, không chạm code ngoài
+            │
+            ▼
+[Bước 4: Verify & Test] ── Chạy test xác thực thực tế. Nếu FAIL ──► Kích hoạt Failure Path
 ```
+
+### Chi tiết các bước:
+1. **Triangulate (Khoanh vùng):** Mở file chứa dòng lỗi, đọc tối thiểu 30–50 dòng xung quanh để hiểu ngữ cảnh.
+2. **Root-Cause Gate (R-G-14.1):** Bắt buộc trả lời 5 câu hỏi trước khi sửa:
+   - 1. Vấn đề quan sát được là gì?
+   - 2. Lỗi xảy ra ở đâu (file & line)?
+   - 3. Luồng code nào dẫn tới lỗi?
+   - 4. Nguyên nhân gốc rễ là gì?
+   - 5. Vì sao bản vá đề xuất sẽ triệt tiêu nguyên nhân gốc rễ này?
+   *(Nếu không xác định được với đầy đủ bằng chứng: Chuyển trạng thái `Status: BLOCKED`)*.
+3. **Surgical Fix:** Vá lỗi tại điểm phát sinh hoặc thêm Guard Clause phòng ngự. Đảm bảo optional chaining `?.`, fallback an toàn.
+4. **Verification:** Chạy test hoặc kiểm tra call-sites để đảm bảo các nơi khác gọi hàm này không bị ảnh hưởng.
 
 ---
 
-### Phase 3 — Apply Fix (Direct Edit Only)
+## 4. Xử Lý Sự Cố Khi Bản Vá Thất Bại (Failure Path Protocol)
 
-**Steps:**
-1. Apply fix using `replace_file_content` or `multi_replace_file_content`
-   - **NEVER** create a helper script to do the patching
-   - Keep the change minimal — smallest diff that resolves the issue
-2. Re-read the fixed section to confirm correctness (static verification)
-3. Run shell command ONLY if runtime verification is strictly required (counts toward max 2)
-
-**Exit When:**
-- Fix applied and verified statically → EXIT: SUCCESS
-- Fix applied but runtime verification needed and command budget exhausted → EXIT: FAILED — cannot verify
+Nếu sau khi áp dụng bản vá mà lỗi vẫn còn hoặc sinh ra lỗi mới (Regression):
+1. **Revert ngay bản vá vừa làm:**
+   ```bash
+   git checkout HEAD -- path/to/failed_fix_file
+   ```
+2. **Hủy bỏ giả thuyết cũ:** Không cố chấp chắp vá thêm code. Việc test fail chứng tỏ giả thuyết về nguyên nhân gốc đã SAI.
+3. **Hình thành giả thuyết mới:** Đọc kỹ thông báo lỗi mới xuất hiện để tìm nguyên nhân thực sự sâu hơn (ví dụ: lỗi không nằm ở controller mà nằm ở transformer dữ liệu trước đó).
+4. **Giới hạn 2 lần thử:** Nếu sau 2 lần vá vẫn không hết lỗi, AI BẮT BUỘC dừng lại, giữ nguyên trạng thái ban đầu và báo cáo chi tiết các giả thuyết đã thử để xin thêm log từ người dùng với trạng thái `Status: BLOCKED`.
 
 ---
 
-## Confidence Model
+## 5. Ví Dụ Bản Vá Phẫu Thuật Đa Ngôn Ngữ
 
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Direct evidence — exact file:line + stack trace confirms it | Proceed with fix |
-| MEDIUM | Inferred from code patterns, similar bugs nearby | EXIT: BLOCKED — collect more evidence |
-| LOW | Assumption without code evidence | STOP — ask user before applying fix |
+### TypeScript / JavaScript:
+```typescript
+// ❌ Trước khi sửa: TypeError: Cannot read properties of undefined (reading 'address')
+function getUserCity(user: UserResponse) {
+  return user.profile.address.city;
+}
 
----
-
-## Severity
-
-| Level | Definition | Example |
-|-------|-----------|---------|
-| CRITICAL | Data loss / security / app crash | Hardcoded secret, unhandled null crash on login |
-| HIGH | Core feature broken, blocking users | API returns 500, form submission fails |
-| MEDIUM | Degraded UX, workaround exists | Wrong label, minor calculation off |
-| LOW | Cosmetic, non-blocking | Console.log left in code |
-
----
-
-## Evidence Format
-
-```
-[SEVERITY] path/to/file.ts:LINE
-Reason:     [why this causes the bug]
-Impact:     [which modules/users are affected]
-Confidence: [HIGH|MEDIUM|LOW]
-Fix:        [what was changed]
-```
-
-**Example:**
-```
-[HIGH] src/services/auth.service.ts:87
-Reason:     Missing null check on `user.profile` — crashes when profile is not yet loaded
-Impact:     Affects all login flows; 100% of users hitting this path
-Confidence: HIGH
-Fix:        Added `user.profile?.email ?? ''` guard
-```
-
----
-
-## Retry Policy
-
-```
-Fix applied
-  └─ Static verification (re-read fixed section)
-       ├─ PASS → EXIT: SUCCESS
-       └─ Issue detected → attempt 1 correction
-            └─ Re-verify
-                 ├─ PASS → EXIT: SUCCESS
-                 └─ FAIL → EXIT: FAILED + report both attempts
-                      └─ Do NOT attempt 3rd fix — ESCALATE to user
-```
-
----
-
-## Escalation Rules
-
-```
-BLOCKED: [Specific reason]
-Missing:
-  - [Stack trace / error message / reproduction steps]
-Questions:
-  1. Lỗi xuất hiện khi nào? (action/URL/input cụ thể)
-  2. Lỗi có tái hiện được không?
-Recommended Assumptions (if proceeding without full info):
-  - [Safe assumption based on available context]
-```
-
----
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user or qk-orchestrator",
-  "required_fields": ["symptom_description", "context_graph"],
-  "optional_fields": ["stack_trace", "error_message", "affected_file"]
+// ✅ Bản vá tối thiểu (Surgical Fix) có Null-Safety & Fallback:
+function getUserCity(user: UserResponse | null | undefined): string {
+  return user?.profile?.address?.city ?? "Unknown";
 }
 ```
 
-### Produces
-```json
-{
-  "to": "user",
-  "output_fields": ["changed_files", "root_cause", "impact", "severity", "confidence", "exit_code"]
-}
+### Python:
+```python
+# ❌ Trước khi sửa: KeyError hoặc NoneType error khi item không có 'price'
+def calculate_subtotal(items):
+    return sum(item["price"] * item["quantity"] for item in items)
+
+# ✅ Bản vá tối thiểu (Surgical Fix) phòng thủ với dict.get() và type guard:
+def calculate_subtotal(items) -> float:
+    if not items:
+        return 0.0
+    return sum(
+        float(item.get("price", 0.0)) * int(item.get("quantity", 1))
+        for item in items
+        if isinstance(item, dict)
+    )
 ```
 
 ---
 
-## Output Format
+## 6. Thích Ứng Theo Role Kỹ Thuật (Role Adaptation)
 
+| Role | Trọng tâm khi Debug & Fix Bug | Hành vi kỹ thuật đặc thù |
+|---|---|---|
+| `frontend` | UI lifecycle, re-rendering, event propagation, API response binding | Kiểm tra network mock, hook dependency array, conditional rendering |
+| `backend` | Transaction rollback, auth middleware, input validation, SQL exception | Kiểm tra query logging, DB connection pool, Zod validation, error status |
+| `fullstack` | Hợp đồng giao tiếp FE-BE, serialization, cookie/session, sync state | Kiểm tra shared types, request payload vs response schema, CORS |
+| `data` | Data corruption, schema drift, null trong pipeline, OOM | Kiểm tra partition path, dbt logs, data quality assertion, idempotency |
+| `devops` | CrashLoopBackOff, memory leak, missing env secret, port conflict | Kiểm tra container logs, Docker healthcheck, ingress/proxy headers |
+| `qa` | Tạo test case tái hiện (Repro step), edge-case boundary verification | Viết automated reproduction script, kiểm tra cross-browser |
+
+---
+
+## 7. Báo Cáo Nghiệm Thu Chuẩn Xác (Truth-First Report)
+
+```markdown
+🔧 Bug Resolution Summary                             [Role: <role> | Type: <Dạng lỗi>]
+─────────────────────────────────────────────────────────────────────
+Trạng thái:          [SUCCESS | BLOCKED | FAILED | PARTIAL]
+Triệu chứng ban đầu: [Mô tả ngắn gọn lỗi gặp phải và thông báo lỗi]
+Nguyên nhân gốc rễ:  [Cơ chế chính xác gây ra lỗi trong mã nguồn]
+
+Vị trí đã can thiệp phẫu thuật (Laser Focus):
+  ✅ [FIX] [TênFile.ts:L42](file:///<workspace-root>/path/to/file.ts#L42-L48): [Mô tả bản vá ngắn gọn]
+
+Kiểm chứng thực tế (Verify Before Claim):
+  • Chạy lệnh kiểm thử: [Đã chạy: `npm test path/to/test` | Chưa chạy (Lý do môi trường)]
+  • Kết quả kiểm tra:   [Pass | Regression test đã bổ sung | Cần user test tay]
+  • Tác động phụ:       ✅ Đã rà soát N call-sites, 0 side-effect
+
+📋 Kịch bản test tay dành cho người dùng:
+  1. [Thao tác cụ thể để kích hoạt lại luồng và xác nhận lỗi đã hết]
 ```
-🐛 Bug Report
-─────────────────────────────────────────────────
-Symptom:     [What broke + how to reproduce]
-Root cause:  [file:line — exact reason]
-Severity:    [CRITICAL | HIGH | MEDIUM | LOW]
-Confidence:  [HIGH | MEDIUM | LOW]
-Impact:      [Which modules/users affected]
-
-🔧 Fix Applied
-─────────────────────────────────────────────────
-File:        [path/to/file.ts]
-Change:      [What changed and why it's minimal]
-
-✅ Verification
-─────────────────────────────────────────────────
-Static:      [Re-read section — looks correct]
-Runtime:     [PASS | SKIPPED — reason]
-
-Exit Code:   [SUCCESS | PARTIAL | BLOCKED | FAILED]
-```
-
----
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Bug fixed and verified | Fix applied + static/runtime check passed |
-| PARTIAL | Fix applied, verification inconclusive | Budget exhausted or environment inaccessible |
-| BLOCKED | Cannot diagnose without more info | Missing stack trace / reproduction steps |
-| FAILED | Fix attempted, issue persists after 2 retries OR budget exhausted without verification | Complex race condition or architectural issue |
-
----
-
-Diagnose and fix a specific bug with minimal, targeted changes while preserving all existing behavior.
-This skill is triggered when a user reports a specific defect with a stack trace, error message, or reproduction steps. It requires concrete evidence before any code modification.
-- Symptom description (error message, wrong behavior, crash)
-- Stack trace or reproduction steps
-- Affected file or feature area (if known)
-- Context graph (for blast radius assessment)
-1. **Observe:** Read error output, stack trace, and affected code section
-2. **Hypothesize:** Identify potential root causes based on evidence
-3. **Verify:** Confirm root cause with direct file:line evidence
-4. **Fix:** Apply minimal patch using direct edit only
-5. **Verify:** Re-read fixed code and confirm correctness
-- MUST have exact file:line before proceeding to fix
-- MUST NOT guess root cause without direct evidence
-- MUST keep changes minimal — smallest diff that resolves the issue
-- MUST NOT exceed token_budget (max 3 files, 150 lines each, 2 shell commands)
-- MUST verify fix before marking done
-- Zero-Trust: No fix without HIGH confidence (direct evidence)
-- Minimal Change: Fix only the bug, no refactoring
-- Backward Compat: Preserve all existing public API behavior
-- Evidence First: Every finding must use Evidence Format with file:line
----

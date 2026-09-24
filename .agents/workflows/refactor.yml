@@ -1,0 +1,102 @@
+name: refactor
+version: 8.0.0
+description: "Pipeline refactor an toàn: giữ nguyên behavior bên ngoài, cải thiện chất lượng bên trong."
+
+owner:
+  type: engineering
+  maintained_by: qk-team
+
+verification_profile: refactor
+
+triggers:
+  - "refactor"
+  - "tái cấu trúc"
+  - "clean up this code"
+  - "simplify"
+  - "reduce complexity"
+  - "dọn dẹp code"
+
+ide_binding:
+  slash_command: "/refactor"
+  aliases: ["/cleanup", "/simplify"]
+
+steps:
+  - id: baseline
+    name: "Thiết lập baseline"
+    purpose: "Hiểu code hiện tại trước khi thay đổi"
+    required: true
+    skip_if: null
+    inputs:
+      - target_files
+      - refactor_goal    # e.g. "extract functions", "reduce complexity", "improve naming"
+    outputs:
+      - current_behavior_summary   # What the code does now
+      - pain_points                # Specific issues to address
+      - test_coverage_status       # Có tests không?
+    context_budget: 200
+    actions:
+      - "Đọc toàn bộ target section"
+      - "Mô tả behavior hiện tại"
+      - "Identify specific code smells"
+    exit_on_fail: BLOCKED
+
+  - id: plan
+    name: "Lên kế hoạch refactor"
+    purpose: "Quyết định approach để không thay đổi external behavior"
+    required: true
+    skip_if: null
+    inputs:
+      - pain_points
+      - current_behavior_summary
+    outputs:
+      - refactor_steps     # Ordered list of changes
+      - risk_assessment    # What could break
+      - rollback_point     # Git commit or checkpoint
+    min_confidence: HIGH
+    actions:
+      - "Outline từng bước thay đổi"
+      - "Xác định gì có thể break"
+    human_checkpoint:
+      condition: "risk_assessment cho thấy có thể breaking change hoặc thiếu test coverage"
+      message: "Refactor rủi ro cao. Vui lòng duyệt qua refactor_steps và risk_assessment."
+  - id: execute
+    name: "Thực hiện refactor"
+    purpose: "Apply changes theo plan, step by step"
+    required: true
+    skip_if: null
+    inputs:
+      - refactor_steps
+    outputs:
+      - modified_files
+      - changes_summary
+    actions:
+      - "Làm từng bước nhỏ, verify sau mỗi bước"
+      - "Không refactor ngoài scope đã định"
+      - "Chỉ refactor, KHÔNG add behavior mới"
+      - "Đảm bảo code sau refactor pass R-C-09"
+      - "Không add functionality mới trong khi refactor"
+
+  - id: verify
+    name: "Verify behavior unchanged + quality gate"
+    purpose: "Xác nhận external behavior giống hệt trước refactor VÀ quality cải thiện"
+    required: true
+    skip_if: null
+    inputs:
+      - current_behavior_summary
+      - modified_files
+    outputs:
+      - behavior_preserved    # true/false
+      - test_results          # pass/fail/na
+      - quality_gate_result   # PASS | FAIL
+    actions:
+      - "Re-read modified sections"
+      - "So sánh với current_behavior_summary — behavior PHẢI giống hệt"
+      - "Chạy tests nếu có"
+      - "Áp dụng shared quality gate → xem: .agents/workflows/shared/quality-gate.yml"
+      - "  Checklist: universal_checks + refactor specific checks"
+      - "Ghi log execution trace vào evals/traces/"
+    exit_on_fail: FAILED
+
+escalation:
+  max_retries: 1
+  on_failure: "Revert to rollback_point. Report what was completed and what remains."

@@ -1,0 +1,7 @@
+case:
+  id: ambiguous-01
+  description: User provides an overly generic optimization request
+input: Tối ưu app
+candidates: []
+decision:
+  rejected: []

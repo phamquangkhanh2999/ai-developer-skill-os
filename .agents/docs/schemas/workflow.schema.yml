@@ -1,0 +1,33 @@
+# Workflow Schema Reference
+# See workflows/_schema.yml for the full machine-readable schema.
+# This file is for human reference.
+
+schema_version: 8.0.0
+
+top_level_required:
+  name:        "string, kebab-case"
+  version:     "semver 8.x.x"
+  description: "string, one sentence"
+  steps:       "array, minimum 2"
+  escalation:  "object: {max_retries, on_failure}"
+
+step_required:
+  id:       "string, snake_case, unique within workflow"
+  name:     "string, human-readable"
+  purpose:  "string — WHAT the step achieves"
+  inputs:   "array — what this step needs to start"
+  outputs:  "array — what this step produces when done"
+  required: "bool — true = cannot be skipped without skip_if condition"
+
+step_optional:
+  skip_if:        "string — condition under which step can be skipped"
+  exit_on_fail:   "BLOCKED | PARTIAL | FAILED"
+  min_confidence: "HIGH | MEDIUM"
+  actions:        "array — hints for HOW (not mandatory for agent)"
+
+verification_profiles:
+  bug-fix:      [regression_check, root_cause_fixed, lint_clean, test_if_available]
+  refactor:     [behavior_unchanged, test_pass, lint_clean, no_new_complexity]
+  feature:      [acceptance_criteria, test_coverage, integration_check, lint_clean]
+  documentation:[accuracy, completeness, no_broken_links]
+  review:       [findings_have_evidence, severity_justified, actionable_suggestions]

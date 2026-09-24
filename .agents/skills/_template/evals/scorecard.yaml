@@ -1,0 +1,19 @@
+# scorecard.yaml — Governed Evaluation Schema
+# Schema Version 1 — EDAOS v8.2 Eval Platform
+schema_version: 1
+extends: default
+passing_threshold: 80
+
+criteria:
+  correctness:
+    weight: 40
+    description: "Exact adherence to logical requirements, architectural contracts, and syntax integrity."
+  completeness:
+    weight: 20
+    description: "Zero omission of required inputs, parameters, and boundary conditions."
+  security_and_governance:
+    weight: 25
+    description: "Compliance with zero-trust design, secret exclusion, and EDAOS safety rules."
+  formatting:
+    weight: 15
+    description: "Strict adherence to expected structured format without broken artifacts."

@@ -25,3 +25,11 @@ node_modules/
 # Agent execution scratch files (if any get generated inside this folder)
 .agents_cache/
 .scratch/
+
+# Generated reports and traces
+.agents/reports/
+evals/traces/
+
+# Kilo and local worktrees
+.kilo/
+

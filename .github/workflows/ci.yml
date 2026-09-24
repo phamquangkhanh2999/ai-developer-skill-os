@@ -3,17 +3,17 @@ name: CI / Spec Compliance & Registry Validation
 on:
   pull_request:
     paths:
-      - 'skills/**'
-      - 'skills.json'
-      - 'docs/SPEC.md'
-      - 'bin/install.js'
+      - '.agents/skills/**'
+      - '.agents/registry/**'
+      - 'README.md'
+      - 'bin/**'
   push:
     branches: [ main ]
     paths:
-      - 'skills/**'
-      - 'skills.json'
-      - 'docs/SPEC.md'
-      - 'bin/install.js'
+      - '.agents/skills/**'
+      - '.agents/registry/**'
+      - 'README.md'
+      - 'bin/**'
 
 jobs:
   lint-and-validate:
@@ -53,4 +53,4 @@ jobs:
         run: npm install
 
       - name: Generate Registry Snapshot
-        run: node bin/install.js --ide=7 --scope=2
+        run: node bin/** --ide=7 --scope=2

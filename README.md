@@ -1,101 +1,125 @@
-# 🚀 AI Developer Skill OS (ai-developer-skill-os) v7.5.1
+# AI Developer Skill OS v10.1.0 — Lean Core Edition
 
-> **v7.5.1 "Anti-Slop & Zero-Trust Architecture"**
+> **v10.1.0 "Lean Core Revolution & API-to-Data Discovery Integration"**
 
-Hệ sinh thái AI Developer Skill OS đã được tái cấu trúc hoàn toàn. Thay vì cung cấp các "công cụ rời rạc" (Toolbox), phiên bản V7 được thiết kế như một **Hệ điều hành khép kín, hoạt động theo kỷ luật của một Kiến trúc sư Hệ thống (50 năm kinh nghiệm)**.
-
----
-
-## 🏗️ Triết Lý Hoạt Động Cốt Lõi (V7 Kernel)
-
-### 1. Zero-Trust Context (Không bao giờ đoán mò)
-Mọi kỹ năng phân tích logic và backend (như `qk-feature-delivery`, `qk-orchestrator`) đều bị khoá chặt, không được phép hoạt động nếu chưa có **Dependency Graph** (Bản đồ cấu trúc) từ `qk-context-loader`. AI không được phép thay đổi code dựa trên trí tưởng tượng.
-
-### 2. Contract-First (Khế ước đi đầu)
-- **Frontend / UI**: Mọi sửa đổi giao diện đều phải dựa trên `DESIGN.md`. Nếu vi phạm (tạo ra giao diện lười biếng "slop", dùng màu mặc định sai lệch), AI sẽ tự động bị đánh trượt bài kiểm toán.
-- **Backend / API**: Mọi API phải được viết `OpenAPI/Swagger` schema trước khi viết logic thực tế (`qk-api-lifecycle`).
-- **Database**: Cấm truy vấn mù. Bắt buộc phải có Schema định nghĩa rõ ràng trước (`qk-data-lifecycle`).
-
-### 3. Repair Loop (Chu trình Sửa Lỗi Khép Kín)
-Bảo vệ mã nguồn khỏi thói quen "sửa vội" của AI. Lỗi bắt buộc phải qua chu trình điều tra nghiêm ngặt: `Observe -> Hypothesis -> Evidence -> Fix -> Verify` (`qk-bug-resolution`).
+Phiên bản **v10.1.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **11 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tích hợp toàn diện cỗ máy biên dịch Prompt Compiler v11.1 và Discovery Engine cho Antigravity IDE.
 
 ---
 
-## 🧩 Danh sách 22 Master Skills
+## Điểm Nổi Bật Của v10.1.0
 
-Các kỹ năng được quản lý cực kỳ chặt chẽ với bài kiểm tra tự động (Vitest) để đảm bảo tính nhất quán của luật lệ:
-- **Orchestration:** `qk-orchestrator`, `qk-context-loader`, `qk-access-policy`
-- **Engineering / Dev:** `qk-feature-delivery`, `qk-api-lifecycle`, `qk-fe-api-integration`, `qk-data-lifecycle`, `qk-ui-builder`, `qk-ui-system-builder`
-- **Validation & Standards:** `qk-validation-gate`, `qk-engineering-standard`, `qk-ui-audit`, `qk-project-health`, `qk-bug-resolution`
-- **Ops & AI:** `qk-system-evolution`, `qk-production-release`, `qk-ai-builder`, `qk-project-bootstrap`
-- **Docs & Utils:** `qk-docs`, `qk-project-memory`, `qk-help`, `qk-db-optimizer`
+1. **Quy Hoạch 11 Core Super-Skills**: Hợp nhất logic toàn diện từ 37 thư mục cũ vào 11 khối năng lực domain chuyên sâu:
+   - `qk-orchestrator`: Điều phối, nạp ngữ cảnh kiến trúc (Context Graph) và khởi tạo dự án (Bootstrap).
+   - `qk-prompt-compiler`: Biên dịch & chuẩn hóa prompt (Control Plane, Prompt Delta, 4 Cổng Kiểm Soát).
+   - `qk-product-spec`: Phân tích yêu cầu, PRD, BDD/Gherkin acceptance criteria và Gap Analysis/Khả thi.
+   - `qk-feature-delivery`: Phát triển tính năng end-to-end, tích hợp API client, state management và giao tiếp FE-BE.
+   - `qk-bug-resolution`: Chẩn đoán và xử lý bug bằng chu trình khép kín 5 bước (Observe → Hypothesize → Evidence → Fix → Verify).
+   - `qk-ui-engineer`: Xây dựng UI chuẩn Design Tokens, tối ưu hoá tương tác, responsive và kiểm toán 57 tiêu chí Anti-Slop.
+   - `qk-backend-data`: Thiết kế REST/tRPC API, Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN database và Data Pipeline (ETL/dbt).
+   - `qk-api-data-discovery`: Khám phá API, thu thập Real Evidence, Schema Discovery, đánh giá tầng Bronze Medallion và Checkpoint Handoff Contract.
+   - `qk-code-review`: Kiểm toán mã nguồn kiến trúc, chấm điểm sức khỏe Codebase Health Score (0–100), bảo mật OWASP Top 10 và chất lượng Web (WCAG 2.1 AA, Core Web Vitals).
+   - `qk-code-cleaner`: Tái cấu trúc sạch sẽ (SOLID, giải phóng God files >300L), nâng cấp thư viện an toàn (có Rollback plan) và kỹ nghệ kiểm thử tự động (Test Pyramid).
+   - `qk-devops-release`: Vận hành Platform (Docker, CI/CD GitHub Actions), cổng kiểm soát phát hành 8-Gate Production, đồng bộ tài liệu (README/OpenAPI), bộ nhớ dự án (`.ai-local/`, `/learn`) và kiến trúc AI/RAG.
+2. **Hỗ Trợ Toàn Diện 14 Senior Roles**: Fullstack, Backend, Frontend, Data Engineer, Data Analyst, Data Architect, Data Scientist, DevOps, QA, Product Manager, Business Analyst, UI/UX Designer, AI/ML Engineer, Business Manager.
+3. **Antigravity Cockpit Optimization**:
+   - **Interactive Planning Mode**: Tự động kích hoạt modal và nút **[Proceed]** trên Antigravity trước khi thay đổi mã nguồn lớn (complexity ≥ Medium).
+   - **Artifact Dual-Stream Reporting**: Tránh spam hàng trăm dòng vào cửa sổ Chat; xuất báo cáo chi tiết vào file Artifact (`review_report.md`, `health_scorecard.md`) và in bản Tóm tắt điều hành 15–25 dòng vào chat.
+   - **Dynamic Workspace Path Links**: Toàn bộ đường dẫn file được định dạng theo chuẩn `file:///<workspace-root>/...` dùng forward slash, click mở ngay lập tức trong editor.
+   - **Ascii / Unicode Diagram Rendering**: Vẽ sơ đồ kiến trúc và luồng dữ liệu trực tiếp trong terminal bằng Unicode Box Drawing.
 
 ---
 
-## 💻 Cách Cài Đặt (Installation)
+## Cấu Trúc Hệ Thống
 
-### Cách 1: NPM Global (Khuyên dùng cho nhiều máy)
-```bash
-npm i -g ai-developer-skill-os
+```
+.agents/
+├── DEV_PROFILE.md        ← Khai báo role + stack của bạn (AI đọc đầu mỗi session)
+├── AGENTS.md             ← Entry point: Quick Routing Table 9 Super-Skills + 14 Roles Matrix
+├── GEMINI.md             ← Quy chuẩn cockpit riêng cho Antigravity IDE
+├── skills/               ← 11 Core Super-Skills (mỗi skill có SKILL.md độc lập)
+│   ├── qk-orchestrator/
+│   ├── qk-prompt-compiler/
+│   ├── qk-product-spec/
+│   ├── qk-feature-delivery/
+│   ├── qk-bug-resolution/
+│   ├── qk-ui-engineer/
+│   ├── qk-backend-data/
+│   ├── qk-api-data-discovery/
+│   ├── qk-code-review/
+│   ├── qk-code-cleaner/
+│   └── qk-devops-release/
+├── workflows/            ← 10 execution pipelines liên kết trực tiếp
+├── rules/                ← Behavior policies (global, coding, safety, security...)
+└── registry/             ← Index O(1) sinh tự động (index.yaml, graph.json)
 ```
 
-### Cách 2: NXP (Không cần cài global)
-```bash
-npx ai-developer-skill-os init --ide=antigravity --scope=2
+---
+
+## Bắt Đầu Nhanh
+
+### Bước 1 — Khai báo role và stack một lần
+
+Tạo hoặc chỉnh sửa `.agents/DEV_PROFILE.md` trong dự án của bạn:
+
+```yaml
+role: fullstack          # fe | be | fullstack | data | ai-engineer | devops | qa | pm | ba...
+stack:
+  frontend:  Next.js 15 + TypeScript
+  backend:   Node.js + Fastify / NestJS
+  database:  PostgreSQL + Prisma
+  css:       Tailwind CSS
+ai_style: concise        # concise | detailed | teaching
 ```
 
-### Cách 3: NPM Scripts (Trong dự án)
-```bash
-# Antigravity Global — 1 lần cài, mọi dự án dùng chung
-npm run install:antigravity
-
-# Antigravity Local — cài riêng cho dự án này
-npm run install:antigravity:local
-
-# Các IDE khác
-npm run install:cursor        # Global Cursor
-npm run install:windsurf      # Global Windsurf
-npm run install:claude        # Global Claude Code
-npm run install:kilo          # Global Kilo Code
-npm run install:multi         # Multi-IDE
-```
-
-## 📦 Tham số cho `init`
-
-| Tham số | Giá trị | Mô tả |
-|---------|---------|-------|
-| `--ide` | `antigravity`, `cursor`, `windsurf`, `claude`, `kilo`, `multi-ide` | IDE/AI Assistant |
-| `--scope` | `1` = Local, `2` = Global | Phạm vi cài đặt |
-
-### Ví dụ thực tế
+### Bước 2 — Gọi Super-Skill
 
 ```bash
-# Cài Antigravity Global (toàn máy)
-npx ai-developer-skill-os init --ide=antigravity --scope=2
+# Kích hoạt bằng lệnh trực tiếp:
+./qk-orchestrator              # Điều phối, nạp ngữ cảnh dự án
+./qk-prompt-compiler           # Biên dịch & chuẩn hóa prompt (hiển thị trước khi code)
+./qk-product-spec              # Viết PRD, user stories, acceptance criteria
+./qk-feature-delivery          # Phát triển tính năng mới end-to-end
+./qk-bug-resolution            # Sửa bug và điều tra nguyên nhân gốc
+./qk-ui-engineer               # Thiết kế UI, tokens, audit anti-slop
+./qk-backend-data              # Viết API, schema migration, tối ưu DB, pipeline
+./qk-api-data-discovery        # Khám phá API, Schema Discovery, Data Contract & Bronze
+./qk-code-review               # Review code, health score (0-100), OWASP, WCAG
+./qk-code-cleaner              # Refactor God files, nâng cấp library, viết test
+./qk-devops-release            # Docker, CI/CD, 8-gate release, docs, RAG
 
-# Cài Antigravity Local (chỉ dự án này)
-npx ai-developer-skill-os init --ide=antigravity --scope=1
-
-# Cài Cursor Local
-npx ai-developer-skill-os init --ide=cursor --scope=1
-
-# Cài Multi-IDE (tạo CLAUDE.md + .qk-ai-skill-os)
-npx ai-developer-skill-os init --ide=multi-ide --scope=2
+# Hoặc dùng ngôn ngữ tự nhiên — AI tự động nhận diện:
+"biên dịch lại prompt cho task này"        → qk-prompt-compiler
+"fix bug crash màn hình checkout"         → qk-bug-resolution
+"thiết kế api đặt hàng và migration db"   → qk-backend-data
+"phân tích postman và lấy schema bronze"  → qk-api-data-discovery
+"review bảo mật và đo nợ kỹ thuật dự án"  → qk-code-review
+"tách file UserService.ts bị quá dài"     → qk-code-cleaner
+"chuẩn bị release lên production"         → qk-devops-release
 ```
 
-## 🧪 Testing
+---
 
-Hệ thống được bảo vệ bằng bộ Test Suite (Vitest) để tự động kiểm toán tính hợp lệ của toàn bộ 22 file Kỹ năng trước khi xuất bản:
+## Danh Mục 11 Core Super-Skills
+
+| Super-Skill | Phụ Đề Dev (Nhiệm vụ cốt lõi) | Phạm vi & Năng lực thực chiến | Các kỹ năng cũ đã hợp nhất |
+|---|---|---|---|
+| `qk-orchestrator` | **Điều hướng & Context** | Điều phối tổng thể, nạp context đồ thị phụ thuộc (Context Graph), khởi tạo cấu hình dự án (Bootstrap) | `qk-orchestrator`, `qk-context-loader`, `qk-project-bootstrap`, `qk-help` |
+| `qk-prompt-compiler` | **Biên Dịch & Chuẩn Hóa Prompt** | Bộ biên dịch câu lệnh thô (Raw Request) thành Execution Prompt 9 thành phần kỹ thuật, công khai minh bạch trước khi thực thi | *Mới* (tích hợp [PROMPT_RULES.md](./PROMPT_RULES.md)) |
+| `qk-product-spec` | **Viết Spec & PRD** | Đặc tả sản phẩm, phân tích PRD, Acceptance Criteria (BDD/Gherkin), Gap Analysis và Đánh giá tính khả thi | `qk-product-specification`, `qk-project-audit` |
+| `qk-feature-delivery` | **Build Feature mới** | Phát triển tính năng mới trọn gói, tích hợp API Client, xử lý loading/error states, quản lý State | `qk-feature-delivery`, `qk-api-consumer`, `qk-fe-api-integration` |
+| `qk-bug-resolution` | **Debug & Fix Bug** | Chẩn đoán và dập lỗi theo chu trình khép kín 5 bước, loại bỏ giả định mù quáng | `qk-bug-resolution` |
+| `qk-ui-engineer` | **Build UI & Component** | Xây dựng UI component chuẩn Design Tokens, tương tác micro-animations, kiểm toán 57 tiêu chí Anti-Slop | `qk-ui-builder`, `qk-design-system-engineering`, `qk-ui-system-builder`, `qk-ui-audit`, `qk-frontend-architecture` |
+| `qk-backend-data` | **API & Database** | Kiến trúc REST/tRPC API, Database Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN query, Data Pipeline (ETL/dbt) | `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-access-policy`, `qk-db-optimizer`, `qk-data-engineer` |
+| `qk-api-data-discovery` | **Khám Phá API & Data Contract** | Phân tích Postman, thu thập Real Evidence, khám phá Schema & Data Dictionary, đánh giá tầng Bronze Medallion, Checkpoint dừng trước khi code | *Mới* (API-to-Data Engine & Contract Discovery) |
+| `qk-code-review` | **Review Code & Audit** | Đánh giá mã nguồn kiến trúc, đo lường chỉ số nợ kỹ thuật (Health Score 0–100), quét bảo mật OWASP Top 10, kiểm toán chất lượng Web WCAG AA | `qk-code-review`, `qk-project-health`, `qk-security-audit`, `qk-web-quality-gate`, `qk-validation-gate` |
+| `qk-code-cleaner` | **Refactor & Viết Test** | Tái cấu trúc sạch (SOLID, phân tách God files >300L), nâng cấp thư viện tiệm tiến (kèm Rollback plan), kỹ nghệ kiểm thử tự động (Test Pyramid) | `qk-refactor`, `qk-upgrade`, `qk-system-evolution`, `qk-test-engineering`, `qk-engineering-standard` |
+| `qk-devops-release` | **DevOps, CI/CD & Deploy** | Nền tảng CI/CD (Docker, GitHub Actions), cổng kiểm soát phát hành 8-Gate Release, đồng bộ tài liệu (README, OpenAPI), bộ nhớ dự án (`.ai-local/`), AI/RAG Pipeline | `qk-devops-platform`, `qk-production-release`, `qk-docs`, `qk-project-memory`, `qk-ai-builder`, `qk-agent-observability` |
+
+---
+
+## Công Cụ & Scripts Quản Trị
 
 ```bash
-npm test
+# Tái tạo runtime registry O(1) từ 11 Super-Skills:
+node tooling/build-registry.js
 ```
-
-## 🚀 Tra Cứu (Help)
-
-Để tra cứu danh sách các Kỹ năng và luật lệ khắt khe của hệ thống V7, hãy gọi:
-```bash
-./qk-help
-```
-
-

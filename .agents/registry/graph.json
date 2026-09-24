@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "manifest_version": "8.2",
+  "generated_at": "2026-09-15T03:45:16.804Z",
+  "nodes": {
+    "qk-api-data-discovery": {
+      "path": ".agents/skills/qk-api-data-discovery",
+      "version": "10.1.0",
+      "tags": [
+        "api",
+        "data",
+        "discovery"
+      ],
+      "dependencies": [
+        "context-discovery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-backend-data": {
+      "path": ".agents/skills/qk-backend-data",
+      "version": "10.1.0",
+      "tags": [
+        "backend",
+        "data"
+      ],
+      "dependencies": [
+        "feature-delivery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-bug-resolution": {
+      "path": ".agents/skills/qk-bug-resolution",
+      "version": "10.1.0",
+      "tags": [
+        "bug",
+        "resolution"
+      ],
+      "dependencies": [
+        "bug-resolution"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-code-cleaner": {
+      "path": ".agents/skills/qk-code-cleaner",
+      "version": "10.1.0",
+      "tags": [
+        "code",
+        "cleaner"
+      ],
+      "dependencies": [
+        "refactor"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-code-review": {
+      "path": ".agents/skills/qk-code-review",
+      "version": "10.1.0",
+      "tags": [
+        "code",
+        "review"
+      ],
+      "dependencies": [
+        "code-review"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-devops-release": {
+      "path": ".agents/skills/qk-devops-release",
+      "version": "10.1.0",
+      "tags": [
+        "devops",
+        "release"
+      ],
+      "dependencies": [
+        "production-release"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-feature-delivery": {
+      "path": ".agents/skills/qk-feature-delivery",
+      "version": "10.1.0",
+      "tags": [
+        "feature",
+        "delivery"
+      ],
+      "dependencies": [
+        "feature-delivery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-orchestrator": {
+      "path": ".agents/skills/qk-orchestrator",
+      "version": "10.1.0",
+      "tags": [
+        "orchestrator"
+      ],
+      "dependencies": [
+        "context-discovery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-product-spec": {
+      "path": ".agents/skills/qk-product-spec",
+      "version": "10.1.0",
+      "tags": [
+        "product",
+        "spec"
+      ],
+      "dependencies": [
+        "spec-driven-development"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-prompt-compiler": {
+      "path": ".agents/skills/qk-prompt-compiler",
+      "version": "11.1.0",
+      "tags": [
+        "prompt",
+        "compiler"
+      ],
+      "dependencies": [
+        "prompt-compilation"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    },
+    "qk-ui-engineer": {
+      "path": ".agents/skills/qk-ui-engineer",
+      "version": "10.1.0",
+      "tags": [
+        "ui",
+        "engineer"
+      ],
+      "dependencies": [
+        "feature-delivery"
+      ],
+      "dependents": [],
+      "is_orphan": false
+    }
+  },
+  "adjacency": {
+    "qk-api-data-discovery": [
+      "context-discovery"
+    ],
+    "qk-backend-data": [
+      "feature-delivery"
+    ],
+    "qk-bug-resolution": [
+      "bug-resolution"
+    ],
+    "qk-code-cleaner": [
+      "refactor"
+    ],
+    "qk-code-review": [
+      "code-review"
+    ],
+    "qk-devops-release": [
+      "production-release"
+    ],
+    "qk-feature-delivery": [
+      "feature-delivery"
+    ],
+    "qk-orchestrator": [
+      "context-discovery"
+    ],
+    "qk-product-spec": [
+      "spec-driven-development"
+    ],
+    "qk-prompt-compiler": [
+      "prompt-compilation"
+    ],
+    "qk-ui-engineer": [
+      "feature-delivery"
+    ]
+  },
+  "stats": {
+    "total_scanned": 11,
+    "active": 11,
+    "archived": 0,
+    "relocated": 0,
+    "has_cycles": false
+  }
+}

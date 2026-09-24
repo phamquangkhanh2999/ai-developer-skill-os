@@ -1,278 +1,108 @@
 ---
 name: qk-orchestrator
-category: core
-version: 7.5.0
-description: "Điều hướng yêu cầu của người dùng đến đúng skill với kỷ luật thép — kiểm tra preconditions và routing table."
-platforms: [antigravity, claude-code, cursor, windsurf, kilo-code]
-execution_mode: deterministic
-
-cost: low
-latency: fast
-risk: low
-side_effects: none
-produces: [plan]
-consumes: [user-request]
-
-token_budget:
-  max_files_read: 1
-  max_lines_per_read: 50
-  max_shell_commands: 0
-  stop_early: true
-
-exit_codes: [SUCCESS, BLOCKED, FAILED, PARTIAL]
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
+version: 10.1.0
+status: stable
+subtitle: "Điều hướng & Context"
+description: "Cổng điều phối trung tâm: Nạp kiến trúc dự án (Context Graph), tự động khởi tạo hồ sơ (Bootstrap DEV_PROFILE.md) và định tuyến chính xác đến 1 trong 9 Super-Skills. Dùng khi: help, list skills, chọn skill gì, route task, load context, tìm hiểu codebase, giải thích kiến trúc dự án, setup dev profile, bootstrap dự án mới — TUYỆT ĐỐI KHÔNG trực tiếp code hay sửa file dự án."
+tools:
+  - filesystem
+  - terminal
+rules:
+  - global
+  - coding-standards
+workflow: context-discovery
+triggers:
+  - "help"
+  - "list skills"
+  - "chọn skill nào"
+  - "dùng skill gì"
+  - "route task"
+  - "điều hướng"
+  - "load context"
+  - "tìm hiểu codebase"
+  - "giải thích kiến trúc"
+  - "kiến trúc dự án"
+  - "project bootstrap"
+  - "setup profile"
 ---
 
-# qk-orchestrator — Request Routing
+# qk-orchestrator — Điều hướng & Context (Dispatcher & Context Engine)
 
-> **Language rule:** Code, identifiers, file names ? English. Explanations, summaries ? Vietnamese.
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Preconditions
-- [ ] User request is provided (any language)
-
-```
-On missing precondition:
-  EXIT: BLOCKED
-  Message: "Vui lòng mô tả yêu cầu của bạn."
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Scope
-- ✅ Analyze user intent and route to the correct skill
-- ✅ Verify preconditions of target skill BEFORE delegating
-- ✅ Enforce sequential pipeline when skills depend on each other
-
-## Non-Goals
-- ❌ Write code directly — delegate to specialist skills
-- ❌ Hallucinate non-existent skills
-- ❌ Allow UI work without `DESIGN.md` verified
-- ❌ Allow logic work without context graph from `qk-context-loader`
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Priority Order
-
-| Priority | Check | Skip Threshold |
-|----------|-------|----------------|
-| P1 | Match intent to routing table | Never |
-| P2 | Verify target skill preconditions | Never |
-| P3 | Check pipeline dependencies (e.g., context-loader first) | Never for logic tasks |
-| P4 | Estimate cost/latency for user info | Budget < 70% |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Workflow
-
-### Phase 1 — Intent Classification
-
-**Steps:**
-1. Parse user request → extract intent keywords
-2. Match against routing table (see `references/routing-table.md`)
-3. Resolve to primary skill + pipeline order
-
-**Decision:**
-```
-IF single clear match found
-  → Confidence: HIGH → go to Phase 2
-
-ELSE IF 2–3 possible matches
-  → Pick highest-priority match
-  → Confidence: MEDIUM → go to Phase 2, note ambiguity
-
-ELSE IF no match
-  → EXIT: BLOCKED — ask clarifying question
-```
-
-**Exit When:**
-- Skill identified → go to Phase 2
-- No matching skill → EXIT: BLOCKED
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 2 — Precondition Check
-
-**Steps:**
-1. Read target skill's `Preconditions` section
-2. Verify each precondition against current context
-
-**Decision:**
-```
-IF all preconditions met
-  → go to Phase 3
-
-ELSE IF missing precondition is resolvable
-  → Resolve it first (e.g., run qk-context-loader, find DESIGN.md)
-  → Then go to Phase 3
-
-ELSE
-  → EXIT: BLOCKED
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-### Phase 3 — Pipeline Enforcement
-
-**Steps:**
-1. Check if target skill `consumes` output from another skill
-2. If yes → ensure that upstream skill has run first
-3. Delegate to target skill with full context
-
-**Pipeline Rules:**
-```
-UI tasks:
-  [DESIGN.md check] → [qk-ui-audit (optional)] → [qk-ui-builder | qk-feature-delivery]
-
-Logic tasks:
-  [qk-context-loader] → [qk-feature-delivery | qk-bug-resolution | qk-api-lifecycle]
-
-Data tasks:
-  [qk-context-loader] → [qk-data-lifecycle | qk-db-optimizer]
-
-Release tasks:
-  [qk-validation-gate] → [qk-production-release]
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Routing Table (Quick Reference)
-Full table: see `references/routing-table.md`
-
-| Intent Keywords | Primary Skill | Pipeline |
-|----------------|---------------|----------|
-| bug, lỗi, error, broken, crash, fix, sửa | `qk-bug-resolution` | direct |
-| tính năng, feature, thêm, mới, add, implement | `qk-feature-delivery` | context-loader first |
-| UI, giao diện, design, component, layout, màn hình | `qk-ui-builder` | DESIGN.md check |
-| slow, query, index, N+1, performance DB | `qk-db-optimizer` | context-loader first |
-| deploy, release, production, CI/CD, build | `qk-production-release` | validation-gate first |
-| schema, migration, database, table, model | `qk-data-lifecycle` | context-loader first |
-| refactor, clean, SOLID, DRY, code quality | `qk-engineering-standard` | direct |
-| test, lint, validate, check quality | `qk-validation-gate` | direct |
-| upgrade, update thư viện, migrate library | `qk-system-evolution` | direct |
-| docs, documentation, README, comment | `qk-docs` | direct |
-| API, endpoint, route, contract | `qk-api-lifecycle` | context-loader first |
-| access, role, permission, RBAC, auth | `qk-access-policy` | direct |
-| AI, prompt, RAG, LLM, embedding | `qk-ai-builder` | direct |
-| design system, token, CSS variable | `qk-ui-system-builder` | DESIGN.md check |
-| project audit, health, tech debt | `qk-project-health` | direct |
-| new project, bootstrap, init | `qk-project-bootstrap` | direct |
-| memory, context, recall, lưu | `qk-project-memory` | direct |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Confidence Model
-
-| Level | Condition | Action |
-|-------|-----------|--------|
-| HIGH | Single clear keyword match | Route directly |
-| MEDIUM | Multiple possible skills | Route to most likely, note ambiguity |
-| LOW | Request is too vague | Ask clarifying question |
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Escalation Rules
-
-```
-BLOCKED: Cannot determine correct skill
-Missing:
-  - More specific description of the task
-Questions:
-  1. Bạn muốn làm gì? (fix bug / thêm tính năng / tối ưu / deploy)
-  2. File hoặc module nào bị ảnh hưởng?
-Recommended Assumptions: none — routing requires clear intent
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Handoff Contract
-
-### Consumes
-```json
-{
-  "from": "user",
-  "required_fields": ["request_text"],
-  "optional_fields": ["affected_file", "context"]
-}
-```
-
-### Produces
-```json
-{
-  "to": "[target-skill]",
-  "output_fields": ["routed_skill", "pipeline_order", "preconditions_verified", "exit_code"]
-}
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Output Format
-
-```
-🧭 Orchestrator Routing
-─────────────────────────────────────────────────
-Intent:      [Classified intent]
-Skill:       [qk-skill-name]
-Pipeline:    [skill-a → skill-b → skill-c]
-Confidence:  [HIGH | MEDIUM | LOW]
-
-Preconditions:
-  ✅ [Condition met]
-  ✅ [Condition met]
-
-Exit Code:   SUCCESS
-```
-
-skill_version: 7.5.0
-runtime_version: 1
-schema_version: 2
----
-
-## Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| SUCCESS | Skill routed, preconditions verified, delegation in progress | Normal flow |
-| PARTIAL | Routed with MEDIUM confidence — ambiguity noted | Multi-match situation |
-| BLOCKED | Cannot classify intent or precondition missing | Vague request or missing DESIGN.md |
-| FAILED | No skill matches and cannot escalate | Unknown domain request |
+> **Language rule:** Code, identifiers, file names → English. Explanations, summaries → Vietnamese.
 
 ---
 
+## 1. Nguyên Tắc Cốt Lõi & Luật Chống Over-Engineering
 
+> **Core Principle:** The dispatcher routes; it does not implement. Load just enough context to make precise technical decisions without overwhelming the conversation window.
+> **Dispatch Principle:** Routing must be evidence-based from manifest files, never from guesses.
+
+### 🛡️ Anti-Overengineering Rule (CẤM ÔM ĐỒM & CẤM XẢ CONTEXT RÁC)
+- **Tuyệt đối không tự ý viết code:** Orchestrator là cổng điều hướng. Tuyệt đối KHÔNG tự ý sửa file logic, fix bug, hay tạo component. Sau khi nạp context xong, BẮT BUỘC chuyển giao quyền sang đúng Super-Skill chuyên trách.
+- **Không xả đồ thị dependency khổng lồ:** Tránh quét và in ra hàng trăm dependencies không cần thiết. Chỉ tập trung vào cấu trúc phân tầng chính và các điểm kết nối cốt lõi.
+
+### 🔒 Laser Focus & Repository Inspection Rule (R-G-13)
+- Chỉ đọc các tệp manifest và entry point chính (`package.json`, `tsconfig.json`, `src/index`, router).
+- **CẤM** quét toàn bộ thư mục sâu hoặc đọc nội dung các file implementation khi chỉ làm nhiệm vụ điều phối.
+
+### ⚖️ Verify Before Claim Rule (XÁC MINH TRƯỚC KHI BÁO CÁO - R-G-14.7)
+- **Đọc manifest thực tế:** Phải đọc trực tiếp các file manifest (`package.json`, `go.mod`, `pyproject.toml`) trước khi công bố tech stack. Không tự suy diễn hay phỏng đoán framework.
+
+---
+
+## 2. Ranh Giới & Phạm Vi Kỹ Thuật (Hard Boundaries)
+
+### ✅ Việc skill này BẮT BUỘC làm:
+- **Auto-Bootstrapper:** Kiểm tra và khởi tạo `.agents/DEV_PROFILE.md` nếu chưa có từ việc phân tích manifest thực tế.
+- **Architectural Context Graph:** Nhận diện các ranh giới module (Presentation, Domain, Data, Infra) để định hướng thực thi.
+- **Strict Dispatching:** Ánh xạ chính xác yêu cầu của người dùng vào 1 trong 9 Super-Skills và kích hoạt kèm thông báo chuẩn.
+- **Unicode Box Drawing:** Vẽ sơ đồ luồng/kiến trúc trực quan bằng Unicode Box Drawing trong terminal khi người dùng yêu cầu trực quan hóa.
+
+### ❌ Việc skill này TUYỆT ĐỐI KHÔNG làm:
+- Tự tay sửa bug hay viết tính năng → Phải chuyển giao ngay cho skill tương ứng.
+
+---
+
+## 3. Quy Trình Điều Phối Tuần Tự (Sequential Procedure)
+
+```
+[Bước 1: Pre-flight Check]  ── Đọc/Tạo DEV_PROFILE.md, nhận diện role và primary stack
+            │
+            ▼
+[Bước 2: Context Mapping]   ── Xác định module liên quan (chỉ quét trong phạm vi cần thiết)
+            │
+            ▼
+[Bước 3: Strict Dispatch]   ── Kích hoạt đúng Super-Skill kèm thông báo chuẩn
+```
+
+---
+
+## 4. Thích Ứng Theo Role Kỹ Thuật (Role Adaptation)
+
+| Role | Trọng tâm khi khởi tạo & nạp Context | Thông tin nạp ưu tiên |
+|---|---|---|
+| `frontend` | Component hierarchy, client state (Zustand/Redux), styling setup | Next/Vite config, UI library, token files |
+| `backend` | API gateway, auth guards, service layer, ORM models | Database connection, router definitions, middleware |
+| `fullstack` | Hợp đồng giao tiếp (Contracts), type sharing, migration, UI binding | Prisma/Drizzle schema, OpenAPI specs, client API SDK |
+| `data` | Ingestion pipelines, warehouse connections, data transformations | dbt models, Airflow DAGs, SQL seeds |
+| `devops` | Container configs, CI workflows, environment secrets, deployment | Dockerfile, docker-compose, .github/workflows |
+| `qa` | Testing pyramid, fixture setups, mock environments, test runners | vitest.config, playwright.config, mocks directory |
+
+---
+
+## 5. Báo Cáo Nghiệm Thu Chuẩn Xác (Truth-First Report)
+
+```markdown
+🧭 Orchestrator Context Summary                     [Role: <role> | Stack: <primary stack>]
+─────────────────────────────────────────────────────────────────────
+Trạng thái dự án:   [Đã nhận diện hồ sơ | Auto-bootstrapped DEV_PROFILE.md]
+Cấu trúc phát hiện: [Monolith / Monorepo / Microservices]
+Định tuyến tiếp:    [Tên Super-Skill được kích hoạt]
+
+Bản đồ kiến trúc nhanh:
+  📁 [Source Code](file:///<workspace-root>/src): [Mô tả ngắn phân tầng]
+  📄 [Cấu hình chính](file:///<workspace-root>/package.json): [Dependencies chính đã xác thực]
+
+⚡ Chuyển giao thực thi:
+  Đang kích hoạt [<Super-Skill>](file:///<workspace-root>/.agents/skills/<super-skill>/SKILL.md) để xử lý yêu cầu.
+```

@@ -3,389 +3,336 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import os from 'os';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const sourceDir = path.resolve(__dirname, '..', '.agents');
+const packageJsonPath = path.resolve(__dirname, '..', 'package.json');
+const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const version = pkg.version;
+const cwd = process.cwd();
+const homeDir = os.homedir();
 
-const sourceDir = path.join(__dirname, '..');
+// Version marker file written after every successful install
+const VERSION_FILE = '.ai-skill-os-version';
+
+// ─── IDE Configuration Map ────────────────────────────────────────────────────
+// Each IDE has:
+//   localDir  — where to install when scope=local (relative to cwd)
+//   globalDir — where to install when scope=global (absolute, user-level)
+//   postInstall — special steps after copy (null = none)
+// ─────────────────────────────────────────────────────────────────────────────
+const IDE_CONFIG = {
+  antigravity: {
+    label: 'Antigravity (Google Gemini)',
+    localDir: path.join(cwd, '.agents'),
+    globalDir: path.join(homeDir, '.gemini', 'config'),
+    postInstall: 'rewriteAbsolutePaths',
+    note: 'Global: ~/.gemini/config — applies to all projects on this machine',
+  },
+  claude: {
+    label: 'Claude Code (Anthropic)',
+    localDir: path.join(cwd, '.claude'),
+    globalDir: path.join(homeDir, '.claude'),
+    postInstall: 'renameToClaude',
+    note: 'Global: ~/.claude/CLAUDE.md — applies to all Claude Code sessions',
+  },
+  cursor: {
+    label: 'Cursor IDE',
+    localDir: path.join(cwd, '.cursor', 'rules'),
+    globalDir: null, // Cursor has no reliable global rules path — use Settings UI
+    postInstall: 'exportCursorRules',
+    note: 'Local only: .cursor/rules/ — use Cursor Settings > Rules for AI for global rules',
+  },
+  codex: {
+    label: 'OpenAI Codex CLI',
+    localDir: path.join(cwd, '.codex'),
+    globalDir: path.join(homeDir, '.codex'),
+    postInstall: null,
+    note: 'Global: ~/.codex — applies to all Codex CLI sessions',
+  },
+};
+
+// ─── Utilities ───────────────────────────────────────────────────────────────
 
 function copyRecursiveSync(src, dest) {
-  const exists = fs.existsSync(src);
-  const stats = exists && fs.statSync(src);
-  const isDirectory = exists && stats.isDirectory();
-
-  if (isDirectory) {
-    const dirName = path.basename(src);
-    if (dirName.startsWith('_')) {
-      return;
+  if (!fs.existsSync(src)) return;
+  const stats = fs.statSync(src);
+  if (stats.isDirectory()) {
+    fs.mkdirSync(dest, { recursive: true });
+    for (const child of fs.readdirSync(src)) {
+      copyRecursiveSync(path.join(src, child), path.join(dest, child));
     }
-
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest, { recursive: true });
-    }
-    fs.readdirSync(src).forEach(function(childItemName) {
-      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
-    });
   } else {
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
   }
 }
 
-function cleanOldSkills(targetSkillsDir, isGeminiGlobal) {
-  if (fs.existsSync(targetSkillsDir)) {
-    console.log('🧹 Đang dọn dẹp phiên bản cũ để tối ưu hệ thống...');
-    if (isGeminiGlobal) {
-      fs.readdirSync(targetSkillsDir).forEach(item => {
-        if (item.startsWith('qk-')) {
-          fs.rmSync(path.join(targetSkillsDir, item), { recursive: true, force: true });
-        }
-      });
-    } else {
-      fs.rmSync(targetSkillsDir, { recursive: true, force: true });
+/** Read installed version from marker file. Returns null if not installed. */
+function getInstalledVersion(targetDir) {
+  const markerPath = path.join(targetDir, VERSION_FILE);
+  if (!fs.existsSync(markerPath)) return null;
+  try {
+    return fs.readFileSync(markerPath, 'utf8').trim();
+  } catch {
+    return null;
+  }
+}
+
+/** Write version marker after successful install. */
+function writeVersionMarker(targetDir) {
+  fs.writeFileSync(
+    path.join(targetDir, VERSION_FILE),
+    `${version}\nInstalled: ${new Date().toISOString()}\n`,
+    'utf8'
+  );
+}
+
+/** Remove existing install. For Cursor: only delete the .mdc rule file. */
+function removeExistingInstall(targetDir, ide) {
+  if (ide === 'cursor') {
+    const mdcPath = path.join(targetDir, 'ai-skill-os.mdc');
+    if (fs.existsSync(mdcPath)) fs.unlinkSync(mdcPath);
+    console.log('  🗑️  Removed old Cursor rule: ai-skill-os.mdc');
+  } else {
+    if (fs.existsSync(targetDir)) {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+      console.log(`  🗑️  Removed old install: ${targetDir}`);
     }
   }
 }
 
-function ensureKiloConfig(kiloJsonPath, kiloSkillsDir, kiloThemesDir, kiloCommandsDir) {
-  if (!fs.existsSync(kiloSkillsDir)) {
-    fs.mkdirSync(kiloSkillsDir, { recursive: true });
-  }
-  if (!fs.existsSync(kiloThemesDir)) {
-    fs.mkdirSync(kiloThemesDir, { recursive: true });
-  }
-  if (!fs.existsSync(kiloCommandsDir)) {
-    fs.mkdirSync(kiloCommandsDir, { recursive: true });
-  }
-
-  const srcSkills = path.join(sourceDir, 'skills');
-  if (fs.existsSync(srcSkills)) {
-    copyRecursiveSync(srcSkills, kiloSkillsDir);
-  }
-
-  let kiloConfig = {};
-  if (fs.existsSync(kiloJsonPath)) {
-    try {
-      kiloConfig = JSON.parse(fs.readFileSync(kiloJsonPath, 'utf8'));
-    } catch (e) {
-      kiloConfig = {};
-    }
-  }
-
-  const skillPaths = [kiloSkillsDir];
-  if (!kiloConfig.skills || typeof kiloConfig.skills !== 'object' || !Array.isArray(kiloConfig.skills.paths)) {
-    kiloConfig.skills = { paths: skillPaths };
-  } else {
-    const exists = kiloConfig.skills.paths.some(p => path.resolve(p) === path.resolve(kiloSkillsDir));
-    if (!exists) {
-      kiloConfig.skills.paths = [...kiloConfig.skills.paths, ...skillPaths];
-    }
-  }
-
-  fs.writeFileSync(kiloJsonPath, JSON.stringify(kiloConfig, null, 2) + '\n');
-  return kiloJsonPath;
+/** Prompt user yes/no. Resolves true for yes. */
+function confirm(rl, question) {
+  return new Promise((resolve) => {
+    rl.question(question, (ans) => resolve(['y', 'yes', ''].includes(ans.trim().toLowerCase())));
+  });
 }
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const parsed = { ide: null, scope: null };
+  const result = { ide: null, scope: null };
   for (const arg of args) {
-    if (arg.startsWith('--ide=')) parsed.ide = arg.split('=')[1];
-    if (arg.startsWith('--scope=')) parsed.scope = arg.split('=')[1];
+    if (arg.startsWith('--ide=')) result.ide = arg.split('=')[1];
+    else if (arg.startsWith('--scope=')) result.scope = arg.split('=')[1];
   }
+  return result;
+}
 
-  const aliasMap = {
-    'antigravity': '4',
-    'gemini': '4',
-    'cursor': '1',
-    'windsurf': '2',
-    'claude': '3',
-    'cliner': '3',
-    'roo': '3',
-    'codex': '5',
-    'kilo': '6',
-    'multi-ide': '7',
-    'all': '7'
+// ─── Post-install handlers ────────────────────────────────────────────────────
+
+/**
+ * Antigravity global install: rewrite relative .agents/X paths → absolute paths.
+ * Required because Antigravity reads SKILL.md files from an absolute global path.
+ */
+function rewriteAbsolutePaths(targetDir) {
+  const targetPosix = targetDir.replace(/\\/g, '/');
+  const DIRS_TO_REWRITE = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'docs', 'blueprints'];
+
+  const walk = (dir) => {
+    for (const file of fs.readdirSync(dir)) {
+      const fullPath = path.join(dir, file);
+      if (fs.statSync(fullPath).isDirectory()) {
+        walk(fullPath);
+      } else if (/\.(md|yml|yaml|json)$/.test(fullPath)) {
+        let content = fs.readFileSync(fullPath, 'utf8');
+        let changed = false;
+
+        for (const d of DIRS_TO_REWRITE) {
+          const re = new RegExp(`\\.agents/${d}`, 'g');
+          if (re.test(content)) {
+            content = content.replace(re, () => `${targetPosix}/${d}`);
+            changed = true;
+          }
+        }
+        if (content.includes('.agents/skills.json')) {
+          content = content.replace(/\.agents\/skills\.json/g, () => `${targetPosix}/skills.json`);
+          changed = true;
+        }
+        if (changed) fs.writeFileSync(fullPath, content, 'utf8');
+      }
+    }
   };
 
-  if (parsed.ide && aliasMap[parsed.ide.toLowerCase()]) {
-    parsed.ide = aliasMap[parsed.ide.toLowerCase()];
-  }
-
-  if (args.includes('--antigravity')) {
-    parsed.ide = '4';
-    if (!parsed.scope) parsed.scope = '2';
-  }
-  if (args.includes('--cursor')) {
-    parsed.ide = '1';
-    if (!parsed.scope) parsed.scope = '2';
-  }
-  if (args.includes('--kilo')) {
-    parsed.ide = '6';
-    if (!parsed.scope) parsed.scope = '2';
-  }
-
-  return parsed;
+  walk(targetDir);
+  console.log('  ✅ Rewrote .agents/* references → absolute paths for Antigravity global mode');
 }
 
-function runInstall(ideCode, answerScope) {
-  let isGemini = false;
-  let isKilo = false;
-  let isMultiIde = false;
-  let ruleFileName = null;
+/**
+ * Claude Code install: copy AGENTS.md → CLAUDE.md at target root.
+ * Claude Code reads ~/.claude/CLAUDE.md as global instructions.
+ */
+function renameToClaude(targetDir) {
+  const agentsMd = path.join(targetDir, 'AGENTS.md');
+  const claudeMd = path.join(targetDir, 'CLAUDE.md');
 
-  switch(ideCode) {
-    case '1': ruleFileName = '.cursorrules'; break;
-    case '2': ruleFileName = '.windsurfrules'; break;
-    case '3': ruleFileName = '.clinerules'; break;
-    case '4': isGemini = true; break;
-    case '5': ruleFileName = '.codexrules'; break;
-    case '6': ruleFileName = '.kilorules'; isKilo = true; break;
-    case '7': isMultiIde = true; ruleFileName = null; break;
-    case '0': default: break;
+  if (fs.existsSync(agentsMd) && !fs.existsSync(claudeMd)) {
+    fs.copyFileSync(agentsMd, claudeMd);
+    console.log('  ✅ Copied AGENTS.md → CLAUDE.md (Claude Code entry point)');
+  } else if (fs.existsSync(claudeMd)) {
+    console.log('  ℹ️  CLAUDE.md already exists — skipped overwrite');
+  }
+}
+
+/**
+ * Cursor install: export AGENTS.md content as a .mdc rule file.
+ * Cursor reads .cursor/rules/*.mdc — each file needs YAML frontmatter.
+ */
+function exportCursorRules(targetDir) {
+  const agentsMd = path.join(sourceDir, 'AGENTS.md');
+  if (!fs.existsSync(agentsMd)) return;
+
+  const rawContent = fs.readFileSync(agentsMd, 'utf8');
+  const mdcContent = `---
+description: "AI Developer Skill OS v${version} — global skill rules"
+alwaysApply: true
+---
+
+${rawContent}`;
+
+  const outPath = path.join(targetDir, 'ai-skill-os.mdc');
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.writeFileSync(outPath, mdcContent, 'utf8');
+  console.log(`  ✅ Exported rules → ${outPath}`);
+  console.log('  ℹ️  For global rules: Cursor Settings > General > Rules for AI');
+}
+
+// ─── Main install logic ───────────────────────────────────────────────────────
+
+async function runInstall(ideKey, scopeKey, rl) {
+  const ideMap = { '1': 'antigravity', '2': 'claude', '3': 'cursor', '4': 'codex' };
+  const scopeMap = { '1': 'local', '2': 'global' };
+
+  const ide = ideMap[ideKey] || ideKey;
+  const scope = scopeMap[scopeKey] || scopeKey;
+  const config = IDE_CONFIG[ide];
+
+  if (!config) {
+    console.error(`❌ IDE không hợp lệ: "${ide}". Chọn: antigravity, claude, cursor, codex`);
+    process.exit(1);
   }
 
-  const isGlobal = answerScope.trim() === '2';
+  const isGlobal = scope === 'global';
 
-  const homeDir = os.homedir();
-  const cwd = process.cwd();
-  let targetDir = '';
-  let ruleFilePath = null;
-  let baseFolderForPrompt = '';
-  let kiloJsonPath = null;
-  let kiloSkillsDir = null;
-  let kiloThemesDir = null;
-  let kiloCommandsDir = null;
+  if (isGlobal && config.globalDir === null) {
+    console.warn(`⚠️  ${config.label} không hỗ trợ cài Global qua file.`);
+    console.warn(`   ${config.note}`);
+    console.warn('   Tiến hành cài Local thay thế...');
+  }
 
-  if (isMultiIde) {
-    targetDir = path.join(cwd, '.qk-ai-skill-os');
-    baseFolderForPrompt = './.qk-ai-skill-os';
-    ruleFilePath = path.join(cwd, 'CLAUDE.md');
-    if (!isGlobal) {
-      kiloSkillsDir = path.join(cwd, '.kilo', 'skills');
-      kiloThemesDir = path.join(cwd, '.kilo', 'themes');
-      kiloCommandsDir = path.join(cwd, '.kilo', 'command');
-      kiloJsonPath = path.join(cwd, 'kilo.json');
-    }
-  } else if (isGemini) {
-    if (isGlobal) {
-      targetDir = path.join(homeDir, '.gemini', 'config');
-      ruleFilePath = path.join(targetDir, 'AGENTS.md');
-      baseFolderForPrompt = path.join(targetDir, 'skills').replace(/\\/g, '/');
+  const targetDir = (isGlobal && config.globalDir) ? config.globalDir : config.localDir;
+
+  console.log(`\n🚀 AI Developer Skill OS v${version}`);
+  console.log(`   IDE:   ${config.label}`);
+  console.log(`   Scope: ${isGlobal ? 'Global' : 'Local'}`);
+  console.log(`   Path:  ${targetDir}`);
+
+  // ── Version check ────────────────────────────────────────────────────────
+  const installedVersion = getInstalledVersion(targetDir);
+
+  if (installedVersion) {
+    if (installedVersion === version) {
+      console.log(`\n✅ Phiên bản v${version} đã được cài đặt — không cần cập nhật.`);
+      console.log('   Dùng --force để cài lại.\n');
+      const isForce = process.argv.includes('--force');
+      if (!isForce) {
+        if (rl) rl.close();
+        return;
+      }
+      console.log('   --force detected: tiến hành cài lại...');
     } else {
-      targetDir = path.join(cwd, '.agents');
-      ruleFilePath = path.join(cwd, '.agents', 'AGENTS.md');
-      baseFolderForPrompt = '.agents/skills';
+      console.log(`\n⚠️  Phát hiện phiên bản cũ: v${installedVersion}`);
+      console.log(`   Phiên bản mới:             v${version}`);
+      const shouldUpgrade = rl
+        ? await confirm(rl, '\n   Xóa bản cũ và cài bản mới? [Y/n]: ')
+        : true;
+      if (!shouldUpgrade) {
+        console.log('   Hủy cài đặt.');
+        if (rl) rl.close();
+        return;
+      }
     }
-  } else if (isKilo) {
-    if (isGlobal) {
-      targetDir = path.join(homeDir, '.qk-ai-skill-os');
-      baseFolderForPrompt = targetDir.replace(/\\/g, '/');
-      kiloSkillsDir = path.join(homeDir, '.kilo', 'skills');
-      kiloThemesDir = path.join(homeDir, '.config', 'kilo', 'themes');
-      kiloCommandsDir = path.join(homeDir, '.config', 'kilo', 'command');
-      kiloJsonPath = path.join(homeDir, '.config', 'kilo', 'kilo.json');
-    } else {
-      targetDir = path.join(cwd, '.qk-ai-skill-os');
-      baseFolderForPrompt = './.qk-ai-skill-os';
-      kiloSkillsDir = path.join(cwd, '.kilo', 'skills');
-      kiloThemesDir = path.join(cwd, '.kilo', 'themes');
-      kiloCommandsDir = path.join(cwd, '.kilo', 'command');
-      kiloJsonPath = path.join(cwd, 'kilo.json');
-    }
-    ruleFilePath = path.join(cwd, 'CLAUDE.md');
+    // Remove old install before fresh copy
+    removeExistingInstall(targetDir, ide);
   } else {
-    if (isGlobal) {
-      targetDir = path.join(homeDir, '.qk-ai-skill-os');
-      baseFolderForPrompt = targetDir.replace(/\\/g, '/');
-    } else {
-      targetDir = path.join(cwd, '.qk-ai-skill-os');
-      baseFolderForPrompt = './.qk-ai-skill-os';
-    }
-    if (ruleFileName) {
-      ruleFilePath = path.join(cwd, ruleFileName);
-    }
+    console.log('   (Chưa cài đặt — fresh install)\n');
   }
 
-  const systemPrompt = `[Role]
-You are an elite AI Software Engineer. You must strictly follow the rules in this project.
-Vui lòng tìm đọc danh sách kỹ năng tại file \`${baseFolderForPrompt}/skills.json\`.
-
-[Trigger Mechanism]
-Bất cứ khi nào người dùng gõ lệnh bắt đầu bằng \`./qk-[tên-skill]\`, bạn BẮT BUỘC phải đọc file \`SKILL.md\` tương ứng trong thư mục \`${baseFolderForPrompt}/...\` (hoặc dùng tool view_file để đọc file đó) trước khi làm bất cứ việc gì. Đừng bao giờ đoán mò.
-
-[Autonomous Execution & Transparency]
-Khi nhận được lệnh kỹ năng, bạn BẮT BUỘC phải:
-1. Thông báo rõ ràng: "[🚀 AI Developer Skin: Đã kích hoạt kỹ năng <tên-skill>]" ngay dòng đầu tiên.
-2. TỰ ĐỘNG THỰC THI (End-to-End): Dùng các tools của bạn (đọc file, sửa code, chạy lệnh) để tự động hoàn thành 100% mục tiêu được giao. KHÔNG ĐƯỢC dừng lại để hỏi ý kiến trừ khi gặp lỗi chí mạng hoặc requirement quá mập mờ.
-3. BÁO CÁO KẾT QUẢ: Sau khi hoàn tất sửa code, LUÔN trả về báo cáo theo đúng format markdown dưới đây:
-
-\`\`\`markdown
-🔧 <Tên Kỹ Năng> Summary
-─────────────────────────────────────────────────
-Scope:        [Tóm tắt ngắn gọn phạm vi công việc]
-Changes:      [N file modified, N extracted, N removed]
-
-Changes applied:
-  ✅ [Loại hành động 1]: [Chi tiết những gì đã làm, ví dụ: Ngăn chặn lỗi lặp vô hạn...]
-  ✅ [Loại hành động 2]: [Chi tiết những gì đã làm]
-
-📊 Quality improvement:
-  Before: [Mô tả ngắn tình trạng trước khi sửa/làm]
-  After:  [Mô tả sự cải thiện đạt được]
-
-✅ Verification:
-  Tests:     [Trạng thái test (vd: N/A, Pass)]
-  Lint/Types:[Trạng thái kiểm tra lỗi (vd: Clean)]
-  Behavior:  [Kết quả hoạt động (vd: Unchanged, Improved)]
-
-⚠️ Notes:
-  [Các lưu ý đặc biệt, rủi ro tiềm ẩn hoặc cách người dùng có thể test lại tính năng này]
-\`\`\`
-
-[Command Arguments]
-Người dùng có thể truyền thêm tham số vào lệnh (ví dụ: \`./qk-ui-builder --fw=react --css=tailwind\`).
-Nếu người dùng sử dụng tham số (argument), bạn BẮT BUỘC phải tuân thủ tuyệt đối các công nghệ/yêu cầu được chỉ định trong tham số đó thay vì dùng mặc định.`;
-
+  // ── Install ──────────────────────────────────────────────────────────────
   try {
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true });
+    if (!fs.existsSync(sourceDir)) {
+      console.error(`❌ Không tìm thấy source: ${sourceDir}`);
+      process.exit(1);
     }
 
-    const targetSkillsDir = path.join(targetDir, 'skills');
-    cleanOldSkills(targetSkillsDir, isGemini && isGlobal);
-
-    const filesAndFolders = [
-      'skills', '_template', 'docs', 'skills.json', 'README.md', 'CHANGELOG.md', 'LICENSE'
-    ];
-
-    if (isGemini && isGlobal) {
-      if (fs.existsSync(path.join(sourceDir, 'skills'))) {
-        copyRecursiveSync(path.join(sourceDir, 'skills'), path.join(targetDir, 'skills'));
-      }
-      if (fs.existsSync(path.join(sourceDir, 'skills.json'))) {
-        fs.copyFileSync(path.join(sourceDir, 'skills.json'), path.join(targetDir, 'skills', 'skills.json'));
-      }
+    if (ide === 'cursor') {
+      exportCursorRules(targetDir);
     } else {
-      filesAndFolders.forEach(item => {
-        const src = path.join(sourceDir, item);
-        let dest = path.join(targetDir, item);
-        if (fs.existsSync(src)) {
-          copyRecursiveSync(src, dest);
+      copyRecursiveSync(sourceDir, targetDir);
+      console.log(`  ✅ Copied .agents/ → ${targetDir}`);
+      if (isGlobal && config.postInstall === 'rewriteAbsolutePaths') {
+        rewriteAbsolutePaths(targetDir);
+      }
+      if (config.postInstall === 'renameToClaude') {
+        renameToClaude(targetDir);
+      }
+      if (ide === 'antigravity') {
+        const geminiSource = path.resolve(__dirname, '..', 'GEMINI.md');
+        if (fs.existsSync(geminiSource)) {
+          const geminiDest = isGlobal ? path.join(homeDir, '.gemini', 'GEMINI.md') : path.join(cwd, 'GEMINI.md');
+          fs.mkdirSync(path.dirname(geminiDest), { recursive: true });
+          fs.copyFileSync(geminiSource, geminiDest);
+          console.log(`  ✅ Copied GEMINI.md → ${geminiDest}`);
         }
-      });
-    }
-
-    if (ruleFilePath) {
-      const ruleDir = path.dirname(ruleFilePath);
-      if (ruleDir !== cwd && !fs.existsSync(ruleDir)) {
-        fs.mkdirSync(ruleDir, { recursive: true });
-      }
-
-      let writeContent = systemPrompt;
-      if (isGemini) {
-        writeContent = `\n<RULE[ai_skill_os]>\n---\ntrigger: always_on\n---\n${systemPrompt}\n</RULE[ai_skill_os]>\n`;
-      }
-
-      if (fs.existsSync(ruleFilePath)) {
-        const existingContent = fs.readFileSync(ruleFilePath, 'utf8');
-        const marker = isGemini ? '<RULE[ai_skill_os]>' : '[Role]\nYou are an elite AI Software Engineer.';
-        const markerIndex = existingContent.indexOf(marker);
-        if (markerIndex !== -1) {
-          const before = existingContent.substring(0, markerIndex);
-          const after = existingContent.substring(markerIndex).split('\n').slice(isGemini ? 2 : 1).join('\n');
-          const lastMarkerEnd = after.indexOf(isGemini ? '</RULE[ai_skill_os]>' : '[Trigger Mechanism]');
-          const actualAfter = lastMarkerEnd !== -1 ? after.substring(lastMarkerEnd + (isGemini ? 19 : 18)).trimStart() : after;
-          fs.writeFileSync(ruleFilePath, before + writeContent.trimStart() + (actualAfter ? '\n' + actualAfter : '') + '\n');
-          console.log(`✅ Đã CẬP NHẬT cấu hình tự động trong file: ${ruleFilePath}`);
-        } else {
-          fs.appendFileSync(ruleFilePath, "\n\n" + writeContent);
-          console.log(`✅ Đã GHI THÊM cấu hình tự động vào file: ${ruleFilePath}`);
-        }
-      } else {
-        fs.writeFileSync(ruleFilePath, writeContent);
-        console.log(`✅ Đã TẠO MỚI file cấu hình: ${ruleFilePath}`);
       }
     }
 
-    if (isKilo) {
-      ensureKiloConfig(kiloJsonPath, kiloSkillsDir, kiloThemesDir, kiloCommandsDir);
-      console.log(`✅ Đã cấu hình Kilo Code tại: ${kiloJsonPath}`);
-      console.log(`   → Skills: ${kiloSkillsDir}`);
-      console.log(`   → Themes: ${kiloThemesDir}`);
-      console.log(`   → Commands: ${kiloCommandsDir}`);
-    }
+    writeVersionMarker(targetDir);
+    console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);
 
-    if (isMultiIde) {
-      if (kiloJsonPath && kiloSkillsDir) {
-        ensureKiloConfig(kiloJsonPath, kiloSkillsDir, kiloThemesDir, kiloCommandsDir);
-        console.log(`✅ Đã cấu hình Kilo Code (Multi-IDE) tại: ${kiloJsonPath}`);
-        console.log(`   → Skills: ${kiloSkillsDir}`);
-        console.log(`   → Themes: ${kiloThemesDir}`);
-        console.log(`   → Commands: ${kiloCommandsDir}`);
-      } else if (ruleFilePath) {
-        console.log(`✅ Đã tạo file cấu hình Multi-IDE: ${ruleFilePath}`);
-      }
-    }
-
-    console.log(`\n🎉 HOÀN TẤT! Dữ liệu kỹ năng đã được lưu tại: ${targetDir}`);
-    if (isGlobal && !isGemini) {
-      const name = ruleFilePath ? path.basename(ruleFilePath) : 'CLAUDE.md';
-      console.log(`💡 Lưu ý: Kỹ năng đã được cài ở cấp độ máy tính (Global). File cấu hình cục bộ (${name}) ở dự án này đang trỏ thẳng về thư mục Global đó.`);
-    } else if (isGlobal && isGemini) {
-      console.log(`💡 Lưu ý: Antigravity đã được cài Global. Từ nay bạn mở BẤT KỲ DỰ ÁN NÀO trên máy tính này, Antigravity cũng sẽ tự động có đủ 22 kỹ năng mà không cần cài lại!`);
-    } else if (isKilo) {
-      console.log(`💡 Lưu ý: Kilo Code đã sẵn sàng. Dùng \`<leader>t\` hoặc \`/themes\` để xem, và \`/skills\` để xem danh sách skill đã cài.`);
-    }
-
-    if (!isGemini && !isKilo && !isMultiIde) {
-      if (fs.existsSync(path.join(cwd, '.kilorules'))) {
-        fs.unlinkSync(path.join(cwd, '.kilorules'));
-        console.log(`🧹 Đã xoá file .kilorules cũ (không còn cần thiết).`);
-      }
-    }
-
-  } catch (error) {
-    console.error('❌ Có lỗi xảy ra trong quá trình cài đặt:', error.message);
+  } catch (err) {
+    console.error('❌ Lỗi cài đặt:', err.message);
+    process.exit(1);
+  } finally {
+    if (rl) rl.close();
   }
 }
+
+// ─── CLI entry point ──────────────────────────────────────────────────────────
 
 const args = parseArgs();
 
-if (args.ide !== null && args.scope !== null) {
-  runInstall(args.ide, args.scope);
+if (args.ide && args.scope) {
+  // Non-interactive mode (called via npm scripts)
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  await runInstall(args.ide, args.scope, rl);
 } else {
-  console.log('🚀 Đang chuẩn bị cài đặt AI Developer Skill OS...\n');
+  // Interactive mode
+  console.log(`\n🚀 AI Developer Skill OS v${version} — Setup\n`);
 
-  const questionIde = `Vui lòng chọn IDE/AI Assistant bạn đang sử dụng:
-(1) Cursor
-(2) Windsurf
-(3) Cline / Roo Code
-(4) Antigravity / Gemini
-(5) Codex
-(6) Kilo Code
-(7) Tất cả các IDE (Multi-IDE)
-(0) Bỏ qua (Không tạo config tự động)
+  const ideQuestion = `Chọn IDE/AI Assistant:
+  (1) Antigravity (Google Gemini)
+  (2) Claude Code (Anthropic)
+  (3) Cursor IDE
+  (4) OpenAI Codex CLI
 
-Nhập số (0-7): `;
+Nhập số (1-4): `;
 
-  const questionScope = `
-Bạn muốn cài đặt bộ kỹ năng ở đâu?
-(1) Local  (Gắn vào dự án hiện tại - Phù hợp làm việc nhóm)
-(2) Global (Cài vào máy tính dùng chung cho mọi dự án - Dành cho cá nhân)
+  const scopeQuestion = `
+Phạm vi cài đặt:
+  (1) Local  — Chỉ dự án này (.agents/ hoặc .claude/ trong thư mục hiện tại)
+  (2) Global — Toàn bộ máy tính (áp dụng cho mọi dự án)
 
 Nhập số (1-2): `;
 
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
-  rl.question(questionIde, (answerIde) => {
-    rl.question(questionScope, (answerScope) => {
-      rl.close();
-      runInstall(answerIde.trim(), answerScope.trim());
+  rl.question(ideQuestion, async (ideAnswer) => {
+    rl.question(scopeQuestion, async (scopeAnswer) => {
+      await runInstall(ideAnswer.trim(), scopeAnswer.trim(), rl);
     });
   });
 }
