@@ -1,5 +1,5 @@
 name: bug-resolution
-version: 10.2.0
+version: 10.3.0
 platforms: [antigravity, claude, opencode]
 runtime_version: 1
 description: "Pipeline chuẩn để diagnose và fix bugs theo chu trình: Observe → Hypothesize → Evidence → Patch → Verify."
@@ -44,6 +44,19 @@ steps:
       - "Mô tả triệu chứng bằng ngôn ngữ kỹ thuật"
     exit_on_fail: BLOCKED
 
+  - id: orchestration_plan
+    name: "Chọn chế độ và bàn giao context"
+    purpose: "Chỉ dispatch khi capability, scope và ownership đáp ứng policy"
+    required: true
+    skip_if: null
+    inputs: [error_signature, affected_file]
+    outputs: [execution_mode, task_assignments]
+    actions:
+      - "Đọc .agents/rules/subagent-orchestration.md; giữ single-agent nếu tool/quyền không đáp ứng"
+      - "Truyền baseline, context, constraints, paths và acceptance criteria; tối đa hai child, depth 1"
+      - "Thu result contract qua message/event; fallback khi failed, không tích hợp kết quả stale"
+      - "Bug nhỏ single-agent; investigators chỉ đọc, lead là writer duy nhất"
+
   - id: hypothesize
     name: "Đặt giả thuyết nguyên nhân"
     purpose: "Xác định top 3 nguyên nhân có thể, xếp theo xác suất"
@@ -52,11 +65,14 @@ steps:
     inputs:
       - error_signature
       - affected_file
+      - execution_mode
+      - task_assignments
     outputs:
       - hypothesis_list      # Ordered list: [H1 (most likely), H2, H3]
       - selected_hypothesis  # H1 unless evidence suggests otherwise
     min_confidence: HIGH
     actions:
+      - "Collect investigator evidence, lead kiểm chứng độc lập trước chọn root cause"
       - "List 3 nguyên nhân có thể gây ra triệu chứng này"
       - "Xếp hạng theo xác suất dựa trên stack trace"
       - "Chọn H1 để kiểm chứng trước"
@@ -92,6 +108,7 @@ steps:
       - patched_files    # List of files modified
       - diff_summary     # What changed and why
     actions:
+      - "Lead tạo regression và xác nhận fail vì bug trước fix nếu có môi trường; nếu không ghi limitation"
       - "Edit source file trực tiếp với replace_file_content hoặc multi_replace_file_content"
       - "Không tạo wrapper script"
       - "Không dùng ?. hoặc ! để silence lỗi"
@@ -112,7 +129,7 @@ steps:
       - quality_gate_result   # PASS | FAIL
     actions:
       - "Re-read patched code section"
-      - "Chạy test liên quan nếu có"
+      - "Chạy regression và targeted checks trên cây cuối; ghi PASS/FAIL/NOT_RUN thực tế"
       - "Áp dụng shared quality gate → xem: .agents/workflows/shared/quality-gate.yml"
       - "  Checklist: universal_checks + bug-resolution specific checks"
       - "Ghi log execution trace vào evals/traces/"
@@ -150,6 +167,6 @@ escalation:
 #   References Valid: yes
 #   Decision Trees: PASS
 #   Thresholds Defined: PASS
-#   schema_version: 10.2.0
+#   schema_version: 10.3.0
 #   runtime_version: 1
 #   platforms: [antigravity, claude, opencode]
