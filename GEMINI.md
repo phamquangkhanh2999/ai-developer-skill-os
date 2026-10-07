@@ -73,10 +73,13 @@ Chủ động gợi ý người dùng kích hoạt 4 slash commands bản địa
 
 ---
 
-## 6. Manager View & Reactive Task Execution
+## 6. Controlled Subagent Orchestration (v10.3)
 
-- **Chạy song song (Manager View):** Các tác vụ độc lập (không share file, không phụ thuộc nhau) có thể chạy song song trong các agent con. Các tác vụ có quan hệ phụ thuộc phải chạy tuần tự.
-- **Thực thi phản ứng (Reactive - Không Polling):** Antigravity tự động kích hoạt lại agent khi background command hoàn tất qua hệ thống tin nhắn. **TUYỆT ĐỐI KHÔNG** chạy vòng lặp sleep hay polling kiểm tra status.
+- Trước dispatch, đọc `.agents/rules/subagent-orchestration.md` và xác minh capability trong session.
+- Review/bug investigation: chỉ tách việc độc lập với scope/baseline rõ, tối đa hai child chỉ đọc.
+- Parallel-write là opt-in sau pilot runtime; contract và ownership phải chốt trước. Task nhỏ hoặc không có tool chạy single-agent.
+- Lead truyền assignment đầy đủ context, kiểm chứng kết quả, integrate rồi verify cây cuối.
+- Dùng messaging/event; cancellation, timeout, retry và fallback theo policy. Không claim subagents hoặc test chưa thực chạy.
 
 ---
 
