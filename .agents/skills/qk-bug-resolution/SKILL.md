@@ -1,6 +1,6 @@
 ---
 name: qk-bug-resolution
-version: 10.2.0
+version: 10.3.0
 status: stable
 subtitle: "Debug & Fix Bug"
 description: "Chẩn đoán nguyên nhân gốc rễ và khắc phục lỗi mã nguồn theo chu trình khép kín 4 bước (Triangulate → Root-Cause → Surgical Fix → Regression Shield). Dùng khi: fix bug, sửa lỗi, crash, error, exception, trace lỗi, điều tra nguyên nhân bug, not working, màn hình trắng, lỗi logic — TUYỆT ĐỐI KHÔNG dùng khi cần tái cấu trúc lớn (dùng qk-code-cleaner) hoặc làm tính năng mới (dùng qk-feature-delivery)."
@@ -300,6 +300,17 @@ Fix:        [suggestion]
 
 ---
 
+## Controlled Subagent Investigation (v10.3)
+
+Đọc `.agents/rules/subagent-orchestration.md` trước điều tra. Bug nhỏ chạy single-agent. Bug nhiều giả thuyết có thể giao tối đa hai investigators chỉ đọc nếu runtime và quyền đáp ứng.
+
+1. Lead giữ repro, error signature và baseline; giao call-path investigator và hypothesis/edge-case investigator bằng assignment contract.
+2. Thu result contract; lead kiểm chứng giả thuyết ở source hiện tại, không claim root cause chỉ vì hai child đồng ý.
+3. Lead là writer duy nhất. Tạo regression phù hợp, xác nhận fail trước fix vì đúng lỗi rồi pass sau fix nếu môi trường hỗ trợ.
+4. Verify targeted checks trên cây cuối; không tái hiện hoặc thiếu môi trường thì ghi PARTIAL/NOT_RUN. Cancellation/failure dùng policy và không tích hợp kết quả stale.
+
+---
+
 ## Platform-Specific Instructions
 
 ### Antigravity (Google Gemini)
@@ -332,6 +343,6 @@ Fix:        [suggestion]
 | References Valid | ✅ |
 | Decision Trees | PASS |
 | Thresholds Defined | PASS |
-| schema_version | 10.2.0 |
+| schema_version | 10.3.0 |
 | runtime_version | 1 |
 | platforms | [antigravity, claude, opencode] |
