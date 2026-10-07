@@ -69,7 +69,7 @@ function getInstalledVersion(targetDir) {
   const markerPath = path.join(targetDir, VERSION_FILE);
   if (!fs.existsSync(markerPath)) return null;
   try {
-    return fs.readFileSync(markerPath, 'utf8').trim();
+    return fs.readFileSync(markerPath, 'utf8').split(/\r?\n/)[0].trim();
   } catch {
     return null;
   }
@@ -84,12 +84,13 @@ function writeVersionMarker(targetDir) {
   );
 }
 
-/** Remove existing install from target directory. */
-function removeExistingInstall(targetDir) {
-  if (fs.existsSync(targetDir)) {
-    fs.rmSync(targetDir, { recursive: true, force: true });
-    console.log(`  🗑️  Removed old install: ${targetDir}`);
-  }
+/** Backup before overlaying managed files; retain user profile and custom agents. */
+function backupExistingInstall(targetDir) {
+  if (!fs.existsSync(targetDir)) return null;
+  const backupDir = `${targetDir}.backup-${Date.now()}`;
+  fs.cpSync(targetDir, backupDir, { recursive: true, errorOnExist: true, force: false });
+  console.log(`  Backup: ${backupDir}`);
+  return backupDir;
 }
 
 /** Prompt user yes/no. Resolves true for yes. */
@@ -210,6 +211,9 @@ async function runInstall(ideKey, scopeKey, rl) {
   }
 
   const targetDir = (isGlobal && config.globalDir) ? config.globalDir : config.localDir;
+  if (path.resolve(targetDir) === path.resolve(sourceDir)) {
+    throw new Error('Install into a different workspace; refusing to overwrite package source.');
+  }
 
   console.log(`\n🚀 AI Developer Skill OS v${version}`);
   console.log(`   IDE:   ${config.label}`);
@@ -232,8 +236,8 @@ async function runInstall(ideKey, scopeKey, rl) {
     } else {
       console.log(`\n⚠️  Phát hiện phiên bản cũ: v${installedVersion}`);
       console.log(`   Phiên bản mới:             v${version}`);
-      const shouldUpgrade = rl
-        ? await confirm(rl, '\n   Xóa bản cũ và cài bản mới? [Y/n]: ')
+      const shouldUpgrade = process.argv.includes('--force') ? true : rl
+        ? await confirm(rl, '\n   Backup và cập nhật bản mới? [Y/n]: ')
         : true;
       if (!shouldUpgrade) {
         console.log('   Hủy cài đặt.');
@@ -241,8 +245,7 @@ async function runInstall(ideKey, scopeKey, rl) {
         return;
       }
     }
-    // Remove old install before fresh copy
-    removeExistingInstall(targetDir);
+    // Overlay managed files below; never delete unrelated user customizations.
   } else {
     console.log('   (Chưa cài đặt — fresh install)\n');
   }
@@ -253,6 +256,10 @@ async function runInstall(ideKey, scopeKey, rl) {
       console.error(`❌ Không tìm thấy source: ${sourceDir}`);
       process.exit(1);
     }
+
+    const backupDir = backupExistingInstall(targetDir);
+    const profilePath = path.join(targetDir, 'DEV_PROFILE.md');
+    const preservedProfile = fs.existsSync(profilePath) ? fs.readFileSync(profilePath) : null;
 
     if (ide === 'opencode') {
       copyRecursiveSync(sourceDir, targetDir);
@@ -272,11 +279,21 @@ async function runInstall(ideKey, scopeKey, rl) {
         if (fs.existsSync(geminiSource)) {
           const geminiDest = isGlobal ? path.join(homeDir, '.gemini', 'GEMINI.md') : path.join(cwd, 'GEMINI.md');
           fs.mkdirSync(path.dirname(geminiDest), { recursive: true });
+          if (fs.existsSync(geminiDest)) {
+            fs.copyFileSync(geminiDest, `${geminiDest}.backup-${Date.now()}`, fs.constants.COPYFILE_EXCL);
+          }
           fs.copyFileSync(geminiSource, geminiDest);
+          if (isGlobal) {
+            const content = fs.readFileSync(geminiDest, 'utf8');
+            fs.writeFileSync(geminiDest, content.replace(/\.agents\//g, () => `${targetDir.replace(/\\/g, '/')}/`));
+          }
           console.log(`  ✅ Copied GEMINI.md → ${geminiDest}`);
         }
       }
     }
+
+    if (preservedProfile) fs.writeFileSync(profilePath, preservedProfile);
+    if (backupDir) console.log(`  Rollback: restore files from ${backupDir}`);
 
     writeVersionMarker(targetDir);
     console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);

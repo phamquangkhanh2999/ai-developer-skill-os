@@ -29,7 +29,7 @@ describe('V10 Install Script Logic', () => {
 
   it('should support version detection and upgrade prompt', () => {
     expect(content).toContain('getInstalledVersion');
-    expect(content).toContain('removeExistingInstall');
+    expect(content).toContain('backupExistingInstall');
     expect(content).toContain('writeVersionMarker');
     expect(content).toContain('--force');
   });
