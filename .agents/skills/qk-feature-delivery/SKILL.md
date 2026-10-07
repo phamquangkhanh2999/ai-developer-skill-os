@@ -1,6 +1,6 @@
 ---
 name: qk-feature-delivery
-version: 10.2.0
+version: 10.3.0
 status: stable
 subtitle: "Build Feature mới"
 description: "Phát triển tính năng mới end-to-end: Thiết lập Contract kiểu dữ liệu, tích hợp gọi API, xử lý trọn vẹn 4 trạng thái UI (Loading/Success/Empty/Error) và tuân thủ YAGNI/SOLID. Dùng khi: add feature, phát triển tính năng mới, tạo mới, build new, thêm chức năng, tích hợp api, fetch data, consume api, bind data, state management — TUYỆT ĐỐI KHÔNG dùng cho việc fix bug (dùng qk-bug-resolution) hoặc dọn dẹp code cũ (dùng qk-code-cleaner)."
@@ -298,6 +298,18 @@ Fix:        [suggestion]
 
 ---
 
+## Controlled Subagent Delivery (v10.3)
+
+Đọc `.agents/rules/subagent-orchestration.md` trước implementation. Default single-agent; parallel-write chỉ opt-in khi user yêu cầu và pilot runtime đã verified.
+
+1. Lead chốt requirements, API/types contract và ownership. Lead giữ shared files/schema/lockfile/manifest.
+2. Chỉ phân FE/BE khi có phần việc độc lập, paths không chồng và không có generator ghi rộng; tối đa hai writers, child không spawn thêm.
+3. Giao assignment/result contract đầy đủ context. Child muốn chạm shared file trả đề xuất cho lead. Nếu không bảo đảm ownership thì tuần tự.
+4. Lead collect và review diffs, integrate rồi chạy type/lint/tests phù hợp trên cây cuối; verifier độc lập nếu có ích chạy sau integration.
+5. Tuân thủ UI states theo loại fetching/mutation hiện có. Report actual mode, final checks và limitations; tool thiếu fallback single-agent.
+
+---
+
 ## Platform-Specific Instructions
 
 ### Antigravity (Google Gemini)
@@ -330,6 +342,6 @@ Fix:        [suggestion]
 | References Valid | ✅ |
 | Decision Trees | PASS |
 | Thresholds Defined | PASS |
-| schema_version | 10.2.0 |
+| schema_version | 10.3.0 |
 | runtime_version | 1 |
 | platforms | [antigravity, claude, opencode] |
