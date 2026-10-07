@@ -1,5 +1,5 @@
 name: feature-delivery
-version: 10.2.0
+version: 10.3.0
 platforms: [antigravity, claude, opencode]
 runtime_version: 1
 description: "Pipeline end-to-end để phát triển tính năng mới: từ requirement đến verified implementation."
@@ -79,6 +79,19 @@ steps:
     human_checkpoint:
       condition: "affected_areas thuộc complexity level 'high' hoặc 'critical' (5+ files, có external dependency hoặc breaking change)"
       message: "Feature này có độ phức tạp cao. Xác nhận implementation_plan trước khi bắt đầu code."
+  - id: orchestration_plan
+    name: "Chọn chế độ và bàn giao context"
+    purpose: "Chỉ dispatch khi capability, scope và ownership đáp ứng policy"
+    required: true
+    skip_if: null
+    inputs: [implementation_plan, api_contract, constraints]
+    outputs: [execution_mode, task_assignments]
+    actions:
+      - "Đọc .agents/rules/subagent-orchestration.md; giữ single-agent nếu tool/quyền không đáp ứng"
+      - "Truyền baseline, context, constraints, paths và acceptance criteria; tối đa hai child, depth 1"
+      - "Thu result contract qua message/event; fallback khi failed, không tích hợp kết quả stale"
+      - "Parallel-write chỉ opt-in sau pilot verified; chốt contract và một writer/file, lead giữ shared files"
+
   - id: implement
     name: "Implement"
     purpose: "Viết code theo design đã approved"
@@ -87,11 +100,14 @@ steps:
     inputs:
       - implementation_plan
       - existing_patterns
+      - execution_mode
+      - task_assignments
     outputs:
       - created_files
       - modified_files
       - implementation_summary
     actions:
+      - "Collect/review diffs và integrate trước verify; không chạy writers phụ thuộc hoặc chồng paths"
       - "Implement theo thứ tự: types → logic → UI → tests"
       - "Follow existing patterns và conventions"
       - "Code phải tuân thủ nghiêm ngặt R-C-09 (Zero-Slop)"
@@ -112,6 +128,7 @@ steps:
       - unmet_criteria
       - quality_gate_result   # PASS | PARTIAL | FAIL
     actions:
+      - "Chạy checks trên cây cuối sau integration; report actual mode và limitations"
       - "Đối chiếu từng acceptance criterion — list unmet nếu có"
       - "Re-read key implementation sections"
       - "Run linter nếu có (npm run lint / ruff / eslint)"
@@ -153,6 +170,6 @@ escalation:
 #   References Valid: yes
 #   Decision Trees: PASS
 #   Thresholds Defined: PASS
-#   schema_version: 10.2.0
+#   schema_version: 10.3.0
 #   runtime_version: 1
 #   platforms: [antigravity, claude, opencode]
