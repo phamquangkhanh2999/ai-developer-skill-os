@@ -1,6 +1,6 @@
 ---
 name: qk-code-review
-version: 10.2.0
+version: 10.3.0
 status: stable
 subtitle: "Review Code & Audit"
 description: "Kiểm toán mã nguồn toàn diện: Đánh giá kiến trúc, chấm điểm sức khỏe Codebase Health Score (0–100), quét bảo mật OWASP Top 10 và kiểm định chất lượng Web WCAG AA. Dùng khi: review code, code review, kiểm tra code, đánh giá code, health check, nợ kỹ thuật, security audit, scan lỗ hổng, owasp, secret leak, a11y, accessibility, wcag — TUYỆT ĐỐI KHÔNG dùng khi trực tiếp sửa code (dùng qk-code-cleaner)."
@@ -289,6 +289,17 @@ Score:      -25 pts
 
 ---
 
+## Controlled Subagent Review (v10.3)
+
+Đọc `.agents/rules/subagent-orchestration.md` trước bước phân tích. Scope và baseline phải rõ; nếu runtime/quyền không đáp ứng thì single-agent.
+
+1. Lead chọn tối đa hai reviewers chỉ đọc: logic/architecture và security/test/edge cases; không quét toàn repo mặc định.
+2. Gửi assignment/result contract của policy, gồm constraints user và paths. Role không tự hạn chế toolset; kiểm tra quyền trước dispatch.
+3. Thu findings; lead kiểm chứng evidence ở source hiện tại, bỏ trùng và phân loại. Với review tài liệu, ghi N/A cho checks OWASP không áp dụng.
+4. Report mode, baseline, checks thực chạy và limitations. Spinner hoặc status SUCCESS của child không chứng minh PASS tổng.
+
+---
+
 ## Platform-Specific Instructions
 
 ### Antigravity (Google Gemini)
@@ -321,6 +332,6 @@ Score:      -25 pts
 | References Valid | ✅ |
 | Decision Trees | PASS |
 | Thresholds Defined | PASS |
-| schema_version | 10.2.0 |
+| schema_version | 10.3.0 |
 | runtime_version | 1 |
 | platforms | [antigravity, claude, opencode] |
