@@ -2,7 +2,7 @@
 
 ## Semantic Versioning: `MAJOR.MINOR.PATCH`
 
-Current: `10.2.0`
+Current package: `10.3.0`. Skills/workflows have independent semantic versions.
 
 ### Bản đồ Kiến trúc các Phiên bản
 
@@ -11,7 +11,7 @@ Current: `10.2.0`
 | V7      | Prompt Collection         | Static instructions                        |
 | V8.x    | Skill System              | Structured capabilities                    |
 | V9.x    | Governed Capability Graph | Decision boundaries + lifecycle governance |
-| V10.x   | 11 Super-Skills           | V10.2 — Confidence Model, Exit Codes, Evidence Format, Compliance |
+| V10.x   | 11 Super-Skills           | V10.3 — Controlled orchestration, evidence verification and integration |
 
 ---
 
@@ -38,9 +38,13 @@ Fixes that don't change behavior.
 
 ---
 
-## V10.2 Migration Notes
+## V10.3 Migration Notes
 
-All skill files, rule files, and workflow files MUST have version `10.2.0` in frontmatter.
+Package 10.3.0 upgrades review, feature-delivery and bug-resolution skills/workflows to 10.3.0. Unchanged skills/workflows retain 10.2.0. Bump each changed component for behavior changes; do not rewrite unchanged components solely to match package version. Runtime schema stays at `runtime_version: 1` and registry `schema_version: 1`.
+
+Do not run the legacy `sync:v10` script for this release: it hardcodes 10.2.0 and rewrites skill bodies. Update scoped metadata and regenerate registry with the builder instead.
+
+Antigravity review/bug investigation can use read-only children after capability and permission checks. Feature parallel-write requires explicit opt-in and a verified pilot. Claude/OpenCode use single-agent fallback. See [release guide](releases/v10.3.0.md).
 
 ### New Required Sections in Every SKILL.md:
 - `## Mô Hình Độ Tin Cậy (Confidence Model)`

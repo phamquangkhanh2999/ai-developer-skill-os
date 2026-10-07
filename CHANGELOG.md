@@ -5,6 +5,27 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [10.3.0] — 2026-10-07 — Controlled Subagent Orchestration
+
+### Added
+- Shared policy: runtime capability checks, assignment/result contracts, two-child limit, depth one, failure/cancel handling and truthful fallback.
+- Independent review and bug investigation; lead verifies evidence and remains the bug-fix writer.
+- Opt-in feature writers after verified runtime pilot, contract ownership and final integration checks.
+- Integration tests for upgrade preservation, same-version no-op, source protection, isolated global paths and workflow contracts.
+
+### Changed
+- Review/feature/bug skills and workflows to 10.3.0; other skills retain independent versions.
+- Package includes GEMINI.md; registry manifest version derives from package metadata.
+- Installer backs up before overlay, preserves DEV_PROFILE and unrelated customization, and backs up GEMINI.md separately.
+
+### Fixed
+- Version marker parsing reads the first line; same-version installation is a no-op.
+- Global GEMINI.md references resolve to the installed configuration directory.
+- `--force` upgrades without interactive confirmation.
+
+### Validation limits
+- One read-only Antigravity CLI 1.2.16 pilot verified spawn, evidence review and child cleanup. Full skill prompt matrix, multiple writers, IDE UI and model benchmarks remain NOT VERIFIED; parallel-write stays opt-in.
+
 ## [10.2.0] — 2026-09-24 — AI Developer Skill OS v10.2: 3 IDEs (Antigravity, Claude, OpenCode), Platform-Specific Sections, graph.json edges
 
 ### Added

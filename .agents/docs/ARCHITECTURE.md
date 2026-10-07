@@ -53,7 +53,7 @@ tooling/
 ├── build-registry.js      # Generate index.yaml + graph.json
 ├── validate-skills.js     # Validate all SKILL.md files
 ├── validate-graph.js      # Validate graph integrity
-├── sync-versions.js       # Sync version across all files
+├── sync-versions.js       # Legacy 10.2 rewrite tool; do not use for 10.3 upgrades
 └── run-aar.js             # Run after-action review
 ```
 
@@ -82,11 +82,19 @@ User / Calling Agent
 
 ---
 
-## V10.2 Key Principles
+## V10.3 Key Principles
 
 1. **Confidence Model**: Every routing decision has HIGH/MEDIUM/LOW confidence
 2. **Exit Codes**: Every skill defines SUCCESS/PARTIAL/BLOCKED/FAILED
 3. **Evidence Format**: Structured evidence with severity, confidence, fix suggestion
-4. **Compliance**: Every skill has a compliance checklist with schema_version 10.2.0
+4. **Compliance**: Every skill has a compliance checklist; component versions are independent, runtime_version stays 1
 5. **Zero Orphans**: All 11 skills connected in graph (Score 100/100)
 6. **No Duplicate Systems**: Single skill system under `.agents/skills/` only
+
+## Controlled orchestration
+
+The target skill reads `.agents/rules/subagent-orchestration.md` before dispatch. Lead selects single-agent or parallel-read based on actual runtime tools, permissions, scope and independent work. Parallel-write requires user opt-in and a verified pilot.
+
+Flow: scope/baseline → capability and ownership → assignment → execution → result/evidence verification → integration if needed → final checks. No new routing skill or graph dependency is introduced. Policy limits two active children and one level of nesting; it is behavioral guidance, not a runtime scheduler or permission enforcement layer.
+
+Lead owns shared files/contracts, deduplicates findings and verifies the final tree. Tool failure/cancel/stale results retain their limitations and trigger fallback. The installer ships GEMINI.md and policy, backs up before overlay, preserves existing profile and unrelated custom files, and resolves global protocol paths.

@@ -1,10 +1,10 @@
-# AI Developer Skill OS - Specification (V10.2.0)
+# AI Developer Skill OS - Specification (V10.3.0)
 
-This document defines the strict contract and schema for all `SKILL.md` files in the AI Developer Skill OS. Every active skill MUST comply with this specification. The frontmatter is frozen to ensure cross-platform compatibility and deterministic agent behavior.
+This document describes the shipped SKILL.md contracts. Package and component versions are independent. Runtime schema stays at version 1 in 10.3.0.
 
 ## 1. Frontmatter Contract (YAML)
 
-Every `SKILL.md` must begin with this exact YAML structure. Do not add, remove, or rename fields.
+Every SKILL.md starts with YAML frontmatter. Shipped skills use name, version, status, subtitle, description, platforms, runtime_version, tools, rules, workflow and triggers. The extended example below is optional guidance; intent, selection, execution_mode, token_budget, exit_codes and compliance objects are not required by the current validator.
 
 ```yaml
 ---
@@ -67,26 +67,26 @@ compliance:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `name` | string | YES | Skill identifier, must start with `qk-` |
-| `version` | semver | YES | Must be `10.2.0` |
+| `version` | semver | YES | Independent component version; changed review/feature/bug use 10.3.0, unchanged skills retain 10.2.0 |
 | `status` | enum | YES | `stable`, `experimental`, or `deprecated` |
 | `description` | string | YES | One-sentence summary of the skill's purpose |
 | `platforms` | array | YES | Supported IDEs. Valid values: `antigravity`, `claude`, `opencode` |
-| `type` | enum | YES | Primary domain: `capability`, `utility`, `orchestrator` |
+| `type` | enum | Optional | Primary domain: `capability`, `utility`, `orchestrator` |
 | `runtime_version` | integer | YES | Runtime version (currently `1`) |
-| `execution_mode` | string | YES | Must be `deterministic` for all V10 skills |
-| `intent` | array | YES | Primary and secondary intents |
-| `complexity.level` | enum | YES | `low`, `medium`, `high`, `critical` |
+| `execution_mode` | string | Optional | Extended metadata; actual mode is chosen using runtime capabilities and policy |
+| `intent` | array | Optional | Primary and secondary intents |
+| `complexity.level` | enum | Optional | `low`, `medium`, `high`, `critical` |
 | `triggers` | array | YES | Keywords that route AI to this skill |
-| `selection.priority` | enum | YES | `high`, `medium`, `low` |
+| `selection.priority` | enum | Optional | `high`, `medium`, `low` |
 | `workflow` | string | YES | References `workflows/<name>.yml` |
-| `exit_codes` | object | YES | SUCCESS, PARTIAL, BLOCKED, FAILED with meanings |
-| `compliance` | object | YES | schema_version, runtime_version, platforms |
+| `exit_codes` | object | Optional | Shipped skills define exit codes in body sections |
+| `compliance` | object | Optional | Shipped skills use a body checklist |
 
 ---
 
-## 2. Required Body Sections (V10.2)
+## 2. Required Body Sections (V10.3)
 
-Every `SKILL.md` body MUST contain sections in this order:
+Every SKILL.md includes these responsibilities; headings and order follow each skill procedure:
 
 ```
 ## 1. Nguyên Tắc Cốt Lõi & Luật Chống Over-Engineering
@@ -107,7 +107,7 @@ Every `SKILL.md` body MUST contain sections in this order:
 - **Confidence Model**: Every skill defines HIGH/MEDIUM/LOW confidence levels
 - **Exit Codes**: Every skill defines SUCCESS/PARTIAL/BLOCKED/FAILED
 - **Evidence Format**: Every skill has structured evidence format with severity + confidence
-- **Compliance**: Every skill ends with Compliance check table (schema_version 10.2.0)
+- **Compliance**: Every skill ends with a component-version checklist and runtime_version 1
 - **Platform-Specific**: Every skill has instructions for Antigravity, Claude, OpenCode
 
 ---
@@ -145,8 +145,8 @@ node tooling/validate-graph.js     # Score 100/100
 # Rebuild registry
 node tooling/build-registry.js     # 11 active, 0 archived
 
-# Sync versions across repo
-node tooling/sync-versions.js      # All files to 10.2.0
+# Update component versions in scope, then regenerate registry
+# Do not run legacy sync:v10 for 10.3; it hardcodes 10.2.0 and rewrites bodies
 
 # Run full test suite
 npm run test:registry              # All tests pass
@@ -158,7 +158,12 @@ npm run test:registry              # All tests pass
 
 | Version | Change |
 |---------|--------|
+| V10.3.0 | Controlled dispatch, evidence verification, opt-in writers, safe upgrade backups |
 | V10.2.0 | 3 IDEs (Antigravity, Claude, OpenCode), platform-specific sections, platforms field |
 | V10.1.0 | 11 Super-Skills, API Discovery Engine, Prompt Compiler Control Plane |
 | V9.x | Legacy multi-skill system (29+ skills) |
 | V8.x | Structured skill system |
+
+## Controlled orchestration contract
+
+Before dispatch, read rules/subagent-orchestration.md. Assignment/result YAML is prompt data, not new native tool arguments or required frontmatter. Default single-agent; parallel-read requires actual capability and permissions; parallel-write requires opt-in and a verified pilot. See [release guide](releases/v10.3.0.md).

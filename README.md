@@ -1,12 +1,36 @@
-# AI Developer Skill OS v10.2.0 — Lean Core Edition
+# AI Developer Skill OS v10.3.0 — Controlled Subagent Orchestration
 
-> **v10.2.0 "Lean Core Revolution & API-to-Data Discovery Integration"**
+> **v10.3.0: review độc lập, context handoff và tích hợp có kiểm chứng.**
 
-Phiên bản **v10.2.0** giải quyết triệt để vấn đề phân mảnh quá mức (extreme fragmentation) từ 37 thư mục vi kỹ năng (micro-skills) xuống còn **11 Core Super-Skills** mạnh mẽ, không làm mất bất kỳ tính năng chuyên sâu nào, đồng thời tích hợp toàn diện cỗ máy biên dịch Prompt Compiler v10.2 và Discovery Engine cho Antigravity IDE.
+## Điều phối trong v10.3.0
+
+- Giữ 11 skills và routing hiện tại. Review/điều tra bug chỉ dispatch khi session Antigravity có tool và quyền phù hợp, scope rõ và có lợi ích kiểm chứng độc lập.
+- Tối đa hai child, depth một; giao đủ baseline/context/constraints, lead kiểm chứng evidence và báo mode thực tế.
+- Feature mặc định single-agent. Nhiều writers là opt-in sau pilot runtime; chốt contract, một writer/file, lead integrate rồi chạy checks cuối.
+- Tool thiếu, task nhỏ hoặc user cấm delegation: single-agent. Claude/OpenCode giữ chế độ này trong release hiện tại.
+- Policy: [.agents/rules/subagent-orchestration.md](.agents/rules/subagent-orchestration.md). Đây là chỉ dẫn hành vi; runtime và quyền cần kiểm chứng trên phiên Antigravity thực tế.
+
+### Nâng cấp và rollback
+
+```bash
+npx ai-developer-skill-os@10.3.0 --ide=antigravity --scope=local --force
+```
+
+Lệnh trên dùng sau khi 10.3.0 được publish. Thử local trước phát hành bằng tarball: giải nén và chạy `node package/bin/install.js` từ workspace tạm.
+
+Installer backup thư mục đích trước khi overlay, giữ DEV_PROFILE hiện có và file tùy chỉnh ngoài managed paths. GEMINI.md cũ được backup riêng. Managed skills/rules/workflows bị cập nhật; tùy chỉnh trong các file này có thể lấy lại từ backup. Overlay có thể giữ file managed cũ đã bỏ; release này không xóa/rename skill.
+
+Rollback bằng khôi phục file từ backup được installer in ra; xem diff để giữ thay đổi user mới. Cài trực tiếp vào thư mục source package bị chặn.
+
+### Runtime pilot trước parallel-write
+
+Trong Antigravity, thử review module, review config nhỏ và case user cấm agent con; kiểm tra mode/evidence thực tế. Sau đó thử feature có contract và failure/cancel trước khi opt-in nhiều writers. Repo tests kiểm tra cấu trúc và installer, không chứng minh agent đã chạy thật hoặc chất lượng model.
+
+Phiên bản **v10.3.0** giữ 11 Core Super-Skills của v10.2, bổ sung điều phối có kiểm soát cho review/feature/bug và bảo toàn customization khi upgrade. [Hướng dẫn release và rollback](.agents/docs/releases/v10.3.0.md).
 
 ---
 
-## Điểm Nổi Bật Của v10.1.0
+## Năng lực nền tảng từ v10.1–v10.2
 
 1. **Quy Hoạch 11 Core Super-Skills**: Hợp nhất logic toàn diện từ 37 thư mục cũ vào 11 khối năng lực domain chuyên sâu:
    - `qk-orchestrator`: Điều phối, nạp ngữ cảnh kiến trúc (Context Graph) và khởi tạo dự án (Bootstrap).
