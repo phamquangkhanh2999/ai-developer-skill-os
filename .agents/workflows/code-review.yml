@@ -1,5 +1,5 @@
 name: code-review
-version: 10.2.0
+version: 10.3.0
 platforms: [antigravity, claude, opencode]
 runtime_version: 1
 description: "Pipeline kiểm tra chất lượng code theo SOLID, DRY, Clean Code và ngưỡng số liệu cụ thể."
@@ -35,6 +35,18 @@ steps:
       - review_focus    # bug, quality, security, performance, all
     exit_on_fail: BLOCKED
 
+  - id: orchestration_plan
+    name: "Chọn chế độ và bàn giao context"
+    purpose: "Chỉ dispatch khi capability, scope và ownership đáp ứng policy"
+    required: true
+    skip_if: null
+    inputs: [file_list, review_focus]
+    outputs: [execution_mode, task_assignments]
+    actions:
+      - "Đọc .agents/rules/subagent-orchestration.md; giữ single-agent nếu tool/quyền không đáp ứng"
+      - "Truyền baseline, context, constraints, paths và acceptance criteria; tối đa hai child, depth 1"
+      - "Thu result contract qua message/event; fallback khi failed, không tích hợp kết quả stale"
+
   - id: static_analysis
     name: "Phân tích tĩnh"
     purpose: "Thu thập findings có bằng chứng rõ ràng"
@@ -43,11 +55,14 @@ steps:
     inputs:
       - file_list
       - review_focus
+      - execution_mode
+      - task_assignments
     outputs:
       - findings         # Each: severity + file + line + quote + reason + suggestion
     min_confidence: HIGH
     context_budget: 150
     actions:
+      - "Nếu parallel-read: collect findings; lead kiểm chứng evidence hiện tại, bỏ trùng, giữ limitations"
       - "Đọc từng file theo budget (max 150 lines per read)"
       - "Flag SOLID violations với ngưỡng cụ thể"
       - "Flag DRY violations (≥ 2 duplications)"
@@ -122,6 +137,6 @@ escalation:
 #   References Valid: yes
 #   Decision Trees: PASS
 #   Thresholds Defined: PASS
-#   schema_version: 10.2.0
+#   schema_version: 10.3.0
 #   runtime_version: 1
 #   platforms: [antigravity, claude, opencode]
