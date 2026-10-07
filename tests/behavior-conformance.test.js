@@ -20,8 +20,10 @@ describe('V10 Skill Compliance', () => {
     describe(path.basename(path.dirname(skillPath)), () => {
       const content = fs.readFileSync(skillPath, 'utf8');
 
-      it('should have version 10.2.0 in frontmatter', () => {
-        expect(content).toContain('version: 10.2.0');
+      it('should have the expected independent skill version', () => {
+        const upgraded = ['qk-code-review', 'qk-feature-delivery', 'qk-bug-resolution'];
+        const expected = upgraded.includes(path.basename(path.dirname(skillPath))) ? '10.3.0' : '10.2.0';
+        expect(content).toContain(`version: ${expected}`);
       });
 
       it('should have platforms field', () => {

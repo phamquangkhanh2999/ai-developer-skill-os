@@ -33,3 +33,6 @@ evals/traces/
 # Kilo and local worktrees
 .kilo/
 
+# Private agent memory and npm build artifacts
+.ai-local/
+*.tgz

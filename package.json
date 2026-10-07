@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "10.2.0",
-  "description": "AI Developer Skill OS v10.2 — 11 Governed Core Super-Skills with API Data Discovery Engine, Prompt Compiler Control Plane & Antigravity Cockpit Integration.",
+  "version": "10.3.0",
+  "description": "AI Developer Skill OS v10.3 \u2014 Controlled Subagent Orchestration, independent review and safe integration.",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -9,7 +9,8 @@
     "tooling",
     "package.json",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "GEMINI.md"
   ],
   "bin": {
     "ai-developer-skill-os": "bin/install.js",
@@ -36,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
+    "url": "git+https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
   },
   "keywords": [
     "ai",
@@ -53,7 +54,7 @@
     "registry",
     "eval"
   ],
-  "author": "Quang Khánh",
+  "author": "Quang Kh\u00e1nh",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os/issues"
