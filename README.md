@@ -1,55 +1,35 @@
-# AI Developer Skill OS v10.3.0 — Controlled Subagent Orchestration
+# AI Developer Skill OS v11.0.0 — Lean 5-Core Skills Architecture
 
-> **v10.3.0: review độc lập, context handoff và tích hợp có kiểm chứng.**
+> **v11.0.0: Tinh gọn 11 xuống 5 Core Skills, nạp tài liệu chuyên môn theo nhu cầu và quản lý migration an toàn.**
 
-## Điều phối trong v10.3.0
+## Kiến Trúc Lean 5 Core Skills trong v11.0.0
 
-- Giữ 11 skills và routing hiện tại. Review/điều tra bug chỉ dispatch khi session Antigravity có tool và quyền phù hợp, scope rõ và có lợi ích kiểm chứng độc lập.
-- Tối đa hai child, depth một; giao đủ baseline/context/constraints, lead kiểm chứng evidence và báo mode thực tế.
-- Feature mặc định single-agent. Nhiều writers là opt-in sau pilot runtime; chốt contract, một writer/file, lead integrate rồi chạy checks cuối.
-- Tool thiếu, task nhỏ hoặc user cấm delegation: single-agent. Claude/OpenCode giữ chế độ này trong release hiện tại.
-- Policy: [.agents/rules/subagent-orchestration.md](.agents/rules/subagent-orchestration.md). Đây là chỉ dẫn hành vi; runtime và quyền cần kiểm chứng trên phiên Antigravity thực tế.
+- **5 Core Skills chính:**
+  1. `qk-feature-delivery`: Xây dựng tính năng mới, đổi yêu cầu, tích hợp API, lập đặc tả (chế độ plan-only, discovery-only, prompt-only).
+  2. `qk-bug-resolution`: Chẩn đoán nguyên nhân gốc rễ và sửa lỗi mã nguồn theo chu trình khép kín: Observe → Evidence → Cause → Minimal Fix → Verify.
+  3. `qk-code-review`: Kiểm toán mã nguồn và bảo mật chỉ đọc (Read-Only) với bằng chứng cụ thể.
+  4. `qk-code-cleaner`: Tái cấu trúc bảo toàn hành vi (Zero Behavior Change), nâng cấp thư viện an toàn và viết test.
+  5. `qk-devops-release`: Vận hành nền tảng CI/CD, Docker, phát hành có rollback, cập nhật tài liệu và quản lý memory khi được yêu cầu.
 
-### Nâng cấp và rollback
+- **Tài liệu tham khảo chuyên môn (On-demand References):**
+  - Đặt tại `.agents/references/`: `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`, `context-discovery.md`.
+  - Nạp khi cần thiết, không làm phình context ban đầu.
+
+- **Ánh xạ lệnh cũ (Legacy Aliases):**
+  - Khai báo tại `.agents/skill-aliases.yml`: chuyển hướng các tên lệnh cũ (`qk-ui-engineer`, `qk-backend-data`, `qk-api-data-discovery`, `qk-product-spec`, `qk-prompt-compiler`, `qk-orchestrator`) về core skill và reference tương ứng.
+  - Bảo đảm các chế độ không sinh code: `plan-only`, `prompt-only`, `discovery-only`.
+
+- **Quản lý phát hành & Migration Manifest:**
+  - File quản lý `.ai-skill-os-managed.json` tự động theo dõi checksum của mọi file hệ thống.
+  - Khi nâng cấp: tự động dọn sạch các file cũ đã retire mà người dùng không sửa đổi, đồng thời bảo toàn 100% file custom và private memory (`DEV_PROFILE.md`, `.ai-local/`).
+
+### Nâng cấp và cài đặt
 
 ```bash
-npx ai-developer-skill-os@10.3.0 --ide=antigravity --scope=local --force
+npx ai-developer-skill-os@11.0.0 --ide=antigravity --scope=local --force
 ```
 
-Lệnh trên dùng sau khi 10.3.0 được publish. Thử local trước phát hành bằng tarball: giải nén và chạy `node package/bin/install.js` từ workspace tạm.
-
-Installer backup thư mục đích trước khi overlay, giữ DEV_PROFILE hiện có và file tùy chỉnh ngoài managed paths. GEMINI.md cũ được backup riêng. Managed skills/rules/workflows bị cập nhật; tùy chỉnh trong các file này có thể lấy lại từ backup. Overlay có thể giữ file managed cũ đã bỏ; release này không xóa/rename skill.
-
-Rollback bằng khôi phục file từ backup được installer in ra; xem diff để giữ thay đổi user mới. Cài trực tiếp vào thư mục source package bị chặn.
-
-### Runtime pilot trước parallel-write
-
-Trong Antigravity, thử review module, review config nhỏ và case user cấm agent con; kiểm tra mode/evidence thực tế. Sau đó thử feature có contract và failure/cancel trước khi opt-in nhiều writers. Repo tests kiểm tra cấu trúc và installer, không chứng minh agent đã chạy thật hoặc chất lượng model.
-
-Phiên bản **v10.3.0** giữ 11 Core Super-Skills của v10.2, bổ sung điều phối có kiểm soát cho review/feature/bug và bảo toàn customization khi upgrade. [Hướng dẫn release và rollback](.agents/docs/releases/v10.3.0.md).
-
----
-
-## Năng lực nền tảng từ v10.1–v10.2
-
-1. **Quy Hoạch 11 Core Super-Skills**: Hợp nhất logic toàn diện từ 37 thư mục cũ vào 11 khối năng lực domain chuyên sâu:
-   - `qk-orchestrator`: Điều phối, nạp ngữ cảnh kiến trúc (Context Graph) và khởi tạo dự án (Bootstrap).
-   - `qk-prompt-compiler`: Biên dịch & chuẩn hóa prompt (Control Plane, Prompt Delta, 4 Cổng Kiểm Soát).
-   - `qk-product-spec`: Phân tích yêu cầu, PRD, BDD/Gherkin acceptance criteria và Gap Analysis/Khả thi.
-   - `qk-feature-delivery`: Phát triển tính năng end-to-end, tích hợp API client, state management và giao tiếp FE-BE.
-   - `qk-bug-resolution`: Chẩn đoán và xử lý bug bằng chu trình khép kín 5 bước (Observe → Hypothesize → Evidence → Fix → Verify).
-   - `qk-ui-engineer`: Xây dựng UI chuẩn Design Tokens, tối ưu hoá tương tác, responsive và kiểm toán 57 tiêu chí Anti-Slop.
-   - `qk-backend-data`: Thiết kế REST/tRPC API, Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN database và Data Pipeline (ETL/dbt).
-   - `qk-api-data-discovery`: Khám phá API, thu thập Real Evidence, Schema Discovery, đánh giá tầng Bronze Medallion và Checkpoint Handoff Contract.
-   - `qk-code-review`: Kiểm toán mã nguồn kiến trúc, chấm điểm sức khỏe Codebase Health Score (0–100), bảo mật OWASP Top 10 và chất lượng Web (WCAG 2.1 AA, Core Web Vitals).
-   - `qk-code-cleaner`: Tái cấu trúc sạch sẽ (SOLID, giải phóng God files >300L), nâng cấp thư viện an toàn (có Rollback plan) và kỹ nghệ kiểm thử tự động (Test Pyramid).
-   - `qk-devops-release`: Vận hành Platform (Docker, CI/CD GitHub Actions), cổng kiểm soát phát hành 8-Gate Production, đồng bộ tài liệu (README/OpenAPI), bộ nhớ dự án (`.ai-local/`, `/learn`) và kiến trúc AI/RAG.
-2. **Hỗ Trợ Toàn Diện 14 Senior Roles**: Fullstack, Backend, Frontend, Data Engineer, Data Analyst, Data Architect, Data Scientist, DevOps, QA, Product Manager, Business Analyst, UI/UX Designer, AI/ML Engineer, Business Manager.
-3. **Antigravity Cockpit Optimization**:
-   - **Interactive Planning Mode**: Tự động kích hoạt modal và nút **[Proceed]** trên Antigravity trước khi thay đổi mã nguồn lớn (complexity ≥ Medium).
-   - **Artifact Dual-Stream Reporting**: Tránh spam hàng trăm dòng vào cửa sổ Chat; xuất báo cáo chi tiết vào file Artifact (`review_report.md`, `health_scorecard.md`) và in bản Tóm tắt điều hành 15–25 dòng vào chat.
-   - **Dynamic Workspace Path Links**: Toàn bộ đường dẫn file được định dạng theo chuẩn `file:///<workspace-root>/...` dùng forward slash, click mở ngay lập tức trong editor.
-   - **Ascii / Unicode Diagram Rendering**: Vẽ sơ đồ kiến trúc và luồng dữ liệu trực tiếp trong terminal bằng Unicode Box Drawing.
+Installer backup toàn bộ thư mục đích trước khi cập nhật, hỗ trợ rollback tức thì.
 
 ---
 
@@ -58,6 +38,14 @@ Phiên bản **v10.3.0** giữ 11 Core Super-Skills của v10.2, bổ sung đi�
 ```
 .agents/
 ├── DEV_PROFILE.md        ← Khai báo role + stack của bạn (AI đọc đầu mỗi session)
+├── AGENTS.md             ← Entry Point chính điều phối đến 5 Core Skills
+├── skill-aliases.yml     ← Ánh xạ lệnh cũ sang 5 core skills
+├── skills/               ← 5 Core Skills
+├── references/           ← Tài liệu chuyên môn nạp theo nhu cầu (UI, Backend, API, Spec)
+├── workflows/            ← Workflows thực thi tương ứng
+├── rules/                ← Hợp đồng thực thi chung (global.md, safety, security...)
+└── registry/             ← Metadata và graph được tạo tự động (index.yaml, graph.json)
+```
 ├── AGENTS.md             ← Entry point: Quick Routing Table 9 Super-Skills + 14 Roles Matrix
 ├── GEMINI.md             ← Quy chuẩn cockpit riêng cho Antigravity IDE
 ├── skills/               ← 11 Core Super-Skills (mỗi skill có SKILL.md độc lập)

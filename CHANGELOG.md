@@ -5,6 +5,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [11.0.0] — 2026-10-28 — Lean 5-Core Skills Architecture & On-Demand References
+
+### Added
+- Lean architecture reducing 11 skills down to 5 core skills (`qk-feature-delivery`, `qk-bug-resolution`, `qk-code-review`, `qk-code-cleaner`, `qk-devops-release`).
+- On-demand engineering references under `.agents/references/`: `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`, `context-discovery.md`.
+- Legacy skill aliases metadata in `.agents/skill-aliases.yml` mapping 6 retired skills with non-code modes (`plan-only`, `prompt-only`, `discovery-only`).
+- Managed files manifest `.ai-skill-os-managed.json` and migration planner in `tooling/managed-files.js` for clean removal of retired files while strictly preserving user customizations and private memory (`.ai-local/`, `DEV_PROFILE.md`).
+- 5 mandatory fields contract for bug reports and truth-first evidence statuses (`VERIFIED`, `PARTIAL`, `BLOCKED`, `FAILED`).
+- Comprehensive test suites: `tests/skill-contract.test.js`, `tests/registry-generation.test.js`, `tests/shared-policy.test.js`, `tests/routing-contract.test.js`, `tests/managed-files.test.js`.
+
+### Changed
+- Slimmed entry point `.agents/AGENTS.md` (under 50 lines) and `GEMINI.md` environment adapter (under 50 lines).
+- Slimmed shared execution policy `.agents/rules/global.md` (under 70 lines).
+- Rebuilt capability graph supporting independent skills without forced orchestrator edges or false cycle errors.
+
+### Retired
+- Folders `qk-product-spec`, `qk-ui-engineer`, `qk-backend-data`, `qk-api-data-discovery`, `qk-prompt-compiler`, `qk-orchestrator` migrated to 5 core skills + on-demand references.
+
+---
+
 ## [10.3.0] — 2026-10-07 — Controlled Subagent Orchestration
 
 ### Added

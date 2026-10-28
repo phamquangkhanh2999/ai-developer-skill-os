@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "manifest_version": "10.3",
-  "generated_at": "2026-10-28T07:43:59.000Z",
+  "manifest_version": "11.0",
+  "generated_at": "2026-10-28T07:46:00.059Z",
   "nodes": {
     "qk-bug-resolution": {
       "path": ".agents/skills/qk-bug-resolution",

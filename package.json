@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "10.3.0",
-  "description": "AI Developer Skill OS v10.3 \u2014 Controlled Subagent Orchestration, independent review and safe integration.",
+  "version": "11.0.0",
+  "description": "AI Developer Skill OS v11.0 — Lean 5-Core Skills Architecture, On-Demand Engineering References & Managed Migration Manifest.",
   "main": "bin/install.js",
   "files": [
     "bin",
