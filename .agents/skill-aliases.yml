@@ -1,0 +1,39 @@
+version: 1
+aliases:
+  qk-ui-engineer:
+    target: qk-feature-delivery
+    fallback_target: qk-bug-resolution
+    mode: build
+    reference: references/ui.md
+    description: "Chuyển sang qk-feature-delivery (hoặc qk-bug-resolution nếu sửa lỗi UI) kèm reference ui.md"
+
+  qk-backend-data:
+    target: qk-feature-delivery
+    fallback_target: qk-bug-resolution
+    mode: build
+    reference: references/backend-data.md
+    description: "Chuyển sang qk-feature-delivery (hoặc qk-bug-resolution nếu lỗi contract) kèm reference backend-data.md"
+
+  qk-api-data-discovery:
+    target: qk-feature-delivery
+    mode: discovery-only
+    reference: references/api-discovery.md
+    description: "Chuyển sang qk-feature-delivery ở chế độ discovery-only, không viết code ingestion"
+
+  qk-product-spec:
+    target: qk-feature-delivery
+    mode: plan-only
+    reference: references/requirements.md
+    description: "Chuyển sang qk-feature-delivery ở chế độ plan-only (spec/PRD/BDD), tuyệt đối không viết code"
+
+  qk-prompt-compiler:
+    target: qk-feature-delivery
+    mode: prompt-only
+    reference: references/prompt-authoring.md
+    description: "Chuyển sang qk-feature-delivery ở chế độ prompt-only, không thực thi nội dung prompt đang biên tập"
+
+  qk-orchestrator:
+    target: intake
+    mode: help
+    reference: references/context-discovery.md
+    description: "Xử lý trực tiếp tại entry point (intake), hướng dẫn 5 core skills hoặc đọc context-discovery.md"
