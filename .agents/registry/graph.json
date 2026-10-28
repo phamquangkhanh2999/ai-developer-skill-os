@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "manifest_version": "10.3",
-  "generated_at": "2026-10-07T04:36:37.740Z",
+  "generated_at": "2026-10-28T07:21:26.051Z",
   "nodes": {
     "qk-api-data-discovery": {
       "path": ".agents/skills/qk-api-data-discovery",
@@ -17,9 +17,7 @@
         "discovery"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-backend-data": {
@@ -35,9 +33,7 @@
         "data"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-bug-resolution": {
@@ -53,9 +49,7 @@
         "resolution"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-code-cleaner": {
@@ -71,9 +65,7 @@
         "cleaner"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-code-review": {
@@ -89,9 +81,7 @@
         "review"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-devops-release": {
@@ -107,9 +97,7 @@
         "release"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-feature-delivery": {
@@ -125,9 +113,7 @@
         "delivery"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-orchestrator": {
@@ -158,9 +144,7 @@
         "spec"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-prompt-compiler": {
@@ -176,9 +160,7 @@
         "compiler"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     },
     "qk-ui-engineer": {
@@ -194,64 +176,11 @@
         "engineer"
       ],
       "dependencies": [],
-      "dependents": [
-        "qk-orchestrator"
-      ],
+      "dependents": [],
       "is_orphan": false
     }
   },
-  "edges": [
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-prompt-compiler",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-product-spec",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-feature-delivery",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-bug-resolution",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-code-cleaner",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-code-review",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-ui-engineer",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-backend-data",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-devops-release",
-      "relation": "depends_on"
-    },
-    {
-      "from": "qk-orchestrator",
-      "to": "qk-api-data-discovery",
-      "relation": "depends_on"
-    }
-  ],
+  "edges": [],
   "adjacency": {
     "qk-api-data-discovery": [],
     "qk-backend-data": [],
@@ -260,18 +189,7 @@
     "qk-code-review": [],
     "qk-devops-release": [],
     "qk-feature-delivery": [],
-    "qk-orchestrator": [
-      "qk-prompt-compiler",
-      "qk-product-spec",
-      "qk-feature-delivery",
-      "qk-bug-resolution",
-      "qk-code-cleaner",
-      "qk-code-review",
-      "qk-ui-engineer",
-      "qk-backend-data",
-      "qk-devops-release",
-      "qk-api-data-discovery"
-    ],
+    "qk-orchestrator": [],
     "qk-product-spec": [],
     "qk-prompt-compiler": [],
     "qk-ui-engineer": []

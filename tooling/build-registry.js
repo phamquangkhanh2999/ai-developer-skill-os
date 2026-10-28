@@ -1,6 +1,6 @@
 /**
  * build-registry.js
- * V10.2 Governed Capability Metadata & Eval Platform
+ * Governed Capability Metadata & Eval Platform
  * Generates registry/index.yaml (lightweight lookup) and registry/graph.json (O(1) graph & cycle check)
  * 
  * Usage: node tooling/build-registry.js
@@ -11,56 +11,57 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const SKILLS_DIR = path.join(__dirname, '../.agents/skills');
-const REGISTRY_DIR = path.join(__dirname, '../.agents/registry');
-const INDEX_YAML = path.join(REGISTRY_DIR, 'index.yaml');
-const GRAPH_JSON = path.join(REGISTRY_DIR, 'graph.json');
-const packageVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8')).version;
-const manifestVersion = packageVersion.split('.').slice(0, 2).join('.');
+const DEFAULT_ROOT_DIR = path.resolve(__dirname, '..');
+const DEFAULT_SKILLS_DIR = path.join(DEFAULT_ROOT_DIR, '.agents/skills');
+const DEFAULT_REGISTRY_DIR = path.join(DEFAULT_ROOT_DIR, '.agents/registry');
 
-function parseYamlFile(filePath) {
-  try {
-    let content = fs.readFileSync(filePath, 'utf8');
-    if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
-    const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    if (match) {
-      return yaml.load(match[1]);
-    }
-    return yaml.load(content);
-  } catch (e) {
-    console.error(`[WARN] Failed to parse YAML from ${filePath}: ${e.message}`);
-    return null;
+export function parseYamlFile(filePath) {
+  let content = fs.readFileSync(filePath, 'utf8');
+  if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (match) {
+    return yaml.load(match[1]);
   }
+  return yaml.load(content);
 }
 
-function buildRegistry() {
-  console.log(`🔄 Building V${manifestVersion} Governed Capability Registry & O(1) Runtime Graph...`);
+export function buildRegistryCore({
+  skillsDir = DEFAULT_SKILLS_DIR,
+  registryDir = DEFAULT_REGISTRY_DIR,
+  rootDir = DEFAULT_ROOT_DIR,
+  allowCycles = false
+} = {}) {
+  const pkgPath = path.join(rootDir, 'package.json');
+  const packageVersion = fs.existsSync(pkgPath)
+    ? JSON.parse(fs.readFileSync(pkgPath, 'utf8')).version
+    : '11.0.0';
+  const manifestVersion = packageVersion.split('.').slice(0, 2).join('.');
 
-  if (!fs.existsSync(SKILLS_DIR)) {
-    console.error('❌ Skills directory not found:', SKILLS_DIR);
-    process.exit(1);
+  if (!fs.existsSync(skillsDir)) {
+    throw new Error(`Skills directory not found: ${skillsDir}`);
   }
 
-  fs.mkdirSync(REGISTRY_DIR, { recursive: true });
+  fs.mkdirSync(registryDir, { recursive: true });
 
-  const dirs = fs.readdirSync(SKILLS_DIR).filter(d => 
-    !d.startsWith('_') && fs.statSync(path.join(SKILLS_DIR, d)).isDirectory()
-  );
+  const dirs = fs.readdirSync(skillsDir).filter(d => 
+    !d.startsWith('_') && fs.statSync(path.join(skillsDir, d)).isDirectory()
+  ).sort();
 
   const capabilities = {};
   const adjacency = {};
   const reverseAdjacency = {};
 
   for (const dir of dirs) {
-    const capYamlPath = path.join(SKILLS_DIR, dir, 'capability.yaml');
-    const skillMdPath = path.join(SKILLS_DIR, dir, 'SKILL.md');
+    const capYamlPath = path.join(skillsDir, dir, 'capability.yaml');
+    const skillMdPath = path.join(skillsDir, dir, 'SKILL.md');
     
     let meta = null;
     let fromCapabilityYaml = false;
-
     let skillMdMeta = null;
+
     if (fs.existsSync(skillMdPath)) {
       skillMdMeta = parseYamlFile(skillMdPath);
     }
@@ -75,22 +76,19 @@ function buildRegistry() {
     if (!meta) continue;
 
     const id = meta.id || meta.name || dir;
-    const version = meta.version || skillMdMeta?.version || '8.2.0';
+    const version = meta.version || skillMdMeta?.version || '10.3.0';
     const status = meta.status || skillMdMeta?.status || 'stable';
     const description = meta.description || skillMdMeta?.description || '';
     
     // Normalize tags
     let tags = meta.tags || meta.keywords || [];
     if (!Array.isArray(tags) || tags.length === 0) {
-      // Derive simple tags from dir words
       tags = dir.replace(/^qk-/, '').split('-');
     }
 
     // Normalize dependencies - only use explicit skill-to-skill dependencies
     let dependencies = meta.dependencies || [];
     if (!fromCapabilityYaml) {
-      // Only use explicit dependencies, not workflow names
-      // workflow field identifies the primary workflow, not a dependency
       const extraDeps = meta.decision_boundary?.delegates_to || [];
       if (extraDeps.length > 0) {
         const depSet = new Set([...dependencies, ...extraDeps]);
@@ -107,26 +105,20 @@ function buildRegistry() {
       dependencies
     };
 
-    adjacency[id] = dependencies;
+    adjacency[id] = [...dependencies];
     if (!reverseAdjacency[id]) reverseAdjacency[id] = [];
   }
 
-  // ── Hardcoded Cross-Skill Edges (V10.2) ─────
-  // Directed acyclic graph: qk-orchestrator is the root hub
-  // It routes to all other skills. No other skill routes back to it.
-  const crossEdges = {
-    'qk-orchestrator': ['qk-prompt-compiler', 'qk-product-spec', 'qk-feature-delivery', 'qk-bug-resolution', 'qk-code-cleaner', 'qk-code-review', 'qk-ui-engineer', 'qk-backend-data', 'qk-devops-release', 'qk-api-data-discovery']
-  };
-
-  for (const [skillId, deps] of Object.entries(crossEdges)) {
-    if (adjacency[skillId]) {
-      adjacency[skillId] = [...new Set([...adjacency[skillId], ...deps])];
-    } else {
-      adjacency[skillId] = deps;
+  // Validate all declared dependencies exist in capabilities
+  for (const [id, deps] of Object.entries(adjacency)) {
+    for (const dep of deps) {
+      if (!capabilities[dep]) {
+        throw new Error(`Declared dependency "${dep}" in skill "${id}" does not exist in active skills.`);
+      }
     }
   }
 
-  // Populate reverse adjacency for orphan detection
+  // Populate reverse adjacency
   for (const [id, deps] of Object.entries(adjacency)) {
     for (const dep of deps) {
       if (!reverseAdjacency[dep]) reverseAdjacency[dep] = [];
@@ -165,11 +157,14 @@ function buildRegistry() {
     }
   }
 
+  if (hasCycles && !allowCycles) {
+    throw new Error('Cycle detected in skill dependency graph');
+  }
+
   // Build Graph JSON (O(1) Runtime lookups)
   const graphNodes = {};
   for (const [id, data] of Object.entries(capabilities)) {
     const dependents = reverseAdjacency[id] || [];
-    const isOrphan = data.dependencies.length === 0 && dependents.length === 0 && id !== 'qk-orchestrator' && id !== 'qk-help';
 
     graphNodes[id] = {
       path: data.path,
@@ -178,7 +173,7 @@ function buildRegistry() {
       tags: data.tags,
       dependencies: data.dependencies,
       dependents,
-      is_orphan: isOrphan
+      is_orphan: false
     };
   }
 
@@ -187,12 +182,19 @@ function buildRegistry() {
   const archivedSkills = allIds.filter(id => capabilities[id].status === 'archived');
   const relocatedSkills = allIds.filter(id => capabilities[id].status === 'relocated');
 
+  const edges = [];
+  for (const [from, toList] of Object.entries(adjacency)) {
+    for (const to of toList) {
+      edges.push({ from, to, relation: 'depends_on' });
+    }
+  }
+
   const graphJsonData = {
     schema_version: 1,
     manifest_version: manifestVersion,
     generated_at: new Date().toISOString(),
     nodes: graphNodes,
-    edges: Object.entries(adjacency).flatMap(([from, toList]) => toList.map(to => ({ from, to, relation: 'depends_on' }))),
+    edges,
     adjacency,
     stats: {
       total_scanned: allIds.length,
@@ -203,26 +205,51 @@ function buildRegistry() {
     }
   };
 
-  // Build Registry Index YAML (Lightweight lookup)
+  const indexYamlData = {
+    schema_version: 1,
+    manifest_version: manifestVersion,
+    generated_at: new Date().toISOString(),
+    stats: {
+      total_scanned: allIds.length,
+      active: activeSkills.length,
+      archived: archivedSkills.length,
+      relocated: relocatedSkills.length
+    },
+    capabilities
+  };
+
   const indexYamlContent = `# AUTO-GENERATED BY registry-builder (tooling/build-registry.js)\n# DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.\n` +
-    yaml.dump({
-      schema_version: 1,
-      manifest_version: manifestVersion,
-      generated_at: new Date().toISOString(),
-      stats: {
-        total_scanned: allIds.length,
-        active: activeSkills.length,
-        archived: archivedSkills.length,
-        relocated: relocatedSkills.length
-      },
-      capabilities
-    }, { indent: 2 });
+    yaml.dump(indexYamlData, { indent: 2 });
 
-  fs.writeFileSync(INDEX_YAML, indexYamlContent, 'utf8');
-  fs.writeFileSync(GRAPH_JSON, JSON.stringify(graphJsonData, null, 2), 'utf8');
+  const indexYamlPath = path.join(registryDir, 'index.yaml');
+  const graphJsonPath = path.join(registryDir, 'graph.json');
 
-  console.log(`✅ Generated lightweight registry index at .agents/registry/index.yaml (${allIds.length} scanned: ${activeSkills.length} active, ${archivedSkills.length} archived, ${relocatedSkills.length} relocated)`);
-  console.log(`✅ Generated O(1) adjacency graph at .agents/registry/graph.json (active: ${activeSkills.length}, has_cycles: ${hasCycles})`);
+  fs.writeFileSync(indexYamlPath, indexYamlContent, 'utf8');
+  fs.writeFileSync(graphJsonPath, JSON.stringify(graphJsonData, null, 2), 'utf8');
+
+  return {
+    graph: graphJsonData,
+    index: indexYamlData,
+    indexYamlContent,
+    graphJsonContent: JSON.stringify(graphJsonData, null, 2)
+  };
 }
 
-buildRegistry();
+export function buildRegistry() {
+  const packageVersion = JSON.parse(fs.readFileSync(path.join(DEFAULT_ROOT_DIR, 'package.json'), 'utf8')).version;
+  const manifestVersion = packageVersion.split('.').slice(0, 2).join('.');
+  console.log(`🔄 Building V${manifestVersion} Governed Capability Registry & O(1) Runtime Graph...`);
+
+  try {
+    const { graph } = buildRegistryCore();
+    console.log(`✅ Generated lightweight registry index at .agents/registry/index.yaml (${graph.stats.total_scanned} scanned: ${graph.stats.active} active, ${graph.stats.archived} archived, ${graph.stats.relocated} relocated)`);
+    console.log(`✅ Generated O(1) adjacency graph at .agents/registry/graph.json (active: ${graph.stats.active}, has_cycles: ${graph.stats.has_cycles})`);
+  } catch (err) {
+    console.error(`❌ Registry build failed: ${err.message}`);
+    process.exit(1);
+  }
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  buildRegistry();
+}
