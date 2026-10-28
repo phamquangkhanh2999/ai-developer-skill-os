@@ -187,20 +187,49 @@ function rewriteAbsolutePaths(targetDir) {
   console.log('  ✅ Rewrote .agents/* references → absolute paths for Antigravity global mode');
 }
 
+const V10_STOCK_AGENTS_SHA = '150aafe478b815230a75924edcd9320adbf253b54ab03217419e328dc57a40e1';
+
 /**
- * Claude Code install: copy AGENTS.md → CLAUDE.md at target root.
+ * Claude Code install: copy AGENTS.md → CLAUDE.md at target root with ownership and conflict checking.
  * Claude Code reads ~/.claude/CLAUDE.md as global instructions.
  */
-function renameToClaude(targetDir) {
+function renameToClaude(targetDir, previousManifest) {
   const agentsMd = path.join(targetDir, 'AGENTS.md');
   const claudeMd = path.join(targetDir, 'CLAUDE.md');
 
-  if (fs.existsSync(agentsMd) && !fs.existsSync(claudeMd)) {
+  if (!fs.existsSync(agentsMd)) return { customized: false };
+
+  if (!fs.existsSync(claudeMd)) {
     fs.copyFileSync(agentsMd, claudeMd);
     console.log('  ✅ Copied AGENTS.md → CLAUDE.md (Claude Code entry point)');
-  } else if (fs.existsSync(claudeMd)) {
-    console.log('  ℹ️  CLAUDE.md already exists — skipped overwrite');
+    return { customized: false };
   }
+
+  // CLAUDE.md already exists — check ownership before updating
+  const currentClaudeSha = computeSha256(fs.readFileSync(claudeMd));
+  const newAgentsSha = computeSha256(fs.readFileSync(agentsMd));
+  const prevAgentsSha = previousManifest?.files?.['AGENTS.md'];
+  const prevClaudeSha = previousManifest?.files?.['CLAUDE.md'];
+
+  const isStockSystemFile =
+    currentClaudeSha === newAgentsSha ||
+    currentClaudeSha === prevAgentsSha ||
+    currentClaudeSha === prevClaudeSha ||
+    currentClaudeSha === V10_STOCK_AGENTS_SHA;
+
+  if (isStockSystemFile) {
+    fs.copyFileSync(agentsMd, claudeMd);
+    console.log('  ✅ Updated CLAUDE.md → v11 5-skill entry point');
+    return { customized: false };
+  }
+
+  // User has customized CLAUDE.md! Preserve user version, backup, and create .system-new
+  console.log('  ⚠️ Preserved modified user file (conflict): CLAUDE.md');
+  try {
+    fs.copyFileSync(claudeMd, `${claudeMd}.backup-${Date.now()}`);
+    fs.copyFileSync(agentsMd, `${claudeMd}.system-new`);
+  } catch {}
+  return { customized: true };
 }
 
 /**
@@ -365,6 +394,7 @@ async function runInstall(ideKey, scopeKey, rl) {
       console.log(`  ✅ Installed .agents/ → ${targetDir}`);
     }
 
+    let claudeCustomized = false;
     if (ide === 'opencode') {
       copyOpenCodeConfig(targetDir);
     } else {
@@ -372,7 +402,8 @@ async function runInstall(ideKey, scopeKey, rl) {
         rewriteAbsolutePaths(targetDir);
       }
       if (config.postInstall === 'renameToClaude') {
-        renameToClaude(targetDir);
+        const res = renameToClaude(targetDir, previousManifest);
+        claudeCustomized = Boolean(res?.customized);
       }
       if (ide === 'antigravity') {
         const geminiSource = path.resolve(__dirname, '..', 'GEMINI.md');
@@ -395,9 +426,37 @@ async function runInstall(ideKey, scopeKey, rl) {
     if (preservedProfile) fs.writeFileSync(profilePath, preservedProfile);
     if (backupDir) console.log(`  Rollback: restore files from ${backupDir}`);
 
+    // Generate the installed manifest reflecting actual content on disk after post-install transformations
+    const installedManifest = {
+      schemaVersion: nextManifest.schemaVersion || 1,
+      packageVersion: version,
+      files: {}
+    };
+
+    for (const [rel, sourceSha] of Object.entries(nextManifest.files || {})) {
+      const full = path.join(targetDir, rel);
+      if (fs.existsSync(full)) {
+        if (migrationPlan.conflicts.includes(rel)) {
+          // Keep base sha from previous manifest or incoming release so future upgrades recognize user modifications
+          installedManifest.files[rel] = previousManifest?.files?.[rel] || sourceSha;
+        } else {
+          // Record exact sha of file on disk (including path rewrites)
+          installedManifest.files[rel] = computeSha256(fs.readFileSync(full));
+        }
+      }
+    }
+
+    if (fs.existsSync(path.join(targetDir, 'CLAUDE.md'))) {
+      if (claudeCustomized) {
+        installedManifest.files['CLAUDE.md'] = previousManifest?.files?.['CLAUDE.md'] || 'customized';
+      } else {
+        installedManifest.files['CLAUDE.md'] = computeSha256(fs.readFileSync(path.join(targetDir, 'CLAUDE.md')));
+      }
+    }
+
     fs.writeFileSync(
       path.join(targetDir, MANAGED_MANIFEST_FILE),
-      JSON.stringify(nextManifest, null, 2),
+      JSON.stringify(installedManifest, null, 2),
       'utf8'
     );
     writeVersionMarker(targetDir);

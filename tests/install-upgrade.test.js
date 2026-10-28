@@ -139,4 +139,65 @@ describe('Installation and upgrade in isolated workspaces', () => {
       expect(output).toContain('qk-product-spec');
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
+
+  it('records accurate checksums matching on-disk rewritten files in global install manifest (0 mismatches)', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-global-checksum-'));
+    try {
+      execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=global'],
+        { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
+
+      const targetDir = path.join(cwd, '.gemini/config');
+      const manifestPath = path.join(targetDir, '.ai-skill-os-managed.json');
+      expect(fs.existsSync(manifestPath)).toBe(true);
+
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      const mismatched = [];
+
+      for (const [rel, recordedSha] of Object.entries(manifest.files)) {
+        const full = path.join(targetDir, rel);
+        expect(fs.existsSync(full), `File ${rel} recorded in manifest must exist on disk`).toBe(true);
+        const actualSha = crypto.createHash('sha256').update(fs.readFileSync(full)).digest('hex');
+        if (actualSha !== recordedSha) {
+          mismatched.push({ file: rel, recordedSha, actualSha });
+        }
+      }
+
+      // Checksum mismatches immediately after fresh global install must be exactly 0
+      expect(mismatched).toEqual([]);
+
+      // Second install / upgrade should not report any conflicts
+      const upgradeOutput = execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=global', '--force'],
+        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
+
+      expect(upgradeOutput).not.toContain('conflict');
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('handles Claude Code entry migration: updates unmodified CLAUDE.md and preserves customized CLAUDE.md', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-claude-migration-'));
+    try {
+      // 1. Upgrade when CLAUDE.md is stock v10
+      const claudeDir = path.join(cwd, '.claude');
+      fs.mkdirSync(claudeDir, { recursive: true });
+      const stockV10Agents = execFileSync('git', ['show', '85b28f88fb1ffdbf0a931bd3ff583467b61b9d92:.agents/AGENTS.md'], { encoding: 'utf8' });
+      fs.writeFileSync(path.join(claudeDir, 'CLAUDE.md'), stockV10Agents);
+
+      execFileSync(process.execPath, [script, '--ide=claude', '--scope=global'],
+        { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
+
+      const updatedClaude = fs.readFileSync(path.join(claudeDir, 'CLAUDE.md'), 'utf8');
+      expect(updatedClaude).toContain('5 Core Skills');
+      expect(updatedClaude).not.toContain('11 Core Super-Skills');
+
+      // 2. Upgrade when CLAUDE.md is customized by user
+      fs.writeFileSync(path.join(claudeDir, 'CLAUDE.md'), '# User Customized Claude Instructions\nCustom rules here.\n');
+
+      const upgradeOutput = execFileSync(process.execPath, [script, '--ide=claude', '--scope=global', '--force'],
+        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
+
+      expect(fs.readFileSync(path.join(claudeDir, 'CLAUDE.md'), 'utf8')).toContain('User Customized Claude Instructions');
+      expect(fs.existsSync(path.join(claudeDir, 'CLAUDE.md.system-new'))).toBe(true);
+      expect(upgradeOutput).toContain('Preserved modified user file (conflict): CLAUDE.md');
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
 });

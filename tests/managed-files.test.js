@@ -163,6 +163,33 @@ describe('Managed Files Manifest & Migration Planner', () => {
     expect(plan.remove.length).toBe(0);
     expect(plan.preserve).toContain('custom.md');
     expect(plan.preserve).toContain('DEV_PROFILE.md');
-    expect(plan.write).toContain('AGENTS.md');
+  });
+
+  it('protects active files with unverified ownership when upgrading without previous manifest', () => {
+    const nextManifest = {
+      schemaVersion: 1,
+      packageVersion: '11.0.0',
+      files: {
+        'rules/global.md': computeSha256('# New Global Rule v11\n'),
+        'skills/qk-feature-delivery/SKILL.md': computeSha256('# Feature Delivery\n')
+      }
+    };
+
+    // User customized rules/global.md in v10 before upgrading to v11
+    const plan = planManagedMigration({
+      previousManifest: null,
+      nextManifest,
+      installedFiles: ['rules/global.md', 'skills/qk-feature-delivery/SKILL.md'],
+      currentFilesContent: {
+        'rules/global.md': '# User Custom Global Rule v10\nDo not overwrite!\n',
+        'skills/qk-feature-delivery/SKILL.md': '# Feature Delivery\n'
+      },
+      isLegacyUpgrade: true
+    });
+
+    expect(plan.conflicts).toContain('rules/global.md');
+    expect(plan.preserve).toContain('rules/global.md');
+    expect(plan.write).not.toContain('rules/global.md');
+    expect(plan.write).toContain('skills/qk-feature-delivery/SKILL.md');
   });
 });

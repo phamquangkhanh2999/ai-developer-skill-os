@@ -101,8 +101,14 @@ export function planManagedMigration({
 
     if (nextFilesSet.has(rel)) {
       // File exists in both old and new releases
-      if (prevFiles && prevFiles[rel] && currentSha && currentSha !== prevFiles[rel]) {
-        // User modified this file! Preserve user version, do not overwrite silently.
+      const hasKnownPrevSha = Boolean(prevFiles && prevFiles[rel]);
+      const isKnownModified = hasKnownPrevSha && currentSha && currentSha !== prevFiles[rel];
+      // When ownership cannot be proven (no manifest or not in prevFiles), protect existing file if it differs from upstream
+      const isUnverifiedOwnership = !hasKnownPrevSha;
+      const isDifferentFromNext = isUnverifiedOwnership && currentSha && currentSha !== nextManifest?.files?.[rel];
+
+      if (isKnownModified || isDifferentFromNext) {
+        // User modified this file or file pre-existed with unverified ownership! Preserve user version.
         preserve.push(rel);
         conflicts.push(rel);
         const writeIndex = write.indexOf(rel);

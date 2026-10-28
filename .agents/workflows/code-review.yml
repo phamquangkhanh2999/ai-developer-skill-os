@@ -102,7 +102,7 @@ steps:
       - "Mỗi finding: file:line + code quote + explanation + suggestion"
       - "Đánh giá mức độ tuân thủ R-C-09 (Zero-Slop)"
       - "Đánh giá rủi ro R-SEC-04"
-      - "Ghi log execution trace vào evals/traces/"
+      - "Chỉ xuất báo cáo ra Artifact Pane hoặc hiển thị trực tiếp; tuyệt đối không tự ý ghi file hay trace vào working tree repo"
       - "Tính health score: 100 - (critical×20 + high×10 + medium×3 + low×1)"
 
 escalation:

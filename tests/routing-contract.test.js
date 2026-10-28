@@ -100,5 +100,57 @@ describe('Routing and Alias Contract Specification', () => {
         expect(resolved.reference, `Reference mismatch for prompt: "${tc.prompt}"`).toBe(tc.ref);
       }
     });
+
+    it('prioritizes user constraints over aliases and goals over domain keywords (multi-intent disambiguation)', () => {
+      const disambiguationCases = [
+        {
+          prompt: 'review code',
+          expectedSkill: 'qk-code-review',
+          mode: 'review',
+          ref: null
+        },
+        {
+          prompt: 'qk-ui-engineer sửa lỗi spacing',
+          expectedSkill: 'qk-bug-resolution',
+          mode: 'fix',
+          ref: 'references/ui.md'
+        },
+        {
+          prompt: 'chỉ review Postman, đừng sửa',
+          expectedSkill: 'qk-code-review',
+          mode: 'review',
+          ref: 'references/api-discovery.md'
+        },
+        {
+          prompt: 'đánh giá code auth, không sửa gì',
+          expectedSkill: 'qk-code-review',
+          mode: 'review',
+          ref: null
+        },
+        {
+          prompt: 'qk-backend-data sửa lỗi query bị chậm',
+          expectedSkill: 'qk-bug-resolution',
+          mode: 'fix',
+          ref: 'references/backend-data.md'
+        },
+        {
+          prompt: 'chỉ khám phá collection API, chưa viết code',
+          expectedSkill: 'qk-feature-delivery',
+          mode: 'discovery-only',
+          ref: 'references/api-discovery.md'
+        }
+      ];
+
+      for (const tc of disambiguationCases) {
+        if (tc.ref) {
+          const rPath = path.join(rootDir, '.agents', tc.ref);
+          expect(fs.existsSync(rPath), `Reference ${tc.ref} must exist on disk`).toBe(true);
+        }
+        const resolved = resolveSkillRoute(tc.prompt);
+        expect(resolved.skill, `Skill mismatch for prompt: "${tc.prompt}"`).toBe(tc.expectedSkill);
+        expect(resolved.mode, `Mode mismatch for prompt: "${tc.prompt}"`).toBe(tc.mode);
+        expect(resolved.reference, `Reference mismatch for prompt: "${tc.prompt}"`).toBe(tc.ref);
+      }
+    });
   });
 });
