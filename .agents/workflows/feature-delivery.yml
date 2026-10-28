@@ -127,6 +127,7 @@ steps:
       - verification_result
       - unmet_criteria
       - quality_gate_result   # PASS | PARTIAL | FAIL
+      - acceptance_results    # Kết quả kiểm chứng từng tiêu chí AC (PASS/FAIL/NOT_RUN)
     actions:
       - "Chạy checks trên cây cuối sau integration; report actual mode và limitations"
       - "Đối chiếu từng acceptance criterion — list unmet nếu có"

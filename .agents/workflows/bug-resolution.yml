@@ -59,7 +59,7 @@ steps:
 
   - id: hypothesize
     name: "Đặt giả thuyết nguyên nhân"
-    purpose: "Xác định top 3 nguyên nhân có thể, xếp theo xác suất"
+    purpose: "Xác định nguyên nhân tiềm ẩn hoặc đi thẳng vào nguyên nhân nếu bằng chứng đã rõ ràng"
     required: true
     skip_if: null
     inputs:
@@ -68,14 +68,14 @@ steps:
       - execution_mode
       - task_assignments
     outputs:
-      - hypothesis_list      # Ordered list: [H1 (most likely), H2, H3]
-      - selected_hypothesis  # H1 unless evidence suggests otherwise
+      - hypothesis_list      # Danh sách giả thuyết hoặc nguyên nhân xác định
+      - selected_hypothesis  # Giả thuyết khả dĩ nhất
     min_confidence: HIGH
     actions:
       - "Collect investigator evidence, lead kiểm chứng độc lập trước chọn root cause"
-      - "List 3 nguyên nhân có thể gây ra triệu chứng này"
-      - "Xếp hạng theo xác suất dựa trên stack trace"
-      - "Chọn H1 để kiểm chứng trước"
+      - "Nêu nguyên nhân hoặc giả thuyết tiềm ẩn (nếu đã có stack trace/evidence rõ ràng, không ép đủ 3 giả thuyết)"
+      - "Xếp hạng theo xác suất dựa trên bằng chứng thực tế"
+      - "Chọn giả thuyết khả dĩ nhất để kiểm chứng"
 
   - id: evidence
     name: "Tìm bằng chứng xác nhận"
@@ -111,7 +111,7 @@ steps:
       - "Lead tạo regression và xác nhận fail vì bug trước fix nếu có môi trường; nếu không ghi limitation"
       - "Edit source file trực tiếp với replace_file_content hoặc multi_replace_file_content"
       - "Không tạo wrapper script"
-      - "Không dùng ?. hoặc ! để silence lỗi"
+      - "Không dùng ! để silence lỗi; ?. chỉ hợp lệ khi contract cho phép nullable, không dùng ?. để che đậy sai lệch schema"
       - "Fix root cause, không patch bề mặt"
     human_checkpoint:
       condition: "file thuộc vùng auth/payment/permission/migration"
@@ -127,6 +127,11 @@ steps:
       - verification_result   # PASS | FAIL | PARTIAL
       - evidence_of_fix
       - quality_gate_result   # PASS | FAIL
+      - cause                 # Nguyên nhân gốc rễ
+      - evidence              # Bằng chứng file:dòng/log
+      - change_summary        # Đã sửa gì và ở đâu
+      - fix_rationale         # Vì sao sửa triệt tiêu được lỗi
+      - check_results         # Kết quả chạy test thực tế (PASS/FAIL/NOT_RUN)
     actions:
       - "Re-read patched code section"
       - "Chạy regression và targeted checks trên cây cuối; ghi PASS/FAIL/NOT_RUN thực tế"
