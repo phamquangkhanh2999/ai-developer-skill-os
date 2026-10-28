@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -56,6 +57,31 @@ describe('Installation and upgrade in isolated workspaces', () => {
       expect(gemini).toContain(`${cwd}/.gemini/config/rules/subagent-orchestration.md`);
       expect(gemini).not.toContain('.agents/rules/');
       expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/subagent-orchestration.md'))).toBe(true);
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('upgrades with managed manifest: removes retired files and preserves customized files', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-managed-upgrade-'));
+    try {
+      const target = path.join(cwd, '.agents');
+      fs.mkdirSync(path.join(target, 'retired-skill'), { recursive: true });
+      fs.writeFileSync(path.join(target, 'retired-skill/SKILL.md'), 'retired skill content');
+      fs.writeFileSync(path.join(target, 'custom.md'), 'user custom content');
+
+      const sha = crypto.createHash('sha256').update('retired skill content').digest('hex');
+      fs.writeFileSync(path.join(target, '.ai-skill-os-managed.json'), JSON.stringify({
+        schemaVersion: 1,
+        packageVersion: '10.2.0',
+        files: {
+          'retired-skill/SKILL.md': sha
+        }
+      }));
+
+      run(cwd, ['--force']);
+
+      expect(fs.existsSync(path.join(target, 'retired-skill/SKILL.md'))).toBe(false);
+      expect(fs.readFileSync(path.join(target, 'custom.md'), 'utf8')).toBe('user custom content');
+      expect(fs.existsSync(path.join(target, '.ai-skill-os-managed.json'))).toBe(true);
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 });

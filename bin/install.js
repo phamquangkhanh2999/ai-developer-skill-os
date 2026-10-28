@@ -5,6 +5,12 @@ import path from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
 import os from 'os';
+import {
+  generateManifest,
+  planManagedMigration,
+  MANAGED_MANIFEST_FILE,
+  computeSha256
+} from '../tooling/managed-files.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -187,6 +193,20 @@ rules:
   }
 }
 
+function collectInstalledFiles(dir, baseDir = dir) {
+  const results = [];
+  if (!fs.existsSync(dir)) return results;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...collectInstalledFiles(full, baseDir));
+    } else {
+      results.push(path.relative(baseDir, full).replace(/\\/g, '/'));
+    }
+  }
+  return results;
+}
+
 // ─── Main install logic ───────────────────────────────────────────────────────
 
 async function runInstall(ideKey, scopeKey, rl) {
@@ -261,6 +281,43 @@ async function runInstall(ideKey, scopeKey, rl) {
     const profilePath = path.join(targetDir, 'DEV_PROFILE.md');
     const preservedProfile = fs.existsSync(profilePath) ? fs.readFileSync(profilePath) : null;
 
+    const nextManifest = generateManifest(sourceDir, version);
+    const managedManifestPath = path.join(targetDir, MANAGED_MANIFEST_FILE);
+    let previousManifest = null;
+    if (fs.existsSync(managedManifestPath)) {
+      try {
+        previousManifest = JSON.parse(fs.readFileSync(managedManifestPath, 'utf8'));
+      } catch {}
+    }
+
+    if (previousManifest) {
+      const installedFiles = collectInstalledFiles(targetDir);
+      const currentFilesContent = {};
+      for (const rel of installedFiles) {
+        try {
+          currentFilesContent[rel] = fs.readFileSync(path.join(targetDir, rel));
+        } catch {}
+      }
+      const migrationPlan = planManagedMigration({
+        previousManifest,
+        nextManifest,
+        installedFiles,
+        currentFilesContent
+      });
+
+      for (const fileToRemove of migrationPlan.remove) {
+        const fullRemove = path.join(targetDir, fileToRemove);
+        if (fs.existsSync(fullRemove)) {
+          fs.unlinkSync(fullRemove);
+          console.log(`  🗑️ Removed retired managed file: ${fileToRemove}`);
+        }
+      }
+
+      for (const conflict of migrationPlan.conflicts) {
+        console.warn(`  ⚠️ Preserved modified user file with conflict: ${conflict}`);
+      }
+    }
+
     if (ide === 'opencode') {
       copyRecursiveSync(sourceDir, targetDir);
       copyOpenCodeConfig(targetDir);
@@ -295,6 +352,11 @@ async function runInstall(ideKey, scopeKey, rl) {
     if (preservedProfile) fs.writeFileSync(profilePath, preservedProfile);
     if (backupDir) console.log(`  Rollback: restore files from ${backupDir}`);
 
+    fs.writeFileSync(
+      path.join(targetDir, MANAGED_MANIFEST_FILE),
+      JSON.stringify(nextManifest, null, 2),
+      'utf8'
+    );
     writeVersionMarker(targetDir);
     console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);
 
