@@ -79,6 +79,13 @@ workflow:
   description: "References workflows/<name>.yml"
   example: "bug-resolution"
 
+references:
+  type: array
+  items:
+    type: string
+  description: "Optional list of relative paths from skill folder to on-demand references"
+  example: ["../../references/ui.md"]
+
 rules:
   type: array
   example: [global]
