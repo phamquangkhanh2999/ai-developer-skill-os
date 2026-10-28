@@ -13,9 +13,8 @@ describe('Skill Contract Specification', () => {
   const skillDirs = fs.readdirSync(skillsDir)
     .filter(d => !d.startsWith('_') && fs.statSync(path.join(skillsDir, d)).isDirectory());
 
-  it('should have the expected number of active core skills (11 before cutover)', () => {
-    // Before cutover this is 11, after task 9 cutover this transitions to 5
-    expect(skillDirs.length).toBe(11);
+  it('should have the expected number of active core skills (5 after cutover)', () => {
+    expect(skillDirs.length).toBe(5);
   });
 
   it('all existing skills should satisfy platforms contract [antigravity, claude, opencode]', () => {

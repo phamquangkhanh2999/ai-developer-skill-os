@@ -12,8 +12,8 @@ describe('V10 Skill Compliance', () => {
     .filter(d => !d.startsWith('_') && fs.statSync(path.join(skillsDir, d)).isDirectory())
     .map(d => path.join(skillsDir, d, 'SKILL.md'));
 
-  it('should have exactly 11 skill files', () => {
-    expect(skillFiles.length).toBe(11);
+  it('should have exactly 5 core skill files', () => {
+    expect(skillFiles.length).toBe(5);
   });
 
   skillFiles.forEach(skillPath => {

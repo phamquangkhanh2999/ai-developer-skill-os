@@ -2,38 +2,13 @@
 # DO NOT EDIT MANUALLY. THIS IS A GENERATED RUNTIME ARTIFACT.
 schema_version: 1
 manifest_version: '10.3'
-generated_at: '2026-10-28T07:35:48.918Z'
+generated_at: '2026-10-28T07:43:59.000Z'
 stats:
-  total_scanned: 11
-  active: 11
+  total_scanned: 5
+  active: 5
   archived: 0
   relocated: 0
 capabilities:
-  qk-api-data-discovery:
-    path: .agents/skills/qk-api-data-discovery
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - api
-      - data
-      - discovery
-    dependencies: []
-  qk-backend-data:
-    path: .agents/skills/qk-backend-data
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - backend
-      - data
-    dependencies: []
   qk-bug-resolution:
     path: .agents/skills/qk-bug-resolution
     version: 10.4.0
@@ -93,51 +68,4 @@ capabilities:
     tags:
       - feature
       - delivery
-    dependencies: []
-  qk-orchestrator:
-    path: .agents/skills/qk-orchestrator
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - orchestrator
-    dependencies: []
-  qk-product-spec:
-    path: .agents/skills/qk-product-spec
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - product
-      - spec
-    dependencies: []
-  qk-prompt-compiler:
-    path: .agents/skills/qk-prompt-compiler
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - prompt
-      - compiler
-    dependencies: []
-  qk-ui-engineer:
-    path: .agents/skills/qk-ui-engineer
-    version: 10.2.0
-    status: stable
-    platforms:
-      - antigravity
-      - claude
-      - opencode
-    tags:
-      - ui
-      - engineer
     dependencies: []

@@ -1,41 +1,8 @@
 {
   "schema_version": 1,
   "manifest_version": "10.3",
-  "generated_at": "2026-10-28T07:35:48.918Z",
+  "generated_at": "2026-10-28T07:43:59.000Z",
   "nodes": {
-    "qk-api-data-discovery": {
-      "path": ".agents/skills/qk-api-data-discovery",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "api",
-        "data",
-        "discovery"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
-    },
-    "qk-backend-data": {
-      "path": ".agents/skills/qk-backend-data",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "backend",
-        "data"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
-    },
     "qk-bug-resolution": {
       "path": ".agents/skills/qk-bug-resolution",
       "version": "10.4.0",
@@ -115,88 +82,19 @@
       "dependencies": [],
       "dependents": [],
       "is_orphan": false
-    },
-    "qk-orchestrator": {
-      "path": ".agents/skills/qk-orchestrator",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "orchestrator"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
-    },
-    "qk-product-spec": {
-      "path": ".agents/skills/qk-product-spec",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "product",
-        "spec"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
-    },
-    "qk-prompt-compiler": {
-      "path": ".agents/skills/qk-prompt-compiler",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "prompt",
-        "compiler"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
-    },
-    "qk-ui-engineer": {
-      "path": ".agents/skills/qk-ui-engineer",
-      "version": "10.2.0",
-      "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
-      ],
-      "tags": [
-        "ui",
-        "engineer"
-      ],
-      "dependencies": [],
-      "dependents": [],
-      "is_orphan": false
     }
   },
   "edges": [],
   "adjacency": {
-    "qk-api-data-discovery": [],
-    "qk-backend-data": [],
     "qk-bug-resolution": [],
     "qk-code-cleaner": [],
     "qk-code-review": [],
     "qk-devops-release": [],
-    "qk-feature-delivery": [],
-    "qk-orchestrator": [],
-    "qk-product-spec": [],
-    "qk-prompt-compiler": [],
-    "qk-ui-engineer": []
+    "qk-feature-delivery": []
   },
   "stats": {
-    "total_scanned": 11,
-    "active": 11,
+    "total_scanned": 5,
+    "active": 5,
     "archived": 0,
     "relocated": 0,
     "has_cycles": false
