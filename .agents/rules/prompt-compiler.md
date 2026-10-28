@@ -1,8 +1,8 @@
 ---
-version: 10.2.0
-description: "Quy tắc Prompt Compiler v11.1 Control Plane: Cổng kiểm soát hành vi, Risk Gate R0-R4, Change Budget, Scope Expansion Gate, Evidence Gate và Prompt Delta."
+version: 11.0.0
+description: "Quy tắc Prompt Compiler Control Plane: Cổng kiểm soát hành vi, Risk Gate R0-R4, Change Budget, Scope Expansion Gate, Evidence Gate và Prompt Delta (nạp theo nhu cầu)."
 domain: rules
-applies_to: all
+applies_to: on-demand
 ---
 
 # Prompt Compiler Rules v11.1 — Control Plane & Behavioral Gate
