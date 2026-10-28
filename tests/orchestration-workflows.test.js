@@ -19,4 +19,16 @@ describe('Controlled orchestration workflow contracts', () => {
       expect(steps.map(step => step.id).length).toBe(new Set(steps.map(step => step.id)).size);
     });
   }
+
+  it('feature-delivery supports documentation-only modes by skipping implement and orchestration_plan', () => {
+    const workflow = yaml.load(fs.readFileSync(path.join(root, '.agents/workflows/feature-delivery.yml'), 'utf8'));
+    const implementStep = workflow.steps.find(s => s.id === 'implement');
+    expect(implementStep).toBeDefined();
+    expect(implementStep.skip_if).toBe("mode != 'build'");
+    expect(implementStep.required).toBe(false);
+
+    const planStep = workflow.steps.find(s => s.id === 'orchestration_plan');
+    expect(planStep).toBeDefined();
+    expect(planStep.skip_if).toBe("mode != 'build'");
+  });
 });

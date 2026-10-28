@@ -5,7 +5,15 @@
 
 ---
 
-## 1. Clickable File Links (Dynamic Workspace Path)
+## 1. Pre-flight & Intake
+
+Trước khi xử lý bất kỳ yêu cầu nào trong phiên làm việc:
+1. Đọc `.agents/DEV_PROFILE.md` nếu tồn tại (lấy role, stack, conventions, constraints).
+2. Đọc `.agents/AGENTS.md` và `.agents/rules/global.md` để khởi tạo intake và định tuyến vào 5 Core Skills.
+
+---
+
+## 2. Clickable File Links (Dynamic Workspace Path)
 
 Mọi đường dẫn file và symbol mã nguồn BẮT BUỘC dùng link markdown `file:///`:
 - Cú pháp liên kết file: `[<filename>](file:///<workspace-root>/<relative-path>)`
@@ -15,14 +23,14 @@ Mọi đường dẫn file và symbol mã nguồn BẮT BUỘC dùng link markdo
 
 ---
 
-## 2. Artifact Dual-Stream Reporting
+## 3. Artifact Dual-Stream Reporting
 
 - **Stream 1 (Tài liệu chi tiết):** Ghi báo cáo chuyên sâu, diff lớn, bảng biểu vào file Artifact markdown (`.md`) trong thư mục brain: `<appDataDir>/brain/<conversation-id>/...`.
 - **Stream 2 (Cửa sổ Chat):** Chỉ in bản Tóm tắt điều hành (Executive Summary) ngắn gọn (15–25 dòng) kèm liên kết trỏ tới Artifact.
 
 ---
 
-## 3. Terminal Visual Rendering
+## 4. Terminal Visual Rendering
 
 Khi người dùng yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc trực quan hóa luồng:
 - BẮT BUỘC render trực tiếp thành biểu đồ khối ký tự **ASCII / Unicode Box Drawing** (`┌─┐`, `│`, `└─┘`, `──►`) ngay trong response.
@@ -30,7 +38,7 @@ Khi người dùng yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc tr
 
 ---
 
-## 4. Tích Hợp Slash Commands Bản Địa
+## 5. Tích Hợp Slash Commands Bản Địa
 
 Chủ động gợi ý slash command phù hợp ngữ cảnh khi người dùng cần:
 - `/grill-me`: Phỏng vấn sâu làm rõ các quyết định thiết kế hoặc yêu cầu còn mơ hồ.
@@ -41,7 +49,7 @@ Chủ động gợi ý slash command phù hợp ngữ cảnh khi người dùng 
 
 ---
 
-## 5. Controlled Subagent Orchestration
+## 6. Controlled Subagent Orchestration
 
 Khi người dùng yêu cầu và môi trường hỗ trợ, tham khảo `.agents/rules/subagent-orchestration.md`.
 Mặc định thực thi single-agent; không tự ý điều phối song song khi chưa được cho phép.

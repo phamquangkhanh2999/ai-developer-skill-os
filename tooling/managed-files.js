@@ -10,8 +10,23 @@ const EXCLUDED_PATTERNS = [
   /^\.git/,
   /^\.ai-skill-os-version$/,
   /^\.ai-skill-os-managed\.json$/,
-  /\.backup-[\d]+$/
+  /\.backup-[\d]+$/,
+  /\.system-new$/
 ];
+
+export const V10_RETIRED_FILES_FINGERPRINTS = {
+  'skills/qk-product-spec/SKILL.md': 'a3eafcffa626932bcf4702c349056750d3ebdd38db2f35b3a3cd571634dc4bb8',
+  'skills/qk-ui-engineer/SKILL.md': '3994fda574ad40551d5c423974c57e5caee617889c709ad070476d60520157df',
+  'skills/qk-backend-data/SKILL.md': 'cc3b50dc76f5399f6717e2259a7f748d3ebd39b980945a9b8eb70bee3ce6a67f',
+  'skills/qk-api-data-discovery/SKILL.md': '40e8c430ab03acdf5d441fa311d2888fb71f46cd43a5ecabad0d52f7661885d8',
+  'skills/qk-api-data-discovery/references/bronze-record-format.md': 'de7b4c3eb2071d9ab58bebd87c4431bed3abd839dc26b29e1d2c8c399e529e18',
+  'skills/qk-api-data-discovery/references/data-contract-yaml.md': '1088a859424919f41e635997cfd08f626c453033a8f2e3af7bcb32f648515ade',
+  'skills/qk-api-data-discovery/references/discovery-report-template.md': '8ee21b6a80303d0883d8c73b5d425875fdbd89e35ee7df4c300ca7a074be5ea9',
+  'skills/qk-prompt-compiler/SKILL.md': '9fcc46abc7238698f8be2e3f8e0c138e68049095187a240beb9d389d56f71a1f',
+  'skills/qk-orchestrator/SKILL.md': '11834e5213f5e2c0c024173e1f805670e21d1165dff82a9e75a9d77700b1ef1b',
+  'skills/qk-orchestrator/evals/scorecard.yaml': 'e4444f5087921a66ae8ea1b741ae3d883f2cce6616f0eaf85b063e827e490809',
+  'skills/qk-orchestrator/references/routing-table.md': '0597eb8f30fe56cc8ca84de7d382e94387d66e3136ae095a7df980c4be62cc33'
+};
 
 export function computeSha256(contentOrBuffer) {
   return crypto.createHash('sha256').update(contentOrBuffer).digest('hex');
@@ -63,15 +78,16 @@ export function planManagedMigration({
   previousManifest,
   nextManifest,
   installedFiles = [],
-  currentFilesContent = {}
+  currentFilesContent = {},
+  isLegacyUpgrade = false
 }) {
-  const write = Object.keys(nextManifest?.files || {});
+  const write = [...Object.keys(nextManifest?.files || {})];
   const remove = [];
   const preserve = [];
   const conflicts = [];
 
   const nextFilesSet = new Set(write);
-  const prevFiles = previousManifest?.files || null;
+  const prevFiles = previousManifest?.files || (isLegacyUpgrade ? V10_RETIRED_FILES_FINGERPRINTS : null);
 
   for (const installedFile of installedFiles) {
     const rel = installedFile.replace(/\\/g, '/');
@@ -80,16 +96,25 @@ export function planManagedMigration({
       continue;
     }
 
+    const currentContent = currentFilesContent[rel];
+    const currentSha = currentContent !== undefined ? computeSha256(currentContent) : null;
+
     if (nextFilesSet.has(rel)) {
+      // File exists in both old and new releases
+      if (prevFiles && prevFiles[rel] && currentSha && currentSha !== prevFiles[rel]) {
+        // User modified this file! Preserve user version, do not overwrite silently.
+        preserve.push(rel);
+        conflicts.push(rel);
+        const writeIndex = write.indexOf(rel);
+        if (writeIndex !== -1) {
+          write.splice(writeIndex, 1);
+        }
+      }
       continue;
     }
 
     // File is on disk, but not in next manifest
     if (prevFiles && prevFiles[rel]) {
-      // It was managed in previous release
-      const currentContent = currentFilesContent[rel];
-      const currentSha = currentContent !== undefined ? computeSha256(currentContent) : null;
-
       if (currentSha === prevFiles[rel]) {
         // Unmodified system file -> safe to remove
         remove.push(rel);
@@ -99,8 +124,12 @@ export function planManagedMigration({
         conflicts.push(rel);
       }
     } else {
-      // Not managed by previous manifest (e.g. user custom file, or v10 without manifest) -> preserve
+      // Not managed by previous manifest (e.g. user custom file, or unrecognized legacy file) -> preserve
       preserve.push(rel);
+      if (rel.startsWith('skills/')) {
+        // Legacy or custom skill folder that was not recognized
+        conflicts.push(rel);
+      }
     }
   }
 

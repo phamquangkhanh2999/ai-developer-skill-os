@@ -31,10 +31,12 @@ steps:
     inputs:
       - user_description
       - existing_context
+      - mode                 # build | plan-only | discovery-only | prompt-only
     outputs:
       - feature_scope        # What's in, what's out
       - acceptance_criteria  # How to know it's done
       - affected_areas       # Which parts of codebase are touched
+      - mode
     min_confidence: HIGH
     actions:
       - "Viết lại requirement bằng ngôn ngữ kỹ thuật"
@@ -46,7 +48,7 @@ steps:
     name: "Load context"
     purpose: "Hiểu codebase hiện tại đủ để implement đúng cách"
     required: true
-    skip_if: "Context graph đã có từ qk-orchestrator"
+    skip_if: "Context graph đã có từ qk-orchestrator hoặc mode == 'prompt-only'"
     inputs:
       - affected_areas
     outputs:
@@ -62,7 +64,7 @@ steps:
     name: "Thiết kế solution"
     purpose: "Quyết định approach trước khi code"
     required: true
-    skip_if: "Feature đơn giản, single file, no design decision needed"
+    skip_if: "Feature đơn giản, single file, no design decision needed, hoặc mode in ['discovery-only', 'prompt-only']"
     inputs:
       - feature_scope
       - existing_patterns
@@ -83,7 +85,7 @@ steps:
     name: "Chọn chế độ và bàn giao context"
     purpose: "Chỉ dispatch khi capability, scope và ownership đáp ứng policy"
     required: true
-    skip_if: null
+    skip_if: "mode != 'build'"
     inputs: [implementation_plan, api_contract, constraints]
     outputs: [execution_mode, task_assignments]
     actions:
@@ -94,9 +96,9 @@ steps:
 
   - id: implement
     name: "Implement"
-    purpose: "Viết code theo design đã approved"
-    required: true
-    skip_if: null
+    purpose: "Viết code theo design đã approved (chỉ thực thi khi mode == 'build')"
+    required: false
+    skip_if: "mode != 'build'"
     inputs:
       - implementation_plan
       - existing_patterns
@@ -107,6 +109,7 @@ steps:
       - modified_files
       - implementation_summary
     actions:
+      - "Chỉ thực thi khi mode == 'build'; bỏ qua hoàn toàn ở các chế độ plan-only, discovery-only, prompt-only"
       - "Collect/review diffs và integrate trước verify; không chạy writers phụ thuộc hoặc chồng paths"
       - "Implement theo thứ tự: types → logic → UI → tests"
       - "Follow existing patterns và conventions"
@@ -116,13 +119,14 @@ steps:
 
   - id: verify
     name: "Verify implementation"
-    purpose: "Xác nhận feature hoạt động đúng theo acceptance criteria — quality gate bắt buộc"
+    purpose: "Xác nhận feature hoạt động đúng theo acceptance criteria (hoặc nghiệm thu tài liệu khi không code) — quality gate bắt buộc"
     required: true
     skip_if: null
     inputs:
       - acceptance_criteria
       - created_files
       - modified_files
+      - mode
     outputs:
       - verification_result
       - unmet_criteria

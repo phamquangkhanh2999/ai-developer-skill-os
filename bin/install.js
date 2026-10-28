@@ -24,12 +24,15 @@ const homeDir = os.homedir();
 // Version marker file written after every successful install
 const VERSION_FILE = '.ai-skill-os-version';
 
+const CORE_SKILLS = [
+  'qk-feature-delivery',
+  'qk-bug-resolution',
+  'qk-code-review',
+  'qk-code-cleaner',
+  'qk-devops-release'
+];
+
 // ─── IDE Configuration Map ────────────────────────────────────────────────────
-// Each IDE has:
-//   localDir  — where to install when scope=local (relative to cwd)
-//   globalDir — where to install when scope=global (absolute, user-level)
-//   postInstall — special steps after copy (null = none)
-// ─────────────────────────────────────────────────────────────────────────────
 const IDE_CONFIG = {
   antigravity: {
     label: 'Antigravity (Google Gemini)',
@@ -68,6 +71,35 @@ function copyRecursiveSync(src, dest) {
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
   }
+}
+
+function removeEmptyDirs(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      const full = path.join(dir, entry.name);
+      removeEmptyDirs(full);
+      try {
+        if (fs.readdirSync(full).length === 0) {
+          fs.rmdirSync(full);
+        }
+      } catch {}
+    }
+  }
+}
+
+function collectInstalledFiles(dir, baseDir = dir) {
+  const results = [];
+  if (!fs.existsSync(dir)) return results;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...collectInstalledFiles(full, baseDir));
+    } else {
+      results.push(path.relative(baseDir, full).replace(/\\/g, '/'));
+    }
+  }
+  return results;
 }
 
 /** Read installed version from marker file. Returns null if not installed. */
@@ -124,7 +156,7 @@ function parseArgs() {
  */
 function rewriteAbsolutePaths(targetDir) {
   const targetPosix = targetDir.replace(/\\/g, '/');
-  const DIRS_TO_REWRITE = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'docs', 'blueprints'];
+  const DIRS_TO_REWRITE = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'docs', 'blueprints', 'references'];
 
   const walk = (dir) => {
     for (const file of fs.readdirSync(dir)) {
@@ -171,7 +203,6 @@ function renameToClaude(targetDir) {
   }
 }
 
-
 /**
  * OpenCode install: create .opencode/config.yaml pointing to AGENTS.md.
  * OpenCode reads .opencode/ directory for configuration.
@@ -191,20 +222,6 @@ rules:
 `, 'utf8');
     console.log('  ✅ Created .opencode/config.yaml');
   }
-}
-
-function collectInstalledFiles(dir, baseDir = dir) {
-  const results = [];
-  if (!fs.existsSync(dir)) return results;
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      results.push(...collectInstalledFiles(full, baseDir));
-    } else {
-      results.push(path.relative(baseDir, full).replace(/\\/g, '/'));
-    }
-  }
-  return results;
 }
 
 // ─── Main install logic ───────────────────────────────────────────────────────
@@ -265,7 +282,6 @@ async function runInstall(ideKey, scopeKey, rl) {
         return;
       }
     }
-    // Overlay managed files below; never delete unrelated user customizations.
   } else {
     console.log('   (Chưa cài đặt — fresh install)\n');
   }
@@ -290,21 +306,28 @@ async function runInstall(ideKey, scopeKey, rl) {
       } catch {}
     }
 
-    if (previousManifest) {
-      const installedFiles = collectInstalledFiles(targetDir);
-      const currentFilesContent = {};
-      for (const rel of installedFiles) {
-        try {
-          currentFilesContent[rel] = fs.readFileSync(path.join(targetDir, rel));
-        } catch {}
-      }
-      const migrationPlan = planManagedMigration({
-        previousManifest,
-        nextManifest,
-        installedFiles,
-        currentFilesContent
-      });
+    const installedFiles = fs.existsSync(targetDir) ? collectInstalledFiles(targetDir) : [];
+    const currentFilesContent = {};
+    for (const rel of installedFiles) {
+      try {
+        currentFilesContent[rel] = fs.readFileSync(path.join(targetDir, rel));
+      } catch {}
+    }
+    const isLegacyUpgrade = !previousManifest && Boolean(installedVersion || fs.existsSync(path.join(targetDir, 'skills')));
 
+    const migrationPlan = planManagedMigration({
+      previousManifest,
+      nextManifest,
+      installedFiles,
+      currentFilesContent,
+      isLegacyUpgrade
+    });
+
+    if (!previousManifest && !isLegacyUpgrade && !fs.existsSync(targetDir)) {
+      copyRecursiveSync(sourceDir, targetDir);
+      console.log(`  ✅ Copied .agents/ → ${targetDir}`);
+    } else {
+      // Execute removals
       for (const fileToRemove of migrationPlan.remove) {
         const fullRemove = path.join(targetDir, fileToRemove);
         if (fs.existsSync(fullRemove)) {
@@ -313,18 +336,38 @@ async function runInstall(ideKey, scopeKey, rl) {
         }
       }
 
-      for (const conflict of migrationPlan.conflicts) {
-        console.warn(`  ⚠️ Preserved modified user file with conflict: ${conflict}`);
+      // Clean up empty directories in skills
+      removeEmptyDirs(path.join(targetDir, 'skills'));
+
+      // Copy only files in migrationPlan.write (never overwrite conflict files)
+      for (const rel of migrationPlan.write) {
+        const src = path.join(sourceDir, rel);
+        const dst = path.join(targetDir, rel);
+        if (fs.existsSync(src)) {
+          fs.mkdirSync(path.dirname(dst), { recursive: true });
+          fs.copyFileSync(src, dst);
+        }
       }
+
+      // Report conflicts and save upstream new versions as .system-new for user inspection
+      for (const conflict of migrationPlan.conflicts) {
+        console.warn(`  ⚠️ Preserved modified user file (conflict): ${conflict}`);
+        const src = path.join(sourceDir, conflict);
+        if (fs.existsSync(src)) {
+          const conflictNewPath = path.join(targetDir, `${conflict}.system-new`);
+          try {
+            fs.mkdirSync(path.dirname(conflictNewPath), { recursive: true });
+            fs.copyFileSync(src, conflictNewPath);
+          } catch {}
+        }
+      }
+
+      console.log(`  ✅ Installed .agents/ → ${targetDir}`);
     }
 
     if (ide === 'opencode') {
-      copyRecursiveSync(sourceDir, targetDir);
       copyOpenCodeConfig(targetDir);
-      console.log(`  ✅ Copied .agents/ → ${targetDir}`);
     } else {
-      copyRecursiveSync(sourceDir, targetDir);
-      console.log(`  ✅ Copied .agents/ → ${targetDir}`);
       if (isGlobal && config.postInstall === 'rewriteAbsolutePaths') {
         rewriteAbsolutePaths(targetDir);
       }
@@ -358,7 +401,25 @@ async function runInstall(ideKey, scopeKey, rl) {
       'utf8'
     );
     writeVersionMarker(targetDir);
-    console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);
+
+    // Verify remaining skills to check for incomplete migration
+    let remainingSkills = [];
+    const skillsDir = path.join(targetDir, 'skills');
+    if (fs.existsSync(skillsDir)) {
+      remainingSkills = fs.readdirSync(skillsDir)
+        .filter(d => !d.startsWith('_') && fs.statSync(path.join(skillsDir, d)).isDirectory());
+    }
+    const unexpectedSkills = remainingSkills.filter(s => !CORE_SKILLS.includes(s));
+    const hasIncompleteMigration = unexpectedSkills.length > 0;
+
+    if (hasIncompleteMigration) {
+      console.log('\n⚠️ CẢNH BÁO MIGRATION CHƯA HOÀN TẤT:');
+      console.log(`   Phát hiện kỹ năng cũ chưa được dọn dẹp trong ${targetDir}/skills: ${unexpectedSkills.join(', ')}`);
+      console.log('   Để tránh trùng lặp discovery trong Antigravity/Claude, vui lòng kiểm tra backup và xóa hoặc di chuyển các kỹ năng cũ sang .agents/references/.');
+      console.log(`\n⚠️ Cài đặt hoàn tất với cảnh báo (còn ${remainingSkills.length} skills trên disk). ${config.note}\n`);
+    } else {
+      console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);
+    }
 
   } catch (err) {
     console.error('❌ Lỗi cài đặt:', err.message);
@@ -368,37 +429,40 @@ async function runInstall(ideKey, scopeKey, rl) {
   }
 }
 
-// ─── CLI entry point ──────────────────────────────────────────────────────────
+// ─── Interactive CLI Entry Point ─────────────────────────────────────────────
 
-const args = parseArgs();
+async function main() {
+  const parsed = parseArgs();
 
-if (args.ide && args.scope) {
-  // Non-interactive mode (called via npm scripts)
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  await runInstall(args.ide, args.scope, rl);
-} else {
-  // Interactive mode
-  console.log(`\n🚀 AI Developer Skill OS v${version} — Setup\n`);
-
-  const ideQuestion = `Chọn IDE/AI Assistant:
-  (1) Antigravity (Google Gemini)
-  (2) Claude Code (Anthropic)
-  (3) OpenCode (Open Source)
-
-Nhập số (1-3): `;
-
-  const scopeQuestion = `
-Phạm vi cài đặt:
-  (1) Local  — Chỉ dự án này (.agents/ hoặc .claude/ trong thư mục hiện tại)
-  (2) Global — Toàn bộ máy tính (áp dụng cho mọi dự án)
-
-Nhập số (1-2): `;
+  if (parsed.ide && parsed.scope) {
+    await runInstall(parsed.ide, parsed.scope, null);
+    return;
+  }
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
-  rl.question(ideQuestion, async (ideAnswer) => {
-    rl.question(scopeQuestion, async (scopeAnswer) => {
-      await runInstall(ideAnswer.trim(), scopeAnswer.trim(), rl);
-    });
+  console.log('\n╔═══════════════════════════════════════════════════╗');
+  console.log(`║   AI Developer Skill OS v${version} Installer           ║`);
+  console.log('╚═══════════════════════════════════════════════════╝\n');
+  console.log('Chọn IDE của bạn:');
+  console.log('  1) Antigravity  (Google Gemini)  → ~/.gemini/config');
+  console.log('  2) Claude Code  (Anthropic)      → ~/.claude/CLAUDE.md');
+  console.log('  3) OpenCode     (Open Source)    → ~/.config/opencode\n');
+
+  const ideChoice = await new Promise((resolve) => rl.question('Lựa chọn [1/2/3]: ', resolve));
+
+  console.log('\nChọn phạm vi cài đặt:');
+  console.log('  1) Local  — chỉ dự án hiện tại (./.agents/)');
+  console.log('  2) Global — tất cả dự án trên máy này (khuyến nghị)\n');
+
+  const scopeChoice = await new Promise((resolve) => rl.question('Lựa chọn [1/2]: ', resolve));
+
+  await runInstall(ideChoice.trim(), scopeChoice.trim(), rl);
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  main().catch((err) => {
+    console.error('Fatal error:', err);
+    process.exit(1);
   });
 }

@@ -55,8 +55,13 @@ describe('Installation and upgrade in isolated workspaces', () => {
         { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
       const gemini = fs.readFileSync(path.join(cwd, '.gemini/GEMINI.md'), 'utf8');
       expect(gemini).toContain(`${cwd}/.gemini/config/rules/subagent-orchestration.md`);
+      expect(gemini).toContain(`${cwd}/.gemini/config/AGENTS.md`);
+      expect(gemini).toContain(`${cwd}/.gemini/config/rules/global.md`);
+      expect(gemini).not.toContain('.agents/AGENTS.md');
       expect(gemini).not.toContain('.agents/rules/');
       expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/subagent-orchestration.md'))).toBe(true);
+      expect(fs.existsSync(path.join(cwd, '.gemini/config/AGENTS.md'))).toBe(true);
+      expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/global.md'))).toBe(true);
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 
@@ -82,6 +87,56 @@ describe('Installation and upgrade in isolated workspaces', () => {
       expect(fs.existsSync(path.join(target, 'retired-skill/SKILL.md'))).toBe(false);
       expect(fs.readFileSync(path.join(target, 'custom.md'), 'utf8')).toBe('user custom content');
       expect(fs.existsSync(path.join(target, '.ai-skill-os-managed.json'))).toBe(true);
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('preserves user modified files even when present in new release and creates .system-new', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-conflict-'));
+    try {
+      run(cwd);
+      const target = path.join(cwd, '.agents');
+      const globalRule = path.join(target, 'rules/global.md');
+      expect(fs.existsSync(globalRule)).toBe(true);
+
+      fs.writeFileSync(globalRule, '# User Customized Global Rule\nNever overwrite me!\n');
+
+      run(cwd, ['--force']);
+
+      expect(fs.readFileSync(globalRule, 'utf8')).toBe('# User Customized Global Rule\nNever overwrite me!\n');
+      expect(fs.existsSync(`${globalRule}.system-new`)).toBe(true);
+      expect(fs.readFileSync(`${globalRule}.system-new`, 'utf8')).not.toContain('Never overwrite me!');
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('handles legacy v10 upgrade without manifest: cleans unmodified retired skills and warns if custom legacy skills remain', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-v10-legacy-'));
+    try {
+      const target = path.join(cwd, '.agents');
+      // Create mock v10 directory with unmodified ui-engineer and customized product-spec
+      const uiSkillDir = path.join(target, 'skills/qk-ui-engineer');
+      const psSkillDir = path.join(target, 'skills/qk-product-spec');
+      fs.mkdirSync(uiSkillDir, { recursive: true });
+      fs.mkdirSync(psSkillDir, { recursive: true });
+
+      // Get stock v10 content for qk-ui-engineer
+      const stockUiContent = execFileSync('git', ['show', '85b28f88fb1ffdbf0a931bd3ff583467b61b9d92:.agents/skills/qk-ui-engineer/SKILL.md'], { encoding: 'utf8' });
+      fs.writeFileSync(path.join(uiSkillDir, 'SKILL.md'), stockUiContent);
+
+      // Write customized content for qk-product-spec
+      fs.writeFileSync(path.join(psSkillDir, 'SKILL.md'), '# User Customized Product Spec\nDo not delete!\n');
+
+      const output = run(cwd, ['--force']);
+
+      // Unmodified ui-engineer was removed
+      expect(fs.existsSync(uiSkillDir)).toBe(false);
+
+      // Customized product-spec was preserved
+      expect(fs.existsSync(psSkillDir)).toBe(true);
+      expect(fs.readFileSync(path.join(psSkillDir, 'SKILL.md'), 'utf8')).toContain('User Customized Product Spec');
+
+      // Output warns about incomplete migration due to remaining legacy skill
+      expect(output).toContain('CẢNH BÁO MIGRATION CHƯA HOÀN TẤT');
+      expect(output).toContain('qk-product-spec');
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 });

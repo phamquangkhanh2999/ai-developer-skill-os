@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
+import { resolveSkillRoute } from '../tooling/route-resolver.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -81,20 +82,22 @@ describe('Routing and Alias Contract Specification', () => {
       { prompt: 'Fix lỗi này (không log, chưa rõ triệu chứng)', expectedSkill: 'qk-bug-resolution', mode: 'clarify', ref: null }
     ];
 
-    it('covers all 16 prompt scenarios in routing metadata contract', () => {
+    it('covers all 16 prompt scenarios in routing metadata contract and strictly resolves route and references', () => {
       expect(testCases.length).toBe(16);
       for (const tc of testCases) {
         if (tc.expectedSkill !== 'intake') {
           const sDir = path.join(rootDir, '.agents/skills', tc.expectedSkill);
-          expect(fs.existsSync(sDir)).toBe(true);
+          expect(fs.existsSync(sDir), `Skill directory for ${tc.expectedSkill} must exist`).toBe(true);
         }
         if (tc.ref) {
           const rPath = path.join(rootDir, '.agents', tc.ref);
-          // If reference is created, verify it exists
-          if (fs.existsSync(rPath)) {
-            expect(fs.existsSync(rPath)).toBe(true);
-          }
+          expect(fs.existsSync(rPath), `Required reference ${tc.ref} for prompt "${tc.prompt}" must exist on disk`).toBe(true);
         }
+
+        const resolved = resolveSkillRoute(tc.prompt);
+        expect(resolved.skill, `Skill mismatch for prompt: "${tc.prompt}"`).toBe(tc.expectedSkill);
+        expect(resolved.mode, `Mode mismatch for prompt: "${tc.prompt}"`).toBe(tc.mode);
+        expect(resolved.reference, `Reference mismatch for prompt: "${tc.prompt}"`).toBe(tc.ref);
       }
     });
   });

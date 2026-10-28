@@ -101,6 +101,45 @@ describe('Managed Files Manifest & Migration Planner', () => {
     expect(plan2.conflicts).toContain('retiredSkill/SKILL.md');
   });
 
+  it('detects conflict when user modified an updated file and preserves it instead of overwriting', () => {
+    const oldHashGlobal = computeSha256('original global rules v10');
+    const previousManifest = {
+      schemaVersion: 1,
+      packageVersion: '10.3.0',
+      files: {
+        'rules/global.md': oldHashGlobal,
+        'rules/coding.md': computeSha256('coding rules v10')
+      }
+    };
+
+    const nextManifest = {
+      schemaVersion: 1,
+      packageVersion: '11.0.0',
+      files: {
+        'rules/global.md': computeSha256('new lean global rules v11'),
+        'rules/coding.md': computeSha256('coding rules v11')
+      }
+    };
+
+    // User customized rules/global.md!
+    const plan = planManagedMigration({
+      previousManifest,
+      nextManifest,
+      installedFiles: ['rules/global.md', 'rules/coding.md'],
+      currentFilesContent: {
+        'rules/global.md': 'user custom edited global rules',
+        'rules/coding.md': 'coding rules v10'
+      }
+    });
+
+    // rules/global.md must be a conflict, preserved, and NOT in write
+    expect(plan.conflicts).toContain('rules/global.md');
+    expect(plan.preserve).toContain('rules/global.md');
+    expect(plan.write).not.toContain('rules/global.md');
+    // rules/coding.md was not modified by user, so it should be in write
+    expect(plan.write).toContain('rules/coding.md');
+  });
+
   it('handles upgrade from version without previous manifest (v10 legacy fallback)', () => {
     const nextManifest = {
       schemaVersion: 1,
