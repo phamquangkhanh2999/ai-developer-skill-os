@@ -46,24 +46,6 @@ Installer backup toàn bộ thư mục đích trước khi cập nhật, hỗ tr
 ├── rules/                ← Hợp đồng thực thi chung (global.md, safety, security...)
 └── registry/             ← Metadata và graph được tạo tự động (index.yaml, graph.json)
 ```
-├── AGENTS.md             ← Entry point: Quick Routing Table 9 Super-Skills + 14 Roles Matrix
-├── GEMINI.md             ← Quy chuẩn cockpit riêng cho Antigravity IDE
-├── skills/               ← 11 Core Super-Skills (mỗi skill có SKILL.md độc lập)
-│   ├── qk-orchestrator/
-│   ├── qk-prompt-compiler/
-│   ├── qk-product-spec/
-│   ├── qk-feature-delivery/
-│   ├── qk-bug-resolution/
-│   ├── qk-ui-engineer/
-│   ├── qk-backend-data/
-│   ├── qk-api-data-discovery/
-│   ├── qk-code-review/
-│   ├── qk-code-cleaner/
-│   └── qk-devops-release/
-├── workflows/            ← 10 execution pipelines liên kết trực tiếp
-├── rules/                ← Behavior policies (global, coding, safety, security...)
-└── registry/             ← Index O(1) sinh tự động (index.yaml, graph.json)
-```
 
 ---
 
@@ -100,38 +82,33 @@ ai_style: concise        # concise | detailed | teaching
 ./qk-devops-release            # Docker, CI/CD, 8-gate release, docs, RAG
 
 # Hoặc dùng ngôn ngữ tự nhiên — AI tự động nhận diện:
-"biên dịch lại prompt cho task này"        → qk-prompt-compiler
-"fix bug crash màn hình checkout"         → qk-bug-resolution
-"thiết kế api đặt hàng và migration db"   → qk-backend-data
-"phân tích postman và lấy schema bronze"  → qk-api-data-discovery
-"review bảo mật và đo nợ kỹ thuật dự án"  → qk-code-review
-"tách file UserService.ts bị quá dài"     → qk-code-cleaner
-"chuẩn bị release lên production"         → qk-devops-release
+"làm tính năng mới xuất excel"              → qk-feature-delivery + references/ui.md
+"viết lại prompt cho task này"              → qk-feature-delivery [prompt-only] + references/prompt-authoring.md
+"fix bug crash màn hình checkout"           → qk-bug-resolution
+"thiết kế api đặt hàng và migration db"     → qk-feature-delivery + references/backend-data.md
+"phân tích postman và lấy schema"           → qk-feature-delivery [discovery-only] + references/api-discovery.md
+"review bảo mật và đo nợ kỹ thuật dự án"    → qk-code-review
+"tách file UserService.ts bị quá dài"       → qk-code-cleaner
+"chuẩn bị release lên production"           → qk-devops-release
 ```
 
 ---
 
-## Danh Mục 11 Core Super-Skills
+## Danh Mục 5 Core Skills & On-Demand References
 
-| Super-Skill | Phụ Đề Dev (Nhiệm vụ cốt lõi) | Phạm vi & Năng lực thực chiến | Các kỹ năng cũ đã hợp nhất |
+| Core Skill | Phụ Đề Dev (Nhiệm vụ cốt lõi) | Phạm vi & Năng lực thực chiến | Tham khảo chuyên môn (On-demand References) |
 |---|---|---|---|
-| `qk-orchestrator` | **Điều hướng & Context** | Điều phối tổng thể, nạp context đồ thị phụ thuộc (Context Graph), khởi tạo cấu hình dự án (Bootstrap) | `qk-orchestrator`, `qk-context-loader`, `qk-project-bootstrap`, `qk-help` |
-| `qk-prompt-compiler` | **Biên Dịch & Chuẩn Hóa Prompt** | Bộ biên dịch câu lệnh thô (Raw Request) thành Execution Prompt 9 thành phần kỹ thuật, công khai minh bạch trước khi thực thi | *Mới* (tích hợp [PROMPT_RULES.md](./PROMPT_RULES.md)) |
-| `qk-product-spec` | **Viết Spec & PRD** | Đặc tả sản phẩm, phân tích PRD, Acceptance Criteria (BDD/Gherkin), Gap Analysis và Đánh giá tính khả thi | `qk-product-specification`, `qk-project-audit` |
-| `qk-feature-delivery` | **Build Feature mới** | Phát triển tính năng mới trọn gói, tích hợp API Client, xử lý loading/error states, quản lý State | `qk-feature-delivery`, `qk-api-consumer`, `qk-fe-api-integration` |
-| `qk-bug-resolution` | **Debug & Fix Bug** | Chẩn đoán và dập lỗi theo chu trình khép kín 5 bước, loại bỏ giả định mù quáng | `qk-bug-resolution` |
-| `qk-ui-engineer` | **Build UI & Component** | Xây dựng UI component chuẩn Design Tokens, tương tác micro-animations, kiểm toán 57 tiêu chí Anti-Slop | `qk-ui-builder`, `qk-design-system-engineering`, `qk-ui-system-builder`, `qk-ui-audit`, `qk-frontend-architecture` |
-| `qk-backend-data` | **API & Database** | Kiến trúc REST/tRPC API, Database Schema & Migration an toàn, phân quyền RBAC/ABAC, tối ưu EXPLAIN query, Data Pipeline (ETL/dbt) | `qk-api-lifecycle`, `qk-data-lifecycle`, `qk-access-policy`, `qk-db-optimizer`, `qk-data-engineer` |
-| `qk-api-data-discovery` | **Khám Phá API & Data Contract** | Phân tích Postman, thu thập Real Evidence, khám phá Schema & Data Dictionary, đánh giá tầng Bronze Medallion, Checkpoint dừng trước khi code | *Mới* (API-to-Data Engine & Contract Discovery) |
-| `qk-code-review` | **Review Code & Audit** | Đánh giá mã nguồn kiến trúc, đo lường chỉ số nợ kỹ thuật (Health Score 0–100), quét bảo mật OWASP Top 10, kiểm toán chất lượng Web WCAG AA | `qk-code-review`, `qk-project-health`, `qk-security-audit`, `qk-web-quality-gate`, `qk-validation-gate` |
-| `qk-code-cleaner` | **Refactor & Viết Test** | Tái cấu trúc sạch (SOLID, phân tách God files >300L), nâng cấp thư viện tiệm tiến (kèm Rollback plan), kỹ nghệ kiểm thử tự động (Test Pyramid) | `qk-refactor`, `qk-upgrade`, `qk-system-evolution`, `qk-test-engineering`, `qk-engineering-standard` |
-| `qk-devops-release` | **DevOps, CI/CD & Deploy** | Nền tảng CI/CD (Docker, GitHub Actions), cổng kiểm soát phát hành 8-Gate Release, đồng bộ tài liệu (README, OpenAPI), bộ nhớ dự án (`.ai-local/`), AI/RAG Pipeline | `qk-devops-platform`, `qk-production-release`, `qk-docs`, `qk-project-memory`, `qk-ai-builder`, `qk-agent-observability` |
+| `qk-feature-delivery` | **Build Feature & Tích hợp** | Phát triển tính năng mới trọn gói, đổi yêu cầu, tích hợp API, lập đặc tả (hỗ trợ các chế độ non-code: `plan-only`, `discovery-only`, `prompt-only`) | `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md` |
+| `qk-bug-resolution` | **Debug & Fix Bug** | Chẩn đoán nguyên nhân gốc rễ và dập lỗi theo chu trình khép kín 5 bước: Observe → Evidence → Cause → Minimal Fix → Verify | `ui.md`, `backend-data.md` |
+| `qk-code-review` | **Review Code & Audit** | Đánh giá mã nguồn kiến trúc chỉ đọc (Read-Only), đo lường nợ kỹ thuật, quét bảo mật OWASP Top 10, kiểm toán WCAG | `backend-data.md`, `ui.md` |
+| `qk-code-cleaner` | **Refactor & Viết Test** | Tái cấu trúc bảo toàn hành vi (Zero Behavior Change), nâng cấp thư viện tiệm tiến, bổ sung kiểm thử tự động | `backend-data.md`, `ui.md` |
+| `qk-devops-release` | **DevOps, CI/CD & Deploy** | Vận hành nền tảng CI/CD (Docker, GitHub Actions), phát hành sản phẩm an toàn có Rollback, đồng bộ tài liệu | `context-discovery.md` |
 
 ---
 
 ## Công Cụ & Scripts Quản Trị
 
 ```bash
-# Tái tạo runtime registry O(1) từ 11 Super-Skills:
+# Tái tạo runtime registry O(1) từ 5 Core Skills:
 node tooling/build-registry.js
 ```

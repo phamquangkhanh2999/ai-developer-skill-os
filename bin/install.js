@@ -157,33 +157,28 @@ function parseArgs() {
 function rewriteAbsolutePaths(targetDir) {
   const targetPosix = targetDir.replace(/\\/g, '/');
   const DIRS_TO_REWRITE = ['skills', 'registry', 'rules', 'workflows', 'knowledge', 'docs', 'blueprints', 'references'];
+  const managedFiles = collectInstalledFiles(sourceDir);
 
-  const walk = (dir) => {
-    for (const file of fs.readdirSync(dir)) {
-      const fullPath = path.join(dir, file);
-      if (fs.statSync(fullPath).isDirectory()) {
-        walk(fullPath);
-      } else if (/\.(md|yml|yaml|json)$/.test(fullPath)) {
-        let content = fs.readFileSync(fullPath, 'utf8');
-        let changed = false;
+  for (const rel of managedFiles) {
+    const fullPath = path.join(targetDir, rel);
+    if (!fs.existsSync(fullPath)) continue;
+    if (!/\.(md|yml|yaml|json)$/.test(fullPath)) continue;
+    let content = fs.readFileSync(fullPath, 'utf8');
+    let changed = false;
 
-        for (const d of DIRS_TO_REWRITE) {
-          const re = new RegExp(`\\.agents/${d}`, 'g');
-          if (re.test(content)) {
-            content = content.replace(re, () => `${targetPosix}/${d}`);
-            changed = true;
-          }
-        }
-        if (content.includes('.agents/skills.json')) {
-          content = content.replace(/\.agents\/skills\.json/g, () => `${targetPosix}/skills.json`);
-          changed = true;
-        }
-        if (changed) fs.writeFileSync(fullPath, content, 'utf8');
+    for (const d of DIRS_TO_REWRITE) {
+      const re = new RegExp(`\\.agents/${d}`, 'g');
+      if (re.test(content)) {
+        content = content.replace(re, () => `${targetPosix}/${d}`);
+        changed = true;
       }
     }
-  };
-
-  walk(targetDir);
+    if (content.includes('.agents/skills.json')) {
+      content = content.replace(/\.agents\/skills\.json/g, () => `${targetPosix}/skills.json`);
+      changed = true;
+    }
+    if (changed) fs.writeFileSync(fullPath, content, 'utf8');
+  }
   console.log('  ✅ Rewrote .agents/* references → absolute paths for Antigravity global mode');
 }
 
@@ -471,11 +466,20 @@ async function runInstall(ideKey, scopeKey, rl) {
     const unexpectedSkills = remainingSkills.filter(s => !CORE_SKILLS.includes(s));
     const hasIncompleteMigration = unexpectedSkills.length > 0;
 
+    const coreConflicts = (migrationPlan?.conflicts || []).filter(f => f === 'AGENTS.md' || f === 'rules/global.md');
+    if (coreConflicts.length > 0) {
+      console.log('\n⚠️ CẢNH BÁO: Cài đặt ở trạng thái PARTIAL.');
+      console.log(`   Các tệp cốt lõi sau đang giữ phiên bản tùy chỉnh của bạn: ${coreConflicts.join(', ')}`);
+      console.log('   Bản phát hành mới được lưu thành file *.system-new. Hãy đối chiếu để hoàn tất cập nhật.');
+    }
+
     if (hasIncompleteMigration) {
       console.log('\n⚠️ CẢNH BÁO MIGRATION CHƯA HOÀN TẤT:');
       console.log(`   Phát hiện kỹ năng cũ chưa được dọn dẹp trong ${targetDir}/skills: ${unexpectedSkills.join(', ')}`);
       console.log('   Để tránh trùng lặp discovery trong Antigravity/Claude, vui lòng kiểm tra backup và xóa hoặc di chuyển các kỹ năng cũ sang .agents/references/.');
       console.log(`\n⚠️ Cài đặt hoàn tất với cảnh báo (còn ${remainingSkills.length} skills trên disk). ${config.note}\n`);
+    } else if (coreConflicts.length > 0) {
+      console.log(`\n⚠️ Hoàn tất cài đặt với cảnh báo PARTIAL! ${config.note}\n`);
     } else {
       console.log(`\n🎉 Hoàn tất v${version}! ${config.note}\n`);
     }
