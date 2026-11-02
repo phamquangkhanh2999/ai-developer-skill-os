@@ -1,5 +1,6 @@
 ---
 version: 10.2.0
+trigger: model_decision
 description: "Risk management rules for agent actions with side effects."
 domain: rules
 applies_to: [skills-with-risk-medium, skills-with-risk-high]

@@ -1,169 +1,73 @@
-# AI Developer Skill OS - Specification (V10.3.0)
+# Antigravity Skill Package Specification
 
-This document describes the shipped SKILL.md contracts. Package and component versions are independent. Runtime schema stays at version 1 in 10.3.0.
+This specification describes the current package contract. The package supports Antigravity only. Historical platform and workflow designs remain in the changelog/ADR archive and are not shipped as current runtime instructions.
 
-## 1. Frontmatter Contract (YAML)
+## 1. Skill frontmatter
 
-Every SKILL.md starts with YAML frontmatter. Shipped skills use name, version, status, subtitle, description, platforms, runtime_version, tools, rules, workflow and triggers. The extended example below is optional guidance; intent, selection, execution_mode, token_budget, exit_codes and compliance objects are not required by the current validator.
+Each core `SKILL.md` has YAML frontmatter. `workflow` metadata is not used; a skill links to shared rules and optional on-demand references instead.
 
 ```yaml
 ---
-# ── Identity ───────────────────────────────────────
 name: qk-[skill-name]
-version: 10.2.0
+version: 10.4.2
 status: stable
-description: "[Một câu — skill này làm gì và dành cho ai]"
-platforms: [antigravity, claude, opencode]
-
-# ── Classification ─────────────────────────────────
-type: capability                    # capability | utility | orchestrator
+description: "Purpose and routing signals for this skill"
+platforms: [antigravity]
 runtime_version: 1
-
-intent:
-  - [primary-intent]
-  - [secondary-intent]
-
-complexity:
-  level: medium                     # low | medium | high | critical
-
 triggers:
-  - "[trigger phrase 1]"
-
-selection:
-  priority: medium                  # high | medium | low
-  confidence_threshold: 0.75
-
-# ── References ─────────────────────────────────────
-workflow: [workflow-name]
+  - "representative user phrase"
 rules:
   - global
 tools:
   - filesystem
-
-# ── Runtime ────────────────────────────────────────
-execution_mode: deterministic
-token_budget:
-  max_files_read: 3
-  max_lines_per_read: 150
-  max_shell_commands: 2
-  stop_early: true
-
-# ── V10 Required ───────────────────────────────────
-exit_codes:
-  SUCCESS: "Task completed"
-  PARTIAL: "Task done with gaps"
-  BLOCKED: "Missing precondition"
-  FAILED: "Task failed"
-
-compliance:
-  schema_version: 10.2.0
-  runtime_version: 1
-  platforms: [antigravity, claude, opencode]
+references:
+  - "../../references/ui.md"
 ---
 ```
 
-### Field Definitions
+### Fields
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | string | YES | Skill identifier, must start with `qk-` |
-| `version` | semver | YES | Independent component version; changed review/feature/bug use 10.3.0, unchanged skills retain 10.2.0 |
-| `status` | enum | YES | `stable`, `experimental`, or `deprecated` |
-| `description` | string | YES | One-sentence summary of the skill's purpose |
-| `platforms` | array | YES | Supported IDEs. Valid values: `antigravity`, `claude`, `opencode` |
-| `type` | enum | Optional | Primary domain: `capability`, `utility`, `orchestrator` |
-| `runtime_version` | integer | YES | Runtime version (currently `1`) |
-| `execution_mode` | string | Optional | Extended metadata; actual mode is chosen using runtime capabilities and policy |
-| `intent` | array | Optional | Primary and secondary intents |
-| `complexity.level` | enum | Optional | `low`, `medium`, `high`, `critical` |
-| `triggers` | array | YES | Keywords that route AI to this skill |
-| `selection.priority` | enum | Optional | `high`, `medium`, `low` |
-| `workflow` | string | YES | References `workflows/<name>.yml` |
-| `exit_codes` | object | Optional | Shipped skills define exit codes in body sections |
-| `compliance` | object | Optional | Shipped skills use a body checklist |
+| Field | Required | Contract |
+|---|---:|---|
+| `name` | Yes | Skill id using `qk-` prefix |
+| `version` | Yes | Component semantic version, independent of package version |
+| `status` | Yes | `stable`, `experimental` or `deprecated` |
+| `description` | Yes | Concise purpose and routing description |
+| `platforms` | Yes | Exactly `[antigravity]` |
+| `runtime_version` | Yes | Current skill contract version, `1` |
+| `triggers` | Yes | Natural-language routing phrases |
+| `rules` | Optional | Rule names under `.agents/rules/` |
+| `tools` | Optional | Tool capability labels; do not treat these as grants |
+| `references` | Optional | Relative paths to on-demand guidance |
 
----
+Extended sections such as intent, selection, budgets, exit codes and compliance may be present in skill bodies. The validator, not this example, defines the enforceable contract.
 
-## 2. Required Body Sections (V10.3)
+## 2. Antigravity rule metadata
 
-Every SKILL.md includes these responsibilities; headings and order follow each skill procedure:
+Rule files under `.agents/rules/` use Antigravity-compatible YAML frontmatter. `global.md` is `always_on`; specialized rules use `model_decision` with a meaningful description. Validators reject absent/invalid trigger metadata and incomplete descriptions.
 
-```
-## 1. Nguyên Tắc Cốt Lõi & Luật Chống Over-Engineering
-## 2. Giới Hạn Kỹ Thuật & Cấm Kỵ Tuyệt Đối (Hard Boundaries)
-## 3. Quy Trình Thực Hiện Theo Bước (Sequential Procedure)
-## 4. Xử Lý Sự Cố Khi Thất Bại (Failure Path)     [if applicable]
-## 5. Thích Ứng Theo Role Kỹ Thuật (Role Adaptation) [if applicable]
-## 6. Mô Hình Độ Tin Cậy (Confidence Model)
-## 7. Bằng Chứng Định Dạng (Evidence Format)
-## 8. Thoái Ra Mã (Exit Codes)
-## 9. Chính Sách Retry (Retry Policy)               [if applicable]
-## 10. Platform-Specific Instructions
-## 11. Compliance
-```
+## 3. Runtime boundaries
 
-### V10 Key Requirements
+- Antigravity discovers skills from the documented `.agents/skills/` layout and exposes installed skills through its native interaction model.
+- Repository aliases in `.agents/skill-aliases.yml` are routing guidance only. They do not create executable commands or additional skills.
+- This package has no YAML workflow runtime. Skills describe procedures directly and can reference policy or guidance files.
+- Subagent delegation depends on the active Antigravity runtime's actual tools and permissions. The orchestration rule is policy text, not a scheduler or capability grant.
 
-- **Confidence Model**: Every skill defines HIGH/MEDIUM/LOW confidence levels
-- **Exit Codes**: Every skill defines SUCCESS/PARTIAL/BLOCKED/FAILED
-- **Evidence Format**: Every skill has structured evidence format with severity + confidence
-- **Compliance**: Every skill ends with a component-version checklist and runtime_version 1
-- **Platform-Specific**: Every skill has instructions for Antigravity, Claude, OpenCode
+## 4. Generated registry and checks
 
----
-
-## 3. Supported Platforms
-
-| Platform | Config File | Context Window | Tool Format |
-|----------|-------------|----------------|-------------|
-| **Antigravity** (Google Gemini) | `.agents/AGENTS.md` | Large | Custom Cockpit |
-| **Claude** (Anthropic) | `.claude/CLAUDE.md` | ~200K tokens | Native (Read/Write/Edit/Bash) |
-| **OpenCode** (Open Source) | `.opencode/config.yaml` | ~128K tokens | Custom |
-
----
-
-## 4. Registry Schema
-
-| File | Format | Generated by |
-|------|--------|--------------|
-| `.agents/registry/index.yaml` | YAML | `node tooling/build-registry.js` |
-| `.agents/registry/graph.json` | JSON | `node tooling/build-registry.js` |
-
-Each graph node includes: `path`, `version`, `platforms`, `tags`, `dependencies`, `dependents`, `is_orphan`.
-
----
-
-## 5. Validation
+| Artifact | Generated by |
+|---|---|
+| `.agents/registry/index.yaml` | `node tooling/build-registry.js` |
+| `.agents/registry/graph.json` | `node tooling/build-registry.js` |
 
 ```bash
-# Validate all skill files
-node tooling/validate-skills.js    # 11/11 valid
-
-# Validate graph integrity
-node tooling/validate-graph.js     # Score 100/100
-
-# Rebuild registry
-node tooling/build-registry.js     # 11 active, 0 archived
-
-# Update component versions in scope, then regenerate registry
-# Do not run legacy sync:v10 for 10.3; it hardcodes 10.2.0 and rewrites bodies
-
-# Run full test suite
-npm run test:registry              # All tests pass
+npm run lint
+npm run test:graph
+npm test
 ```
 
----
+The current package has five core skills. Counts are derived from source and must not be hard-coded as an assumption in validation tooling.
 
-## Changelog
+## 5. Versioning
 
-| Version | Change |
-|---------|--------|
-| V10.3.0 | Controlled dispatch, evidence verification, opt-in writers, safe upgrade backups |
-| V10.2.0 | 3 IDEs (Antigravity, Claude, OpenCode), platform-specific sections, platforms field |
-| V10.1.0 | 11 Super-Skills, API Discovery Engine, Prompt Compiler Control Plane |
-| V9.x | Legacy multi-skill system (29+ skills) |
-| V8.x | Structured skill system |
-
-## Controlled orchestration contract
-
-Before dispatch, read rules/subagent-orchestration.md. Assignment/result YAML is prompt data, not new native tool arguments or required frontmatter. Default single-agent; parallel-read requires actual capability and permissions; parallel-write requires opt-in and a verified pilot. See [release guide](releases/v10.3.0.md).
+Package releases use semantic versioning. Removing platform installers and workflow tooling is a breaking scope change; this package line therefore advances to `12.0.0`. Skill component versions remain independently managed and are bumped when their behavior changes.

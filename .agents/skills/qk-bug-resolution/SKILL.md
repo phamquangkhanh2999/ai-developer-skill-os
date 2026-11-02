@@ -1,10 +1,10 @@
 ---
 name: qk-bug-resolution
-version: 10.4.0
+version: 10.4.2
 status: stable
 subtitle: "Debug & Fix Bug"
 description: "Chẩn đoán nguyên nhân gốc rễ và khắc phục lỗi mã nguồn theo chu trình khép kín: Observe → Evidence → Cause → Minimal Fix → Verify. Dùng khi: fix bug, sửa lỗi, crash, error, exception, trace lỗi, điều tra nguyên nhân bug, not working, lỗi UI, lỗi API."
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references:
   - ../../references/ui.md
@@ -13,7 +13,7 @@ rules:
   - global
   - coding-standards
   - safety
-workflow: bug-resolution
+  - subagent-orchestration
 triggers:
   - "fix bug"
   - "sửa lỗi"
@@ -29,7 +29,7 @@ triggers:
 
 # qk-bug-resolution — Chẩn Đoán & Khắc Phục Lỗi Mã Nguồn
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-bug-resolution vì <lỗi hoặc triệu chứng cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 
@@ -57,6 +57,8 @@ triggers:
 - **Không dùng hack che giấu:**
   - CẤM dùng `as any`, `@ts-ignore`, hoặc `try/catch` rỗng để nuốt exception.
   - Optional chaining `?.` chỉ hợp lệ khi contract cho phép giá trị nullable. Không lạm dụng `?.` để che đậy việc API trả sai schema hợp đồng.
+- **Điều tra song song có kiểm soát:** Chỉ dùng investigator chỉ đọc khi user cho phép, runtime có tool/quyền phù hợp và vùng việc tách biệt; đọc [subagent-orchestration.md](../../rules/subagent-orchestration.md), lead phải kiểm chứng evidence hiện tại trước khi chọn root cause và là writer duy nhất.
+- **Regression test:** Khi có thể, tạo test tái hiện bug và xác nhận test đỏ trước khi sửa; nếu môi trường không cho phép, ghi rõ hạn chế và kiểm chứng khác đã chạy.
 
 ---
 

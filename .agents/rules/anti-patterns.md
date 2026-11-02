@@ -1,5 +1,6 @@
 ---
 name: anti-patterns
+trigger: model_decision
 description: "Quy tắc cốt lõi (R-C-09) về các Anti-patterns và AI Slop cần tuyệt đối tránh trong quá trình Code và Design."
 severity: critical
 enforcement: strict

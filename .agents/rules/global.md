@@ -1,5 +1,6 @@
 ---
 version: 11.0.0
+trigger: always_on
 description: "Hợp đồng thực thi chung cho toàn bộ skills: intake, bằng chứng, sửa tối thiểu, báo cáo và an toàn."
 domain: rules
 applies_to: all
@@ -46,7 +47,7 @@ applies_to: all
 
 ## 4. Hợp Đồng Báo Cáo Chuẩn
 
-Dòng mở đầu báo cáo: `Dùng <skill> vì <mục tiêu hoặc vấn đề cụ thể>.` (Không bắt buộc in toàn bộ compiled prompt hay scorecard cho mọi task).
+Mở báo cáo bằng mục tiêu hoặc kết luận hữu ích cho người dùng; không bắt buộc nêu tên skill hay in toàn bộ compiled prompt/scorecard.
 
 ### A. Báo Cáo Sửa Lỗi (Bug Report — 5 trường bắt buộc)
 1. **Lỗi và điều kiện xảy ra:** Mô tả hành vi sai và điều kiện/ngữ cảnh kích hoạt lỗi.

@@ -1,10 +1,10 @@
 ---
 name: qk-feature-delivery
-version: 10.4.0
+version: 10.4.2
 status: stable
 subtitle: "Build Feature mới & Tích hợp"
 description: "Phát triển tính năng mới, thay đổi yêu cầu, tích hợp API, và lập đặc tả (chế độ plan-only, discovery-only, prompt-only). Dùng khi: add feature, tính năng mới, tạo mới, build new, đổi yêu cầu, tích hợp api, consume api, bind data, viết spec, prd, bdd."
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references:
   - ../../references/requirements.md
@@ -16,7 +16,7 @@ rules:
   - global
   - coding-standards
   - safety
-workflow: feature-delivery
+  - subagent-orchestration
 triggers:
   - "add feature"
   - "phát triển tính năng mới"
@@ -33,7 +33,7 @@ triggers:
 
 # qk-feature-delivery — Xây Dựng Tính Năng & Tích Hợp
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-feature-delivery vì <mục tiêu cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 
@@ -76,4 +76,5 @@ Tự review diffs & chạy lệnh kiểm chứng thực tế (test / build / typ
 Báo cáo kết quả theo mẫu Feature Report trong global.md
 ```
 
-- **Controlled Subagent:** Mặc định single-agent. Chỉ điều phối subagent khi người dùng yêu cầu và môi trường hỗ trợ.
+- **Controlled Subagent:** Mặc định single-agent. Chỉ cân nhắc delegation khi user cho phép và runtime hiện tại xác nhận được tool/quyền; đọc [subagent-orchestration.md](../../rules/subagent-orchestration.md) trước dispatch. Không được tạo hai writer cho cùng file. Lead tích hợp kết quả và verify trên cây cuối; nếu dispatch không khả dụng, tiếp tục single-agent và ghi giới hạn.
+- **Verification gate:** Chạy checks sau khi tích hợp mọi thay đổi; đối chiếu từng acceptance criterion và nêu rõ phần chưa chạy hoặc chưa đạt.

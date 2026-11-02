@@ -3,7 +3,7 @@
 This document serves as the "Constitution" for the AI Developer Skill OS. It dictates how the project evolves, when core files can be modified, and how versions are incremented.
 
 ## 1. Core Philosophy
-**Architecture-first, features-second.**
+**Antigravity-first, features-second.** The supported runtime is Antigravity only.
 Before submitting any Pull Request, ask yourself:
 1. *Does this change require modifying the OS Kernel (`AGENTS.md`)?*
 2. *If not, can this be solved at the Skill, Knowledge, or Template layer?*
@@ -11,14 +11,11 @@ Before submitting any Pull Request, ask yourself:
 If the problem can be solved in a Skill, Knowledge document, or Template, **do not touch the Kernel**.
 
 ## 2. When to modify `AGENTS.md` (The Kernel)
-The Kernel is **frozen**. Modifications to `AGENTS.md` are strictly prohibited unless:
-- The change introduces a fundamentally new paradigm for ALL agents (e.g., a completely new approach to token management).
-- A critical, framework-breaking hallucination loop is discovered that cannot be solved via Skill guidelines.
-- **Requirement:** Any modification to `AGENTS.md` MUST be accompanied by a new Architecture Decision Record (ADR).
+Keep the entry point concise and change it only when routing, supported runtime, safety contract, or installed structure changes. A supported-runtime or architecture change must include an ADR and synchronized tests/docs.
 
 ## 3. When to create an ADR (Architecture Decision Record)
 ADRs (located in `docs/adr/`) must be created when:
-- Modifying `AGENTS.md` or `SPEC.md`.
+- Modifying root `AGENTS.md`, `.agents/AGENTS.md`, or the package contract in `SPEC.md`.
 - Introducing a new lifecycle phase to the pipeline.
 - Deprecating an existing core feature or standard tool.
 
@@ -30,9 +27,9 @@ A change is considered **Breaking** if it:
 
 ## 5. Versioning Strategy (Semantic Versioning)
 We strictly adhere to SemVer based on the framework's architecture, not just content.
-- **MAJOR (e.g., v10.x.x to v11.0.0):** Breaking changes to the Kernel (`AGENTS.md`), Metadata Contract (`SPEC.md`), or fundamental routing.
-- **MINOR (e.g., v10.2.0 to v10.3.0):** Adding new Capabilities, new default Skills, new Knowledge docs, or new Templates. 
-- **PATCH (e.g., v10.2.0 to v10.2.1):** Fixing typos in docs, updating README, or minor bug fixes within an individual skill's SOP.
+- **MAJOR:** Breaking package/runtime or metadata changes, including removing a supported platform.
+- **MINOR:** Adding backward-compatible skills or package capabilities.
+- **PATCH:** Compatible fixes to docs, validation, installer or individual skill behavior.
 
 ## 6. PR Review Process
 1. **Architecture Compliance:** Does the PR violate the Kernel Freeze? Are all skills compliant with `SPEC.md`?

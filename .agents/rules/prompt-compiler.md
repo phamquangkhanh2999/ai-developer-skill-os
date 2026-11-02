@@ -1,5 +1,6 @@
 ---
 version: 11.0.0
+trigger: model_decision
 description: "Quy tắc Prompt Compiler Control Plane: Cổng kiểm soát hành vi, Risk Gate R0-R4, Change Budget, Scope Expansion Gate, Evidence Gate và Prompt Delta (nạp theo nhu cầu)."
 domain: rules
 applies_to: on-demand

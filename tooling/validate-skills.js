@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DEFAULT_ROOT_DIR = path.resolve(__dirname, '..');
 const DEFAULT_SKILLS_DIR = path.join(DEFAULT_ROOT_DIR, '.agents/skills');
+const DEFAULT_RULES_DIR = path.join(DEFAULT_ROOT_DIR, '.agents/rules');
+const SUPPORTED_RULE_TRIGGERS = new Set(['always_on', 'model_decision', 'glob', 'manual']);
 
 const SEMVER_REGEX = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
 
@@ -48,14 +50,15 @@ export function validateSkillContent(content, filePath, rootDir = DEFAULT_ROOT_D
   }
 
   // 3. Platforms validation
-  const requiredPlatforms = ['antigravity', 'claude', 'opencode'];
+  const requiredPlatforms = ['antigravity'];
   if (!Array.isArray(meta.platforms)) {
     errors.push(`Missing platforms array in ${filePath}`);
   } else {
     for (const p of requiredPlatforms) {
-      if (!meta.platforms.includes(p)) {
-        errors.push(`Missing required platform "${p}" in ${filePath}`);
-      }
+      if (!meta.platforms.includes(p)) errors.push(`Missing required platform "${p}" in ${filePath}`);
+    }
+    if (meta.platforms.length !== 1 || meta.platforms.some(platform => !requiredPlatforms.includes(platform))) {
+      errors.push(`Unsupported platform metadata in ${filePath}; supported platforms: antigravity only`);
     }
   }
 
@@ -64,30 +67,17 @@ export function validateSkillContent(content, filePath, rootDir = DEFAULT_ROOT_D
     errors.push(`Missing runtime_version in ${filePath}`);
   }
 
-  // 5. Workflow validation
-  if (!meta.workflow || typeof meta.workflow !== 'string') {
-    errors.push(`Missing workflow in ${filePath}`);
-  } else {
-    const workflowBase = meta.workflow.endsWith('.yml') || meta.workflow.endsWith('.yaml')
-      ? meta.workflow
-      : `${meta.workflow}.yml`;
-    const workflowPath = path.join(rootDir, '.agents', 'workflows', workflowBase);
-    if (!fs.existsSync(workflowPath)) {
-      errors.push(`Referenced workflow "${meta.workflow}" does not exist at ${workflowPath} (in ${filePath})`);
-    }
-  }
-
-  // 6. Triggers validation
+  // 5. Triggers validation
   if (!meta.triggers || (!Array.isArray(meta.triggers) && typeof meta.triggers !== 'string')) {
     errors.push(`Missing triggers in ${filePath}`);
   }
 
-  // 7. Rules validation
+  // 6. Rules validation
   if (!meta.rules) {
     errors.push(`Missing rules in ${filePath}`);
   }
 
-  // 8. References validation (optional array of paths relative to skill directory)
+  // 7. References validation (optional array of paths relative to skill directory)
   if (meta.references !== undefined) {
     if (!Array.isArray(meta.references)) {
       errors.push(`Field "references" must be an array in ${filePath}`);
@@ -110,7 +100,7 @@ export function validateSkillContent(content, filePath, rootDir = DEFAULT_ROOT_D
     }
   }
 
-  // 9. Shared contract compliance check
+  // 8. Shared contract compliance check
   // Either references global rules OR has legacy sections
   const hasGlobalRule = (Array.isArray(meta.rules) && meta.rules.includes('global')) ||
                         content.includes('global.md') ||
@@ -129,6 +119,69 @@ export function validateSkillContent(content, filePath, rootDir = DEFAULT_ROOT_D
     errors,
     meta
   };
+}
+
+export function validateRuleContent(content, filePath) {
+  const errors = [];
+  const yamlString = extractFrontmatter(content);
+  if (!yamlString) {
+    errors.push(`Missing YAML frontmatter in Antigravity rule ${filePath}`);
+    return { valid: false, errors, meta: null };
+  }
+
+  let meta;
+  try {
+    meta = yaml.load(yamlString);
+  } catch (err) {
+    errors.push(`Invalid YAML frontmatter in Antigravity rule ${filePath}: ${err.message}`);
+    return { valid: false, errors, meta: null };
+  }
+
+  if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
+    errors.push(`Frontmatter must be an object in Antigravity rule ${filePath}`);
+    return { valid: false, errors, meta: null };
+  }
+
+  if (!SUPPORTED_RULE_TRIGGERS.has(meta.trigger)) {
+    errors.push(`Missing or unsupported Antigravity trigger "${meta.trigger}" in ${filePath}`);
+  }
+
+  if (meta.trigger === 'model_decision' && (typeof meta.description !== 'string' || !meta.description.trim())) {
+    errors.push(`Antigravity model_decision rule requires a description in ${filePath}`);
+  }
+
+  if (meta.trigger === 'glob') {
+    const globs = meta.globs ?? meta.glob;
+    if (!(typeof globs === 'string' && globs.trim()) && !(Array.isArray(globs) && globs.length > 0)) {
+      errors.push(`Antigravity glob rule requires non-empty globs or glob in ${filePath}`);
+    }
+  }
+
+  return { valid: errors.length === 0, errors, meta };
+}
+
+export function validateRulesDir(rulesDir = DEFAULT_RULES_DIR) {
+  if (!fs.existsSync(rulesDir)) {
+    return { valid: false, errors: [`Antigravity rules directory not found: ${rulesDir}`], totalScanned: 0, validCount: 0 };
+  }
+
+  const ruleFiles = fs.readdirSync(rulesDir).filter(file => file.endsWith('.md')).sort();
+  const errors = [];
+  let validCount = 0;
+
+  for (const file of ruleFiles) {
+    const filePath = path.join(rulesDir, file);
+    const result = validateRuleContent(fs.readFileSync(filePath, 'utf8'), filePath);
+    if (result.valid) validCount++;
+    else errors.push(...result.errors);
+  }
+
+  console.log(`\nAntigravity rules scanned: ${ruleFiles.length}`);
+  console.log(`Valid: ${validCount}/${ruleFiles.length}`);
+  console.log(`Missing required / errors: ${errors.length}`);
+  for (const error of errors) console.warn(`[WARN] ${error}`);
+
+  return { valid: errors.length === 0, errors, totalScanned: ruleFiles.length, validCount };
 }
 
 export function validateSkillsDir(skillsDir = DEFAULT_SKILLS_DIR, rootDir = DEFAULT_ROOT_DIR) {
@@ -180,8 +233,9 @@ export function validateSkillsDir(skillsDir = DEFAULT_SKILLS_DIR, rootDir = DEFA
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  const result = validateSkillsDir();
-  if (!result.valid) {
+  const skillsResult = validateSkillsDir();
+  const rulesResult = validateRulesDir();
+  if (!skillsResult.valid || !rulesResult.valid) {
     process.exit(1);
   }
 }

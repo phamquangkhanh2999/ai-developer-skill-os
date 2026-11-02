@@ -1,10 +1,10 @@
 ---
 name: qk-devops-release
-version: 10.4.0
+version: 10.4.2
 status: stable
 subtitle: "DevOps, CI/CD & Deploy"
 description: "Vận hành nền tảng, CI/CD pipelines, Docker, phát hành sản phẩm an toàn có Rollback, đồng bộ tài liệu kỹ thuật và quản lý bộ nhớ dự án (.ai-local/). Dùng khi: ci/cd, deployment, pipeline, docker, dockerfile, devops, github actions, release production, release checklist, viết docs, readme, swagger, project memory, learn."
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references:
   - ../../references/context-discovery.md
@@ -12,7 +12,6 @@ rules:
   - global
   - safety
   - command-safety
-workflow: production-release
 triggers:
   - "ci/cd"
   - "deployment"
@@ -30,7 +29,7 @@ triggers:
 
 # qk-devops-release — Vận Hành Nền Tảng, CI/CD & Phát Hành
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-devops-release vì <mục tiêu hạ tầng, tài liệu hoặc release cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 
@@ -61,5 +60,9 @@ Chỉ thực thi khi người dùng xác nhận quyền
    ↓
 Báo cáo kết quả theo mẫu Release/Docs Report trong global.md
 ```
+
+- Trước khi đóng gói: xác nhận version/changelog/README/lockfile khớp; chạy lint, test, graph và registry checks có thật trong package; dùng `npm pack --dry-run --json` rồi kiểm tra file list/tarball.
+- Chạy security/dependency checks phù hợp với repository; không báo pass cho gate hoặc command không tồn tại, và ghi `NOT_RUN` nếu môi trường thiếu quyền hay mạng.
+- Publish chỉ sau xác nhận rõ của user; chuẩn bị phương án quay về release trước và báo trạng thái thực tế.
 
 - **Trạng thái:** `VERIFIED` (đã chạy kiểm thử cấu hình hoặc build image), `BLOCKED` (chờ người dùng cấp quyền/secrets).

@@ -1,15 +1,13 @@
 {
   "schema_version": 1,
-  "manifest_version": "11.0",
-  "generated_at": "2026-10-28T08:58:49.576Z",
+  "manifest_version": "12.0",
+  "generated_at": "2026-11-02T02:51:06.972Z",
   "nodes": {
     "qk-bug-resolution": {
       "path": ".agents/skills/qk-bug-resolution",
-      "version": "10.4.0",
+      "version": "10.4.2",
       "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
+        "antigravity"
       ],
       "tags": [
         "bug",
@@ -21,11 +19,9 @@
     },
     "qk-code-cleaner": {
       "path": ".agents/skills/qk-code-cleaner",
-      "version": "10.4.0",
+      "version": "10.4.2",
       "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
+        "antigravity"
       ],
       "tags": [
         "code",
@@ -37,11 +33,9 @@
     },
     "qk-code-review": {
       "path": ".agents/skills/qk-code-review",
-      "version": "10.4.0",
+      "version": "10.4.2",
       "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
+        "antigravity"
       ],
       "tags": [
         "code",
@@ -53,11 +47,9 @@
     },
     "qk-devops-release": {
       "path": ".agents/skills/qk-devops-release",
-      "version": "10.4.0",
+      "version": "10.4.2",
       "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
+        "antigravity"
       ],
       "tags": [
         "devops",
@@ -69,11 +61,9 @@
     },
     "qk-feature-delivery": {
       "path": ".agents/skills/qk-feature-delivery",
-      "version": "10.4.0",
+      "version": "10.4.2",
       "platforms": [
-        "antigravity",
-        "claude",
-        "opencode"
+        "antigravity"
       ],
       "tags": [
         "feature",

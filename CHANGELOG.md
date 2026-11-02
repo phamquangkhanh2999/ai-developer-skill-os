@@ -5,6 +5,35 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
 
+## [12.0.0] — 2026-11-02 — Antigravity-Only Runtime
+
+### Changed
+- Narrowed the supported package and installer contract to Antigravity; unsupported IDE flags now fail with a clear message.
+- Removed the legacy YAML workflow tree and obsolete version-sync/AAR/evaluation tooling that had no Antigravity runtime consumer.
+- Made skill metadata and registry validation explicitly Antigravity-only, and removed the obsolete workflow frontmatter contract.
+- Reworked current architecture/specification docs and CI around native Antigravity skills, rules and an isolated Antigravity local-install smoke test.
+
+### Removed
+- Claude, OpenCode and Kilo configuration adapters and installer support. Historical release notes remain as archive material.
+
+### Packaging
+- Breaking release; package version is `12.0.0`. Core skill component versions advance to `10.4.2`.
+- This release is prepared locally only; it has not been published to npm or pushed to Git.
+
+## [11.0.1] — 2026-11-02 — Antigravity Rules Compatibility
+
+### Fixed
+- Added supported Antigravity activation metadata to all nine workspace rule files; global policy is always active and domain rules load by model decision.
+- Extended lint validation and regression tests to reject missing/invalid rule triggers and required trigger metadata.
+- Corrected Antigravity skill invocation examples and clarified that YAML workflow files are internal tooling/test contracts, not native Antigravity workflows.
+- Updated CI path filters so changes to rules, references, workflows, entrypoints, tests, package metadata and release docs run validation.
+- Removed the mandatory skill-name banner from user-facing responses while preserving internal goal-based routing.
+- Synchronized root agent guidance and bumped all five core skill patch versions.
+
+### Packaging
+- Prepared for npm package version `11.0.1`; this release has not been published.
+- Installer behavior remains backup-then-replace for an existing `GEMINI.md`.
+
 ## [11.0.0] — 2026-10-28 — Lean 5-Core Skills Architecture & On-Demand References
 
 ### Added

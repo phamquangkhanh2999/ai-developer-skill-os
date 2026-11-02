@@ -4,6 +4,18 @@ on:
     paths:
       - '.agents/skills/**'
       - '.agents/registry/**'
+      - '.agents/rules/**'
+      - '.agents/references/**'
+      - '.agents/docs/**'
+      - '.agents/blueprints/**'
+      - '.agents/AGENTS.md'
+      - '.agents/skill-aliases.yml'
+      - 'AGENTS.md'
+      - 'GEMINI.md'
+      - 'tests/**'
+      - 'CHANGELOG.md'
+      - 'package.json'
+      - 'package-lock.json'
       - 'README.md'
       - 'bin/**'
       - 'tooling/**'
@@ -12,6 +24,18 @@ on:
     paths:
       - '.agents/skills/**'
       - '.agents/registry/**'
+      - '.agents/rules/**'
+      - '.agents/references/**'
+      - '.agents/docs/**'
+      - '.agents/blueprints/**'
+      - '.agents/AGENTS.md'
+      - '.agents/skill-aliases.yml'
+      - 'AGENTS.md'
+      - 'GEMINI.md'
+      - 'tests/**'
+      - 'CHANGELOG.md'
+      - 'package.json'
+      - 'package-lock.json'
       - 'README.md'
       - 'bin/**'
       - 'tooling/**'
@@ -33,10 +57,9 @@ jobs:
         run: npm run lint
       - name: Validate Graph Integrity
         run: npm run test:graph
-  snapshot:
+  antigravity-install-smoke:
     runs-on: ubuntu-latest
     needs: lint-and-validate
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,10 +69,13 @@ jobs:
           node-version: '20.x'
       - name: Install dependencies
         run: npm install
-      - name: Generate Registry Snapshot
-        run: node bin/install.js --ide=claude --scope=2
-      - name: Upload Registry Snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: registry-snapshot
-          path: .agents/registry/
+      - name: Smoke-test Antigravity local install in isolation
+        env:
+          HOME: ${{ runner.temp }}/antigravity-home
+        run: |
+          mkdir -p "$HOME" "$RUNNER_TEMP/antigravity-workspace"
+          cd "$RUNNER_TEMP/antigravity-workspace"
+          node "$GITHUB_WORKSPACE/bin/install.js" --ide=antigravity --scope=local
+          test -f .agents/AGENTS.md
+          test -f .agents/skills/qk-feature-delivery/SKILL.md
+          test -f GEMINI.md

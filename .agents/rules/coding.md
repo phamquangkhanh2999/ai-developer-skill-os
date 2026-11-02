@@ -1,5 +1,6 @@
 ---
 version: 10.2.0
+trigger: model_decision
 description: "Rules governing code writing, editing, and review tasks."
 domain: rules
 applies_to: [skills-with-side_effects-edit_files]

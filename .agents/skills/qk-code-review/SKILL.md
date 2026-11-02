@@ -1,10 +1,10 @@
 ---
 name: qk-code-review
-version: 10.4.0
+version: 10.4.2
 status: stable
 subtitle: "Review Code & Security Audit"
 description: "Đánh giá mã nguồn chỉ đọc (Read-Only): Phát hiện lỗ hổng bảo mật, vi phạm kiến trúc, nợ kỹ thuật với bằng chứng cụ thể. Dùng khi: review code, code review, kiểm tra code, đánh giá code, security audit, scan lỗ hổng, owasp, secret leak."
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references:
   - ../../references/backend-data.md
@@ -13,7 +13,7 @@ rules:
   - global
   - coding-standards
   - safety
-workflow: code-review
+  - subagent-orchestration
 triggers:
   - "review code"
   - "code review"
@@ -27,7 +27,7 @@ triggers:
 
 # qk-code-review — Kiểm Toán Mã Nguồn & Bảo Mật
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-code-review vì <mục tiêu review cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 
@@ -35,6 +35,8 @@ triggers:
 
 - **TUYỆT ĐỐI KHÔNG sửa mã nguồn:** Working tree của dự án phải giữ nguyên vẹn 100%. Không tự ý chỉnh sửa file, không refactor, không tạo file memory khi chỉ được yêu cầu review.
 - **Bằng chứng xác thực (Evidence-First):** Mọi phát hiện (finding) BẮT BUỘC phải trích dẫn đường dẫn `file:dòng`, đoạn mã cụ thể, và phân tích cơ chế gây rủi ro.
+- **Rà soát song song:** Có thể giao phần đọc độc lập khi user cho phép và runtime/quyền xác nhận; đọc [subagent-orchestration.md](../../rules/subagent-orchestration.md). Lead kiểm tra lại mọi finding trên baseline hiện tại, gộp trùng và giữ limitations.
+- **Kiểm chứng (Verify):** Đối chiếu vị trí và cơ chế của từng finding trên source hiện tại trước khi đưa vào báo cáo; đánh dấu giới hạn nếu chưa xác minh được.
 - **Không bịa điểm số tổng:** Cấm đưa ra các thang điểm cảm tính, giả định (như "85/100" hay "92% clean") mà không có công thức đo lường tự động có thể tái lập.
 - **Bảo mật theo ngữ cảnh (Contextual Security):** Chỉ kiểm toán các danh mục OWASP thực sự liên quan. Với các file cấu hình hoặc UI thuần túy, các tiêu chí injection/DB đánh dấu là N/A thay vì cố ép nhận xét hình thức.
 

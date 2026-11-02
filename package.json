@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "11.0.0",
-  "description": "AI Developer Skill OS v11.0 — Lean 5-Core Skills Architecture, On-Demand Engineering References & Managed Migration Manifest.",
+  "version": "12.0.0",
+  "description": "AI Developer Skill OS v12.0.0 — Antigravity-only skills, rules, installer, and managed upgrades.",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -21,7 +21,6 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "sync:v10": "node tooling/sync-versions.js",
     "build:registry": "node tooling/build-registry.js",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -29,11 +28,7 @@
     "test:graph": "node tooling/validate-graph.js",
     "lint": "node tooling/validate-skills.js",
     "install:antigravity": "node bin/install.js --ide=antigravity --scope=2",
-    "install:antigravity:local": "node bin/install.js --ide=antigravity --scope=1",
-    "install:claude": "node bin/install.js --ide=claude --scope=2",
-    "install:claude:local": "node bin/install.js --ide=claude --scope=1",
-    "install:opencode": "node bin/install.js --ide=opencode --scope=2",
-    "install:opencode:local": "node bin/install.js --ide=opencode --scope=1"
+    "install:antigravity:local": "node bin/install.js --ide=antigravity --scope=1"
   },
   "repository": {
     "type": "git",
@@ -41,9 +36,7 @@
   },
   "keywords": [
     "ai",
-    "claude",
     "antigravity",
-    "opencode",
     "skill-os",
     "developer",
     "agent",

@@ -17,7 +17,7 @@ describe('Skill Contract Specification', () => {
     expect(skillDirs.length).toBe(5);
   });
 
-  it('all existing skills should satisfy platforms contract [antigravity, claude, opencode]', () => {
+  it('all existing skills should satisfy the Antigravity-only platform contract', () => {
     for (const dir of skillDirs) {
       const skillPath = path.join(skillsDir, dir, 'SKILL.md');
       const content = fs.readFileSync(skillPath, 'utf8');
@@ -26,10 +26,32 @@ describe('Skill Contract Specification', () => {
       const frontmatter = yaml.load(match[1]);
 
       expect(frontmatter.platforms).toBeDefined();
-      expect(frontmatter.platforms).toContain('antigravity');
-      expect(frontmatter.platforms).toContain('claude');
-      expect(frontmatter.platforms).toContain('opencode');
+      expect(frontmatter.platforms).toEqual(['antigravity']);
     }
+  });
+
+  it('core skills are self-contained and do not depend on a workflow YAML tree', () => {
+    for (const dir of skillDirs) {
+      const skillPath = path.join(skillsDir, dir, 'SKILL.md');
+      const content = fs.readFileSync(skillPath, 'utf8');
+      const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      const frontmatter = yaml.load(match[1]);
+      expect(frontmatter.workflow, `${dir} must not require a workflow file`).toBeUndefined();
+      expect(content, `${dir} contains its own execution guidance`).toMatch(/verify|kiểm chứng/i);
+      expect(content, `${dir} reports results with evidence`).toMatch(/report|báo cáo/i);
+    }
+    expect(fs.existsSync(path.join(rootDir, '.agents', 'workflows'))).toBe(false);
+  });
+
+  it('retains the defining task contracts after workflow removal', () => {
+    const readSkill = name => fs.readFileSync(path.join(skillsDir, name, 'SKILL.md'), 'utf8');
+    expect(readSkill('qk-feature-delivery')).toMatch(/plan-only[\s\S]*discovery-only[\s\S]*prompt-only/i);
+    expect(readSkill('qk-feature-delivery')).toMatch(/subagent-orchestration\.md/i);
+    expect(readSkill('qk-bug-resolution')).toMatch(/Observe[\s\S]*Evidence[\s\S]*Cause[\s\S]*Verify/);
+    expect(readSkill('qk-code-review')).toMatch(/Read-Only[\s\S]*file:dòng/i);
+    expect(readSkill('qk-code-review')).not.toMatch(/health score|100\s*-\s*\(/i);
+    expect(readSkill('qk-code-cleaner')).toMatch(/Zero Behavior Change[\s\S]*Regression Shield/i);
+    expect(readSkill('qk-devops-release')).toMatch(/Cấm tự ý Deploy \/ Publish[\s\S]*Rollback/i);
   });
 
   it('all existing skills with references should resolve within project root without path traversal', () => {
@@ -57,7 +79,7 @@ describe('Skill Contract Specification', () => {
       const invalid = `---
 version: 10.3.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: feature-delivery
 rules: [global]
@@ -74,7 +96,7 @@ triggers: [test]
 name: qk-test-skill
 version: not-a-semver
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: feature-delivery
 rules: [global]
@@ -86,21 +108,19 @@ triggers: [test]
       expect(result.errors.some(e => e.includes('version') || e.includes('semver'))).toBe(true);
     });
 
-    it('fails when referenced workflow does not exist', () => {
+    it('does not require non-native workflow YAML metadata', () => {
       const invalid = `---
 name: qk-test-skill
 version: 10.3.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
-workflow: non-existent-workflow-xyz
 rules: [global]
 triggers: [test]
 ---
 # Content`;
       const result = validateSkillContent(invalid, '/dummy/SKILL.md', rootDir);
-      expect(result.valid).toBe(false);
-      expect(result.errors.some(e => e.includes('workflow'))).toBe(true);
+      expect(result.valid).toBe(true);
     });
 
     it('fails when reference does not exist or traverses out of package root', () => {
@@ -108,7 +128,7 @@ triggers: [test]
 name: qk-test-skill
 version: 10.3.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: feature-delivery
 rules: [global]
@@ -125,7 +145,7 @@ references:
 name: qk-test-skill
 version: 10.3.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: feature-delivery
 rules: [global]

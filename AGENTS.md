@@ -1,7 +1,7 @@
 # AGENTS.md — Quy tắc chung cho mọi AI coding agent
 
 > Đọc file này TRƯỚC KHI làm bất cứ việc gì trong repo này.
-> Áp dụng cho: Antigravity, Claude Code, Cursor, Windsurf, Kilo Code, Cline.
+> Applies to: Antigravity only.
 
 ---
 
@@ -15,8 +15,7 @@ Cấu trúc quan trọng:
 .agents/
 ├── AGENTS.md          ← Entry point của skin system (không phải file này)
 ├── DEV_PROFILE.md     ← Khai báo role + stack của developer
-├── skills/            ← 11 Core Super-Skills (mỗi skill có SKILL.md)
-├── workflows/         ← 12 execution pipelines (YAML)
+├── skills/            ← 5 Core Skills (mỗi skill có SKILL.md)
 ├── rules/             ← Behavior policies (global, coding, safety, security...)
 └── registry/          ← Generated indexes — KHÔNG sửa tay (graph.json, index.yaml)
 ```
@@ -51,7 +50,7 @@ Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` 
 - **KHÔNG** xóa hoặc rename skill folder mà không cập nhật routing table trong `.agents/AGENTS.md`
 - **KHÔNG** sửa `registry/` files bằng tay — luôn regenerate qua `node tooling/build-registry.js` (cập nhật `graph.json` và `index.yaml`)
 - **KHÔNG** thêm `.ai-local/` vào repo — đã gitignore, là private workspace memory
-- **KHÔNG** hardcode đường dẫn tuyệt đối trong bất kỳ SKILL.md hay workflow YAML nào
+- **KHÔNG** hardcode đường dẫn tuyệt đối trong SKILL.md hoặc rule nào
 - **PHẢI** bump version trong SKILL.md khi thay đổi behavior (patch cho fix nhỏ, minor cho feature mới)
 
 ---
@@ -61,13 +60,13 @@ Nếu yêu cầu là sửa/cải tiến skill system → dùng `qk-code-review` 
 Theo Conventional Commits:
 ```
 feat:     thêm skill mới hoặc feature mới trong skill
-fix:      sửa bug trong skill hoặc workflow
+fix:      sửa bug trong skill hoặc rule
 docs:     cập nhật SKILL.md description, README, changelog
-refactor: cấu trúc lại skill/workflow không đổi behavior
+refactor: cấu trúc lại skill/rule không đổi behavior
 chore:    bump version, regenerate registry
 ```
 
-PR không quá 400 dòng diff. Mỗi PR chỉ thay đổi 1 skill hoặc 1 workflow.
+PR không quá 400 dòng diff. Giữ thay đổi theo một mục tiêu và cập nhật registry khi metadata skill đổi.
 
 ---
 

@@ -1,8 +1,8 @@
-# AI Developer Skill OS v11.0.0 — Lean 5-Core Skills Architecture
+# AI Developer Skill OS v12.0.0 — Antigravity Edition
 
-> **v11.0.0: Tinh gọn 11 xuống 5 Core Skills, nạp tài liệu chuyên môn theo nhu cầu và quản lý migration an toàn.**
+> **v12.0.0: Tập trung runtime và installer cho Antigravity; loại bỏ workflow YAML và tích hợp IDE đã nghỉ.**
 
-## Kiến Trúc Lean 5 Core Skills trong v11.0.0
+## Kiến trúc Antigravity với 5 Core Skills
 
 - **5 Core Skills chính:**
   1. `qk-feature-delivery`: Xây dựng tính năng mới, đổi yêu cầu, tích hợp API, lập đặc tả (chế độ plan-only, discovery-only, prompt-only).
@@ -15,8 +15,9 @@
   - Đặt tại `.agents/references/`: `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`, `context-discovery.md`.
   - Nạp khi cần thiết, không làm phình context ban đầu.
 
-- **Ánh xạ lệnh cũ (Legacy Aliases):**
+- **Ánh xạ tên skill cũ (Legacy Aliases):**
   - Khai báo tại `.agents/skill-aliases.yml`: chuyển hướng các tên lệnh cũ (`qk-ui-engineer`, `qk-backend-data`, `qk-api-data-discovery`, `qk-product-spec`, `qk-prompt-compiler`, `qk-orchestrator`) về core skill và reference tương ứng.
+  - Đây là hướng dẫn định tuyến cho agent, không tạo executable hay slash command riêng.
   - Bảo đảm các chế độ không sinh code: `plan-only`, `prompt-only`, `discovery-only`.
 
 - **Quản lý phát hành & Migration Manifest:**
@@ -26,7 +27,7 @@
 ### Nâng cấp và cài đặt
 
 ```bash
-npx ai-developer-skill-os@11.0.0 --ide=antigravity --scope=local --force
+npx ai-developer-skill-os@12.0.0 --ide=antigravity --scope=local --force
 ```
 
 Installer backup toàn bộ thư mục đích trước khi cập nhật, hỗ trợ rollback tức thì.
@@ -42,7 +43,6 @@ Installer backup toàn bộ thư mục đích trước khi cập nhật, hỗ tr
 ├── skill-aliases.yml     ← Ánh xạ lệnh cũ sang 5 core skills
 ├── skills/               ← 5 Core Skills
 ├── references/           ← Tài liệu chuyên môn nạp theo nhu cầu (UI, Backend, API, Spec)
-├── workflows/            ← Workflows thực thi tương ứng
 ├── rules/                ← Hợp đồng thực thi chung (global.md, safety, security...)
 └── registry/             ← Metadata và graph được tạo tự động (index.yaml, graph.json)
 ```
@@ -65,22 +65,21 @@ stack:
 ai_style: concise        # concise | detailed | teaching
 ```
 
-### Bước 2 — Gọi Super-Skill
+### Bước 2 — Gọi skill trong Antigravity
 
-```bash
-# Kích hoạt bằng lệnh trực tiếp:
-./qk-orchestrator              # Điều phối, nạp ngữ cảnh dự án
-./qk-prompt-compiler           # Biên dịch & chuẩn hóa prompt (hiển thị trước khi code)
-./qk-product-spec              # Viết PRD, user stories, acceptance criteria
-./qk-feature-delivery          # Phát triển tính năng mới end-to-end
-./qk-bug-resolution            # Sửa bug và điều tra nguyên nhân gốc
-./qk-ui-engineer               # Thiết kế UI, tokens, audit anti-slop
-./qk-backend-data              # Viết API, schema migration, tối ưu DB, pipeline
-./qk-api-data-discovery        # Khám phá API, Schema Discovery, Data Contract & Bronze
-./qk-code-review               # Review code, health score (0-100), OWASP, WCAG
-./qk-code-cleaner              # Refactor God files, nâng cấp library, viết test
-./qk-devops-release            # Docker, CI/CD, 8-gate release, docs, RAG
+Gõ slash command native của một trong 5 skills:
 
+```text
+/qk-feature-delivery
+/qk-bug-resolution
+/qk-code-review
+/qk-code-cleaner
+/qk-devops-release
+```
+
+Antigravity cũng tự chọn skill theo prompt và description. Alias cũ trong `skill-aliases.yml` chỉ là ánh xạ hướng dẫn; để gọi thủ công, dùng core skill đích.
+
+```text
 # Hoặc dùng ngôn ngữ tự nhiên — AI tự động nhận diện:
 "làm tính năng mới xuất excel"              → qk-feature-delivery + references/ui.md
 "viết lại prompt cho task này"              → qk-feature-delivery [prompt-only] + references/prompt-authoring.md
@@ -109,6 +108,6 @@ ai_style: concise        # concise | detailed | teaching
 ## Công Cụ & Scripts Quản Trị
 
 ```bash
-# Tái tạo runtime registry O(1) từ 5 Core Skills:
+# Tái tạo registry từ 5 Core Skills:
 node tooling/build-registry.js
 ```

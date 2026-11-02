@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import yaml from 'js-yaml';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -27,10 +28,9 @@ describe('V10 Skill Compliance', () => {
       });
 
       it('should have platforms field', () => {
-        expect(content).toContain('platforms:');
-        expect(content).toContain('antigravity');
-        expect(content).toContain('claude');
-        expect(content).toContain('opencode');
+        const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+        expect(match).not.toBeNull();
+        expect(yaml.load(match[1]).platforms).toEqual(['antigravity']);
       });
 
       it('should have runtime_version', () => {

@@ -1,8 +1,8 @@
-# Skill Schema — V10.2
+# Skill Schema — Antigravity Runtime
 # This file defines the required and optional fields for all SKILL.md frontmatter.
 # Every skill MUST conform to this schema. Validator: tooling/validate-skills.js
 
-schema_version: 10.2.0
+schema_version: 12.0.0
 
 # ── Identity ────────────────────────────────────────────
 name:
@@ -12,7 +12,7 @@ name:
 
 version:
   type: semver
-  example: "10.2.0"
+  example: "10.4.2"
 
 status:
   type: enum
@@ -25,9 +25,9 @@ description:
 
 platforms:
   type: array
-  items: [antigravity, claude, opencode]
-  description: "Which IDEs this skill supports"
-  example: [antigravity, claude, opencode]
+  items: [antigravity]
+  description: "Supported runtime; this package targets Antigravity only"
+  example: [antigravity]
 
 runtime_version:
   type: integer
@@ -74,11 +74,6 @@ selection:
     optional: true
 
 # ── References ──────────────────────────────────────────
-workflow:
-  type: string
-  description: "References workflows/<name>.yml"
-  example: "bug-resolution"
-
 references:
   type: array
   items:

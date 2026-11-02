@@ -12,6 +12,20 @@ const run = (cwd, args = []) => execFileSync(process.execPath,
   [script, '--ide=antigravity', '--scope=local', ...args], { cwd, encoding: 'utf8', stdio: 'pipe' });
 
 describe('Installation and upgrade in isolated workspaces', () => {
+  it('rejects unsupported platforms before creating or changing target files', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-unsupported-platform-'));
+    try {
+      for (const ide of ['claude', 'opencode', 'unknown']) {
+        expect(() => execFileSync(process.execPath, [script, `--ide=${ide}`, '--scope=local'], {
+          cwd,
+          encoding: 'utf8',
+          stdio: 'pipe'
+        })).toThrow();
+      }
+      expect(fs.readdirSync(cwd)).toEqual([]);
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
   it('ships protocol, preserves profile/custom agents, and backs up overwritten files', () => {
     const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-upgrade-'));
     try {
@@ -57,6 +71,9 @@ describe('Installation and upgrade in isolated workspaces', () => {
       expect(gemini).toContain(`${cwd}/.gemini/config/rules/subagent-orchestration.md`);
       expect(gemini).toContain(`${cwd}/.gemini/config/AGENTS.md`);
       expect(gemini).toContain(`${cwd}/.gemini/config/rules/global.md`);
+      const domainKnowledge = fs.readFileSync(path.join(cwd, '.gemini/config/knowledge/domain-patterns/construction/ddc-construction-ai-blueprint.md'), 'utf8');
+      expect(domainKnowledge).toContain(`${cwd}/.gemini/config/knowledge/domain-patterns/`);
+      expect(domainKnowledge).not.toContain('.agents/knowledge/');
       expect(gemini).not.toContain('.agents/AGENTS.md');
       expect(gemini).not.toContain('.agents/rules/');
       expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/subagent-orchestration.md'))).toBe(true);
@@ -173,31 +190,4 @@ describe('Installation and upgrade in isolated workspaces', () => {
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 
-  it('handles Claude Code entry migration: updates unmodified CLAUDE.md and preserves customized CLAUDE.md', () => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-claude-migration-'));
-    try {
-      // 1. Upgrade when CLAUDE.md is stock v10
-      const claudeDir = path.join(cwd, '.claude');
-      fs.mkdirSync(claudeDir, { recursive: true });
-      const stockV10Agents = execFileSync('git', ['show', '85b28f88fb1ffdbf0a931bd3ff583467b61b9d92:.agents/AGENTS.md'], { encoding: 'utf8' });
-      fs.writeFileSync(path.join(claudeDir, 'CLAUDE.md'), stockV10Agents);
-
-      execFileSync(process.execPath, [script, '--ide=claude', '--scope=global'],
-        { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
-
-      const updatedClaude = fs.readFileSync(path.join(claudeDir, 'CLAUDE.md'), 'utf8');
-      expect(updatedClaude).toContain('5 Core Skills');
-      expect(updatedClaude).not.toContain('11 Core Super-Skills');
-
-      // 2. Upgrade when CLAUDE.md is customized by user
-      fs.writeFileSync(path.join(claudeDir, 'CLAUDE.md'), '# User Customized Claude Instructions\nCustom rules here.\n');
-
-      const upgradeOutput = execFileSync(process.execPath, [script, '--ide=claude', '--scope=global', '--force'],
-        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
-
-      expect(fs.readFileSync(path.join(claudeDir, 'CLAUDE.md'), 'utf8')).toContain('User Customized Claude Instructions');
-      expect(fs.existsSync(path.join(claudeDir, 'CLAUDE.md.system-new'))).toBe(true);
-      expect(upgradeOutput).toContain('Preserved modified user file (conflict): CLAUDE.md');
-    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
-  });
 });

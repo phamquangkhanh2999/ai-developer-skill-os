@@ -1,10 +1,10 @@
 ---
 name: qk-code-cleaner
-version: 10.4.0
+version: 10.4.2
 status: stable
 subtitle: "Refactor & Viết Test"
 description: "Kỹ nghệ tái cấu trúc bảo toàn hành vi (Zero Behavior Change), nâng cấp dependency an toàn và bổ sung kiểm thử tự động. Dùng khi: refactor, tái cấu trúc, tách file, clean code, giảm complexity, upgrade thư viện, update package, viết test, unit test, integration test."
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references:
   - ../../references/backend-data.md
@@ -13,7 +13,6 @@ rules:
   - global
   - coding-standards
   - safety
-workflow: refactor
 triggers:
   - "refactor"
   - "tái cấu trúc"
@@ -29,7 +28,7 @@ triggers:
 
 # qk-code-cleaner — Tái Cấu Trúc Mã Nguồn & Viết Test
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-code-cleaner vì <mục tiêu refactor hoặc upgrade cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 
@@ -53,6 +52,13 @@ triggers:
 ---
 
 ## 3. Cấu Trúc Báo Cáo Tái Cấu Trúc (Refactor Report)
+
+### Thứ tự thực hiện
+
+1. Ghi nhận hành vi hiện tại và chạy test liên quan làm baseline.
+2. Thực hiện từng thay đổi cấu trúc nhỏ, không đổi contract hoặc nghiệp vụ.
+3. Kiểm chứng (Verify): chạy lại test mục tiêu rồi toàn bộ suite phù hợp; điều tra mọi khác biệt trước khi kết luận.
+4. Rà diff để xác nhận chỉ các file thuộc phạm vi refactor bị đổi.
 
 Báo cáo kết quả gồm:
 - **Mục tiêu:** Hàm, module hoặc dependency được tái cấu trúc.

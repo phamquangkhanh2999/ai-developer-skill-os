@@ -1,6 +1,6 @@
 # AI Agent Anti-Patterns
 
-Khi review các cấu hình AI (Skills, Rules, Workflows), hãy lưu ý các "Code Smells" hoặc Anti-patterns phổ biến sau đây:
+Khi review cấu hình AI (Skills và Rules), hãy lưu ý các "Code Smells" hoặc Anti-patterns phổ biến sau đây:
 
 ## 1. Mất kiểm soát Token (Token Abuse)
 - **Dấu hiệu**: Không định nghĩa `token_budget`, hoặc định nghĩa `max_files_read: 50`, `max_lines_per_read: 1000`.
@@ -10,7 +10,7 @@ Khi review các cấu hình AI (Skills, Rules, Workflows), hãy lưu ý các "Co
 ## 2. Phạm vi quá rộng (Scope Creep)
 - **Dấu hiệu**: Phần `Scope` hoặc `Intent` bao gồm quá nhiều chức năng không liên quan (VD: Vừa viết code, vừa test, vừa deploy, vừa viết docs).
 - **Rủi ro**: Agent mất tập trung, không biết ưu tiên tác vụ nào, thường xuyên bỏ dở công việc giữa chừng.
-- **Cách khắc phục**: Áp dụng nguyên tắc Single Responsibility. Tách thành nhiều skill nhỏ và dùng Orchestrator hoặc Workflow để phối hợp. Yêu cầu làm rõ mục `This skill does NOT`.
+- **Cách khắc phục**: Áp dụng nguyên tắc Single Responsibility. Tách trách nhiệm theo core skill và dùng rule/reference làm hợp đồng dùng chung. Yêu cầu làm rõ mục `This skill does NOT`.
 
 ## 3. Lạm dụng quyền thực thi (Unsafe Side-Effects)
 - **Dấu hiệu**: Cấu hình `side_effects: run_commands` nhưng không có Verification Gate hoặc không bắt buộc user approval.

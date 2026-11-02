@@ -75,6 +75,11 @@ export function buildRegistryCore({
 
     if (!meta) continue;
 
+    const platforms = meta.platforms ?? skillMdMeta?.platforms ?? ['antigravity'];
+    if (!Array.isArray(platforms) || platforms.length !== 1 || platforms[0] !== 'antigravity') {
+      throw new Error(`Unsupported platform metadata for ${dir}; registry supports Antigravity only`);
+    }
+
     const id = meta.id || meta.name || dir;
     const version = meta.version || skillMdMeta?.version || '10.3.0';
     const status = meta.status || skillMdMeta?.status || 'stable';
@@ -100,7 +105,7 @@ export function buildRegistryCore({
       path: `.agents/skills/${dir}`,
       version,
       status,
-      platforms: meta.platforms || ["antigravity", "claude", "opencode"],
+      platforms,
       tags,
       dependencies
     };
@@ -169,7 +174,7 @@ export function buildRegistryCore({
     graphNodes[id] = {
       path: data.path,
       version: data.version,
-      platforms: data.platforms || ["antigravity", "claude", "opencode"],
+      platforms: data.platforms,
       tags: data.tags,
       dependencies: data.dependencies,
       dependents,

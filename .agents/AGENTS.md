@@ -25,6 +25,7 @@
 ## 2. Ánh Xạ Lệnh & Kỹ Năng Cũ (Legacy Aliases)
 
 Chi tiết quy định tại `.agents/skill-aliases.yml`:
+Các alias dưới đây là hướng dẫn định tuyến; Antigravity slash commands chỉ được tạo cho thư mục skill thực có trong `.agents/skills/`.
 - `qk-ui-engineer` ➔ `qk-feature-delivery` (hoặc `qk-bug-resolution` nếu sửa lỗi UI) + `references/ui.md`
 - `qk-backend-data` ➔ `qk-feature-delivery` (hoặc `qk-bug-resolution` nếu lỗi contract) + `references/backend-data.md`
 - `qk-api-data-discovery` ➔ `qk-feature-delivery` (chế độ discovery-only) + `references/api-discovery.md`
@@ -36,7 +37,7 @@ Chi tiết quy định tại `.agents/skill-aliases.yml`:
 
 ## 3. Quy Chuẩn Thực Thi & Báo Cáo
 
-- **Dòng thông báo bắt buộc:** `Dùng <skill> vì <mục tiêu hoặc vấn đề cụ thể>.`
+- **Định tuyến nội bộ:** Chọn skill theo mục tiêu; chỉ nêu tên skill khi điều đó giúp người dùng hiểu cách xử lý.
 - **Không ép compiler:** Không bắt buộc in toàn bộ compiled prompt dài dòng cho mọi task. Chỉ hỏi khi thiếu dữ kiện làm thay đổi quyết định kỹ thuật.
 - **Báo cáo chuẩn theo `.agents/rules/global.md`:**
   - **Bug report (5 trường bắt buộc):** (1) Lỗi & điều kiện xảy ra; (2) Nguyên nhân + bằng chứng (file:dòng/log); (3) Sửa gì + vị trí; (4) Vì sao sửa hết lỗi; (5) Kiểm chứng thực tế (lệnh & kết quả).

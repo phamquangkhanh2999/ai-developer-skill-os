@@ -1,17 +1,16 @@
 ---
 name: qk-[skill-name]
-version: 11.0.0
+version: 11.0.1
 status: stable
 subtitle: "[Tên ngắn gọn]"
 description: "[Một câu — skill này làm gì và dành cho ai]"
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 references: []
 rules:
   - global
   - coding-standards
   - safety
-workflow: [workflow-name]
 triggers:
   - "[trigger phrase 1]"
   - "[trigger phrase 2]"
@@ -19,7 +18,7 @@ triggers:
 
 # qk-[skill-name] — [Tên đầy đủ]
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Dòng mở đầu bắt buộc: `Dùng qk-[skill-name] vì <mục tiêu cụ thể>.`
+> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
 
 ---
 

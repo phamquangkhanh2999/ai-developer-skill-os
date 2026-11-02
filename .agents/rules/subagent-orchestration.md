@@ -1,9 +1,15 @@
-# Controlled Subagent Orchestration — v10.3
+---
+name: subagent-orchestration
+trigger: model_decision
+description: "Load when considering Antigravity subagent delegation, parallel work, assignment boundaries, permissions, or child-task verification."
+---
+
+# Controlled Subagent Orchestration — Antigravity
 
 ## Capability và chế độ thực thi
 
 - Đọc policy này trước mọi dispatch. Chỉ dùng tool thực sự có trong session và tôn trọng instructions/authorization cấp cao hơn.
-- Antigravity: kiểm tra `invoke_subagent`, roster và arguments thực tế; không suy capability từ tên IDE. Claude/OpenCode dùng single-agent trong release này.
+- Antigravity: chỉ dùng chức năng subagent nếu tool/runtime hiện tại thực sự cung cấp; kiểm tra tên tool, roster, arguments và quyền thực tế trước khi dispatch. Không suy capability chỉ từ tên sản phẩm hoặc tài liệu cũ.
 - Default: `single-agent`. Review hoặc điều tra bug có thể dùng `parallel-read` khi có scope rõ và lợi ích kiểm chứng độc lập. `parallel-write` là opt-in: user phải yêu cầu và pilot runtime phải được xác minh.
 - Hai file hoặc risk cao không tự động kích hoạt delegation. Task phụ thuộc chạy tuần tự; không tạo đội FE/BE khi task chỉ có một tầng.
 - Tool thiếu/spawn bị từ chối: tiếp tục single-agent trong quyền hiện có và ghi lý do, không claim đã dùng team.

@@ -11,6 +11,49 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
 describe('Registry Generation & Graph Validation', () => {
+  it('defaults missing platform metadata to Antigravity only', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'registry-platform-test-'));
+    const skillsDir = path.join(tmpDir, '.agents/skills');
+    const registryDir = path.join(tmpDir, '.agents/registry');
+    const skillDir = path.join(skillsDir, 'qk-antigravity-skill');
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), `---
+name: qk-antigravity-skill
+version: 11.0.1
+status: stable
+runtime_version: 1
+rules: [global]
+triggers: [test]
+---
+# Antigravity skill`);
+
+    const { graph, index } = buildRegistryCore({ skillsDir, registryDir, rootDir: tmpDir });
+    expect(graph.nodes['qk-antigravity-skill'].platforms).toEqual(['antigravity']);
+    expect(index.capabilities['qk-antigravity-skill'].platforms).toEqual(['antigravity']);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('rejects unsupported platforms instead of generating a multi-platform registry', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'registry-unsupported-platform-test-'));
+    const skillsDir = path.join(tmpDir, '.agents/skills');
+    const registryDir = path.join(tmpDir, '.agents/registry');
+    const skillDir = path.join(skillsDir, 'qk-multi-platform-skill');
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), `---
+name: qk-multi-platform-skill
+version: 11.0.1
+status: stable
+platforms: [antigravity, claude]
+runtime_version: 1
+rules: [global]
+triggers: [test]
+---
+# Unsupported skill`);
+
+    expect(() => buildRegistryCore({ skillsDir, registryDir, rootDir: tmpDir })).toThrow(/unsupported platform/i);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
   it('generates 5 independent skills without dependencies successfully with 0 cycles and 0 invalid edges', () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'registry-test-'));
     const skillsDir = path.join(tmpDir, '.agents/skills');
@@ -25,7 +68,7 @@ describe('Registry Generation & Graph Validation', () => {
 name: ${name}
 version: 11.0.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: test
 rules: [global]
@@ -59,7 +102,7 @@ triggers: [test]
 name: qk-skill-a
 version: 11.0.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: test
 rules: [global]
@@ -88,7 +131,7 @@ dependencies:
 name: qk-skill-a
 version: 11.0.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: test
 rules: [global]
@@ -104,7 +147,7 @@ dependencies:
 name: qk-skill-b
 version: 11.0.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: test
 rules: [global]
@@ -157,7 +200,7 @@ version: [unclosed array
 name: qk-skill-1
 version: 11.0.0
 status: stable
-platforms: [antigravity, claude, opencode]
+platforms: [antigravity]
 runtime_version: 1
 workflow: test
 rules: [global]
