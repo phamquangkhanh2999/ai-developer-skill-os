@@ -9,15 +9,15 @@
 
 Khi người dùng chỉ yêu cầu viết spec, PRD, Acceptance Criteria hoặc lập kế hoạch:
 - **TUYỆT ĐỐI KHÔNG sinh implementation code** (không tạo/sửa file code tính năng, không cài package).
-- Chỉ bàn giao tài liệu đặc tả, checklist tiêu chí nghiệm thu và sơ đồ luồng.
+- Chỉ bàn giao tài liệu đặc tả, checklist tiêu chí nghiệm thu, sơ đồ luồng (`mermaid`) và khung phác thảo màn hình (wireframe/ASCII hoặc `generative_ui`) khi có tương tác UI.
 
 ---
 
 ## 2. Phân Cấp Yêu Cầu & Lát Cắt Dọc (Vertical Slicing)
 
-- **Task nhỏ, rõ:** Xác định ngay mục tiêu (Objective), tiêu chí hoàn thành (Acceptance Criteria), và thực hiện trực tiếp.
+- **Task nhỏ, rõ:** Ghi ngắn mục tiêu và dấu hiệu nghiệm thu; nếu đang ở plan-only, bàn giao kế hoạch rồi kết thúc đúng sản phẩm yêu cầu.
 - **Task lớn / Phức tạp:**
-  - Chia nhỏ thành các lát cắt dọc (Vertical Slices) có thể kiểm chứng độc lập từ UI → API → Database.
+  - Chia nhỏ thành các lát cắt dọc (Vertical Slices) có thể kiểm chứng độc lập qua các tầng thực sự bị ảnh hưởng.
   - Phân định rõ Phase 1 (MVP) và các Phase tiếp theo.
   - Không tự ý dựng toàn bộ module phình to nếu người dùng chưa chốt phạm vi cốt lõi.
 

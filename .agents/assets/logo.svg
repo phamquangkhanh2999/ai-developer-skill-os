@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <!-- 10%+ transparent margin around 200x200 badge for high contrast on Dark & Light themes -->
+  <rect x="28" y="28" width="200" height="200" rx="44" fill="#0F172A" stroke="#38BDF8" stroke-width="8"/>
+  <circle cx="128" cy="64" r="8" fill="#38BDF8"/>
+  <circle cx="192" cy="112" r="8" fill="#38BDF8"/>
+  <circle cx="168" cy="188" r="8" fill="#38BDF8"/>
+  <circle cx="88" cy="188" r="8" fill="#38BDF8"/>
+  <circle cx="64" cy="112" r="8" fill="#38BDF8"/>
+  <path d="M98 102C84.745 102 74 112.745 74 126C74 139.255 84.745 150 98 150C111.255 150 122 139.255 122 126C122 112.745 111.255 102 98 102ZM110 138L124 152" stroke="#F8FAFC" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M144 102V150M144 128L176 102M156 118L178 150" stroke="#38BDF8" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

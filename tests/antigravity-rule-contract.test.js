@@ -42,7 +42,9 @@ describe('Antigravity rule contracts', () => {
     expect(validateRuleContent('---\ntrigger: alwaysOn\n---\n# rule', 'bad-trigger.md').valid).toBe(false);
     expect(validateRuleContent('---\ntrigger: model_decision\n---\n# rule', 'no-description.md').valid).toBe(false);
     expect(validateRuleContent('---\ntrigger: glob\n---\n# rule', 'no-globs.md').valid).toBe(false);
-    expect(validateRuleContent('---\ntrigger: glob\nglobs: "**/*.ts"\n---\n# rule', 'valid-glob.md').valid).toBe(true);
+    expect(validateRuleContent('---\ntrigger: glob\nglobs: ["*.ts"]\n---\n# rule', 'array-globs.md').valid).toBe(false);
+    expect(validateRuleContent('---\ntrigger: glob\nglobs: "**/*.{ts,tsx}"\n---\n# rule', 'brace-globs.md').valid).toBe(false);
+    expect(validateRuleContent('---\ntrigger: glob\nglobs: "**/*.ts, **/*.tsx"\n---\n# rule', 'valid-glob.md').valid).toBe(true);
   });
 
   it('validator scans the workspace Antigravity rules directory', () => {
@@ -94,7 +96,7 @@ describe('Antigravity rule contracts', () => {
   it('keeps release metadata and root architecture guidance synchronized', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
     const rootAgents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
-    expect(pkg.version).toBe('12.0.0');
+    expect(pkg.version).toBe('13.0.0');
     expect(rootAgents).toContain('5 Core Skills');
     expect(rootAgents).not.toMatch(/11 Core Super-Skills/);
   });

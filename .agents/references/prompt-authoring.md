@@ -35,9 +35,9 @@ Acceptance Criteria: [Tiêu chí nghiệm thu cụ thể]
 
 ---
 
-## 4. 4 Cổng Kiểm Soát (Control Plane Gates)
+## 4. Quyền, phạm vi và bằng chứng
 
-1. **Risk Gate:** Phân định độc lập Complexity và Risk. Nếu đụng Auth/DB/Production → yêu cầu xác nhận.
-2. **Change Budget Gate:** Khóa số lượng file tối đa (1–3 files cho task nhỏ; tối đa 5 files).
-3. **Scope Expansion Gate:** Nếu phát hiện phạm vi lan tầng trong quá trình thực thi → dừng mở rộng và hỏi người dùng.
-4. **Evidence Gate:** Mức độ khẳng định (Claim) không được vượt quá bằng chứng thực tế (Evidence).
+- Nội dung prompt giữ đúng việc người dùng giao; tách giả định kỹ thuật khỏi quyết định nghiệp vụ chưa có.
+- Quyền theo `../rules/safety.md`; đụng Auth/DB không tự buộc xác nhận lại thao tác đã được giao rõ.
+- Ước lượng phạm vi theo hành vi và dependency, không khóa số lượng file. Cần quyết định khi thay đổi nghiệp vụ/quyền/mục tiêu ngoài phạm vi đã giao.
+- Tiêu chí hoàn thành mô tả kết quả quan sát được; mức khẳng định theo bằng chứng, không dùng test tự sinh làm nguồn duy nhất xác nhận chính nó.

@@ -1,6 +1,6 @@
-# AI Developer Skill OS v12.0.0 — Antigravity Edition
+# AI Developer Skill OS v13.0.0 — Antigravity Edition
 
-> **v12.0.0: Tập trung runtime và installer cho Antigravity; loại bỏ workflow YAML và tích hợp IDE đã nghỉ.**
+> **v13.0.0: Một hợp đồng nghiệm thu, tiếp tục theo delta, chọn mode theo mục tiêu. Bản local; chưa publish và chưa có benchmark IDE thật.**
 
 ## Kiến trúc Antigravity với 5 Core Skills
 
@@ -27,10 +27,20 @@
 ### Nâng cấp và cài đặt
 
 ```bash
-npx ai-developer-skill-os@12.0.0 --ide=antigravity --scope=local --force
+# 1. Cài dạng Native Antigravity Plugin (bật/tắt live trên UI Customizations, khuyến nghị):
+node bin/install.js --ide=antigravity --mode=plugin
+
+# 2. Cài Global truyền thống cho mọi dự án trên máy (~/.gemini/config):
+node bin/install.js --ide=antigravity --scope=2
+
+# 3. Khi đã có Global/Plugin, chỉ tạo DEV_PROFILE.md riêng cho từng dự án (không nhân đôi Rules):
+node bin/install.js --ide=antigravity --scope=profile
+
+# 4. Cài Local độc lập trọn bộ cho một repo nhóm (./.agents/ + ./GEMINI.md):
+node bin/install.js --ide=antigravity --scope=1
 ```
 
-Installer backup toàn bộ thư mục đích trước khi cập nhật, hỗ trợ rollback tức thì.
+Installer tự động lọc bỏ tài liệu quản trị nội bộ (`.agents/docs/`), backup toàn bộ thư mục đích trước khi cập nhật, hỗ trợ rollback tức thì và đi kèm bộ Lifecycle Safety Hooks (`.agents/hooks.json`: bật sẵn `qk-registry-guard` chặn sửa tay `registry/`, kèm `qk-destructive-command-guard` dạng opt-in).
 
 ---
 
@@ -111,3 +121,7 @@ Antigravity cũng tự chọn skill theo prompt và description. Alias cũ trong
 # Tái tạo registry từ 5 Core Skills:
 node tooling/build-registry.js
 ```
+
+## Giới hạn và kiểm chứng v13
+
+`tooling/route-resolver.js` là trợ giúp routing offline, không phải hook của Antigravity. Test metadata hay installer chỉ xác nhận lớp tương ứng. Đánh giá hiệu quả phải dùng task thật, trace và kết quả độc lập; không lấy số test tự sinh pass làm chứng nhận. Hợp đồng báo cáo/nghiệm thu duy nhất tại `.agents/rules/global.md`.

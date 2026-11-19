@@ -1,27 +1,25 @@
 ---
-version: 10.2.1
+name: skill-quality
+version: 10.4.0
 trigger: model_decision
-description: "Standards for creating, routing, validating, maintaining, and retiring Antigravity skills."
+description: "Kích hoạt khi tạo, sửa, phân loại hoặc kiểm định Antigravity rules, skills, hooks và registry trong hệ thống QK."
 domain: rules
 applies_to: [skill-authoring, skill-governance]
 ---
 
-# Skill Quality Rules — Antigravity Skill Governance
+# Skill & Rule Quality — Antigravity Governance
 
-## Survival standard
+## Phân loại đúng tầng tùy biến (Rules vs Skills vs Hooks)
+- **Rules (`GEMINI.md`, `.agents/AGENTS.md`, `.agents/rules/*.md`):** Bất biến hành vi, ranh giới an toàn và bảng định tuyến ngắn. Viết mệnh lệnh điều kiện (*Khi X → làm Y; không Z*), bỏ kiến thức phổ thông model đã biết, có cổng chống quá tay (không ép full `build` sau mỗi bước nhỏ).
+- **Skills (`.agents/skills/<name>/SKILL.md`):** Quy trình nhiều bước và modes theo mục tiêu; tách chi tiết sang `references/` nạp theo nhu cầu.
+- **Hooks (`.agents/hooks.json`):** Chốt chặn đồng bộ nhẹ (`PreToolUse`); **không** gắn `npm run build` hay suite nặng vào `Stop` hook. Tôn trọng lệnh gốc `/learn`, `/boost`.
 
-Every skill must own a clear decision boundary, provide reusable capability rather than a static snippet, and route from realistic user language. Merge overlapping skills or retire them with matching updates to `.agents/AGENTS.md`, aliases and generated registry.
+## Hợp đồng Metadata, Frontmatter & Ngân sách ngữ cảnh
+- Standalone `GEMINI.md`, `AGENTS.md` và plugin `rules/AGENTS.md` là Markdown thuần (**không** frontmatter).
+- File khác trong `.agents/rules/*.md` (hoặc `plugins/<dir>/rules/*.md` ngoài `AGENTS.md`/`GEMINI.md`) **bắt buộc** có frontmatter `trigger: always_on | model_decision | glob | manual` (thiếu/lỗi YAML bị âm thầm bỏ qua):
+  - Gói lõi QK chỉ dùng `always_on` cho `global.md`; rule chuyên biệt dùng `model_decision` kèm `description` ngôi thứ ba.
+  - Với `trigger: glob`, `globs` **phải là 1 chuỗi đơn trong ngoặc kép, phân tách dấu phẩy** (`globs: "**/*.ts, **/*.tsx, **/src/**/*.css"`): bọc ngoặc kép khi bắt đầu bằng `*`, không mảng YAML, không `{ts,tsx}`, thêm `**/` cho path có `/` vì khớp theo absolute path.
+- Giới hạn: mỗi rule `<= 24,000`B; tổng always-on `<= 16,000`B (`20,000`-token `defaultRulesBudget`). Skill giữ `platforms: [antigravity]`, `description <= 240` ký tự, `triggers` không trùng, không `workflow`, kiểm bằng `npm run lint`.
 
-## Metadata and routing contract
-
-- Follow the current Antigravity-only frontmatter contract in `.agents/docs/SPEC.md` and validate with `npm run lint`.
-- Keep `platforms` exactly `[antigravity]`; do not add unsupported platform adapters or claim a tool capability through metadata.
-- Use concise descriptions and concrete `triggers`; verify intended routing with representative prompts when either changes.
-- Use `rules` and on-demand `references` for shared policy and domain detail. Do not add a workflow file or `workflow` frontmatter field; skill procedures belong in `SKILL.md`.
-
-## Component versioning
-
-- Bump a skill's own semver when its behavior or routing changes: patch for a focused correction, minor for compatible capability, major for a breaking skill contract.
-- Bump a rule's version when its policy changes.
-- Package versioning follows SemVer; platform/support removals or contract changes require a major package version.
-- After skill metadata changes, run `node tooling/build-registry.js`; never hand-edit generated registry files.
+## Quản lý phiên bản & Registry
+- Tăng semver khi đổi hành vi/trigger; sửa metadata skill phải chạy `node tooling/build-registry.js`, không sửa tay `registry/`.

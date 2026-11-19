@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
-import { validateSkillContent, validateSkillsDir } from '../tooling/validate-skills.js';
+import { validateSkillContent, validateSkillsDir, validateRuleContent, MAX_RULE_FILE_BYTES } from '../tooling/validate-skills.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -13,8 +14,22 @@ describe('Skill Contract Specification', () => {
   const skillDirs = fs.readdirSync(skillsDir)
     .filter(d => !d.startsWith('_') && fs.statSync(path.join(skillsDir, d)).isDirectory());
 
-  it('should have the expected number of active core skills (5 after cutover)', () => {
+  it('should have the expected number of active core skills (5 after cutover) and no _template in .agents/skills', () => {
     expect(skillDirs.length).toBe(5);
+    expect(fs.existsSync(path.join(skillsDir, '_template'))).toBe(false);
+    expect(fs.existsSync(path.join(rootDir, '.agents/docs/templates/SKILL.template.md'))).toBe(true);
+  });
+
+  it('all existing skills should reference only rules that exist in .agents/rules/', () => {
+    for (const dir of skillDirs) {
+      const skillPath = path.join(skillsDir, dir, 'SKILL.md');
+      const content = fs.readFileSync(skillPath, 'utf8');
+      const result = validateSkillContent(content, skillPath, rootDir);
+      expect(result.valid, `Skill ${dir} failed validation: ${result.errors.join(', ')}`).toBe(true);
+      for (const ruleName of result.meta.rules) {
+        expect(fs.existsSync(path.join(rootDir, '.agents/rules', `${ruleName}.md`)), `Missing rule ${ruleName}.md in ${dir}`).toBe(true);
+      }
+    }
   });
 
   it('all existing skills should satisfy the Antigravity-only platform contract', () => {
@@ -37,21 +52,26 @@ describe('Skill Contract Specification', () => {
       const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
       const frontmatter = yaml.load(match[1]);
       expect(frontmatter.workflow, `${dir} must not require a workflow file`).toBeUndefined();
-      expect(content, `${dir} contains its own execution guidance`).toMatch(/verify|kiểm chứng/i);
+      expect(content, `${dir} delegates verification to the shared contract`).toContain('../../rules/global.md');
       expect(content, `${dir} reports results with evidence`).toMatch(/report|báo cáo/i);
     }
     expect(fs.existsSync(path.join(rootDir, '.agents', 'workflows'))).toBe(false);
   });
 
-  it('retains the defining task contracts after workflow removal', () => {
-    const readSkill = name => fs.readFileSync(path.join(skillsDir, name, 'SKILL.md'), 'utf8');
-    expect(readSkill('qk-feature-delivery')).toMatch(/plan-only[\s\S]*discovery-only[\s\S]*prompt-only/i);
-    expect(readSkill('qk-feature-delivery')).toMatch(/subagent-orchestration\.md/i);
-    expect(readSkill('qk-bug-resolution')).toMatch(/Observe[\s\S]*Evidence[\s\S]*Cause[\s\S]*Verify/);
-    expect(readSkill('qk-code-review')).toMatch(/Read-Only[\s\S]*file:dòng/i);
-    expect(readSkill('qk-code-review')).not.toMatch(/health score|100\s*-\s*\(/i);
-    expect(readSkill('qk-code-cleaner')).toMatch(/Zero Behavior Change[\s\S]*Regression Shield/i);
-    expect(readSkill('qk-devops-release')).toMatch(/Cấm tự ý Deploy \/ Publish[\s\S]*Rollback/i);
+  it('publishes non-code modes, two-speed iterative execution, and a shared verification contract', () => {
+    const feature = fs.readFileSync(path.join(skillsDir, 'qk-feature-delivery', 'SKILL.md'), 'utf8');
+    const bug = fs.readFileSync(path.join(skillsDir, 'qk-bug-resolution', 'SKILL.md'), 'utf8');
+    const cleaner = fs.readFileSync(path.join(skillsDir, 'qk-code-cleaner', 'SKILL.md'), 'utf8');
+    for (const mode of ['plan-only', 'discovery-only', 'prompt-only', 'build']) expect(feature).toContain(mode);
+    for (const content of [feature, bug, cleaner]) {
+      expect(content).toContain('Tầng 1');
+      expect(content.toLowerCase()).toContain('checkpoint');
+    }
+    for (const dir of skillDirs) {
+      const content = fs.readFileSync(path.join(skillsDir, dir, 'SKILL.md'), 'utf8');
+      expect(content).toContain('../../rules/global.md');
+      expect(content).not.toContain('`VERIFIED`');
+    }
   });
 
   it('all existing skills with references should resolve within project root without path traversal', () => {
@@ -157,6 +177,72 @@ references:
       const resultTraversal = validateSkillContent(traversalRef, path.join(skillsDir, 'qk-test', 'SKILL.md'), rootDir);
       expect(resultTraversal.valid).toBe(false);
       expect(resultTraversal.errors.some(e => e.includes('traversal') || e.includes('reference'))).toBe(true);
+    });
+
+    it('rejects invalid status enum and descriptions longer than 240 characters', () => {
+      const longDesc = 'x'.repeat(241);
+      const invalid = `---
+name: qk-test-skill
+version: 13.0.0
+status: retired-invalid
+description: "${longDesc}"
+platforms: [antigravity]
+runtime_version: 1
+rules: [global]
+triggers: [test]
+---
+# Content`;
+      const res = validateSkillContent(invalid, '/dummy/SKILL.md', rootDir);
+      expect(res.valid).toBe(false);
+      expect(res.errors.some(e => e.includes('status'))).toBe(true);
+      expect(res.errors.some(e => e.includes('240'))).toBe(true);
+    });
+
+    it('rejects duplicate triggers and directory-name mismatches across skills', () => {
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'qk-dup-triggers-'));
+      try {
+        const s1 = path.join(tmp, 'qk-alpha');
+        const s2 = path.join(tmp, 'qk-beta');
+        fs.mkdirSync(s1, { recursive: true });
+        fs.mkdirSync(s2, { recursive: true });
+
+        fs.writeFileSync(path.join(s1, 'SKILL.md'), `---
+name: qk-alpha
+version: 13.0.0
+status: stable
+description: "Alpha skill"
+platforms: [antigravity]
+runtime_version: 1
+rules: [global]
+triggers: ["shared trigger"]
+---
+# Alpha`);
+        fs.writeFileSync(path.join(s2, 'SKILL.md'), `---
+name: qk-wrong-name
+version: 13.0.0
+status: stable
+description: "Beta skill"
+platforms: [antigravity]
+runtime_version: 1
+rules: [global]
+triggers: ["SHARED TRIGGER"]
+---
+# Beta`);
+
+        const res = validateSkillsDir(tmp, rootDir);
+        expect(res.valid).toBe(false);
+        expect(res.errors.some(e => e.includes('Duplicate trigger'))).toBe(true);
+        expect(res.errors.some(e => e.includes('must match directory'))).toBe(true);
+      } finally {
+        fs.rmSync(tmp, { recursive: true, force: true });
+      }
+    });
+
+    it('rejects rule files exceeding Antigravity 24KB per-file limit', () => {
+      const oversized = `---\ntrigger: model_decision\ndescription: "Oversized rule"\n---\n${'a'.repeat(MAX_RULE_FILE_BYTES + 10)}`;
+      const res = validateRuleContent(oversized, 'oversized.md');
+      expect(res.valid).toBe(false);
+      expect(res.errors.some(e => e.includes('24KB'))).toBe(true);
     });
   });
 });

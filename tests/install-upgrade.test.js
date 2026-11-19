@@ -38,7 +38,7 @@ describe('Installation and upgrade in isolated workspaces', () => {
       run(cwd, ['--force']);
       expect(fs.readFileSync(path.join(target, 'DEV_PROFILE.md'), 'utf8')).toBe('private profile\n');
       expect(fs.readFileSync(path.join(target, 'agents/custom.md'), 'utf8')).toBe('custom agent\n');
-      expect(fs.readFileSync(path.join(cwd, 'GEMINI.md'), 'utf8')).toContain('Controlled Subagent Orchestration');
+      expect(fs.readFileSync(path.join(cwd, 'GEMINI.md'), 'utf8')).toBe(fs.readFileSync(path.join(root, 'GEMINI.md'), 'utf8'));
       expect(fs.readFileSync(path.join(target, 'rules/subagent-orchestration.md'), 'utf8')).toContain('parallel-write');
       const files = fs.readdirSync(cwd);
       const backup = files.find(f => f.startsWith('.agents.backup-'));
@@ -50,6 +50,27 @@ describe('Installation and upgrade in isolated workspaces', () => {
       expect(fs.readdirSync(cwd).sort()).toEqual(before);
       run(cwd, ['--force']);
       expect(fs.readFileSync(path.join(target, 'DEV_PROFILE.md'), 'utf8')).toBe('private profile\n');
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('prunes only empty retired workflow directories and preserves user files there', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-workflow-cleanup-'));
+    try {
+      run(cwd);
+      const workflows = path.join(cwd, '.agents/workflows');
+      fs.mkdirSync(path.join(workflows, 'shared'), { recursive: true });
+      const customFile = path.join(workflows, 'personal/notes.md');
+      fs.mkdirSync(path.dirname(customFile), { recursive: true });
+      fs.writeFileSync(customFile, 'keep my workflow notes\n');
+
+      run(cwd, ['--force']);
+
+      expect(fs.existsSync(path.join(workflows, 'shared'))).toBe(false);
+      expect(fs.readFileSync(customFile, 'utf8')).toBe('keep my workflow notes\n');
+
+      fs.rmSync(path.join(workflows, 'personal'), { recursive: true });
+      run(cwd, ['--force']);
+      expect(fs.existsSync(workflows)).toBe(false);
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 
@@ -68,17 +89,27 @@ describe('Installation and upgrade in isolated workspaces', () => {
       execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=global'],
         { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
       const gemini = fs.readFileSync(path.join(cwd, '.gemini/GEMINI.md'), 'utf8');
-      expect(gemini).toContain(`${cwd}/.gemini/config/rules/subagent-orchestration.md`);
       expect(gemini).toContain(`${cwd}/.gemini/config/AGENTS.md`);
       expect(gemini).toContain(`${cwd}/.gemini/config/rules/global.md`);
-      const domainKnowledge = fs.readFileSync(path.join(cwd, '.gemini/config/knowledge/domain-patterns/construction/ddc-construction-ai-blueprint.md'), 'utf8');
-      expect(domainKnowledge).toContain(`${cwd}/.gemini/config/knowledge/domain-patterns/`);
-      expect(domainKnowledge).not.toContain('.agents/knowledge/');
+      const globalAgents = fs.readFileSync(path.join(cwd, '.gemini/config/AGENTS.md'), 'utf8');
+      expect(globalAgents).toContain(`(${cwd}/.gemini/config/rules/global.md)`);
+      expect(globalAgents).toContain(`${cwd}/.gemini/config/references/ui.md`);
+      expect(globalAgents).toContain(`${cwd}/.gemini/config/skill-aliases.yml`);
+      expect(globalAgents).toContain('.agents/DEV_PROFILE.md');
+      expect(globalAgents).not.toContain('`references/ui.md`');
+      expect(globalAgents).not.toContain('(rules/global.md)');
+      const featureSkill = fs.readFileSync(path.join(cwd, '.gemini/config/skills/qk-feature-delivery/SKILL.md'), 'utf8');
+      expect(featureSkill).toContain('../../rules/global.md');
+      expect(fs.existsSync(path.resolve(cwd, '.gemini/config/skills/qk-feature-delivery', '../../rules/global.md'))).toBe(true);
+      expect(featureSkill).not.toContain('.agents/rules/global.md');
       expect(gemini).not.toContain('.agents/AGENTS.md');
       expect(gemini).not.toContain('.agents/rules/');
       expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/subagent-orchestration.md'))).toBe(true);
       expect(fs.existsSync(path.join(cwd, '.gemini/config/AGENTS.md'))).toBe(true);
       expect(fs.existsSync(path.join(cwd, '.gemini/config/rules/global.md'))).toBe(true);
+      expect(fs.existsSync(path.join(cwd, '.gemini/config/skills/_template'))).toBe(false);
+      expect(fs.existsSync(path.join(cwd, '.gemini/config/docs'))).toBe(false);
+      expect(fs.existsSync(path.join(cwd, '.gemini/config/LICENSE'))).toBe(false);
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 
@@ -136,7 +167,7 @@ describe('Installation and upgrade in isolated workspaces', () => {
       fs.mkdirSync(psSkillDir, { recursive: true });
 
       // Get stock v10 content for qk-ui-engineer
-      const stockUiContent = execFileSync('git', ['show', '85b28f88fb1ffdbf0a931bd3ff583467b61b9d92:.agents/skills/qk-ui-engineer/SKILL.md'], { encoding: 'utf8' });
+      const stockUiContent = fs.readFileSync(path.join(root, 'tests/fixtures/v10-ui-skill.md'), 'utf8');
       fs.writeFileSync(path.join(uiSkillDir, 'SKILL.md'), stockUiContent);
 
       // Write customized content for qk-product-spec
@@ -187,6 +218,96 @@ describe('Installation and upgrade in isolated workspaces', () => {
         { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
 
       expect(upgradeOutput).not.toContain('conflict');
+
+      // User customizes rules/global.md with a relative .agents/rules reference; global upgrade must preserve it untouched
+      const customGlobalContent = '# User Custom Global\nKeep literal .agents/rules/safety.md reference untouched!\n';
+      fs.writeFileSync(path.join(targetDir, 'rules/global.md'), customGlobalContent, 'utf8');
+      execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=global', '--force'],
+        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
+      expect(fs.readFileSync(path.join(targetDir, 'rules/global.md'), 'utf8')).toBe(customGlobalContent);
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('excludes internal .agents/docs from installs and cleans previously managed docs while preserving user docs', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-docs-prune-'));
+    try {
+      const target = path.join(cwd, '.agents');
+      fs.mkdirSync(path.join(target, 'docs'), { recursive: true });
+      const oldSpecContent = '# Old Managed Spec v12\n';
+      const oldSpecSha = crypto.createHash('sha256').update(oldSpecContent).digest('hex');
+      fs.writeFileSync(path.join(target, 'docs/SPEC.md'), oldSpecContent, 'utf8');
+      fs.writeFileSync(path.join(target, 'docs/my-team-notes.md'), 'keep team notes\n', 'utf8');
+      fs.writeFileSync(path.join(target, '.ai-skill-os-managed.json'), JSON.stringify({
+        schemaVersion: 1,
+        packageVersion: '12.1.0',
+        files: { 'docs/SPEC.md': oldSpecSha }
+      }));
+
+      run(cwd, ['--force']);
+
+      expect(fs.existsSync(path.join(target, 'docs/SPEC.md'))).toBe(false);
+      expect(fs.readFileSync(path.join(target, 'docs/my-team-notes.md'), 'utf8')).toBe('keep team notes\n');
+      expect(fs.existsSync(path.join(target, 'LICENSE'))).toBe(false);
+      expect(fs.existsSync(path.join(target, 'hooks.json'))).toBe(true);
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('supports --scope=profile to create or preserve only .agents/DEV_PROFILE.md without duplicating rules', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-thin-profile-'));
+    try {
+      execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=profile'],
+        { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
+
+      expect(fs.existsSync(path.join(cwd, '.agents/DEV_PROFILE.md'))).toBe(true);
+      expect(fs.existsSync(path.join(cwd, 'GEMINI.md'))).toBe(false);
+      expect(fs.existsSync(path.join(cwd, '.agents/rules'))).toBe(false);
+      expect(fs.existsSync(path.join(cwd, '.agents/skills'))).toBe(false);
+
+      fs.writeFileSync(path.join(cwd, '.agents/DEV_PROFILE.md'), 'role: ai-engineer\n', 'utf8');
+      execFileSync(process.execPath, [script, '--ide=antigravity', '--scope=profile', '--force'],
+        { cwd, env: { ...process.env, HOME: cwd }, stdio: 'pipe' });
+      expect(fs.readFileSync(path.join(cwd, '.agents/DEV_PROFILE.md'), 'utf8')).toBe('role: ai-engineer\n');
+    } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
+  });
+
+  it('supports --mode=plugin to package a compliant Native Antigravity Plugin bundle', () => {
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-plugin-mode-'));
+    try {
+      const output = execFileSync(process.execPath, [script, '--ide=antigravity', '--mode=plugin'],
+        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
+
+      expect(output).toContain('customization://qk-skill-os');
+      const pluginDir = path.join(cwd, '.gemini/config/plugins/qk-skill-os');
+      const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+      const pluginMeta = JSON.parse(fs.readFileSync(path.join(pluginDir, 'plugin.json'), 'utf8'));
+
+      const allowedKeys = new Set([
+        'name', 'description', 'logo', 'suggestedPrompts', 'displayName',
+        'version', 'author', 'homepage', 'repository', 'disabled'
+      ]);
+      for (const k of Object.keys(pluginMeta)) {
+        expect(allowedKeys.has(k), `Unknown plugin.json key: ${k}`).toBe(true);
+      }
+      expect(pluginMeta.name).toBe('qk-skill-os');
+      expect(pluginMeta.version).toBe(pkg.version);
+      expect(pluginMeta.suggestedPrompts).toHaveLength(3);
+      expect(fs.existsSync(path.join(pluginDir, pluginMeta.logo))).toBe(true);
+      expect(fs.existsSync(path.join(pluginDir, 'hooks.json'))).toBe(true);
+      expect(fs.existsSync(path.join(pluginDir, 'hooks/guard-registry.mjs'))).toBe(true);
+      expect(fs.existsSync(path.join(pluginDir, 'skills/qk-feature-delivery/SKILL.md'))).toBe(true);
+
+      const pluginAgentsRule = fs.readFileSync(path.join(pluginDir, 'rules/AGENTS.md'), 'utf8');
+      expect(pluginAgentsRule.startsWith('---')).toBe(false);
+      expect(pluginAgentsRule).toContain(`${pluginDir}/rules/AGENTS.md`);
+      expect(pluginAgentsRule).not.toContain(`${pluginDir}/AGENTS.md`);
+      expect(pluginAgentsRule).toContain(`${pluginDir}/rules/global.md`);
+      expect(pluginAgentsRule).toContain(`${pluginDir}/references/ui.md`);
+      expect(pluginAgentsRule).toContain('.agents/DEV_PROFILE.md');
+
+      // Same-version run is a no-op
+      const secondRun = execFileSync(process.execPath, [script, '--ide=antigravity', '--mode=plugin'],
+        { cwd, env: { ...process.env, HOME: cwd }, encoding: 'utf8', stdio: 'pipe' });
+      expect(secondRun).toContain('không cần cập nhật');
     } finally { fs.rmSync(cwd, { recursive: true, force: true }); }
   });
 

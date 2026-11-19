@@ -62,18 +62,18 @@ describe('Routing and Alias Contract Specification', () => {
     expect(parsed.aliases['qk-api-data-discovery'].mode).toBe('discovery-only');
   });
 
-  describe('Prompt Evaluation Suite Metadata Coverage (§11)', () => {
+  describe('Offline resolver examples — not agent evaluation', () => {
     const testCases = [
       { prompt: 'Thêm nút xuất Excel theo bảng hiện tại', expectedSkill: 'qk-feature-delivery', mode: 'build', ref: 'references/ui.md' },
       { prompt: 'Làm hệ thống quản lý kho', expectedSkill: 'qk-feature-delivery', mode: 'clarify', ref: 'references/requirements.md' },
       { prompt: 'Chỉ viết PRD quản lý kho', expectedSkill: 'qk-feature-delivery', mode: 'plan-only', ref: 'references/requirements.md' },
-      { prompt: 'Đổi phí ship, giữ đơn cũ theo mức cũ', expectedSkill: 'qk-feature-delivery', mode: 'build', ref: 'references/backend-data.md' },
+      { prompt: 'Đổi phí ship, giữ đơn cũ theo mức cũ', expectedSkill: 'qk-feature-delivery', mode: 'build', ref: null },
       { prompt: 'API trả null làm trang crash', expectedSkill: 'qk-bug-resolution', mode: 'fix', ref: null },
       { prompt: 'Sửa spacing đang lệch trên mobile', expectedSkill: 'qk-bug-resolution', mode: 'fix', ref: 'references/ui.md' },
       { prompt: 'Chỉ review auth, đừng sửa', expectedSkill: 'qk-code-review', mode: 'review', ref: null },
       { prompt: 'Tách hàm, giữ nguyên hành vi', expectedSkill: 'qk-code-cleaner', mode: 'refactor', ref: null },
       { prompt: 'Nâng dependency có breaking change', expectedSkill: 'qk-code-cleaner', mode: 'upgrade', ref: null },
-      { prompt: 'Tích hợp API từ Postman này', expectedSkill: 'qk-feature-delivery', mode: 'discovery', ref: 'references/api-discovery.md' },
+      { prompt: 'Tích hợp API từ Postman này', expectedSkill: 'qk-feature-delivery', mode: 'build', ref: 'references/backend-data.md' },
       { prompt: 'Phân tích collection, chưa viết ingestion', expectedSkill: 'qk-feature-delivery', mode: 'discovery-only', ref: 'references/api-discovery.md' },
       { prompt: 'Viết lại prompt này, đừng chạy nó', expectedSkill: 'qk-feature-delivery', mode: 'prompt-only', ref: 'references/prompt-authoring.md' },
       { prompt: 'Sửa CI bị lỗi phiên bản Node', expectedSkill: 'qk-devops-release', mode: 'ci', ref: null },
@@ -99,6 +99,21 @@ describe('Routing and Alias Contract Specification', () => {
         expect(resolved.mode, `Mode mismatch for prompt: "${tc.prompt}"`).toBe(tc.mode);
         expect(resolved.reference, `Reference mismatch for prompt: "${tc.prompt}"`).toBe(tc.ref);
       }
+    });
+
+    it('preserves requested artifact and distinguishes data logic from CI', () => {
+      const cases = [
+        ['đừng sửa, chỉ viết prompt sửa lỗi API', 'qk-feature-delivery', 'prompt-only'],
+        ['pipeline ingestion bị ghi trùng bản ghi, sửa logic dedup', 'qk-bug-resolution', 'fix'],
+        ['giải thích cách chạy project, chưa viết code', 'intake', 'help'],
+        ['viết unit test cho hàm tính thuế', 'qk-code-cleaner', 'test'],
+        ['', 'intake', 'clarify'],
+        ['help', 'intake', 'help']
+      ];
+      for (const [prompt, skill, mode] of cases) {
+        expect(resolveSkillRoute(prompt)).toMatchObject({ skill, mode });
+      }
+      expect(resolveSkillRoute('/learn').skill).not.toBe('qk-devops-release');
     });
 
     it('prioritizes user constraints over aliases and goals over domain keywords (multi-intent disambiguation)', () => {

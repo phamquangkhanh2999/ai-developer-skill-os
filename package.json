@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "12.0.0",
-  "description": "AI Developer Skill OS v12.0.0 — Antigravity-only skills, rules, installer, and managed upgrades.",
+  "version": "13.0.0",
+  "description": "QK v13 — Antigravity skills with scoped execution and evidence-based handoff.",
   "main": "bin/install.js",
   "files": [
     "bin",
@@ -47,7 +47,7 @@
     "registry",
     "eval"
   ],
-  "author": "Quang Kh\u00e1nh",
+  "author": "Quang Khánh",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os/issues"

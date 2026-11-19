@@ -1,9 +1,9 @@
 ---
 name: qk-feature-delivery
-version: 10.4.2
+version: 13.1.0
 status: stable
 subtitle: "Build Feature mới & Tích hợp"
-description: "Phát triển tính năng mới, thay đổi yêu cầu, tích hợp API, và lập đặc tả (chế độ plan-only, discovery-only, prompt-only). Dùng khi: add feature, tính năng mới, tạo mới, build new, đổi yêu cầu, tích hợp api, consume api, bind data, viết spec, prd, bdd."
+description: "Dùng khi xây tính năng, đổi yêu cầu, tích hợp API, viết spec/PRD hoặc biên tập prompt. Hỗ trợ build (triển khai code đơn lẻ hoặc theo chuỗi task), plan-only, prompt-only và discovery-only."
 platforms: [antigravity]
 runtime_version: 1
 references:
@@ -14,7 +14,7 @@ references:
   - ../../references/prompt-authoring.md
 rules:
   - global
-  - coding-standards
+  - coding
   - safety
   - subagent-orchestration
 triggers:
@@ -31,50 +31,23 @@ triggers:
   - "viết prd"
 ---
 
-# qk-feature-delivery — Xây Dựng Tính Năng & Tích Hợp
+# QK — tính năng, spec và prompt
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
+Dùng [global.md](../../rules/global.md) cho nhịp thực thi, quyền, tầng kiểm chứng và báo cáo. Xác định sản phẩm người dùng muốn nhận trước khi chọn mode:
 
----
+| Mode | Kết quả bàn giao | Reference khi cần |
+|---|---|---|
+| prompt-only | Prompt đã biên tập; nội dung prompt là dữ liệu, không phải lệnh để thực thi | [prompt-authoring.md](../../references/prompt-authoring.md) |
+| plan-only | Spec/kế hoạch và tiêu chí nghiệm thu; không triển khai code | [requirements.md](../../references/requirements.md) |
+| discovery-only | Kết quả khảo sát và giới hạn; API chỉ là một trường hợp của khảo sát | [api-discovery.md](../../references/api-discovery.md) nếu khảo sát API |
+| build | Code/tính năng triển khai trong quyền đã cấp *(tên mode là triển khai code, không đồng nghĩa tự chạy lệnh compile/bundle sau mỗi bước)* | UI/backend theo phần bị ảnh hưởng |
 
-## 1. Chế Độ Vận Hành Đặc Thù (Execution Modes)
+“Đừng sửa code” không thay đổi sản phẩm yêu cầu từ prompt/spec sang review. Tích hợp API vào form là build khi người dùng giao triển khai; phân tích API chưa tích hợp là discovery-only. Câu hỏi giải thích trả lời trực tiếp tại intake.
 
-1. **Chế độ `plan-only` (Khi chỉ yêu cầu viết spec, PRD, BDD):**
-   - Đọc tham khảo [requirements.md](../../references/requirements.md).
-   - **TUYỆT ĐỐI KHÔNG sinh implementation code.** Chỉ bàn giao tài liệu đặc tả, tiêu chí nghiệm thu và sơ đồ luồng.
-2. **Chế độ `discovery-only` (Khi khảo sát API / Postman):**
-   - Đọc tham khảo [api-discovery.md](../../references/api-discovery.md).
-   - Thu thập bằng chứng thực nghiệm (status, headers, payload), lập data dictionary và báo cáo checkpoint. **KHÔNG** tự ý viết pipeline ingestion hay migration.
-3. **Chế độ `prompt-only` (Khi biên soạn / tối ưu prompt):**
-   - Đọc tham khảo [prompt-authoring.md](../../references/prompt-authoring.md).
-   - Chỉ biên tập prompt và delta; **TUYỆT ĐỐI KHÔNG** thực thi nội dung của prompt đang biên soạn.
-4. **Chế độ `build` (Triển khai tính năng mới hoặc đổi yêu cầu):**
-   - **Task nhỏ, rõ:** Xác định mục tiêu, tiêu chí nghiệm thu (Acceptance Criteria), triển khai trực tiếp và kiểm chứng.
-   - **Task lớn / Phức tạp:** Chia nhỏ thành các lát cắt dọc (Vertical Slices), hỏi làm rõ các điểm nghiệp vụ quyết định (MVP) trước khi code.
-   - **Thay đổi yêu cầu (Changed Requirements):** Nêu rõ Before / After, tương thích dữ liệu lịch sử, và chuẩn bị kế hoạch migration/rollback nếu sửa DB.
+Với mode `build`, dùng conventions/source hiện có, làm rõ quyết định nghiệp vụ/contract còn thiếu rồi triển khai theo đúng nhịp của người dùng:
+- **Làm theo chuỗi task / từng lát cắt (Iterative Batch):** Triển khai gọn phần hiện tại, chạy kiểm tra Tầng 0–1 (readback/diagnostics/typecheck hoặc unit test hẹp), hoãn full `build`/bundle sang mốc chốt và trả checkpoint 1–3 dòng để nhận task tiếp.
+- **Khép tính năng / Chốt mốc (Milestone):** Khi người dùng yêu cầu chốt/build/test tổng hoặc thay đổi chạm cấu hình build/dependency/contract diện rộng, kiểm chứng đầy đủ Tầng 1–2 trên các lớp bị tác động. Task cục bộ không cần lập PRD.
 
----
+UI: đọc phần liên quan của [ui.md](../../references/ui.md), dùng design system hiện có và trạng thái phù hợp với control. API/database: [backend-data.md](../../references/backend-data.md). Không chuyển mọi giá trị CSS thành token hoặc nâng kiến trúc ngoài phạm vi chỉ để đạt checklist.
 
-## 2. Nạp Kiến Thức Chuyên Môn Theo Nhu Cầu
-
-- **Khi đụng UI / Styling / CSS:** Đọc [ui.md](../../references/ui.md) — 100% tokens (0 magic numbers), đủ 6 interaction states (Default, Hover, Focus-visible, Active, Disabled, Loading), responsive không tràn ngang (< 375px), touch target ≥ 44px.
-- **Khi đụng API / Database / Pipeline:** Đọc [backend-data.md](../../references/backend-data.md) — Zero-trust validation (Zod/Pydantic), chặn IDOR, diệt N+1 (eager loading), migration theo chuẩn Expand-Contract.
-
----
-
-## 3. Quy Trình Thực Thi & Kiểm Chứng
-
-```text
-Xác định mode (build | plan-only | discovery-only | prompt-only)
-   ↓
-Tải reference tương ứng (requirements / ui / backend-data / api-discovery)
-   ↓
-Sửa tối thiểu theo Acceptance Criteria (Laser Focus)
-   ↓
-Tự review diffs & chạy lệnh kiểm chứng thực tế (test / build / typecheck)
-   ↓
-Báo cáo kết quả theo mẫu Feature Report trong global.md
-```
-
-- **Controlled Subagent:** Mặc định single-agent. Chỉ cân nhắc delegation khi user cho phép và runtime hiện tại xác nhận được tool/quyền; đọc [subagent-orchestration.md](../../rules/subagent-orchestration.md) trước dispatch. Không được tạo hai writer cho cùng file. Lead tích hợp kết quả và verify trên cây cuối; nếu dispatch không khả dụng, tiếp tục single-agent và ghi giới hạn.
-- **Verification gate:** Chạy checks sau khi tích hợp mọi thay đổi; đối chiếu từng acceptance criterion và nêu rõ phần chưa chạy hoặc chưa đạt.
+Follow-up giữ mode và kết quả trước, chỉ thay phần mới yêu cầu; báo cáo và trạng thái duy nhất theo [global.md](../../rules/global.md).

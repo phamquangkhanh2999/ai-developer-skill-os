@@ -1,0 +1,18 @@
+{
+  "name": "qk-skill-os",
+  "displayName": "QK Developer Skill OS",
+  "version": "13.0.0",
+  "description": "Hệ thống 5 Core Skills cho Google Antigravity (Feature Delivery, Bug Resolution, Read-Only Code Review, Safe Refactor, DevOps Release) kèm hợp đồng nghiệm thu bằng chứng và Lifecycle Safety Hooks.",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Chỉ review module auth và nêu findings có file:dòng, không tự sửa code",
+    "Chẩn đoán nguyên nhân gốc rễ lỗi API trả null gây crash màn hình và sửa tối thiểu",
+    "Lập kế hoạch đặc tả (plan-only) cho tính năng mới trước khi viết code"
+  ],
+  "author": "Quang Khánh",
+  "homepage": "https://github.com/phamquangkhanh2999/ai-developer-skill-os#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phamquangkhanh2999/ai-developer-skill-os.git"
+  }
+}

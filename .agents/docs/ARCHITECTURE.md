@@ -16,7 +16,9 @@ node tooling/build-registry.js
 |---|---|
 | `.agents/AGENTS.md` | Antigravity skin entry point and task routing |
 | `.agents/rules/*.md` | Shared and domain-specific behavior policies |
-| `.agents/skills/*/SKILL.md` | Five core skills and the authoring template |
+| `.agents/skills/*/SKILL.md` | Five core skills discovered by Antigravity |
+| `.agents/hooks.json` & `.agents/hooks/*.mjs` | Lightweight `PreToolUse` safety hooks (`guard-registry`, opt-in `guard-command`) |
+| `.agents/docs/templates/*` | Authoring templates for skills and `plugin.json` (excluded from downstream user workspace copies) |
 | `.agents/references/*.md` | On-demand domain guidance |
 | `.agents/registry/index.yaml` | Generated skill lookup index |
 | `.agents/registry/graph.json` | Generated dependency graph |
@@ -40,4 +42,4 @@ User request
 
 ## Installation and upgrades
 
-The installer targets Antigravity local or global configuration. It backs up managed targets before replacement, preserves user profile/custom files according to the managed-file manifest, and does not install adapters for other IDEs. Upgrade behavior is covered by isolated installer tests; this documentation does not imply the user's live Antigravity runtime was exercised.
+The installer targets Antigravity across four clean scopes: Local workspace (`--scope=local`), Global config (`--scope=global`), Thin Project Profile (`--scope=profile`, writing only `.agents/DEV_PROFILE.md` to avoid duplicating global rules), and Native Antigravity Plugin (`--mode=plugin`, packaging `qk-skill-os/plugin.json` for live UI toggling). Internal repository docs (`.agents/docs/` and `.agents/LICENSE`) are excluded from downstream workspace copies. It backs up managed targets before replacement, preserves user profile/custom files according to the managed-file manifest, and does not install adapters for other IDEs. Upgrade behavior is covered by isolated installer tests; this documentation does not imply the user's live Antigravity runtime was exercised.

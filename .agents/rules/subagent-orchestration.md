@@ -1,7 +1,10 @@
 ---
 name: subagent-orchestration
+version: 1.1.0
 trigger: model_decision
 description: "Load when considering Antigravity subagent delegation, parallel work, assignment boundaries, permissions, or child-task verification."
+domain: rules
+applies_to: [subagents, delegation]
 ---
 
 # Controlled Subagent Orchestration — Antigravity
@@ -11,6 +14,10 @@ description: "Load when considering Antigravity subagent delegation, parallel wo
 - Đọc policy này trước mọi dispatch. Chỉ dùng tool thực sự có trong session và tôn trọng instructions/authorization cấp cao hơn.
 - Antigravity: chỉ dùng chức năng subagent nếu tool/runtime hiện tại thực sự cung cấp; kiểm tra tên tool, roster, arguments và quyền thực tế trước khi dispatch. Không suy capability chỉ từ tên sản phẩm hoặc tài liệu cũ.
 - Default: `single-agent`. Review hoặc điều tra bug có thể dùng `parallel-read` khi có scope rõ và lợi ích kiểm chứng độc lập. `parallel-write` là opt-in: user phải yêu cầu và pilot runtime phải được xác minh.
+- Ưu tiên chọn đúng loại subagent chuyên biệt của Antigravity khi runtime cung cấp:
+  - `research`: ưu tiên cho `parallel-read` (khảo sát codebase/tài liệu độc lập trong read-only sandbox, không có quyền ghi).
+  - `browser`: dùng cho xác minh giao diện hoặc luồng web thật; file upload/đối chiếu stage qua thư mục `browser_sandbox/uploads/` hoặc `browser_sandbox/references/` trong vùng artifact của phiên, và **bắt buộc** đối chiếu thông tin xác thực từ host (`BROWSER_HOST_FACTS`) trước khi báo site đã truy cập, screenshot hoặc kết luận `VERIFIED` lớp UI/runtime.
+  - `swarm`: tiêu thụ nhiều quota (Preview & Quota Heavy); không tự khởi chạy nếu người dùng không yêu cầu rõ ràng.
 - Hai file hoặc risk cao không tự động kích hoạt delegation. Task phụ thuộc chạy tuần tự; không tạo đội FE/BE khi task chỉ có một tầng.
 - Tool thiếu/spawn bị từ chối: tiếp tục single-agent trong quyền hiện có và ghi lý do, không claim đã dùng team.
 

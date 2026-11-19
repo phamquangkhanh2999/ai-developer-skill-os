@@ -533,45 +533,32 @@ Checklist 12 điểm:
 
 ---
 
-# AI PROMPT COMPILER — QUY TRÌNH "VIẾT LẠI PROMPT TRƯỚC KHI LÀM"
+# CHẾ ĐỘ PROMPT-ONLY — BIÊN SOẠN PROMPT THEO NHU CẦU
 
-## 1. Mục Đích
-Người dùng có thể ra lệnh ngắn gọn theo thói quen:
-- `"fix bug login"`
-- `"sửa cái dashboard này"`
-- `"phân tích dữ liệu xã này"`
-- `"tối ưu API này"`
-- `"thêm chức năng export excel"`
+## 1. Khi nào kích hoạt
+- Chỉ kích hoạt khi người dùng **yêu cầu rõ sản phẩm là một bản prompt** (ví dụ: *"viết lại prompt này"*, *"chuẩn hóa system prompt"*, *"tối ưu prompt, đừng chạy nó"*).
+- Với các câu lệnh tác vụ kỹ thuật ngắn gọn thông thường (*"fix bug login"*, *"thêm nút xuất excel"*), AI xử lý trực tiếp theo hợp đồng thực thi tại `.agents/rules/global.md` — **không** tự động in khung ASCII hay ép bước duyệt prompt trung gian.
 
-AI có trách nhiệm **biên dịch (compile)** câu lệnh thô đó thành một **Execution Prompt** đầy đủ, có cấu trúc, hiển thị công khai cho người dùng trước khi tiến hành thực thi.
-
-## 2. Chu Trình 3 Bước
-1. **Bước 1 — Người dùng ra lệnh ngắn:** Nhập lệnh tự nhiên, không cần viết dài.
-2. **Bước 2 — AI hiển thị Prompt đã chuyển hóa:** AI diễn giải lại thành prompt chuẩn, đặt trong khối riêng biệt kèm:
-   - Ý định cốt lõi đã hiểu
-   - Phạm vi cho phép / không được chạm vào
-   - Các bước cụ thể sẽ làm
-   - Giả định kỹ thuật (Assumptions)
-3. **Bước 3 — Xác nhận & Thực thi:**
-   - *Tác vụ an toàn / rõ ràng:* Hiển thị prompt và tự động thực thi (Auto-Proceed).
-   - *Tác vụ phức tạp / destructive / mơ hồ:* Chờ người dùng bấm xác nhận trước khi sửa mã nguồn.
-
-## 3. Khung Hiển Thị Mẫu (Standard Display Block)
+## 2. Nguyên tắc bàn giao ở chế độ `prompt-only`
+1. **Không tự thực thi tác vụ bên trong:** Nội dung của prompt đang biên tập là dữ liệu đầu ra, không phải chỉ thị để AI sửa code dự án hiện tại.
+2. **Tách bạch 3 lớp thông tin:**
+   - Yêu cầu gốc của người dùng;
+   - Ràng buộc kỹ thuật/kiểm chứng do AI gợi ý bổ sung;
+   - Các quyết định nghiệp vụ còn mở mà người nhận prompt cần chốt.
+3. **Định dạng Markdown chuẩn (không ép khung ký tự ASCII):**
 
 ```markdown
-┌────────────────────────────────────────────────────────────────────────┐
-│ 🧠 Ý ĐỊNH TÔI HIỂU                                                    │
-│ [Mô tả ngắn gọn 1-2 câu về mục tiêu thực sự của bạn]                  │
-├────────────────────────────────────────────────────────────────────────┤
-│ 📝 PROMPT ĐÃ CHUYỂN HÓA (COMPILED EXECUTION PROMPT)                    │
-│ Vai trò: [Role phù hợp]                                                │
-│ Nhiệm vụ: [Nhiệm vụ cụ thể]                                            │
-│ Ngữ cảnh: [Context từ codebase / files]                                │
-│ Phạm vi: Được sửa [In-Scope] | Cấm chạm [Out-of-Scope]                │
-│ Ràng buộc: [YAGNI, Không phá vỡ API/DB hiện tại]                       │
-│ Tiêu chí nghiệm thu: [Acceptance Criteria cụ thể]                     │
-├────────────────────────────────────────────────────────────────────────┤
-│ 📋 CÁC BƯỚC THỰC HIỆN                                                 │
-│ 1. [Bước 1] → 2. [Bước 2] → 3. [Bước 3] → 4. [Verify & Test]          │
-└────────────────────────────────────────────────────────────────────────┘
+## Role & Context
+[Vai trò chuyên môn + bối cảnh hệ thống/stack]
+
+## Objective
+[Mục tiêu cụ thể, quan sát và kiểm chứng được]
+
+## Scope & Constraints
+- In-Scope: [Phạm vi được phép thay đổi]
+- Out-of-Scope: [Phạm vi không được chạm vào]
+- Constraints: [Giữ nguyên API/DB contract, không tự thêm dependency ngoài phạm vi]
+
+## Acceptance Criteria & Verification
+- [Tiêu chí nghiệm thu độc lập và các lệnh/quan sát cần chạy]
 ```

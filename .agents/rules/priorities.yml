@@ -1,3 +1,4 @@
+# Mô tả nhóm policy và trọng số tham khảo; Antigravity không tự nạp hay enforce file này.
 priority:
   global:
     weight: 100
@@ -22,7 +23,12 @@ priority:
   quality:
     weight: 80
     description: "Anti-slop, UX best practices, performance"
-    files: []  # reserved — no dedicated rule file yet
+    files: [anti-patterns.md]
+
+  orchestration:
+    weight: 75
+    description: "Controlled subagent delegation and on-demand prompt/plan scoping"
+    files: [subagent-orchestration.md, prompt-compiler.md]
 
   coding:
     weight: 70

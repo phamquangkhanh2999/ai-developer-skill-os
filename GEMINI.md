@@ -1,55 +1,11 @@
-# GEMINI.md — Quy Chuẩn Tối Ưu Hóa Riêng Cho Antigravity IDE
+# QK — Antigravity adapter
 
-> Tệp cấu hình điều hợp môi trường (Adapter) cho Google Antigravity IDE.
-> Tập trung vào cơ chế Artifacts, Clickable Links, Slash Commands và Visual Rendering.
+Với công việc project, đọc `.agents/AGENTS.md` để chọn mục tiêu và `.agents/rules/global.md` để thực thi/nghiệm thu. Giữ kết quả trong context; follow-up chỉ nạp phần mới cần thiết. Dùng profile khi có và liên quan. Câu hỏi thường trả lời trực tiếp.
 
----
+- Quy tắc của workspace và yêu cầu người dùng có ưu tiên; xem source thực tế, không đoán công cụ hay slash command từ tên sản phẩm.
+- Dùng công cụ IDE thực sự được cung cấp. Thiếu browser/terminal/API thì nêu giới hạn của check đó; tiếp tục phần độc lập có thể làm.
+- Link file theo cú pháp runtime hỗ trợ; dùng đường dẫn và dòng đã kiểm tra. Tạo artifact ở vùng runtime cho phép khi cần bàn giao; báo cáo ngắn và nghiệm thu chỉ theo global.md.
+- Với kiến trúc, luồng xử lý, quy trình thao tác hoặc phác thảo UI: chủ động minh họa trực quan (`mermaid` cho sơ đồ/luồng; ASCII wireframe hoặc `generative_ui` widget cho khung giao diện/màn hình) khi giúp người dùng hình dung nhanh hơn text thuần.
+- Quyền và backup theo `.agents/rules/safety.md`. Dùng một luồng điều phối QK; reference kiến trúc chỉ nạp cho quyết định kiến trúc liên quan.
 
-## 1. Pre-flight & Intake
-
-Trước khi xử lý bất kỳ yêu cầu nào trong phiên làm việc:
-1. Đọc `.agents/DEV_PROFILE.md` nếu tồn tại (lấy role, stack, conventions, constraints).
-2. Đọc `.agents/AGENTS.md` và `.agents/rules/global.md` để khởi tạo intake và định tuyến vào 5 Core Skills.
-
----
-
-## 2. Clickable File Links (Dynamic Workspace Path)
-
-Mọi đường dẫn file và symbol mã nguồn BẮT BUỘC dùng link markdown `file:///`:
-- Cú pháp liên kết file: `[<filename>](file:///<workspace-root>/<relative-path>)`
-- Cú pháp liên kết dòng/hàm: `[<symbol>](file:///<workspace-root>/<relative-path>#L<start>-L<end>)`
-- Chuẩn hóa dấu gạch chéo xuôi `/` cho URL (kể cả trên Windows).
-- AI tự động nối thư mục gốc workspace hiện tại, không hardcode đường dẫn tuyệt đối tĩnh.
-
----
-
-## 3. Artifact Dual-Stream Reporting
-
-- **Stream 1 (Tài liệu chi tiết):** Ghi báo cáo chuyên sâu, diff lớn, bảng biểu vào file Artifact markdown (`.md`) trong thư mục brain: `<appDataDir>/brain/<conversation-id>/...`.
-- **Stream 2 (Cửa sổ Chat):** Chỉ in bản Tóm tắt điều hành (Executive Summary) ngắn gọn (15–25 dòng) kèm liên kết trỏ tới Artifact.
-
----
-
-## 4. Terminal Visual Rendering
-
-Khi người dùng yêu cầu vẽ sơ đồ, kiến trúc, flowchart, hoặc trực quan hóa luồng:
-- BẮT BUỘC render trực tiếp thành biểu đồ khối ký tự **ASCII / Unicode Box Drawing** (`┌─┐`, `│`, `└─┘`, `──►`) ngay trong response.
-- Không chỉ trả về mermaid thô trừ khi người dùng yêu cầu xuất file riêng.
-
----
-
-## 5. Tích Hợp Slash Commands Bản Địa
-
-Chủ động gợi ý slash command phù hợp ngữ cảnh khi người dùng cần:
-- `/grill-me`: Phỏng vấn sâu làm rõ các quyết định thiết kế hoặc yêu cầu còn mơ hồ.
-- `/goal`: Chạy task lớn xuyên suốt nhiều module, kiên trì thực thi đến khi đạt mục tiêu.
-- `/learn`: Lưu lại tri thức dự án vào bộ nhớ khi được yêu cầu.
-- `/schedule`: Đặt lịch định kỳ kiểm tra sức khỏe hệ thống.
-- `/browser`: Mở trình duyệt nhúng bên phải để kiểm tra trực quan giao diện localhost.
-
----
-
-## 6. Controlled Subagent Orchestration
-
-Khi người dùng yêu cầu và môi trường hỗ trợ, tham khảo `.agents/rules/subagent-orchestration.md`.
-Mặc định thực thi single-agent; không tự ý điều phối song song khi chưa được cho phép.
+QK là chỉ dẫn cho model, không phải bộ máy cưỡng chế hành vi. Cấu hình đã nạp/validation đạt không tự chứng minh agent chạy chính xác; đánh giá bằng hành động, kết quả và trace thực tế.

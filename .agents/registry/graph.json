@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "manifest_version": "12.0",
-  "generated_at": "2026-11-02T02:51:06.972Z",
+  "manifest_version": "13.0",
+  "generated_at": "2026-11-18T15:10:04.398Z",
   "nodes": {
     "qk-bug-resolution": {
       "path": ".agents/skills/qk-bug-resolution",
-      "version": "10.4.2",
+      "version": "13.1.0",
       "platforms": [
         "antigravity"
       ],
@@ -19,7 +19,7 @@
     },
     "qk-code-cleaner": {
       "path": ".agents/skills/qk-code-cleaner",
-      "version": "10.4.2",
+      "version": "13.1.0",
       "platforms": [
         "antigravity"
       ],
@@ -33,7 +33,7 @@
     },
     "qk-code-review": {
       "path": ".agents/skills/qk-code-review",
-      "version": "10.4.2",
+      "version": "13.0.0",
       "platforms": [
         "antigravity"
       ],
@@ -47,7 +47,7 @@
     },
     "qk-devops-release": {
       "path": ".agents/skills/qk-devops-release",
-      "version": "10.4.2",
+      "version": "13.0.0",
       "platforms": [
         "antigravity"
       ],
@@ -61,7 +61,7 @@
     },
     "qk-feature-delivery": {
       "path": ".agents/skills/qk-feature-delivery",
-      "version": "10.4.2",
+      "version": "13.1.0",
       "platforms": [
         "antigravity"
       ],

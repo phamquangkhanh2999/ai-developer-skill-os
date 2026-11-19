@@ -42,16 +42,17 @@ references:
 
 Extended sections such as intent, selection, budgets, exit codes and compliance may be present in skill bodies. The validator, not this example, defines the enforceable contract.
 
-## 2. Antigravity rule metadata
+## 2. Antigravity rule metadata and context budget
 
-Rule files under `.agents/rules/` use Antigravity-compatible YAML frontmatter. `global.md` is `always_on`; specialized rules use `model_decision` with a meaningful description. Validators reject absent/invalid trigger metadata and incomplete descriptions.
+Rule files under `.agents/rules/` use Antigravity-compatible YAML frontmatter. `global.md` is `always_on`; specialized rules use `model_decision` with a meaningful description. Validators reject absent/invalid trigger metadata, incomplete descriptions, individual rule files exceeding `24,000` bytes, and aggregate always-on footprints (`GEMINI.md` + `.agents/AGENTS.md` + `global.md`) exceeding `16,000` bytes.
 
-## 3. Runtime boundaries
+## 3. Runtime boundaries, hooks, and plugin bundle
 
-- Antigravity discovers skills from the documented `.agents/skills/` layout and exposes installed skills through its native interaction model.
+- Antigravity discovers skills from `.agents/skills/` (or `plugins/qk-skill-os/skills/` in plugin mode) and exposes installed skills through its native interaction model.
+- `.agents/hooks.json` defines lightweight synchronous `PreToolUse` command hooks (`./hooks/guard-registry.mjs` enabled by default; `./hooks/guard-command.mjs` opt-in). Hooks must respect least privilege and never return `"allow"` for paths outside `workspacePaths` / `artifactDirectoryPath`.
 - Repository aliases in `.agents/skill-aliases.yml` are routing guidance only. They do not create executable commands or additional skills.
 - This package has no YAML workflow runtime. Skills describe procedures directly and can reference policy or guidance files.
-- Subagent delegation depends on the active Antigravity runtime's actual tools and permissions. The orchestration rule is policy text, not a scheduler or capability grant.
+- Subagent delegation depends on the active Antigravity runtime's actual tools and permissions (`research`, `browser` verified via `BROWSER_HOST_FACTS`, and explicit opt-in `swarm`). The orchestration rule is policy text, not a scheduler or capability grant.
 
 ## 4. Generated registry and checks
 
@@ -66,8 +67,8 @@ npm run test:graph
 npm test
 ```
 
-The current package has five core skills. Counts are derived from source and must not be hard-coded as an assumption in validation tooling.
+The current package has five core skills with mutually exclusive `triggers`. Counts are derived from source and must not be hard-coded as an assumption in validation tooling.
 
 ## 5. Versioning
 
-Package releases use semantic versioning. Removing platform installers and workflow tooling is a breaking scope change; this package line therefore advances to `12.0.0`. Skill component versions remain independently managed and are bumped when their behavior changes.
+Package releases use semantic versioning. The current contract line is `13.0.0`, featuring a unified verification/reporting contract in `global.md`, lifecycle hooks, thin profile mode (`--scope=profile`), and native Antigravity plugin packaging (`--mode=plugin`). Skill and rule component versions remain independently managed and are bumped when their behavior changes.

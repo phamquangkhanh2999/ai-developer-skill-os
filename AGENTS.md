@@ -15,7 +15,9 @@ Cấu trúc quan trọng:
 .agents/
 ├── AGENTS.md          ← Entry point của skin system (không phải file này)
 ├── DEV_PROFILE.md     ← Khai báo role + stack của developer
+├── hooks.json         ← Lifecycle Safety Hooks (PreToolUse guardrails)
 ├── skills/            ← 5 Core Skills (mỗi skill có SKILL.md)
+├── references/        ← On-demand domain guidance (ui, backend-data, requirements...)
 ├── rules/             ← Behavior policies (global, coding, safety, security...)
 └── registry/          ← Generated indexes — KHÔNG sửa tay (graph.json, index.yaml)
 ```

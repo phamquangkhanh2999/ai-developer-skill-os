@@ -1,9 +1,9 @@
 ---
 name: qk-code-review
-version: 10.4.2
+version: 13.0.0
 status: stable
 subtitle: "Review Code & Security Audit"
-description: "Đánh giá mã nguồn chỉ đọc (Read-Only): Phát hiện lỗ hổng bảo mật, vi phạm kiến trúc, nợ kỹ thuật với bằng chứng cụ thể. Dùng khi: review code, code review, kiểm tra code, đánh giá code, security audit, scan lỗ hổng, owasp, secret leak."
+description: "Dùng khi đánh giá chỉ đọc source, diff, kiến trúc hoặc bảo mật. Nêu findings có bằng chứng và giới hạn; không tự sửa khi chỉ được giao review."
 platforms: [antigravity]
 runtime_version: 1
 references:
@@ -11,7 +11,7 @@ references:
   - ../../references/ui.md
 rules:
   - global
-  - coding-standards
+  - coding
   - safety
   - subagent-orchestration
 triggers:
@@ -25,37 +25,14 @@ triggers:
   - "secret leak"
 ---
 
-# qk-code-review — Kiểm Toán Mã Nguồn & Bảo Mật
+# QK — review chỉ đọc
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
+Dùng [global.md](../../rules/global.md) cho nghiệm thu, báo cáo và giới hạn bằng chứng.
 
----
+- Xác định đối tượng: diff/branch khi được chỉ định; module hoặc cấu hình hiện hành khi user yêu cầu review hệ thống. Thiếu baseline diff không chặn review source hiện hành; nêu rõ phạm vi thực đã đọc.
+- Giữ nguyên source và thay đổi có sẵn. Chỉ sửa khi người dùng chuyển rõ sang yêu cầu sửa; khi đó tiếp tục từ findings đã xác minh, không bắt đầu lại toàn bộ review.
+- Mỗi finding có vị trí `file:dòng`, điều kiện xảy ra, cơ chế/tác động và hướng xử lý. Đối chiếu source hiện tại; gộp trùng và tách phát hiện chắc chắn khỏi giả thuyết cần runtime.
+- Ưu tiên lỗi correctness, dữ liệu, quyền và contract liên quan. Style là góp ý khi không có tác động; số dòng, số tầng hoặc sở thích kiến trúc không tự là lỗi.
+- Chọn checklist theo lĩnh vực thực: [backend-data.md](../../references/backend-data.md) cho API/database/auth; [ui.md](../../references/ui.md) cho UI. Không ép OWASP vào file không có bề mặt tấn công tương ứng.
 
-## 1. Nguyên Tắc Cốt Lõi: Chế Độ Đọc Tuyệt Đối (Strict Read-Only)
-
-- **TUYỆT ĐỐI KHÔNG sửa mã nguồn:** Working tree của dự án phải giữ nguyên vẹn 100%. Không tự ý chỉnh sửa file, không refactor, không tạo file memory khi chỉ được yêu cầu review.
-- **Bằng chứng xác thực (Evidence-First):** Mọi phát hiện (finding) BẮT BUỘC phải trích dẫn đường dẫn `file:dòng`, đoạn mã cụ thể, và phân tích cơ chế gây rủi ro.
-- **Rà soát song song:** Có thể giao phần đọc độc lập khi user cho phép và runtime/quyền xác nhận; đọc [subagent-orchestration.md](../../rules/subagent-orchestration.md). Lead kiểm tra lại mọi finding trên baseline hiện tại, gộp trùng và giữ limitations.
-- **Kiểm chứng (Verify):** Đối chiếu vị trí và cơ chế của từng finding trên source hiện tại trước khi đưa vào báo cáo; đánh dấu giới hạn nếu chưa xác minh được.
-- **Không bịa điểm số tổng:** Cấm đưa ra các thang điểm cảm tính, giả định (như "85/100" hay "92% clean") mà không có công thức đo lường tự động có thể tái lập.
-- **Bảo mật theo ngữ cảnh (Contextual Security):** Chỉ kiểm toán các danh mục OWASP thực sự liên quan. Với các file cấu hình hoặc UI thuần túy, các tiêu chí injection/DB đánh dấu là N/A thay vì cố ép nhận xét hình thức.
-
----
-
-## 2. Nạp Kiến Thức Chuyên Môn Theo Nhu Cầu
-
-- **Khi review Auth / Database / API:** Đọc [backend-data.md](../../references/backend-data.md) — Rà soát IDOR, SQL injection, transaction rollback, rò rỉ secret trong code.
-- **Khi review Giao diện / Client:** Đọc [ui.md](../../references/ui.md) — Rà soát WCAG a11y, contrast ratio, visual regression, tràn viền mobile.
-
----
-
-## 3. Cấu Trúc Báo Cáo Kiểm Toán (Review Report)
-
-Báo cáo kết quả review gồm:
-- **Tóm tắt điều hành:** Số lượng vấn đề phát hiện theo mức độ nghiêm trọng (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`).
-- **Chi tiết từng phát hiện (Findings):**
-  - Mức độ nghiêm trọng (Severity).
-  - Vị trí (`file:dòng`) và trích dẫn mã nguồn có vấn đề.
-  - Cơ chế và tác động tiềm ẩn (Impact).
-  - Đề xuất giải pháp và lý do kỹ thuật (Fix Rationale).
-- **Trạng thái:** `VERIFIED` (đã đối chiếu evidence trên code).
+Báo findings theo mức tác động, sau đó phần đã kiểm/chưa kiểm. Không có finding có căn cứ thì nói rõ thay vì tạo lỗi để đủ mục. Không bịa điểm số tổng. Chứng cứ source không chứng nhận runtime hay bảo đảm không còn lỗi.

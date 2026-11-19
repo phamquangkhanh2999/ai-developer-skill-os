@@ -6,8 +6,10 @@ on:
       - '.agents/registry/**'
       - '.agents/rules/**'
       - '.agents/references/**'
+      - '.agents/hooks/**'
+      - '.agents/hooks.json'
+      - '.agents/assets/**'
       - '.agents/docs/**'
-      - '.agents/blueprints/**'
       - '.agents/AGENTS.md'
       - '.agents/skill-aliases.yml'
       - 'AGENTS.md'
@@ -26,8 +28,10 @@ on:
       - '.agents/registry/**'
       - '.agents/rules/**'
       - '.agents/references/**'
+      - '.agents/hooks/**'
+      - '.agents/hooks.json'
+      - '.agents/assets/**'
       - '.agents/docs/**'
-      - '.agents/blueprints/**'
       - '.agents/AGENTS.md'
       - '.agents/skill-aliases.yml'
       - 'AGENTS.md'
@@ -53,7 +57,7 @@ jobs:
         run: npm install
       - name: Validate Skills Registry vs Filesystem
         run: npm run test:registry
-      - name: Validate SKILL.md Spec Compliance
+      - name: Validate SKILL.md, Rules Budget & Hooks Spec Compliance
         run: npm run lint
       - name: Validate Graph Integrity
         run: npm run test:graph
@@ -69,13 +73,22 @@ jobs:
           node-version: '20.x'
       - name: Install dependencies
         run: npm install
-      - name: Smoke-test Antigravity local install in isolation
+      - name: Smoke-test Antigravity local, profile, and plugin installs in isolation
         env:
           HOME: ${{ runner.temp }}/antigravity-home
         run: |
-          mkdir -p "$HOME" "$RUNNER_TEMP/antigravity-workspace"
+          mkdir -p "$HOME" "$RUNNER_TEMP/antigravity-workspace" "$RUNNER_TEMP/antigravity-thin"
           cd "$RUNNER_TEMP/antigravity-workspace"
           node "$GITHUB_WORKSPACE/bin/install.js" --ide=antigravity --scope=local
           test -f .agents/AGENTS.md
+          test -f .agents/hooks.json
           test -f .agents/skills/qk-feature-delivery/SKILL.md
+          test ! -d .agents/docs
           test -f GEMINI.md
+          node "$GITHUB_WORKSPACE/bin/install.js" --ide=antigravity --mode=plugin
+          test -f "$HOME/.gemini/config/plugins/qk-skill-os/plugin.json"
+          test -f "$HOME/.gemini/config/plugins/qk-skill-os/rules/AGENTS.md"
+          cd "$RUNNER_TEMP/antigravity-thin"
+          node "$GITHUB_WORKSPACE/bin/install.js" --ide=antigravity --scope=profile
+          test -f .agents/DEV_PROFILE.md
+          test ! -f GEMINI.md

@@ -1,9 +1,9 @@
 ---
 name: qk-code-cleaner
-version: 10.4.2
+version: 13.1.0
 status: stable
 subtitle: "Refactor & Viết Test"
-description: "Kỹ nghệ tái cấu trúc bảo toàn hành vi (Zero Behavior Change), nâng cấp dependency an toàn và bổ sung kiểm thử tự động. Dùng khi: refactor, tái cấu trúc, tách file, clean code, giảm complexity, upgrade thư viện, update package, viết test, unit test, integration test."
+description: "Dùng khi refactor giữ contract, nâng dependency hoặc bổ sung unit/integration test. Thay đổi hành vi nghiệp vụ thuộc qk-feature-delivery."
 platforms: [antigravity]
 runtime_version: 1
 references:
@@ -11,7 +11,7 @@ references:
   - ../../references/ui.md
 rules:
   - global
-  - coding-standards
+  - coding
   - safety
 triggers:
   - "refactor"
@@ -26,43 +26,14 @@ triggers:
   - "unit test"
 ---
 
-# qk-code-cleaner — Tái Cấu Trúc Mã Nguồn & Viết Test
+# QK — bảo trì và kiểm thử
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
+Kiểm chứng theo tầng và báo cáo theo [global.md](../../rules/global.md) cho bằng chứng, quyền và nghiệm thu.
 
----
+- **Refactor:** giữ contract/hành vi được yêu cầu; ghi nhận baseline ở phần liên quan, sửa cấu trúc có lợi ích cụ thể, rồi đối chiếu kết quả. Khi refactor theo chuỗi nhiều bước, kiểm Tầng 1 ở từng bước và hoãn full `build`/suite tới mốc chốt. Không tách file hoặc thêm abstraction chỉ để đạt ngưỡng dòng.
+- **Nâng dependency:** đọc changelog/migration chính chủ, kiểm compatibility và lockfile; chạy kiểm chứng Tầng 2 (`build`, checks bắt buộc và hồi quy liên quan). Khi đổi behavior là mục tiêu người dùng đã giao, chuyển feature nội bộ và giữ task; không dừng chỉ vì đổi nhãn skill.
+- **Bổ sung test:** lấy expected result từ yêu cầu, contract, dữ liệu hoặc quan sát được xác nhận. Ưu tiên case có thể phát hiện sai lệch thật, không assertion chỉ sao chép implementation hoặc mock. Mô tả giới hạn test.
 
-## 1. Nguyên Tắc Cốt Lõi: Bảo Toàn Tuyệt Đối Hành Vi (Zero Behavior Change)
+Với thay đổi có rủi ro, có cách khôi phục delta đã làm. Test pass chỉ chứng minh các case và lớp đã chạy; chưa kiểm runtime thì ghi rõ. Tái sử dụng check còn hiệu lực, kiểm lại khi input/source liên quan đổi hoặc có concern mới.
 
-- **Giữ nguyên hợp đồng hành vi:** Refactor chỉ thay đổi cấu trúc bên trong mã nguồn để tăng tính dễ đọc, giảm độ phức tạp (cyclomatic complexity) hoặc tối ưu hiệu năng; **TUYỆT ĐỐI KHÔNG làm thay đổi hành vi nghiệp vụ**.
-- **Nếu yêu cầu đổi hành vi:** Dừng lại và điều hướng người dùng sang `qk-feature-delivery`. Refactor không bao giờ được kiêm nhiệm thêm chức năng mới.
-- **Nâng cấp Dependency an toàn:**
-  - Bắt buộc kiểm tra changelog, migration guides và breaking changes trước khi bump version.
-  - Chạy toàn bộ test suites sau khi nâng cấp để bảo đảm tính tương thích.
-  - Có kế hoạch rollback rõ ràng (lockfile commit) nếu việc nâng cấp gặp lỗi.
-- **Lưới kiểm thử bảo vệ (Regression Shield):** Đảm bảo có bộ test (unit hoặc integration) kiểm tra hành vi cũ trước khi tái cấu trúc. Sau khi refactor, mọi test case phải pass sạch sẽ.
-
----
-
-## 2. Nạp Kiến Thức Chuyên Môn Theo Nhu Cầu
-
-- **Khi refactor UI / Frontend:** Đọc [ui.md](../../references/ui.md) — Áp dụng co-location thay vì xé nhỏ quá mức, dọn magic numbers vào design tokens.
-- **Khi refactor Backend / Query:** Đọc [backend-data.md](../../references/backend-data.md) — Chuẩn hóa validation schemas, loại bỏ N+1 query, bảo đảm transaction rollback.
-
----
-
-## 3. Cấu Trúc Báo Cáo Tái Cấu Trúc (Refactor Report)
-
-### Thứ tự thực hiện
-
-1. Ghi nhận hành vi hiện tại và chạy test liên quan làm baseline.
-2. Thực hiện từng thay đổi cấu trúc nhỏ, không đổi contract hoặc nghiệp vụ.
-3. Kiểm chứng (Verify): chạy lại test mục tiêu rồi toàn bộ suite phù hợp; điều tra mọi khác biệt trước khi kết luận.
-4. Rà diff để xác nhận chỉ các file thuộc phạm vi refactor bị đổi.
-
-Báo cáo kết quả gồm:
-- **Mục tiêu:** Hàm, module hoặc dependency được tái cấu trúc.
-- **Cấu trúc Trước vs Sau (Before / After):** Nêu rõ sự cải thiện (giảm dòng code thừa, giảm độ phức tạp, tách trách nhiệm sạch sẽ).
-- **Lý do thay đổi:** Giải thích giá trị kỹ thuật mang lại.
-- **Bằng chứng giữ nguyên hành vi:** Kết quả thực chạy test suite (lệnh chạy và status `PASS`).
-- **Trạng thái:** `VERIFIED` (đã chạy test thực tế chứng minh hành vi không đổi).
+Chỉ đọc [ui.md](../../references/ui.md) hoặc [backend-data.md](../../references/backend-data.md) khi vùng bảo trì thực sự cần. Trả checkpoint ngắn giữa chuỗi hoặc báo cáo theo global.md khi chốt mốc.

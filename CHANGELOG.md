@@ -1,9 +1,35 @@
+# v13.0.0 — local candidate, 2026-11-18
+
+- One global execution/verification/reporting contract (`global.md` `v13.1.0`) with **Two-Speed Execution** (`Iterative Batch` vs `Milestone Gate`) and **3-Tier Verification** (`Tier 0/1` lightweight checks between tasks, `Tier 2` full build/suite at milestone), plus concise 1–3 line checkpoints.
+- Imperative conditional rule style (`coding.md` `v13.1.0`, `skill-quality.md` `v10.4.0`), strict quoted single-string `globs` linting, and native platform command precedence (`/learn`, `/boost`).
+- Intent-first routing aid, explicit non-code modes (`prompt-only`, `plan-only`, `discovery-only`), unique cross-skill triggers, and intake fallback.
+- Native Antigravity Plugin bundle support (`--mode=plugin` → `qk-skill-os/plugin.json` with live UI toggle) and Thin Project Profile mode (`--scope=profile` to prevent 2x Global/Local rule duplication).
+- Lightweight `PreToolUse` Lifecycle Hooks (`.agents/hooks.json`: `qk-registry-guard` active by default with workspace-boundary least privilege; `qk-destructive-command-guard` opt-in).
+- Modernized subagent orchestration (`v1.1.0`) for Antigravity's native `research` (read-only sandbox), `browser` (verified via `BROWSER_HOST_FACTS`), and explicit opt-in `swarm`.
+- Downstream installations exclude repository-internal `.agents/docs/` and `.agents/LICENSE`. No marketplace publication or performance guarantee.
+
 # Changelog
 
 All notable changes to AI Developer Skill OS are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ---
+
+## [12.1.0] — 2026-11-12 — Evidence-Led Antigravity Intake & Policy Synchronization
+
+### Changed
+- Clarified the Antigravity intake contract: identify the requested outcome and scope, ground code changes in evidence, select files by behavior ownership, and scale reporting detail to task complexity.
+- Synchronized `.agents/rules/` (`global.md` `v11.2.0`, `prompt-compiler.md` `v11.3.0`, `coding.md` `v10.3.0`, `safety.md` `v10.3.0`, `command-safety.md` `v10.3.0`, `anti-patterns.md` `v1.1.0`, `security.md` `v10.2.1`, `subagent-orchestration.md` `v1.0.0`), `GEMINI.md`, and `.agents/AGENTS.md` to eliminate split-brain contradictions between global and workspace rules.
+- Relocated the skill authoring template from `.agents/skills/_template/SKILL.md` to `.agents/docs/templates/SKILL.template.md` so Antigravity IDE does not mount `qk-[skill-name]` as an active skill.
+- Fixed broken rule references (`coding-standards` → `coding`) across core skills (`v10.4.3` / `qk-bug-resolution` `v10.5.0`) and upgraded `tooling/validate-skills.js` to verify rule file existence and reject underscore-prefixed folders in `.agents/skills/`.
+- Fixed `rewriteAbsolutePaths` in `bin/install.js` to skip conflicted user files during global upgrades and prune empty retired directories.
+- Documented `.agents/rules/priorities.yml` as descriptive metadata only; Antigravity does not automatically load or enforce its weights.
+
+### Removed
+- Retired ~600KB of unreferenced legacy v8/v10 files (`.agents/skills/qk-code-review/references/`, `.agents/skills/*/evals/scorecard.yaml`, `.agents/knowledge/`, `.agents/blueprints/`) and registered their SHA-256 fingerprints in `tooling/managed-files.js` for automatic upgrade cleanup.
+
+### Packaging
+- Prepared package version `12.1.0`; this release has not been published to npm or pushed to Git.
 
 ## [12.0.0] — 2026-11-02 — Antigravity-Only Runtime
 

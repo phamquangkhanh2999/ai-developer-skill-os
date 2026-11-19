@@ -17,7 +17,7 @@ describe('Antigravity Install Script Logic', () => {
 
   it('should support Antigravity global installation & path conversion', () => {
     expect(content).toContain(".gemini', 'config'");
-    expect(content).toContain('rewriteAbsolutePaths(targetDir)');
+    expect(content).toContain('rewriteAbsolutePaths(targetDir');
   });
 
   it('exposes Antigravity as its only supported installer target', () => {

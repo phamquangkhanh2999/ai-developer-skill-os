@@ -5,7 +5,14 @@
 
 ---
 
-## 1. Nguyên Tắc Cốt Lõi & Chống Over-Engineering
+## 1. Phác Thảo Khung Giao Diện & Luồng Tương Tác Trực Quan
+
+- **Vẽ trước, giải thích sau:** Khi người dùng yêu cầu phác thảo UI, thiết kế màn hình hoặc hỏi cách thao tác trên giao diện/CMS, **chủ động dựng khung giao diện trực quan** (dùng `generative_ui` HTML widget nếu runtime hỗ trợ, hoặc ASCII wireframe rõ bố cục header/sidebar/form/action buttons) kèm sơ đồ luồng (`mermaid`) thay vì chỉ trả lời bằng text thuần.
+- **Đủ thành phần nghiệp vụ trên khung:** Thể hiện rõ vị trí trường nhập, nút bấm chính/phụ, trạng thái rỗng/loading/lỗi và luồng chuyển màn hình để người dùng đối chiếu ngay.
+
+---
+
+## 2. Nguyên Tắc Cốt Lõi & Chống Over-Engineering
 
 - **Co-location over Micro-splitting:** Giữ các phần tử liên kết chặt chẽ trong cùng một file component (ví dụ: `CardHeader`, `CardBadge` trong `Card.tsx`). Không xé nhỏ component 70 dòng thành 5 file con riêng rẽ nếu chúng chỉ dùng nội bộ.
 - **Tận dụng CSS thuần trước thư viện:** Ưu tiên CSS transitions (`transition: all 150ms ease-in-out`) cho các hiệu ứng hover/focus cơ bản thay vì cài đặt các package animation cồng kềnh (Framer Motion, GSAP) khi chưa được yêu cầu.
@@ -13,10 +20,10 @@
 
 ---
 
-## 2. Kỷ Luật Design Tokens & Anti-Slop (57 Tiêu Chí Thị Giác)
+## 3. Design system và trạng thái theo loại control
 
-- **100% Design Tokens:** Tuyệt đối không dùng magic numbers (`#2371e2` trần trụi hoặc `margin: 19px`). Toàn bộ màu sắc, khoảng cách (spacing), font-size và border-radius phải ánh xạ từ hệ thống token/theme (Tailwind, CSS Variables, Theme provider).
-- **Đầy Đủ 6 Interaction States:**
+- **Design tokens theo dự án:** Tái sử dụng token/theme có sẵn cho giá trị dùng chung. Giá trị cục bộ có chủ đích được giữ khi phù hợp thiết kế; không tạo token hoặc refactor ngoài phạm vi chỉ để loại bỏ px/hex.
+- **Trạng thái liên quan:** Chọn theo loại control và luồng đang làm; nội dung tĩnh không cần trạng thái tương tác, loading chỉ khi có thao tác bất đồng bộ:
   1. `Default`: Trạng thái bình thường.
   2. `Hover`: Phản hồi con trỏ chuột rõ ràng.
   3. `Focus-visible`: Vòng ring bàn phím sáng rõ phục vụ điều hướng phím (a11y).
@@ -32,9 +39,16 @@
 
 ---
 
-## 3. Xử Lý Sự Cố Giao Diện (Layout Bug Resolution)
+## 4. Xử Lý Sự Cố Giao Diện (Layout Bug Resolution)
 
-- **Cấm hack bẩn che lỗi:** Tuyệt đối KHÔNG dùng `overflow: hidden` trên toàn bộ trang `<body>` hoặc root wrapper để che giấu việc vỡ layout/tràn viền ngang.
+- **Sửa nguyên nhân tràn:** Truy phần tử gây tràn trước. Không dùng overflow để giấu nội dung cần truy cập; scroll-lock của modal hoặc clipping có chủ đích được đánh giá theo thiết kế thực tế.
 - **Truy tìm và sửa tận gốc:**
   - Tìm phần tử có `width: 100vw`, fixed `width: 600px`, hoặc chuỗi text dài thiếu `break-words`.
   - Khắc phục bằng `max-w-full`, `min-w-0`, `flex-wrap`, hoặc `grid-cols-1 md:grid-cols-2`.
+
+---
+
+## 5. Kiểm Chứng Giao Diện Thực Tế Trên Antigravity
+
+- Khi dự án có dev server hoặc trang web đang chạy và runtime cung cấp `browser` subagent, ưu tiên ủy quyền kiểm chứng trạng thái hiển thị/tương tác thật thay vì chỉ đoán qua CSS tĩnh.
+- Khi cần đối chiếu ảnh thiết kế/mockup, sao chép file tham chiếu vào `browser_sandbox/references/` trong thư mục artifact của phiên và đối chiếu thông điệp `BROWSER_HOST_FACTS` trước khi ghi nhận bằng chứng UI. Nếu không mở trình duyệt thật, giữ lớp kiểm chứng UI runtime ở trạng thái `NOT_RUN`.

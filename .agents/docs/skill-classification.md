@@ -1,25 +1,23 @@
-# Skill Classifications (Intent-Based Policies)
+# Skill Classifications (5 Core Skills)
 
-Skills are classified into behavioral groups that define their **Primary Objective** and **Preferred Evidence Strategy**.
+Skills are organized into five core functional boundaries that define their **Primary Objective** and **Evidence Strategy**, governed by `.agents/rules/global.md` and `.agents/rules/safety.md`.
 
-*Note: Actual verification depth is NOT determined by the skill itself, but must strictly follow the **Risk-based Verification Policy** defined in `AGENTS.md`.*
+## 1. Read-Only & Audit (`qk-code-review`)
+- **Primary Goal:** Audit code, architecture, and security risks without modifying the working tree.
+- **Evidence Strategy:** Cite exact `file:line` locations, code snippets, and concrete impact mechanisms. Never invent synthetic aggregate scores.
 
-## 1. Static Analysis Skills
-*e.g., qk-code-review, qk-product-spec, qk-orchestrator*
-- **Primary Goal:** Audit, analyze, or document without altering system behavior.
-- **Preferred Behavior:** Prefer static analysis (`read_file`, `grep_search`). Do not execute code or run test suites unless explicitly requested to validate the audit.
+## 2. Feature Delivery & Specifications (`qk-feature-delivery`)
+- **Primary Goal:** Implement new capabilities, handle requirement changes, or operate in non-code modes (`plan-only`, `discovery-only`, `prompt-only`).
+- **Evidence Strategy:** Verify against explicit Acceptance Criteria; load domain references (`requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`) on demand.
 
-## 2. Development Skills
-*e.g., Feature Delivery, Refactor, Bug Resolution*
-- **Primary Goal:** Modify existing behavior or implement new features safely.
-- **Preferred Behavior:** Apply localized changes. Gather targeted evidence. Avoid speculative full-project validation; verify only what is affected.
+## 3. Root-Cause Bug Resolution (`qk-bug-resolution`)
+- **Primary Goal:** Diagnose and eliminate root causes of defects via `Observe → Evidence → Cause → Minimal Fix → Verify`.
+- **Evidence Strategy:** Inspect source, callers, contracts, and logs first; apply minimal fixes at the point of behavior ownership and run targeted verification.
 
-## 3. Validation Skills
-*e.g., Validation Gate, CI Check, Release*
-- **Primary Goal:** Ensure code quality, security, and build stability before release.
-- **Preferred Behavior:** Exhaustive scanning. Running automated checks and full builds is encouraged to satisfy the validation gate.
+## 4. Behavior-Preserving Refactoring & Testing (`qk-code-cleaner`)
+- **Primary Goal:** Improve internal code structure, upgrade dependencies safely, and expand automated test coverage with zero behavior change.
+- **Evidence Strategy:** Establish a baseline before refactoring and prove behavior preservation with passing test suites.
 
-## 4. Maintenance Skills
-*e.g., System Evolution, Dependency Update*
-- **Primary Goal:** Upgrade system foundations safely with a rollback strategy.
-- **Preferred Behavior:** Inspect changelogs and compatibility carefully before updating. Run full system verifications post-update to ensure stability.
+## 5. Platform Operations, Release & Documentation (`qk-devops-release`)
+- **Primary Goal:** Maintain CI/CD pipelines, Docker/deployment configs, proportional documentation, and opt-in project memory (`.ai-local/`).
+- **Evidence Strategy:** Validate configurations locally (`lint`, `test`, `npm pack --dry-run`), prepare rollback plans, and require explicit user authorization before any publish or production deployment.

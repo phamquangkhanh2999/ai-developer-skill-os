@@ -1,0 +1,32 @@
+{
+  "qk-registry-guard": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file|.*replace_file.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/guard-registry.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "qk-destructive-command-guard": {
+    "enabled": false,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/guard-command.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

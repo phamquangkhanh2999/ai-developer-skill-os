@@ -1,9 +1,9 @@
 ---
 name: qk-devops-release
-version: 10.4.2
+version: 13.0.0
 status: stable
 subtitle: "DevOps, CI/CD & Deploy"
-description: "Vận hành nền tảng, CI/CD pipelines, Docker, phát hành sản phẩm an toàn có Rollback, đồng bộ tài liệu kỹ thuật và quản lý bộ nhớ dự án (.ai-local/). Dùng khi: ci/cd, deployment, pipeline, docker, dockerfile, devops, github actions, release production, release checklist, viết docs, readme, swagger, project memory, learn."
+description: "Dùng khi sửa môi trường CI/CD, Docker/image, chuẩn bị hoặc thực hiện release/deploy theo quyền đã cấp, cập nhật docs hoặc memory khi được yêu cầu."
 platforms: [antigravity]
 runtime_version: 1
 references:
@@ -27,42 +27,13 @@ triggers:
   - "project memory"
 ---
 
-# qk-devops-release — Vận Hành Nền Tảng, CI/CD & Phát Hành
+# QK — môi trường và phát hành
 
-> **Hợp đồng cốt lõi:** Tuân thủ [.agents/rules/global.md](../../rules/global.md). Chỉ nêu tên skill nếu điều đó giúp giải thích hướng xử lý.
+Dùng [global.md](../../rules/global.md) cho trạng thái và báo cáo; quyền cho mutation/deploy theo [safety.md](../../rules/safety.md). Quyền đã cấp cho đúng hành động/môi trường tiếp tục có hiệu lực.
 
----
+- Xác định môi trường và kết quả được giao: sửa CI/image/config, chuẩn bị release, hay thực sự deploy. Lỗi test nghiệp vụ/ingestion thuộc bug-resolution; từ “pipeline” không đủ để chọn CI.
+- Khảo sát cấu hình/caller liên quan, sửa trong phạm vi và chuẩn bị khôi phục cho thay đổi có rủi ro. Với publish/release, đối chiếu version, changelog, lockfile và nội dung đóng gói; chạy checks thật có trong repo.
+- Trước deploy/mutation khó khôi phục, kiểm đúng target, quyền, backup/rollback và tác động. Chuẩn bị phần có thể kiểm tra trước khi xin một quyết định còn thiếu; không hỏi lại hành động đã được giao rõ.
+- Nghiệm thu đúng lớp: build image, cài cấu hình, rollout, phiên bản đang phục vụ, health và luồng liên quan là các quan sát khác nhau. Build image đạt không thay deploy/readback; runtime chưa chạy là NOT_RUN. Trạng thái chung chỉ theo global.md và phạm vi yêu cầu.
 
-## 1. Nguyên Tắc Cốt Lõi: An Toàn Phát Hành & Đúng Quyền Hạn
-
-- **Cấm tự ý Deploy / Publish:** Tuyệt đối KHÔNG tự ý thực thi các lệnh deploy lên môi trường production, publish package lên npm/PyPI, hoặc can thiệp hạ tầng đám mây nếu chưa có sự xác nhận tường minh từ người dùng.
-- **Tài liệu hóa tương xứng (Proportional Docs):** Khi cập nhật README, swagger, hoặc tài liệu kỹ thuật: thực hiện ngắn gọn, chính xác, tương xứng với thay đổi; không lập PRD dài dòng hay quy trình phức tạp.
-- **Phân định lỗi CI vs Lỗi ứng dụng:**
-  - Nếu build/job CI fail do cấu hình môi trường (sai phiên bản Node, thiếu dependencies hệ thống, Dockerfile lỗi cú pháp) ➔ Xử lý tại đây.
-  - Nếu CI fail do kiểm thử logic code hoặc crash nghiệp vụ ➔ Điều hướng sang `qk-bug-resolution`.
-- **Quản lý bộ nhớ dự án (`.ai-local/`):**
-  - Chỉ khởi tạo hoặc lưu trữ kiến thức vào `.ai-local/` khi có yêu cầu cụ thể từ người dùng (hoặc lệnh `/learn`).
-  - Không tự ý tạo file rác trong workspace của người dùng.
-- **Kế hoạch Rollback:** Mọi thay đổi release hoặc deploy lên môi trường staging/production bắt buộc phải chuẩn bị phương án quay về phiên bản trước (Revert commit, container rollback tag).
-
----
-
-## 2. Quy Trình Phát Hành & Kiểm Chứng
-
-```text
-Kiểm tra cấu hình môi trường / Secrets / Dockerfile
-   ↓
-Dry-run kiểm thử cục bộ (linter, container build, local actions)
-   ↓
-Báo cáo kế hoạch triển khai & Kế hoạch Rollback
-   ↓
-Chỉ thực thi khi người dùng xác nhận quyền
-   ↓
-Báo cáo kết quả theo mẫu Release/Docs Report trong global.md
-```
-
-- Trước khi đóng gói: xác nhận version/changelog/README/lockfile khớp; chạy lint, test, graph và registry checks có thật trong package; dùng `npm pack --dry-run --json` rồi kiểm tra file list/tarball.
-- Chạy security/dependency checks phù hợp với repository; không báo pass cho gate hoặc command không tồn tại, và ghi `NOT_RUN` nếu môi trường thiếu quyền hay mạng.
-- Publish chỉ sau xác nhận rõ của user; chuẩn bị phương án quay về release trước và báo trạng thái thực tế.
-
-- **Trạng thái:** `VERIFIED` (đã chạy kiểm thử cấu hình hoặc build image), `BLOCKED` (chờ người dùng cấp quyền/secrets).
+Docs: cập nhật nội dung cần thiết theo source thật, không ép PRD/release checklist cho sửa README. Memory: chỉ tạo/sửa `.ai-local/` khi người dùng yêu cầu. [context-discovery.md](../../references/context-discovery.md) chỉ nạp khi cần tìm cấu trúc dự án.

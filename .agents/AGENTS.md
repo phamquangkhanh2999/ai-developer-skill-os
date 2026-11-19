@@ -1,46 +1,39 @@
-# AGENTS.md — Full-System AI Software Engineer OS (5 Core Skills)
+# QK — entry point cho Antigravity
 
-> Entry Point chính của hệ thống Skin.
-> Điều phối trực tiếp đến 5 Core Skills và nạp tài liệu tham khảo (.agents/references/) theo nhu cầu.
+Hợp đồng chung tại [.agents/rules/global.md](.agents/rules/global.md): đọc một lần khi cần, không lặp định nghĩa báo cáo/nghiệm thu ở từng skill. Nếu có `.agents/DEV_PROFILE.md`, dùng conventions liên quan; profile không bắt buộc và không thay thế source thực tế.
 
----
+## Chọn việc theo mục tiêu
 
-## 1. Intake & Pre-flight
+Xác định người dùng muốn **giải thích**, **review**, **viết prompt/spec**, **khảo sát**, hay **thay đổi** trước; sau đó mới xét UI/API/data/CI. Khi mục tiêu đã rõ, làm tiếp trong quyền đã cấp.
 
-1. **Đọc Project Profile:** Đọc `.agents/DEV_PROFILE.md` nếu tồn tại (lấy role, stack, conventions, constraints). Profile là tùy chọn: nếu chưa có, tự suy luận từ codebase mà không chặn người dùng.
-2. **Xác định mục tiêu & chọn 1 Core Skill duy nhất:** Chọn skill theo kết quả mong muốn, không chỉ dò từ khóa:
+| Mục tiêu | Skill / mode |
+|---|---|
+| Hỏi cách dùng, giải thích, trạng thái | Trả lời trực tiếp; đọc source cần thiết, không tự sửa |
+| Đánh giá chỉ đọc, audit | `qk-code-review` |
+| Viết prompt / spec; khảo sát chưa triển khai | `qk-feature-delivery`: prompt-only / plan-only / discovery-only |
+| Hành vi sai, gồm lỗi dữ liệu trong pipeline hoặc test logic fail trên CI | `qk-bug-resolution` |
+| Tính năng mới, đổi hành vi, tích hợp API thật | `qk-feature-delivery`: build *(triển khai code đơn lẻ hoặc theo chuỗi — không đồng nghĩa tự chạy lệnh compile/bundle sau mỗi bước)* |
+| Refactor giữ contract, nâng dependency, bổ sung test | `qk-code-cleaner` |
+| Môi trường CI/CD, image, deploy/release; docs/memory khi được yêu cầu | `qk-devops-release` |
 
-| Mục tiêu công việc | Core Skill | Tham khảo chuyên môn (On-demand References) |
-|---|---|---|
-| Làm mới, đổi yêu cầu, tích hợp API, viết spec/PRD | `qk-feature-delivery` | `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md` |
-| Hành vi sai lệch contract/thiết kế, lỗi runtime/UI/CI | `qk-bug-resolution` | `ui.md`, `backend-data.md` |
-| Đánh giá chỉ đọc, security audit, code health | `qk-code-review` | `backend-data.md`, `ui.md` |
-| Tái cấu trúc giữ nguyên hành vi, upgrade package, test | `qk-code-cleaner` | `backend-data.md`, `ui.md` |
-| CI/CD, docker, release production, viết docs, memory | `qk-devops-release` | `context-discovery.md` |
+“Đừng sửa” là giới hạn quyền, không tự biến yêu cầu viết prompt thành review. “Pipeline” có thể là luồng dữ liệu hoặc CI; chọn theo nơi gây lỗi. “Chưa viết code” không tự có nghĩa khảo sát API. Không đủ mục tiêu thì hỏi ngắn thay vì mặc định build.
 
-*Khi người dùng hỏi chung về cách dùng bộ skin hoặc kiến trúc dự án: xử lý trực tiếp tại Intake (tham khảo `references/context-discovery.md`).*
+## Nhịp thực thi & Tiếp tục task
 
----
+Follow-up là delta: giữ kết quả, quyết định và checks đang hoãn; thực hiện phần mới, tránh lập lại intake/plan toàn bộ. Khi làm nối tiếp nhiều task hoặc ở bước trung gian, chỉ kiểm cục bộ nhẹ và trả checkpoint ngắn — không tự chạy full `build`/bundle sau mỗi bước; tầng kiểm chứng và nghiệm thu theo [.agents/rules/global.md](.agents/rules/global.md).
 
-## 2. Ánh Xạ Lệnh & Kỹ Năng Cũ (Legacy Aliases)
+## Nạp reference theo nhu cầu
 
-Chi tiết quy định tại `.agents/skill-aliases.yml`:
-Các alias dưới đây là hướng dẫn định tuyến; Antigravity slash commands chỉ được tạo cho thư mục skill thực có trong `.agents/skills/`.
-- `qk-ui-engineer` ➔ `qk-feature-delivery` (hoặc `qk-bug-resolution` nếu sửa lỗi UI) + `references/ui.md`
-- `qk-backend-data` ➔ `qk-feature-delivery` (hoặc `qk-bug-resolution` nếu lỗi contract) + `references/backend-data.md`
-- `qk-api-data-discovery` ➔ `qk-feature-delivery` (chế độ discovery-only) + `references/api-discovery.md`
-- `qk-product-spec` ➔ `qk-feature-delivery` (chế độ plan-only, KHÔNG viết code) + `references/requirements.md`
-- `qk-prompt-compiler` ➔ `qk-feature-delivery` (chế độ prompt-only, KHÔNG chạy prompt) + `references/prompt-authoring.md`
-- `qk-orchestrator` ➔ Intake / Help trực tiếp + `references/context-discovery.md`
+- UI/layout: `.agents/references/ui.md`.
+- API/database/data flow: `.agents/references/backend-data.md`.
+- Khảo sát API: `.agents/references/api-discovery.md`.
+- Spec/nghiệp vụ: `.agents/references/requirements.md`.
+- Viết prompt: `.agents/references/prompt-authoring.md`.
+- Quyết định kiến trúc lớn: `.agents/references/architecture.md`.
+- Khám phá cấu trúc dự án: `.agents/references/context-discovery.md`.
 
----
+Đọc phần liên quan, không nạp toàn bộ danh sách. Với review/fix, skill tiếp theo có thể đổi khi mục tiêu thực sự đổi; không yêu cầu người dùng khởi động một task mới chỉ để chuyển skill.
 
-## 3. Quy Chuẩn Thực Thi & Báo Cáo
+## Tương thích tên cũ
 
-- **Định tuyến nội bộ:** Chọn skill theo mục tiêu; chỉ nêu tên skill khi điều đó giúp người dùng hiểu cách xử lý.
-- **Không ép compiler:** Không bắt buộc in toàn bộ compiled prompt dài dòng cho mọi task. Chỉ hỏi khi thiếu dữ kiện làm thay đổi quyết định kỹ thuật.
-- **Báo cáo chuẩn theo `.agents/rules/global.md`:**
-  - **Bug report (5 trường bắt buộc):** (1) Lỗi & điều kiện xảy ra; (2) Nguyên nhân + bằng chứng (file:dòng/log); (3) Sửa gì + vị trí; (4) Vì sao sửa hết lỗi; (5) Kiểm chứng thực tế (lệnh & kết quả).
-  - **Feature report:** Yêu cầu, cách làm & lý do, file thay đổi, kiểm chứng theo Acceptance Criteria.
-  - **Trạng thái:** `VERIFIED` | `PARTIAL` | `BLOCKED` | `FAILED`. Từng check ghi `PASS` | `FAIL` | `NOT_RUN`.
-- **Memory Rule:** KHÔNG tự ý tạo thư mục `.ai-local/`. Chỉ tra cứu nếu đã có; chỉ tạo/sửa khi người dùng yêu cầu.
+Ánh xạ tại `.agents/skill-aliases.yml`: UI/backend → feature hoặc bug theo mục tiêu; product-spec → plan-only; prompt-compiler → prompt-only; api-data-discovery → discovery-only; orchestrator → intake. Alias không tạo executable/slash command mới. Chỉ gọi command/tool mà runtime thực sự có.
