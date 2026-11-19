@@ -1,6 +1,6 @@
-# AI Developer Skill OS v13.0.0 — Antigravity Edition
+# AI Developer Skill OS v13.1.0 — Antigravity Edition
 
-> **v13.0.0: Một hợp đồng nghiệm thu, tiếp tục theo delta, chọn mode theo mục tiêu. Bản local; chưa publish và chưa có benchmark IDE thật.**
+> **v13.1.0: Một hợp đồng nghiệm thu, 2 nhịp thực thi (Iterative Batch vs Milestone Gate), vẽ trực quan luồng/UI, Lifecycle Hooks & Native Plugin.**
 
 ## Kiến trúc Antigravity với 5 Core Skills
 

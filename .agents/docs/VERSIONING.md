@@ -2,7 +2,7 @@
 
 ## Current release line
 
-The current package is `13.0.0` and supports Antigravity only (workspace `.agents/`, global `~/.gemini/config/`, thin project profile `--scope=profile`, and native plugin bundle `--mode=plugin`). Component skill/rule versions are independent of the package version and change only when that component's contract or behavior changes.
+The current package is `13.1.0` and supports Antigravity only (workspace `.agents/`, global `~/.gemini/config/`, thin project profile `--scope=profile`, and native plugin bundle `--mode=plugin`). Component skill/rule versions are independent of the package version and change only when that component's contract or behavior changes.
 
 ## Semantic versioning
 

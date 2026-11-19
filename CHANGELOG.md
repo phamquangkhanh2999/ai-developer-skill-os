@@ -1,4 +1,4 @@
-# v13.0.0 — local candidate, 2026-11-18
+# v13.1.0 — 2026-11-20
 
 - One global execution/verification/reporting contract (`global.md` `v13.1.0`) with **Two-Speed Execution** (`Iterative Batch` vs `Milestone Gate`) and **3-Tier Verification** (`Tier 0/1` lightweight checks between tasks, `Tier 2` full build/suite at milestone), plus concise 1–3 line checkpoints.
 - Imperative conditional rule style (`coding.md` `v13.1.0`, `skill-quality.md` `v10.4.0`), strict quoted single-string `globs` linting, and native platform command precedence (`/learn`, `/boost`).

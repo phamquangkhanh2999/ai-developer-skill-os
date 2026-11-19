@@ -71,4 +71,4 @@ The current package has five core skills with mutually exclusive `triggers`. Cou
 
 ## 5. Versioning
 
-Package releases use semantic versioning. The current contract line is `13.0.0`, featuring a unified verification/reporting contract in `global.md`, lifecycle hooks, thin profile mode (`--scope=profile`), and native Antigravity plugin packaging (`--mode=plugin`). Skill and rule component versions remain independently managed and are bumped when their behavior changes.
+Package releases use semantic versioning. The current contract line is `13.1.0`, featuring a unified verification/reporting contract in `global.md`, two-speed execution, lifecycle hooks, thin profile mode (`--scope=profile`), and native Antigravity plugin packaging (`--mode=plugin`). Skill and rule component versions remain independently managed and are bumped when their behavior changes.
