@@ -1,6 +1,6 @@
-# AI Developer Skill OS v13.1.0 — Antigravity Edition
+# AI Developer Skill OS v13.2.0 — Antigravity Edition
 
-> **v13.1.0: Một hợp đồng nghiệm thu, 2 nhịp thực thi (Iterative Batch vs Milestone Gate), vẽ trực quan luồng/UI, Lifecycle Hooks & Native Plugin.**
+> **v13.2.0: Chuẩn hóa Editorial Diagram & Anti-Slop Specs, một hợp đồng nghiệm thu, 2 nhịp thực thi (Iterative Batch vs Milestone Gate), Lifecycle Hooks & Native Plugin.**
 
 ## Kiến trúc Antigravity với 5 Core Skills
 
@@ -12,7 +12,7 @@
   5. `qk-devops-release`: Vận hành nền tảng CI/CD, Docker, phát hành có rollback, cập nhật tài liệu và quản lý memory khi được yêu cầu.
 
 - **Tài liệu tham khảo chuyên môn (On-demand References):**
-  - Đặt tại `.agents/references/`: `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`, `context-discovery.md`.
+  - Đặt tại `.agents/references/`: `diagram-spec.md`, `requirements.md`, `ui.md`, `backend-data.md`, `api-discovery.md`, `prompt-authoring.md`, `context-discovery.md`.
   - Nạp khi cần thiết, không làm phình context ban đầu.
 
 - **Ánh xạ tên skill cũ (Legacy Aliases):**

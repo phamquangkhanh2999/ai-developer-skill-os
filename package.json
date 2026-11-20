@@ -1,7 +1,7 @@
 {
   "name": "ai-developer-skill-os",
-  "version": "13.1.0",
-  "description": "QK v13 — Antigravity skills with scoped execution and evidence-based handoff.",
+  "version": "13.2.0",
+  "description": "QK v13.2 — Antigravity skills with editorial diagram specs, anti-slop rules, and evidence-based handoff.",
   "main": "bin/install.js",
   "files": [
     "bin",

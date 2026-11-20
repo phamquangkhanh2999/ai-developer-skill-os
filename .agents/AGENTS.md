@@ -25,6 +25,7 @@ Follow-up là delta: giữ kết quả, quyết định và checks đang hoãn; 
 ## Nạp reference theo nhu cầu
 
 - UI/layout: `.agents/references/ui.md`.
+- Sơ đồ/kiến trúc xuất bản: `.agents/references/diagram-spec.md`.
 - API/database/data flow: `.agents/references/backend-data.md`.
 - Khảo sát API: `.agents/references/api-discovery.md`.
 - Spec/nghiệp vụ: `.agents/references/requirements.md`.

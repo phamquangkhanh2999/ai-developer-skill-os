@@ -1,3 +1,10 @@
+# v13.2.0 — 2026-11-20
+
+- Integrated editorial diagram and schematic design specification (`diagram-spec.md`) inspired by `cathrynlavery/diagram-design`.
+- Enforced strict **Anti-Diagram Slop** rules (`anti-patterns.md` `v1.2.0`): 1–2 Focal Accent rule, orthogonal connector rules ($r=8$), 6–10px label masking gap, and complexity budget ($\le 9$ nodes).
+- Added **Topology Delta** guidelines to `architecture.md` (Current vs Target vs Changes ledger).
+- Added responsive SVG container specifications with print media overrides to `ui.md`.
+
 # v13.1.0 — 2026-11-20
 
 - One global execution/verification/reporting contract (`global.md` `v13.1.0`) with **Two-Speed Execution** (`Iterative Batch` vs `Milestone Gate`) and **3-Tier Verification** (`Tier 0/1` lightweight checks between tasks, `Tier 2` full build/suite at milestone), plus concise 1–3 line checkpoints.

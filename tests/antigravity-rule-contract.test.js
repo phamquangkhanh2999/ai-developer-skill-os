@@ -96,7 +96,7 @@ describe('Antigravity rule contracts', () => {
   it('keeps release metadata and root architecture guidance synchronized', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
     const rootAgents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
-    expect(pkg.version).toBe('13.1.0');
+    expect(pkg.version).toBe('13.2.0');
     expect(rootAgents).toContain('5 Core Skills');
     expect(rootAgents).not.toMatch(/11 Core Super-Skills/);
   });

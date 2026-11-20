@@ -1,10 +1,10 @@
 ---
 name: anti-patterns
-version: 1.1.0
+version: 1.2.0
 trigger: model_decision
-description: "Quy tắc cốt lõi (R-C-09) về các Anti-patterns và AI Slop cần tuyệt đối tránh trong quá trình Code và Design."
+description: "Quy tắc cốt lõi (R-C-09) về các Anti-patterns và AI Slop cần tuyệt đối tránh trong quá trình Code, Design và Vẽ biểu đồ."
 domain: rules
-applies_to: [code-quality, ui-design]
+applies_to: [code-quality, ui-design, diagram-architecture]
 ---
 
 # R-C-09: Khung kiểm soát Anti-patterns và AI Slop
@@ -20,6 +20,14 @@ AI thường có xu hướng sinh ra giao diện "chung chung", "xám xịt". Đ
 - **Văn bản mù (Micro-typography):** Font size cho body text nhỏ hơn `14px` hoặc chữ xám nhạt trên nền trắng (Contrast ratio < 4.5:1).
 - **Design tokens:** Tái sử dụng token có sẵn cho màu/khoảng cách lặp lại. Giá trị px/hex cục bộ có chủ đích không tự động là lỗi; không tạo token hoặc refactor diện rộng chỉ để thay literal.
 - **Khoảng trắng hỗn loạn:** Margin/Padding không tuân theo spacing scale (4px/8px base).
+
+## 1.1 Diagram & Schematic Slop (Tuyệt đối cấm khi vẽ sơ đồ, kiến trúc)
+
+Khi trực quan hóa kiến trúc, quy trình hoặc luồng dữ liệu (Mermaid, SVG, HTML widget):
+- **Lạm dụng màu & Neon glow (Rainbow Slop):** Nền đen phát sáng neon (cyan/purple glow), đổ bóng `drop-shadow` lòe loẹt hoặc tô màu rực rỡ lên mọi node. Áp dụng nghiêm ngặt **Quy tắc 1–2 Focal Accent**: Toàn bộ sơ đồ dùng gam màu trung tính (paper, ink, muted slate), chỉ dành tối đa 1–2 điểm nhấn Accent (như cam cháy/burnt-tangerine) cho luồng tiêu điểm, nút thắt cổ chai hoặc phần tử đang thay đổi.
+- **Spaghetti Connectors & Chữ đè dây:** Đường nối chéo xiên xẹo không bo góc, nhiều dây chụm vào cùng một góc nhọn, hoặc đường nối đâm xuyên qua chữ cái (thiếu mask plate nền và khoảng hở tối thiểu 6–10px giữa chữ và dây).
+- **Lạm dụng font Mono toàn diện:** Dùng font Monospace (như JetBrains Mono) cho toàn bộ sơ đồ. Font Mono chỉ dành riêng cho thông số kỹ thuật (port, protocol, schema type, CLI command); tên thành phần và nhãn hiển thị dùng Sans-serif hoặc Serif.
+- **Biểu đồ quá tải (Over-budget):** Nhồi nhét quá 9–10 nodes vào một sơ đồ duy nhất khiến người đọc mất phương hướng. Nếu vượt quá, bắt buộc tách thành **Overview (Tổng quan)** và **Detail (Chi tiết từng module)**.
 
 ## 2. Code Architecture Anti-patterns
 
