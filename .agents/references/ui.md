@@ -7,7 +7,7 @@
 
 ## 1. Phác Thảo Khung Giao Diện & Luồng Tương Tác Trực Quan
 
-- **Vẽ trước, giải thích sau:** Khi người dùng yêu cầu phác thảo UI, thiết kế màn hình hoặc hỏi cách thao tác trên giao diện/CMS, **chủ động dựng khung giao diện trực quan** (dùng `generative_ui` HTML widget nếu runtime hỗ trợ, hoặc ASCII wireframe rõ bố cục header/sidebar/form/action buttons) kèm sơ đồ luồng (`mermaid`) thay vì chỉ trả lời bằng text thuần.
+- **Vẽ trước, giải thích sau:** Khi người dùng yêu cầu phác thảo UI, thiết kế màn hình hoặc hỏi cách thao tác trên giao diện/CMS, **chủ động dựng khung giao diện trực quan** (dùng `generative_ui` HTML widget hoặc xuất artifact HTML/SVG tương tác có đầy đủ styling, input, button, table badge; **tuyệt đối không dùng bảng vẽ ký tự ASCII thô sơ**) kèm sơ đồ luồng (`mermaid`) thay vì chỉ trả lời bằng text thuần.
 - **Đủ thành phần nghiệp vụ trên khung:** Thể hiện rõ vị trí trường nhập, nút bấm chính/phụ, trạng thái rỗng/loading/lỗi và luồng chuyển màn hình để người dùng đối chiếu ngay.
 - **Chuẩn hóa Container khi nhúng SVG/Diagram:**
   - Để tránh biểu đồ SVG bị co dúm font chữ trên màn hình nhỏ hoặc bị cắt cụt mất thanh cuộn, luôn bọc SVG trong container `width: 100%; overflow-x: auto;`.

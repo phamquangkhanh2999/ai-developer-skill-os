@@ -9,7 +9,7 @@
 
 Khi người dùng chỉ yêu cầu viết spec, PRD, Acceptance Criteria hoặc lập kế hoạch:
 - **TUYỆT ĐỐI KHÔNG sinh implementation code** (không tạo/sửa file code tính năng, không cài package).
-- Chỉ bàn giao tài liệu đặc tả, checklist tiêu chí nghiệm thu, sơ đồ luồng (`mermaid`) và khung phác thảo màn hình (wireframe/ASCII hoặc `generative_ui`) khi có tương tác UI.
+- Chỉ bàn giao tài liệu đặc tả, checklist tiêu chí nghiệm thu, sơ đồ luồng (`mermaid`) và khung phác thảo màn hình trực quan (`generative_ui` HTML widget hoặc artifact HTML/SVG; không dùng bảng vẽ ký tự ASCII thô sơ) khi có tương tác UI.
 
 ---
 
